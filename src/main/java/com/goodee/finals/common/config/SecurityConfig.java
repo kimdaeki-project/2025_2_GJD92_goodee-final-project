@@ -1,4 +1,4 @@
-package com.goodee.finals.security;
+package com.goodee.finals.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
