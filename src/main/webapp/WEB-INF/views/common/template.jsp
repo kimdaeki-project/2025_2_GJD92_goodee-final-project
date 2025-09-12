@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>Insert title here</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -17,13 +17,17 @@
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: hidden scroll;">
     
-	    <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
-				<iframe width="1120" height="630" src="https://www.youtube.com/embed/mMjomLgUN_8?si=RYGl9qw_Za_Ynci9&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-			</div>
+    <!-- 여기에 코드 작성 -->
+    <!-- 여기에 코드 작성 -->
+    <!-- 여기에 코드 작성 -->
+    <!-- 여기에 코드 작성 -->
     
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script>
+		document.querySelector("i[data-content='']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	</script>
 </body>
 
 </html>
