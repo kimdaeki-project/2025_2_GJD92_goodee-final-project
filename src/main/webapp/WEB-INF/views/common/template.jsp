@@ -15,7 +15,7 @@
   
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
-    <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: scroll;">
+    <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: hidden scroll;">
     
     <!-- 여기에 코드 작성 -->
     <!-- 여기에 코드 작성 -->

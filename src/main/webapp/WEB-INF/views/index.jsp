@@ -24,9 +24,6 @@
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script>
-		document.querySelector("i[data-content='어트랙션 점검']").parentElement.classList.add("bg-gradient-dark", "text-white")
-	</script>
 </body>
 
 </html>
