@@ -10,11 +10,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.goodee.finals.notice.NoticeDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,6 +52,9 @@ public class StaffDTO implements UserDetails {
 	
 	private Integer staffUsedLeave;
 	private Integer staffRemainLeave;
+	
+	@OneToMany(mappedBy = "staffDTO")
+	private List<NoticeDTO> notices;
 	
 	@Column(insertable = false)
 	@ColumnDefault("1")
