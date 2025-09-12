@@ -2,6 +2,8 @@ package com.goodee.finals.staff;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +35,14 @@ class StaffRepositoryTest {
 	void staffSelectTest() {
 		StaffDTO staffDTO = staffRepository.findById(20250001).orElseThrow();
 		System.out.println(staffDTO.getJobDTO().getJobName());
+	}
+	
+	@Test
+	void nativeQueryTest() {
+		List<JobDTO> result = jobRepository.findAllJobs();
+		result.forEach((job) -> {
+			System.out.println(job.getJobName());
+		});
 	}
 
 }
