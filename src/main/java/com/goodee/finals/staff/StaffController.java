@@ -13,4 +13,9 @@ public class StaffController {
 		return "staff/login";
 	}
 	
+	@GetMapping("test")
+	public String test() {
+		return "common/template_sidebar";
+	}
+	
 }
