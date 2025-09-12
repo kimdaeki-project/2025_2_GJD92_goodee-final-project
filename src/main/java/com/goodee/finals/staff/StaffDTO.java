@@ -10,12 +10,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +28,12 @@ import lombok.ToString;
 public class StaffDTO implements UserDetails {
 	@Id
 	private Integer staffCode;
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
-	private StaffDeptDTO staffDeptDTO;
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
-	private StaffJobDTO staffJobDTO;
+	@ManyToOne
+	@JoinColumn(name = "deptCode")
+	private DeptDTO deptDTO;
+	@ManyToOne
+	@JoinColumn(name = "jobCode")
+	private JobDTO jobDTO;
 	private String staffPw;
 	
 	private String staffName;
@@ -69,8 +70,8 @@ public class StaffDTO implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> grantList = new ArrayList<>();
-		grantList.add(new SimpleGrantedAuthority(staffDeptDTO.getDeptDTO().getDeptName()));
-		grantList.add(new SimpleGrantedAuthority(staffJobDTO.getJobDTO().getJobName()));
+		grantList.add(new SimpleGrantedAuthority(deptDTO.getDeptName()));
+		grantList.add(new SimpleGrantedAuthority(jobDTO.getJobName()));
 		
 		return grantList;
 	}

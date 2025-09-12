@@ -23,6 +23,6 @@ public class JobDTO {
 	private String jobName;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "jobDTO", cascade = CascadeType.ALL)
-	private List<StaffJobDTO> staffJobDTOs;
+	private List<StaffDTO> staffDTOs;
 	
 }

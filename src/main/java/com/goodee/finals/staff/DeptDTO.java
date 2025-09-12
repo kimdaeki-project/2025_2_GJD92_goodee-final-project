@@ -23,5 +23,5 @@ public class DeptDTO {
 	private String deptName;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "deptDTO", cascade = CascadeType.ALL)
-	private List<StaffDeptDTO> staffDeptDTOs;
+	private List<StaffDTO> staffDTOs;
 }
