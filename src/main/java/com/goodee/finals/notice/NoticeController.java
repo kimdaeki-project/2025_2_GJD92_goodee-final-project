@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,7 +21,7 @@ public class NoticeController {
 	private NoticeService noticeService;
 	
 	@GetMapping("")
-	public String list(@PageableDefault(size = 10, sort = "noticeNum", direction= Sort.Direction.DESC) Pageable pageable ,Model model) {
+	public String list(@PageableDefault(size = 10, sort = "noticeNum", direction= Sort.Direction.DESC) Pageable pageable, Model model) {
 		Page<NoticeDTO> result = noticeService.list(pageable);
 		model.addAttribute("notice", result);
 		return "notice/list";
@@ -39,6 +40,20 @@ public class NoticeController {
 		} else {
 			return null;
 		}
+	}
+	
+	@GetMapping("{noticeNum}")
+	public String detail(@PathVariable("noticeNum") NoticeDTO noticeDTO, Model model) {
+		NoticeDTO result = noticeService.detail(noticeDTO);
+		model.addAttribute("notice", result);
+		return "notice/detail";
+	}
+	
+	@GetMapping("{noticeNum}/edit")
+	public String edit(@PathVariable("noticeNum") NoticeDTO noticeDTO, Model model) {
+		NoticeDTO result = noticeService.detail(noticeDTO);
+		model.addAttribute("notice", result);
+		return "notice/write";
 	}
 	
 }

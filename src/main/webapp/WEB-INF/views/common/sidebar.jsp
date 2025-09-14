@@ -21,7 +21,7 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/notice">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="공지사항">campaign</i>
           <span class="nav-link-text ms-1 text-sm">공지사항</span>
         </a>

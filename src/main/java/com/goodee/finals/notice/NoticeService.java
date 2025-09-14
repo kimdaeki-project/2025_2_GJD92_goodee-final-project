@@ -33,4 +33,9 @@ public class NoticeService {
 		return result;
 	}
 
+	public NoticeDTO detail(NoticeDTO noticeDTO) {
+		Optional<NoticeDTO> result = noticeRepository.findById(noticeDTO.getNoticeNum());
+		return result.get();
+	}
+
 }
