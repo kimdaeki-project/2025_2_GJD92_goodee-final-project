@@ -18,6 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 public class StaffController {
 	@Autowired
 	private StaffService staffService;
+	
+	@GetMapping
+	public String getStaffList() {
+		return "staff/list";
+	}
 
 	@GetMapping("login")
 	public String getStaffLogin() {
@@ -38,7 +43,7 @@ public class StaffController {
 	public String postStaffRegist(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach) {
 		int result = staffService.registStaff(staffDTO, attach);
 		
-		return null;
+		return "redirect:/";
 	}
 	
 }
