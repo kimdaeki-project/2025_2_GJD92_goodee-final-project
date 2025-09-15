@@ -1,9 +1,9 @@
-package com.goodee.finals.staff;
+package com.goodee.finals.common.attachment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JobRepository extends JpaRepository<JobDTO, Integer>{
+public interface AttachmentRepository extends JpaRepository<AttachmentDTO, Long> {
 
 }
