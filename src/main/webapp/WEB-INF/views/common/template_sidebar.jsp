@@ -30,7 +30,7 @@
 		      
 		      <li class="nav-item">
 		        <a class="nav-link text-dark" href="#">
-		          <i class="material-symbols-rounded opacity-5 fs-5" data-content="공용드라이브">dashboard</i>
+	 	          <i class="material-symbols-rounded opacity-5 fs-5" data-content="공용드라이브">dashboard</i>
 		          <span class="nav-link-text ms-1 text-sm">공용드라이브</span>
 		        </a>
 		      </li>
@@ -47,7 +47,6 @@
 	  
 	  </section>	
 	</div>
-
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
