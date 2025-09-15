@@ -22,6 +22,7 @@
     		<div class="col-6 offset-3">
     			<div class="form-group row mt-5">
     				<div class="col-4">
+    					<input type="file" id="attach" name="attach" class="form-control" />
     				</div>
     				
     				<div class="col-4">
@@ -34,9 +35,10 @@
     						<form:label path="inputDeptCode">부서</form:label>
     						<form:select path="inputDeptCode">
     							<form:option value="">-- 선택 --</form:option>
-    							<form:option value="1000">인사</form:option>
-    							<form:option value="1001">운영</form:option>
-    							<form:option value="1002">시설</form:option>
+    							<form:option value="1000">임원</form:option>
+    							<form:option value="1001">인사</form:option>
+    							<form:option value="1002">운영</form:option>
+    							<form:option value="1003">시설</form:option>
     						</form:select>
     					</div>
     				</div>
