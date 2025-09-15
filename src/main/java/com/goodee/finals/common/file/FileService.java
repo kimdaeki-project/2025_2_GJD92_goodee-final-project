@@ -17,6 +17,7 @@ public class FileService {
 	public static final String APPROVAL = "approval"; // 결재 서류
 	public static final String RIDE = "ride"; // 어트랙션 사진
 	public static final String LOST = "lost"; // 분실물 사진
+	public static final String DOCUMENT = "document"; // 분실물 사진
 
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
