@@ -35,6 +35,7 @@ public class SecurityConfig {
 		.authorizeHttpRequests((option) -> { option
 			// static resources
 			.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+			.requestMatchers("/staff/info").authenticated()
 			// 임시
 			.anyRequest().permitAll()
 			;
