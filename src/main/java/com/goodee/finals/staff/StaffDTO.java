@@ -21,6 +21,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -64,6 +65,12 @@ public class StaffDTO implements UserDetails {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private List<RideDTO> rideDTOs;
 	
+	
+	// For Input
+	@Transient
+	private Integer inputDeptCode;
+	@Transient
+	private Integer inputJobCode;
 	
 	@Override
 	public String getUsername() {
