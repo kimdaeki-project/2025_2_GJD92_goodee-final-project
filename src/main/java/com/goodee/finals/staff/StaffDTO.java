@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -56,6 +57,12 @@ public class StaffDTO implements UserDetails {
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffEnabled;
+	
+	// For Input
+	@Transient
+	private Integer inputDeptCode;
+	@Transient
+	private Integer inputJobCode;
 	
 	@Override
 	public String getUsername() {
