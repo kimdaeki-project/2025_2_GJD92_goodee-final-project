@@ -24,9 +24,14 @@ public class StaffController {
 		return "staff/login";
 	}
 	
+	@GetMapping("info")
+	public String getStaffInfo() {
+		return "staff/info";
+	}
+	
 	@GetMapping("regist")
 	public String getStaffRegist(@ModelAttribute StaffDTO staffDTO) {
-		return "staff/regist";
+		return "staff/form";
 	}
 	
 	@PostMapping("regist")
