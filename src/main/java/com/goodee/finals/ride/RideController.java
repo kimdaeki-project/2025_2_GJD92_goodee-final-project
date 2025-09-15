@@ -35,6 +35,18 @@ public class RideController {
 		return rideService.saveRide(rideDTO);
 	}
 	
+	@GetMapping("detail")
+	public String getRides(Model model) throws Exception {
+		List<RideDTO> result =  rideService.getAllRides();
+		model.addAttribute("ride", result);
+		return "ride/rideDetail";
+	}
+	
+//	@GetMapping("{rideCode}")
+//	public String getRides(@PathVariable("rideCode") Integer rideCode) throws Exception {
+//		return "ride/rideDetail";
+//	}
+	
 	// 어트랙션 수정
 //	@PutMapping("/{id}")
 //	public ResponseEntity<RideDTO> updateRide(@PathVariable("id") Long id, @RequestBody RideDTO rideDTO) throws Exception {
