@@ -2,8 +2,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl bg-white ms-2 mt-2" id="navbarBlur" data-scroll="true">
-  <div class="container-fluid py-1 px-3">
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl bg-white ms-2 mt-2" style="height: 50px;" id="navbarBlur" data-scroll="true">
+  <div class="container-fluid px-3">
     <div class="collapse navbar-collapse d-flex align-items-center justify-content-end mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <ul class="navbar-nav me-3 d-flex align-items-center justify-content-end">
       	<sec:authorize access="!isAuthenticated()">
@@ -15,19 +15,13 @@
         <sec:authorize access="isAuthenticated()">
         	<sec:authentication property="principal" var="staff" />
         	
-        	<li class="nav-item d-flex align-items-center">
-        		<img width="30" height="30" class="rounded-circle" alt="" src="/file/staff/${ staff.staffAttachmentDTO.attachmentDTO.savedName }">
-        		<span>${ staff.deptDTO.deptDetail }부서 ${ staff.jobDTO.jobDetail } ${ staff.staffName } 님</span>
+        	<li class="nav-item d-flex align-items-center me-3">
+        		<img width="35" height="35" class="rounded-circle" style="padding: 1px; border: 1px solid #686868" alt="" src="/file/staff/${ staff.staffAttachmentDTO.attachmentDTO.savedName }">
+        		<span class="ms-2 align-middle" style="height: 25px; line-height: 25px;">${ staff.deptDTO.deptDetail }부서 ${ staff.jobDTO.jobDetail } ${ staff.staffName } 님</span>
 	        </li> 
-        
-	        <li class="nav-item px-3 d-flex align-items-center">
-	          <a href="#" class="nav-link text-body p-0">
-	            <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
-	          </a>
-	        </li>
 	        
 	        <li class="nav-item dropdown pe-3 d-flex align-items-center">
-	          <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+	          <a href="javascript:;" class="nav-link text-body p-0" style="height: 25px; line-height: 25px;" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 	            <i class="material-symbols-rounded">notifications</i>
 	          </a>
 	          
@@ -104,9 +98,13 @@
 	        </li>
 	        
 	        <li class="nav-item d-flex align-items-center">
-	          <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+	          <a href="#" class="nav-link text-body font-weight-bold px-0" style="padding: 0; height: 25px; line-height: 25px;">
 	            <i class="material-symbols-rounded">account_circle</i>
 	          </a>
+	        </li>
+	        
+	        <li class="nav-item d-flex align-items-center">
+	          <a class="btn btn-sm mb-0 mx-3 bg-gradient-dark text-white" style="width: 100px;" href="/staff/logout">로그아웃</a>
 	        </li>
         </sec:authorize>
         
