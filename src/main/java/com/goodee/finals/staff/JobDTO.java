@@ -21,6 +21,7 @@ public class JobDTO {
 	@Id
 	private Integer jobCode;
 	private String jobName;
+	private String jobDetail;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "jobDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
