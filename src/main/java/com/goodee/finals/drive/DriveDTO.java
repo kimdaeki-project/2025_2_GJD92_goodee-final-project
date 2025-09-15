@@ -37,7 +37,10 @@ public class DriveDTO {
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;
 	
-	@OneToMany(mappedBy = "driveDTO", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "driveDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DriveShareDTO> driveShareDTOs;
+	
+	@OneToMany(mappedBy = "driveDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DocumentDTO> documentDTOs;
 	
 }

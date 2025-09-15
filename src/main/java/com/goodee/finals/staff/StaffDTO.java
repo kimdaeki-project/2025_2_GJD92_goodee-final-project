@@ -10,9 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.goodee.finals.drive.DriveDTO;
-import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.drive.DocumentDTO;
+import com.goodee.finals.drive.DriveDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -77,6 +77,9 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DriveDTO> driveDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DocumentDTO> documentDTOs;
 	
 	@Override
 	public String getUsername() {
