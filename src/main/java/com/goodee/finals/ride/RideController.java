@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,11 +29,16 @@ public class RideController {
 		model.addAttribute("ride", result);
 		return "ride/rideList";
 	}
-
-	// 어트랙션 추가(등록)
-	@PostMapping("")
-	public RideDTO addRide(@RequestBody RideDTO rideDTO) throws Exception {
-		return rideService.saveRide(rideDTO);
+	
+	@GetMapping("add")  // 어트랙션 등록
+	public String addRide(Model model) throws Exception {
+		model.addAttribute("rideDTO", new RideDTO());  // JSP에서 사용할 rideDTO 객체
+		return "ride/rideAdd";  //jsp 파일명
+	}
+	
+	@PostMapping("add")  // rideDTO 값 받아서 DB 저장
+	public String saveRide(@ModelAttribute RideDTO rideDTO) throws Exception{
+		return "ride/rideList";
 	}
 	
 	@GetMapping("detail")
