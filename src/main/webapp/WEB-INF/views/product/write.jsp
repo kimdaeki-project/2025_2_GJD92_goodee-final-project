@@ -22,6 +22,5 @@
 		<button type="submit">등록</button>
 	</form>
 <!-- 		파일첨부기능 -->
-	</div>
 </body>
 </html>
