@@ -27,7 +27,7 @@ import lombok.ToString;
 public class DriveDTO {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long driveNum;
 	private String driveName;
 	private Boolean isPersonal;

@@ -1,5 +1,8 @@
 package com.goodee.finals.drive;
 
-public class DriveShareRepository {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class DriveShareRepository  {
 
 }
