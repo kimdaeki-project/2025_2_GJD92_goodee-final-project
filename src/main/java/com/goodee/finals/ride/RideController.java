@@ -31,7 +31,7 @@ public class RideController {
 
 	// 어트랙션 추가(등록)
 	@PostMapping("")
-	public RideDTO createRide(@RequestBody RideDTO rideDTO) throws Exception {
+	public RideDTO addRide(@RequestBody RideDTO rideDTO) throws Exception {
 		return rideService.saveRide(rideDTO);
 	}
 	
@@ -44,6 +44,9 @@ public class RideController {
 	
 	
 	// 어트랙션 삭제
+	public void deleteRide(@PathVariable("rideCode") Long rideCode) throws Exception {
+		
+	}
 	
 	
 	
