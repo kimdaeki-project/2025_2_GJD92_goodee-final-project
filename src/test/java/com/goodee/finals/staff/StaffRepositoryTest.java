@@ -39,10 +39,7 @@ class StaffRepositoryTest {
 	
 	@Test
 	void nativeQueryTest() {
-		List<JobDTO> result = jobRepository.findAllJobs();
-		result.forEach((job) -> {
-			System.out.println(job.getJobName());
-		});
+		System.out.println(staffRepository.findLastStaffCode());
 	}
 
 }
