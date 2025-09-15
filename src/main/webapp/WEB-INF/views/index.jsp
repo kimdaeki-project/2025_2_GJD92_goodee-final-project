@@ -71,30 +71,49 @@
 
     /* 체크인 카드 스타일 */
     .time-circle {
-      margin: 10px auto;
-      padding: 20px;
-      text-align: center;
-      border: 1px dashed #ccc;
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      line-height: 120px;
-    }
+  margin: 10px auto;
+  padding: 20px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;           /* flex로 변경 */
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;     /* 수직 중앙 정렬 */
+}
+    .time-info {
+  text-align: center;
+  padding: 10px 0;
+}
 
-    .worktime {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+.times-row {
+  display: flex;
+  flex-direction: column; /* 세로로 나열 (한 줄에 두개면 row로 놔도됨) */
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+}
 
-    .check-in button {
-      margin: 5px;
-      padding: 8px 12px;
-      border: none;
-      background-color: #1976d2;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+.worktime {
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button-row button {
+  padding: 8px 16px;
+  background-color: #1976d2;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
     .weather .icon {
       font-size: 48px;
@@ -138,10 +157,19 @@
 	        <div class="panel check-in">
 	          <h2>오늘</h2>
 	          <p>2025-09-10</p>
-	          <div class="time-circle">출근: --:-- / 퇴근: --:--</div>
-	          <div class="worktime">근무시간 : 00h 00m</div>
-	          <button onclick="location.href='/attend/in'">출근</button>
-	          <button onclick="location.href='/attend/out'">퇴근</button>
+	          <div class="time-info">
+	          <div class="time-circle">
+				  <div class="times-row">
+				    <span>출근: --:--:--</span>
+				    <span>퇴근: --:--:--</span>
+				  </div>
+				  </div>
+				  <div class="worktime">근무시간 : 00h 00m</div>
+				  <div class="button-row">
+			          <button onclick="location.href='/attend/in'">출근</button>
+			          <button onclick="location.href='/attend/out'">퇴근</button>
+			      </div>
+			      </div>
 	        </div>
 	
 	        <!-- 어트랙션 운휴 현황 -->
