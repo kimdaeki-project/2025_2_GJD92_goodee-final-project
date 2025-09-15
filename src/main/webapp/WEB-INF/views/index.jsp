@@ -160,7 +160,7 @@
 	          <div class="time-info">
 	          <div class="time-circle">
 				  <div class="times-row">
-				    <span>출근: --:--:--</span>
+				    <span>출근: ${attendDTO.formattedAttendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span>
 				    <span>퇴근: --:--:--</span>
 				  </div>
 				  </div>
