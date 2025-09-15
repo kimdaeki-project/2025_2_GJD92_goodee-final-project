@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/notice/**") @Controller
 public class NoticeController {
@@ -35,8 +36,8 @@ public class NoticeController {
 	}
 	
 	@PostMapping("write")
-	public String write(NoticeDTO noticeDTO) {
-		NoticeDTO result = noticeService.write(noticeDTO);
+	public String write(NoticeDTO noticeDTO, MultipartFile[] files) {
+		NoticeDTO result = noticeService.write(noticeDTO, files);
 		if (result != null) {			
 			return "redirect:/notice";
 		} else {

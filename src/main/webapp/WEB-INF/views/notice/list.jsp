@@ -26,6 +26,9 @@
     
     	<!-- 공지 존재 -->
     	<c:if test="${ notice.content.size() gt 0 }">
+    	<div>
+    	
+    	</div>
 		<table class="table">
 			<thead>
 				<tr>
