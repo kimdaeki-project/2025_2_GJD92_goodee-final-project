@@ -22,6 +22,7 @@
     		<div class="col-6 offset-3">
     			<div class="form-group row mt-5">
     				<div class="col-4">
+    					<input type="file" id="attach" name="attach" class="form-control" />
     				</div>
     				
     				<div class="col-4">
