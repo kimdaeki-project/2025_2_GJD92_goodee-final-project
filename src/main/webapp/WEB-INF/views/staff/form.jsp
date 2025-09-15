@@ -139,7 +139,7 @@
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script src="/js/staff/regist.js"></script>
 	<script>
-		document.querySelector("i[data-content='']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "정보 수정";
 	</script>
 </body>
 

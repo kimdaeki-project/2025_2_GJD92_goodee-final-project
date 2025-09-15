@@ -22,3 +22,4 @@ document.querySelector("#attach").addEventListener("change", (event) => {
 			document.querySelector("#preview").src = "";
 		}
 })
+

@@ -3,7 +3,11 @@
 <!DOCTYPE html>
 
 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl bg-white ms-2 mt-2" style="height: 50px;" id="navbarBlur" data-scroll="true">
-  <div class="container-fluid px-3">
+  <div class="container-fluid px-3 d-flex justify-content-between">
+  	<div>
+			<h5 class="mb-0 ms-3" id="navTitle"></h5>	
+  	</div>
+
     <div class="collapse navbar-collapse d-flex align-items-center justify-content-end mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <ul class="navbar-nav me-3 d-flex align-items-center justify-content-end">
       	<sec:authorize access="!isAuthenticated()">
