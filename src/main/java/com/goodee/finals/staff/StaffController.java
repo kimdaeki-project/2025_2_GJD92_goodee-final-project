@@ -38,7 +38,7 @@ public class StaffController {
 	public String postStaffRegist(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach) {
 		int result = staffService.registStaff(staffDTO, attach);
 		
-		return null;
+		return "redirect:/";
 	}
 	
 }
