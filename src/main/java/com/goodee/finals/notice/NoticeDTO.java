@@ -16,10 +16,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity @Table(name = "notice")
-@Getter @Setter @ToString
+@Getter @Setter
 public class NoticeDTO {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long noticeNum;
@@ -32,6 +31,8 @@ public class NoticeDTO {
 	private Long noticeHits = 0L;
 	@Column(columnDefinition = "boolean default false")
 	private boolean noticeTmp;
+	@Column(columnDefinition = "boolean default false")
+	private boolean noticeDelete;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	@JoinColumn(name = "staffCode")

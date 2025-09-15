@@ -1,7 +1,5 @@
 package com.goodee.finals.notice;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +19,13 @@ public class NoticeController {
 	private NoticeService noticeService;
 	
 	@GetMapping("")
-	public String list(@PageableDefault(size = 10, sort = "noticeNum", direction= Sort.Direction.DESC) Pageable pageable, Model model) {
-		Page<NoticeDTO> result = noticeService.list(pageable);
+	public String list(@PageableDefault(size = 10, sort = "noticeNum", direction= Sort.Direction.DESC) Pageable pageable, NoticePager noticePager, Model model) {
+		String keyword = noticePager.getKeyword();
+		if (keyword == null) keyword = "";
+		Page<NoticeDTO> result = noticeService.list(pageable, keyword);
+		noticePager.calc(result);
 		model.addAttribute("notice", result);
+		model.addAttribute("pager", noticePager);
 		return "notice/list";
 	}
 	
@@ -54,6 +56,28 @@ public class NoticeController {
 		NoticeDTO result = noticeService.detail(noticeDTO);
 		model.addAttribute("notice", result);
 		return "notice/write";
+	}
+	
+	@PostMapping("{noticeNum}/edit")
+	public String edit(NoticeDTO noticeDTO) {
+		NoticeDTO result = noticeService.edit(noticeDTO);
+		if (result != null) {			
+			return "redirect:/notice/" + noticeDTO.getNoticeNum();
+		} else {
+			return null;
+		}
+	}
+	
+	@PostMapping("{noticeNum}/delete")
+	public String delete(@PathVariable("noticeNum") NoticeDTO noticeDTO, Model model) {
+		NoticeDTO result = noticeService.delete(noticeDTO);
+		if (result != null) {
+			model.addAttribute("msg", "게시글이 삭제되었습니다.");
+			model.addAttribute("url", "/notice");
+			return "notice/result";
+		} else {
+			return null;
+		}
 	}
 	
 }

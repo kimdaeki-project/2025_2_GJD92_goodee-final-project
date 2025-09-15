@@ -35,12 +35,17 @@
 		<div>
 			<a href="/notice/${ notice.noticeNum }/edit">수정</a>
 		</div>
+		<div>
+			<form action="/notice/${ notice.noticeNum }/delete" method="post" id="form"></form>
+			<button id="btn-delete">삭제</button>
+		</div>
+		<script type="text/javascript" src="/js/notice/detail.js"></script>
 
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
-		document.querySelector("i[data-content='']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("i[data-content='공지사항']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	</script>
 </body>
 
