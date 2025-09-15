@@ -1,5 +1,6 @@
 package com.goodee.finals.staff;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.common.attachment.AttachmentDTO;
+import com.goodee.finals.common.attachment.AttachmentRepository;
+import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.common.file.FileService;
+
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Transactional
 @Slf4j
 public class StaffService implements UserDetailsService {
 	@Autowired
@@ -21,11 +30,44 @@ public class StaffService implements UserDetailsService {
 	@Autowired
 	private JobRepository jobRepository;
 	@Autowired
+	private AttachmentRepository attachmentRepository;
+	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private FileService fileService;
 	
-	public int registStaff(StaffDTO staffDTO) {
+	public int registStaff(StaffDTO staffDTO, MultipartFile attach) {
 		staffDTO = setStaffDefault(staffDTO);
-		StaffDTO result = staffRepository.saveAndFlush(staffDTO);
+		
+		String fileName = null;
+		AttachmentDTO attachmentDTO = new AttachmentDTO();
+		
+		if (attach != null && attach.getSize() > 0) {
+			try {
+				fileName = fileService.saveFile(FileService.STAFF, attach);
+				
+				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setOriginName(attach.getOriginalFilename());
+				attachmentDTO.setSavedName(fileName);
+				
+				attachmentRepository.save(attachmentDTO);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			attachmentDTO.setAttachSize(0L);
+			attachmentDTO.setOriginName("default.png");
+			attachmentDTO.setSavedName("default.png");
+			
+			attachmentRepository.save(attachmentDTO);
+		}
+		
+		StaffAttachmentDTO staffAttachmentDTO = new StaffAttachmentDTO();
+		staffAttachmentDTO.setStaffDTO(staffDTO);
+		staffAttachmentDTO.setAttachmentDTO(attachmentDTO);
+		
+		staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
+		StaffDTO result = staffRepository.save(staffDTO);
 		
 		return 0;
 	}
