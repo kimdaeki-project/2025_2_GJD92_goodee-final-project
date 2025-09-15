@@ -21,6 +21,7 @@ public class DeptDTO {
 	@Id
 	private Integer deptCode;
 	private String deptName;
+	private String deptDetail;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "deptDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
