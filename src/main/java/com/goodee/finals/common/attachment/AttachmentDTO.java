@@ -22,7 +22,7 @@ import lombok.Setter;
 @Table(name = "attachment")
 public class AttachmentDTO {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long attachNum;
 	private String originName;
 	private String savedName;
