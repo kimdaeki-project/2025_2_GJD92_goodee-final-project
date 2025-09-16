@@ -2,6 +2,7 @@ package com.goodee.finals.common.attachment;
 
 import com.goodee.finals.ride.RideDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -25,19 +26,19 @@ public class RideAttachmentDTO {
 	
 	@Id
     @OneToOne
-    @JoinColumn(name = "rideCode", insertable = false, updatable = false)
+    @JoinColumn(name = "rideCode", unique = true, insertable = false, updatable = false)
     private RideDTO rideDTO;
 
 	@Id
     @OneToOne
-    @JoinColumn(name = "attachNum", nullable = false)
+    @JoinColumn(name = "attachNum", insertable = false, nullable = false)
     private AttachmentDTO attachmentDTO;
 	
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	public static class PK {
-		private Integer rideDTO;
+		private String rideDTO;
 		private Long attachmentDTO;
 	}
 
