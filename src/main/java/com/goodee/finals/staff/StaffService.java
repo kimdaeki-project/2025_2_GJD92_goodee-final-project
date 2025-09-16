@@ -36,7 +36,7 @@ public class StaffService implements UserDetailsService {
 	@Autowired
 	private FileService fileService;
 	
-	public int registStaff(StaffDTO staffDTO, MultipartFile attach) {
+	public boolean registStaff(StaffDTO staffDTO, MultipartFile attach) {
 		staffDTO = setStaffDefault(staffDTO);
 		
 		String fileName = null;
@@ -69,7 +69,8 @@ public class StaffService implements UserDetailsService {
 		staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
 		StaffDTO result = staffRepository.save(staffDTO);
 		
-		return 0;
+		if (result != null) return true;
+		else return false;
 	}
 	
 	private StaffDTO setStaffDefault(StaffDTO staffDTO) {
