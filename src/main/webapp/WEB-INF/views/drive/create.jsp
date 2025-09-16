@@ -6,7 +6,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>드라이브</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 	
@@ -99,10 +99,10 @@
 			<div class="mt-5 d-flex align-items-center">
 				<span>드라이브 공유 :</span>
 				<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" data-bs-toggle="modal" data-bs-target="#shareModal">
-				  <i class="material-symbols-rounded opacity-5 fs-5" data-content="내드라이브">group_add</i>
+				  <i class="material-symbols-rounded opacity-5 fs-5">group_add</i>
 				</button>
 			</div>
-			<table class="col-6 offset-md-1 table table-sm w-25">
+			<table class="col-6 offset-md-1 table w-25">
 			  <thead>
 			    <tr>
 			      <th scope="col" colspan="3" class="text-center">추가된 사용자</th>
@@ -110,18 +110,9 @@
 			      <th scope="col" class="text-center">소속</th>
 			    </tr>
 			  </thead>
-			  <tbody class="table-group-divider text-center">
-			  <!-- 추가된 사용자 -->
-			    <tr>
-				  <th scope="row">
-				  	  <i class="material-symbols-rounded opacity-5 fs-5">close</i>
-				  </th>
-			      <td><i class="material-symbols-rounded opacity-5 fs-5" data-content="내드라이브">contacts_product</i></td>
-			      <td>권준하</td>
-			      <td>사원</td>
-			      <td>시설</td>
-			    </tr>
-			    <!-- 추가된 사용자 -->
+			  <tbody class="table-group-divider text-center" id="savedStaff" name="savedStaff">
+				  <!-- 추가된 사용자 -->
+			      <!-- 추가된 사용자 -->
 			  </tbody>
 			</table>
 		</div>	 
@@ -131,9 +122,9 @@
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<c:import url="/WEB-INF/views/drive/modal.jsp"></c:import>
+	<script src="/js/drive/create_modal.js"></script>
 	<script>
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
-	document.querySelector("i[data-content='']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("#navTitle").textContent = "드라이브 추가"
 	</script>
 </body>
