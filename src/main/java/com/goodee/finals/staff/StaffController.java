@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,47 @@ public class StaffController {
 		
 		return "staff/list";
 	}
+	
+	@GetMapping("{staffCode}")
+	public String getStaffDetail(@PathVariable Integer staffCode, Model model) {
+		StaffDTO staffDTO = staffService.getStaff(staffCode);
+		model.addAttribute("staff", staffDTO);
+		
+		return "staff/detail";
+	}
+	
+	@GetMapping("{staffCode}/update")
+	public String getStaffUpdate(@PathVariable Integer staffCode, Model model) {
+		StaffDTO staffDTO = staffService.getStaff(staffCode);
+		staffDTO.setInputDeptCode(staffDTO.getDeptDTO().getDeptCode());
+		staffDTO.setInputJobCode(staffDTO.getJobDTO().getJobCode());
+		
+		model.addAttribute("staffDTO", staffDTO);
+		
+		return "staff/form";
+	}
+	
+	@PostMapping("{staffCode}/update")
+	public String postStaffUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		log.info("{}", staffDTO.getStaffCode());
+		
+		boolean result = staffService.updateStaff(staffDTO, attach);
+		
+		String resultMsg = "사원 정보 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "사원 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffDTO.getStaffCode();
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
 
 	@GetMapping("login")
 	public String getStaffLogin() {
@@ -63,7 +105,7 @@ public class StaffController {
 		if (result) {
 			resultMsg = "사원을 성공적으로 등록했습니다.";
 			resultIcon = "success";
-			String resultUrl = "/staff/list";
+			String resultUrl = "/staff";
 			model.addAttribute("resultUrl", resultUrl);
 		}
 		
