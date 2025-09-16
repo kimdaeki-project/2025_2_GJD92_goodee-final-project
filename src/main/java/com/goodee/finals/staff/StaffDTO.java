@@ -59,7 +59,7 @@ public class StaffDTO implements UserDetails {
 	private Integer staffUsedLeave;
 	private Integer staffRemainLeave;
 	
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
 	
 	@Column(insertable = false)

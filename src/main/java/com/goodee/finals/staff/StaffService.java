@@ -93,10 +93,8 @@ public class StaffService implements UserDetailsService {
 		
 		if (attach != null && attach.getSize() > 0) {
 			StaffDTO before = staffRepository.findById(staffDTO.getStaffCode()).orElseThrow();
-			Long beforeAttachKey = before.getStaffAttachmentDTO().getAttachmentDTO().getAttachNum();
-			before.setStaffAttachmentDTO(null);
-			staffRepository.saveAndFlush(before);
-			attachmentRepository.deleteById(beforeAttachKey);
+			AttachmentDTO beforeAttach = before.getStaffAttachmentDTO().getAttachmentDTO();
+			attachmentRepository.deleteById(beforeAttach.getAttachNum());
 			
 			AttachmentDTO attachmentDTO = new AttachmentDTO();
 			
