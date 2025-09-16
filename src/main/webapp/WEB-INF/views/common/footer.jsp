@@ -17,5 +17,8 @@
 <!-- Perfect Scrollbar -->
 <script src="/js/perfect-scrollbar.min.js"></script>
 
+<!-- SweetAlert 2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.23.0/dist/sweetalert2.all.min.js"></script>
+
 <!-- Template JS -->
 <script src="/js/material-dashboard.js"></script>
