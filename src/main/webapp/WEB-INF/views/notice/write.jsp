@@ -24,33 +24,32 @@
 			</div>
 			<div>
 				<label for="noticePinned">상단고정</label>
-				<input type="checkbox" id="noticePinned" name="noticePinned">
-			</div>
+				<input type="checkbox" id="noticePinned" name="noticePinned" ${ notice.noticePinned ? "checked" : "" }>
+			</div>	
+			<div class="container mt-3">
+			    <div class="uploader p-3 border rounded bg-light">
+			        <!-- 헤더: 첨부파일 + 내 PC 버튼 -->
+			        <div class="d-flex justify-content-between align-items-center mb-3">
+			            <div class="fw-bold">첨부파일</div>
+			            <button id="pcBtn" type="button" class="btn btn-primary btn-sm">내 PC</button>
+			            <input id="fileInput" type="file" multiple hidden name="files" />
+			        </div>
 			
-			<div class="container">
-				<div class="uploader">
-    				<!-- 업로드 영역 -->
-					<div id="dropzone" class="dropzone mb-3" tabindex="0" aria-label="파일 업로드 영역">
-						<div class="fw-bold">📁 파일을 드래그하거나 클릭하여 선택하세요</div>
-						<div class="text-muted small">여러 개 선택 가능 — 이미지/문서 모두 지원</div>
-						<input id="fileInput" type="file" multiple hidden name="files" />
-					</div>
-					<!-- 내 PC 버튼 -->
-					<div class="text-center">
-						<input id="fileInput" type="file" multiple hidden />
-						<button id="pcBtn" type="button" class="btn btn-primary">내 PC</button>
-					</div>
-					<!-- 파일 리스트 -->
-					<div id="fileList" class="d-flex flex-column gap-2" aria-live="polite"></div>
-				</div>
+			        <!-- 파일 리스트 -->
+			        <div id="fileList" class="d-flex flex-column gap-2" aria-live="polite">
+			            <div class="text-muted text-center p-3 border rounded bg-white">
+			                선택된 파일이 없습니다.
+			            </div>
+			        </div>
+			    </div>
 			</div>
-
 			<div>
 				<label for="noticeContent">내용</label>
 				<textarea rows="10" cols="20" id="noticeContent" name="noticeContent">${ notice.noticeContent }</textarea>
 			</div>
 			<c:if test="${ notice ne null }">
-				<input type="hidden" name="noticeNum" value="">
+				<input type="hidden" name="noticeNum" value="${ notice.noticeNum }">
+				<input type="hidden" name="deleteFiles" id="deleteFiles">
 			</c:if>
 		</form>
 		<c:if test="${ notice eq null }">
@@ -59,7 +58,18 @@
 		<c:if test="${ notice ne null }">
 			<button id="btn-write" data-kind="edit">수정</button>
 		</c:if>
-		<script type="text/javascript" src="/js/notice/write.js"></script>	
+
+		<script>
+		    window.existingFiles = window.existingFiles || [];
+		    <c:forEach items="${ notice.noticeAttachmentDTOs }" var="file">
+		        window.existingFiles.push({
+		            name: "${ file.attachmentDTO.originName }",
+		            size: ${ file.attachmentDTO.attachSize },
+		            attachNum: ${ file.attachmentDTO.attachNum }
+		        });
+		    </c:forEach>
+		</script>
+		<script type="text/javascript" src="/js/notice/write.js"></script>
     
     </section>
   </main>

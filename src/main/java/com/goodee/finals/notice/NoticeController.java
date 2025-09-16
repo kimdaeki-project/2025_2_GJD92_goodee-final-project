@@ -1,5 +1,7 @@
 package com.goodee.finals.notice;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.goodee.finals.common.attachment.AttachmentDTO;
 
 @RequestMapping("/notice/**") @Controller
 public class NoticeController {
@@ -23,9 +28,12 @@ public class NoticeController {
 	public String list(@PageableDefault(size = 10, sort = "noticeNum", direction= Sort.Direction.DESC) Pageable pageable, NoticePager noticePager, Model model) {
 		String keyword = noticePager.getKeyword();
 		if (keyword == null) keyword = "";
-		Page<NoticeDTO> result = noticeService.list(pageable, keyword);
-		noticePager.calc(result);
-		model.addAttribute("notice", result);
+		
+		Page<NoticeDTO> resultNotice = noticeService.list(pageable, keyword);
+		List<NoticeDTO> resultPinned = noticeService.pinned(keyword);
+		noticePager.calc(resultNotice);
+		model.addAttribute("notice", resultNotice);
+		model.addAttribute("pinned", resultPinned);
 		model.addAttribute("pager", noticePager);
 		return "notice/list";
 	}
@@ -60,8 +68,8 @@ public class NoticeController {
 	}
 	
 	@PostMapping("{noticeNum}/edit")
-	public String edit(NoticeDTO noticeDTO) {
-		NoticeDTO result = noticeService.edit(noticeDTO);
+	public String edit(NoticeDTO noticeDTO, @RequestParam(required = false) List<Long> deleteFiles, MultipartFile[] files) {
+		NoticeDTO result = noticeService.edit(noticeDTO, files, deleteFiles);
 		if (result != null) {			
 			return "redirect:/notice/" + noticeDTO.getNoticeNum();
 		} else {
@@ -79,6 +87,14 @@ public class NoticeController {
 		} else {
 			return null;
 		}
+	}
+	
+	@GetMapping("{attachNum}/download")
+	public String download(@PathVariable("attachNum") AttachmentDTO attachmentDTO, Model model) {
+		AttachmentDTO result = noticeService.download(attachmentDTO);
+		model.addAttribute("file", result);
+		model.addAttribute("type", "notice");
+		return "fileDownView";
 	}
 	
 }

@@ -6,146 +6,155 @@ const btn = document.querySelector('#btn-write');
 const form = document.querySelector('#form');
 
 const input = document.querySelector('#fileInput');
-const filesArr = [];
 
 btn.addEventListener('click', () => {
 	const data = btn.getAttribute('data-kind');
 	const dt = new DataTransfer();
-	filesArr.forEach(f => dt.items.add(f));
+	newFiles.forEach(f => dt.items.add(f));
 	input.files = dt.files;
 	if (data == 'write') {
 		form.setAttribute('action', '/notice/write');
 		form.submit();
 	} else if (data == 'edit') {
+		let deleteFiles = document.querySelector('#deleteFiles')
+		deleteFiles.value = deleteExistingFiles.join(",");
 		form.setAttribute('action', './edit');
 		form.submit();
 	}
 });
 // -------------------------------------------------- //
+const existingFiles = window.existingFiles || [];
+const newFiles = [];
+const deleteExistingFiles = [];
+
 (function(){
-  const input = document.getElementById('fileInput');
-  const pcBtn = document.getElementById('pcBtn');
-  const dropzone = document.getElementById('dropzone');
-  const list = document.getElementById('fileList');
-  
-  pcBtn.addEventListener('click', () => input.click());
+    const input = document.getElementById('fileInput');
+    const pcBtn = document.getElementById('pcBtn');
+    const list = document.getElementById('fileList');
 
-  function humanFileSize(size){
-    if(size === 0) return '0 B';
-    const i = Math.floor(Math.log(size) / Math.log(1024));
-    const sizes = ['B','KB','MB','GB','TB'];
-    const value = (size / Math.pow(1024, i));
-    return `${Math.round(value * 10) / 10} ${sizes[i]}`;
-  }
+    pcBtn.addEventListener('click', () => input.click());
 
-  function renderList(){
-    list.innerHTML = '';
-    filesArr.forEach((file, idx) => {
-      const card = document.createElement('div');
-      card.className = 'card file-card shadow-sm p-2 d-flex flex-row align-items-center';
-      card.setAttribute('data-index', idx);
+    function humanFileSize(size){
+        if(size === 0) return '0 B';
+        const i = Math.floor(Math.log(size) / Math.log(1024));
+        const sizes = ['B','KB','MB','GB','TB'];
+        const value = size / Math.pow(1024, i);
+        return `${Math.round(value * 10) / 10} ${sizes[i]}`;
+    }
 
-      const thumbWrap = document.createElement('div');
-      thumbWrap.className = 'ratio ratio-1x1 rounded overflow-hidden me-3';
-      thumbWrap.style.width = '64px';
-      thumbWrap.style.height = '64px';
+    function renderList(){
+        list.innerHTML = '';
 
-      if(file.type.startsWith('image/')){
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.onload = () => URL.revokeObjectURL(img.src);
-        thumbWrap.appendChild(img);
-      } else {
-        thumbWrap.innerHTML = `<div class="d-flex justify-content-center align-items-center h-100 w-100 bg-light text-muted fw-bold">${(file.name.split('.').pop() || '').toUpperCase()}</div>`;
-      }
+        if(existingFiles.length === 0 && newFiles.length === 0){
+            list.innerHTML = '<div class="text-muted text-center p-3 border rounded bg-white">선택된 파일이 없습니다.</div>';
+            return;
+        }
 
-      const meta = document.createElement('div');
-      meta.className = 'file-meta';
-      meta.innerHTML = `
-        <div class="file-name">${file.name}</div>
-        <div class="file-info">${file.type || '알 수 없음'} · ${humanFileSize(file.size)}</div>
-      `;
+        // 기존 파일 렌더링
+		existingFiles.forEach((file, idx) => {
+		    const card = document.createElement('div');
+		    card.className = 'card file-card shadow-sm p-2 d-flex flex-row align-items-center';
 
-      const actions = document.createElement('div');
-      actions.className = 'd-flex gap-2 ms-3';
+		    const thumbWrap = document.createElement('div');
+		    thumbWrap.style.width = '64px';
+		    thumbWrap.style.height = '64px';
+		    thumbWrap.className = 'me-3';
 
-      const previewBtn = document.createElement('button');
-      previewBtn.className = 'btn btn-sm btn-outline-secondary';
-      previewBtn.textContent = '미리보기';
-      previewBtn.type = 'button';
-      previewBtn.onclick = () => {
-        const url = URL.createObjectURL(file);
-        window.open(url, '_blank');
-      };
+		    // 이미지인지 확인
+		    if(file.name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)){
+		        const img = document.createElement('img');
+		        // img.src = file.url || ("/uploads/" + file.savedName); // 서버 저장 경로 맞게 수정
+		        img.style.width = '100%';
+		        img.style.height = '100%';
+		        img.style.objectFit = 'cover';
+		        thumbWrap.appendChild(img);
+		    } else {
+		        thumbWrap.innerHTML = `<div class="d-flex justify-content-center align-items-center h-100 w-100 bg-light text-muted fw-bold">${(file.name.split('.').pop() || '').toUpperCase()}</div>`;
+		    }
 
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'btn btn-sm btn-outline-danger';
-      removeBtn.textContent = '제거';
-      removeBtn.type = 'button';
-      removeBtn.onclick = () => {
-        filesArr.splice(idx,1);
+		    const meta = document.createElement('div');
+		    meta.innerHTML = `
+		        <div>${file.name}</div>
+		        <div class="text-muted">${humanFileSize(file.size)}</div>
+		    `;
+
+		    const removeBtn = document.createElement('button');
+		    removeBtn.textContent = '삭제';
+		    removeBtn.type = 'button';
+		    removeBtn.className = 'btn btn-sm btn-outline-danger ms-3';
+		    removeBtn.onclick = () => {
+				deleteExistingFiles.push(file.attachNum);
+		        existingFiles.splice(idx,1);
+		        renderList();
+		    };
+
+		    card.appendChild(thumbWrap);
+		    card.appendChild(meta);
+		    card.appendChild(removeBtn);
+
+		    list.appendChild(card);
+		});
+
+        // 새 파일 렌더링
+        newFiles.forEach((file, idx) => {
+            const card = document.createElement('div');
+            card.className = 'card file-card shadow-sm p-2 d-flex flex-row align-items-center';
+
+            const thumbWrap = document.createElement('div');
+            thumbWrap.style.width = '64px';
+            thumbWrap.style.height = '64px';
+            thumbWrap.className = 'me-3';
+
+            if(file.type && file.type.startsWith('image/')){
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                thumbWrap.appendChild(img);
+            } else {
+                thumbWrap.innerHTML = `<div class="d-flex justify-content-center align-items-center h-100 w-100 bg-light text-muted fw-bold">${(file.name.split('.').pop() || '').toUpperCase()}</div>`;
+            }
+
+            const meta = document.createElement('div');
+            meta.innerHTML = `
+                <div>${file.name}</div>
+                <div class="text-muted">${file.type || '알 수 없음'} · ${humanFileSize(file.size)}</div>
+            `;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '제거';
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-sm btn-outline-danger ms-3';
+            removeBtn.onclick = () => {
+                newFiles.splice(idx, 1);
+                renderList();
+            };
+
+            card.appendChild(thumbWrap);
+            card.appendChild(meta);
+            card.appendChild(removeBtn);
+
+            list.appendChild(card);
+        });
+    }
+
+    input.addEventListener('change', (e) => {
+        const added = Array.from(e.target.files);
+        added.forEach(f => {
+            const exists = newFiles.some(existing => 
+                existing.name === f.name && 
+                existing.size === f.size && 
+                existing.lastModified === f.lastModified
+            );
+            if(!exists) newFiles.push(f);
+        });
+        input.value = '';
         renderList();
-      };
-
-      actions.appendChild(previewBtn);
-      actions.appendChild(removeBtn);
-
-      card.appendChild(thumbWrap);
-      card.appendChild(meta);
-      card.appendChild(actions);
-
-      list.appendChild(card);
     });
 
-    if(filesArr.length === 0){
-      list.innerHTML = '<div class="text-muted text-center p-3 border rounded bg-white">선택된 파일이 없습니다.</div>';
-    }
-  }
-
-  input.addEventListener('change', (e) => {
-    const newFiles = Array.from(e.target.files);
-    newFiles.forEach(f => {
-      const exists = filesArr.some(existing => existing.name === f.name && existing.size === f.size && existing.lastModified === f.lastModified);
-      if(!exists) filesArr.push(f);
+    window.addEventListener('DOMContentLoaded', () => {
+        renderList();
     });
-    input.value = '';
-    renderList();
-  });
 
-  ['dragenter','dragover'].forEach(ev => {
-    dropzone.addEventListener(ev, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropzone.classList.add('is-dragover');
-    });
-  });
-
-  ['dragleave','dragend','drop'].forEach(ev => {
-    dropzone.addEventListener(ev, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropzone.classList.remove('is-dragover');
-    });
-  });
-
-  dropzone.addEventListener('drop', (e) => {
-    const dt = e.dataTransfer;
-    if(!dt) return;
-    const dropped = Array.from(dt.files || []);
-    dropped.forEach(f => {
-      const exists = filesArr.some(existing => existing.name === f.name && existing.size === f.size && existing.lastModified === f.lastModified);
-      if(!exists) filesArr.push(f);
-    });
-    renderList();
-  });
-
-  dropzone.addEventListener('click', () => input.click());
-  dropzone.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      input.click();
-    }
-  });
-
-  renderList();
 })();

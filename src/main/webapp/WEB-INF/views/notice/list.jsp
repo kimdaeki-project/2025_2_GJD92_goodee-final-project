@@ -41,8 +41,25 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:forEach items="${ pinned }" var="n">
+					<tr class="table-info">
+						<th scope="row">&#x1F4E2;</th>
+						<c:if test="${ n.staffDTO.deptDTO.deptName eq 'ROLE_HR' }">
+							<td>인사팀</td>
+						</c:if>
+						<c:if test="${ n.staffDTO.deptDTO.deptName eq 'ROLE_OP' }">
+							<td>운영팀</td>
+						</c:if>
+						<c:if test="${ n.staffDTO.deptDTO.deptName eq 'ROLE_FA' }">
+							<td>시설팀</td>
+						</c:if>
+						<td><a href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>
+						<td>${ n.staffDTO.staffName }</td>
+						<td>${ n.noticeDate }</td>
+						<td>${ n.noticeHits }</td>
+					</tr>
+				</c:forEach>
 				<c:forEach items="${ notice.content }" var="n">
-				<c:if test="${ n.noticeDelete eq false }">
 					<tr>
 						<th scope="row">${ n.noticeNum }</th>
 						<c:if test="${ n.staffDTO.deptDTO.deptName eq 'ROLE_HR' }">
@@ -59,7 +76,6 @@
 						<td>${ n.noticeDate }</td>
 						<td>${ n.noticeHits }</td>
 					</tr>
-				</c:if>
 				</c:forEach>
 			</tbody>
 		</table>

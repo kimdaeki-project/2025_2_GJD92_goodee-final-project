@@ -29,6 +29,13 @@
 		<div>
 			작성자: ${ notice.staffDTO.staffName }
 		</div>
+		<br>
+		<div>
+			<c:forEach items="${ notice.noticeAttachmentDTOs }" var="file">
+				<div>${ file.attachmentDTO.originName }<a href="/notice/${ file.attachmentDTO.attachNum }/download">다운로드</a></div>
+			</c:forEach>
+		</div>
+		<br>
 		<div>
 			<a href="/notice">목록</a>
 		</div>
@@ -39,6 +46,7 @@
 			<form action="/notice/${ notice.noticeNum }/delete" method="post" id="form"></form>
 			<button id="btn-delete">삭제</button>
 		</div>
+		<%-- 서버에서 가져온 파일 정보로 JS 배열 생성 --%>
 		<script type="text/javascript" src="/js/notice/detail.js"></script>
 
     </section>

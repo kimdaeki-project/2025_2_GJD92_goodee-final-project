@@ -33,6 +33,9 @@ public class NoticeService {
 	private AttachmentRepository attachmentRepository;
 	
 	@Autowired
+	private NoticeAttachmentRepository noticeAttachmentRepository;
+	
+	@Autowired
 	private FileService fileService;
 
 	@Transactional
@@ -78,6 +81,11 @@ public class NoticeService {
 		return result;
 	}
 
+	public List<NoticeDTO> pinned(String keyword) {
+		List<NoticeDTO> result = noticeRepository.pinned(keyword);
+		return result;
+	}
+	
 	public NoticeDTO detail(NoticeDTO noticeDTO) {
 		Long upOneHit = noticeDTO.getNoticeHits() + 1L;
 		noticeDTO.setNoticeHits(upOneHit);
@@ -89,9 +97,46 @@ public class NoticeService {
 		return result.get();
 	}
 
-	public NoticeDTO edit(NoticeDTO noticeDTO) {
+	public NoticeDTO edit(NoticeDTO noticeDTO, MultipartFile[] files, List<Long> deleteFiles) {
+		
+		if (deleteFiles.size() > 0 && deleteFiles != null) {
+			for (Long attachNum : deleteFiles) {
+				noticeAttachmentRepository.deleteById(attachNum);
+				attachmentRepository.deleteById(attachNum);
+			}
+		}
+		
+		String fileName = null;
+		List<AttachmentDTO> attachmentDTOs = new ArrayList<>();
+		if (files != null && files.length > 0) {
+			for (MultipartFile file : files) {
+				if (file != null && file.getSize() > 0) {
+					try {
+						AttachmentDTO attachmentDTO = new AttachmentDTO();
+						fileName = fileService.saveFile(FileService.NOTICE, file);
+						attachmentDTO.setAttachSize(file.getSize());
+						attachmentDTO.setOriginName(file.getOriginalFilename());
+						attachmentDTO.setSavedName(fileName);
+						attachmentRepository.save(attachmentDTO);
+						attachmentDTOs.add(attachmentDTO);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		noticeDTO.setStaffDTO(staffDTO.get());
+		noticeDTO.setNoticeAttachmentDTOs(new ArrayList<NoticeAttachmentDTO>());
+		
+		for (AttachmentDTO attachmentDTO : attachmentDTOs) {
+			NoticeAttachmentDTO noticeAttachmentDTO = new NoticeAttachmentDTO();
+			noticeAttachmentDTO.setNoticeDTO(noticeDTO);
+			noticeAttachmentDTO.setAttachmentDTO(attachmentDTO);
+			noticeDTO.getNoticeAttachmentDTOs().add(noticeAttachmentDTO);
+		}
+		
 		NoticeDTO result = noticeRepository.save(noticeDTO);
 		return result;
 	}
@@ -101,5 +146,11 @@ public class NoticeService {
 		NoticeDTO result = noticeRepository.save(noticeDTO);
 		return result;
 	}
+
+	public AttachmentDTO download(AttachmentDTO attachmentDTO) {
+		Optional<AttachmentDTO> result = attachmentRepository.findById(attachmentDTO.getAttachNum());
+		return result.get();
+	}
+
 
 }
