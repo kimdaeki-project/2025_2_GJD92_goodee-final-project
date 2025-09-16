@@ -28,7 +28,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/staff">
+			        <a class="nav-link text-dark" href="/staff?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="사원 조회">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">사원 조회</span>
 			        </a>
@@ -74,29 +74,34 @@
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    	<div class="mt-5">
-	    		<div class="col-10 offset-1 d-flex gap-2">
-	    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-	    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">정원</p>
-	    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+	    		<div class="col-10 offset-1 d-flex justify-content-between">
+	    			<div class="d-flex gap-1">
+	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">정원</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    			</div>
+		    			
+		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    			</div>
+		    			
+		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">연차</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    			</div>
+		    			
+		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결근</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    			</div>
 	    			</div>
 	    			
-	    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-	    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무</p>
-	    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
-	    			</div>
-	    			
-	    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-	    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">연차</p>
-	    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
-	    			</div>
-	    			
-	    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-	    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결근</p>
-	    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
-	    			</div>
-	    			
-	    			<div>
-	    				
+	    			<div class="d-flex justify-content-end align-items-end">
+    					<div class="input-group">
+							  <input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
+							  <button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+							</div>
 	    			</div>
 	    		</div>
 	    	</div>
@@ -137,21 +142,21 @@
 					  <ul class="pagination">
 					    <c:if test="${ staffList.number - 2 ge 0 }">
 						    <li class="page-item">
-						      <a class="page-link" href="/staff?page=${ staffList.number - 2 }" aria-label="Previous">
+						      <a class="page-link" onclick="movePage('${ staffList.number - 2 }')" aria-label="Previous">
 						        <span aria-hidden="true">&laquo;</span>
 						      </a>
 						    </li>
 					    </c:if>
 					    <c:if test="${ staffList.hasPrevious() }">
-						    <li class="page-item"><a class="page-link" href="/staff?page=${ staffList.number - 1 }">${ staffList.number }</a></li>
+						    <li class="page-item"><a class="page-link" onclick="movePage('${ staffList.number - 1 }')">${ staffList.number }</a></li>
 					    </c:if>
-					    <li class="page-item"><a class="page-link" href="/staff?page=${ staffList.number }">${ staffList.number + 1 }</a></li>
+					    <li class="page-item"><a class="page-link active" onclick="movePage('${ staffList.number }')">${ staffList.number + 1 }</a></li>
 					    <c:if test="${ staffList.hasNext() }">
-						    <li class="page-item"><a class="page-link" href="/staff?page=${ staffList.number + 1 }">${ staffList.number + 2 }</a></li>
+						    <li class="page-item"><a class="page-link" onclick="movePage('${ staffList.number + 1 }')">${ staffList.number + 2 }</a></li>
 					    </c:if>
 					    <c:if test="${ staffList.number + 2 le staffList.totalPages - 1 }">
 						    <li class="page-item">
-						      <a class="page-link" href="/staff?page=${ staffList.number + 2 }" aria-label="Next">
+						      <a class="page-link" onclick="movePage('${ staffList.number + 2 }')" aria-label="Next">
 						        <span aria-hidden="true">&raquo;</span>
 						      </a>
 						    </li>
@@ -164,6 +169,7 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/staff/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='사원 조회']").parentElement.classList.add("bg-gradient-dark", "text-white")

@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 
 import jakarta.persistence.CascadeType;

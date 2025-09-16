@@ -38,8 +38,8 @@ public class StaffService implements UserDetailsService {
 	@Autowired
 	private FileService fileService;
 	
-	public Page<StaffDTO> getStaffList(Pageable pageable) {
-		return staffRepository.findAll(pageable);
+	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
+		return staffRepository.findAllBySearch(search, pageable);
 	}
 	
 	public boolean registStaff(StaffDTO staffDTO, MultipartFile attach) {
@@ -113,6 +113,8 @@ public class StaffService implements UserDetailsService {
 		
 		return staffDTO;
 	}
+
+	
 
 	
 

@@ -25,9 +25,12 @@ public class StaffController {
 	private StaffService staffService;
 	
 	@GetMapping
-	public String getStaffList(@PageableDefault(size = 10, sort = "staffCode", direction = Direction.ASC) Pageable pageable, Model model) {
-		Page<StaffDTO> staffList = staffService.getStaffList(pageable);
+	public String getStaffList(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
 		model.addAttribute("staffList", staffList);
+		model.addAttribute("search", search);
 		
 		return "staff/list";
 	}
