@@ -20,7 +20,7 @@ public class AttendController {
 		
 		if (result != null) {
 			model.addAttribute("attendDTO", result);
-			System.out.println(result);
+			System.out.println("출근체크");
 			return "index";
 		} else {
 			return null;
@@ -29,9 +29,16 @@ public class AttendController {
 	}
 	
 	@GetMapping("out")
-	public void attendOut() {
-//		attendService.attendOut();
-		System.out.println("퇴근함");
+	public String attendOut(AttendDTO attendDTO, Model model) {
+		AttendDTO result = attendService.attendOut(attendDTO);
+		
+		if (result != null) {
+			model.addAttribute("attendDTO", result);
+			System.out.println("퇴근체크");
+			return "redirect:/";
+		} else {
+			return null;
+		}
 	}
 	
 }

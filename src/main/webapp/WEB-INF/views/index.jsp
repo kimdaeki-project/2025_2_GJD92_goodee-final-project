@@ -71,17 +71,17 @@
 
     /* 체크인 카드 스타일 */
     .time-circle {
-  margin: 10px auto;
-  padding: 20px;
-  text-align: center;
-  border: 1px dashed #ccc;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  display: flex;           /* flex로 변경 */
-  justify-content: center; /* 가운데 정렬 */
-  align-items: center;     /* 수직 중앙 정렬 */
-}
+	margin: 10px auto;
+	padding: 20px;
+	text-align: center;
+	border: 1px dashed #ccc;
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	display: flex;           /* flex로 변경 */
+	justify-content: center; /* 가운데 정렬 */
+	align-items: center;     /* 수직 중앙 정렬 */
+	}
     .time-info {
   text-align: center;
   padding: 10px 0;
@@ -114,32 +114,40 @@
   border-radius: 4px;
   cursor: pointer;
 }
+.weather .icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 10px;
+}
 
-    .weather .icon {
-      font-size: 48px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+table td, table th {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+}
 
-    table td, table th {
-      padding: 6px;
-      border-bottom: 1px solid #eee;
-    }
+.notices table td:nth-child(2) {
+  color: #1976d2;
+}
 
-    .notices table td:nth-child(2) {
-      color: #1976d2;
-    }
-
-    /* 어트랙션 상태 강조 */
-    .attraction-status table td:last-child {
-      color: red;
-      font-weight: bold;
-    }
+/* 어트랙션 상태 강조 */
+.attraction-status table td:last-child {
+  color: red;
+  font-weight: bold;
+}
+.today-header {
+display: flex;
+justify-content: space-between; /* 양 끝으로 배치 */
+align-items: center;            /* 세로 가운데 정렬 */
+font-weight: bold;              /* 글자 강조 (선택사항) */
+font-size: 16px;                /* 크기 조절 가능 */
+margin-bottom: 10px;            /* 아래 여백 */
+}
+	
 	</style>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -153,22 +161,43 @@
     
 	    <section class="content">
 
-	        <!-- 왼쪽 (출근 / 근무시간) -->
-	        <div class="panel check-in">
-	          <h2>오늘</h2>
-	          <p>2025-09-10</p>
-	          <div class="time-info">
-	          <div class="time-circle">
-				  <div class="times-row">
-				    <span>출근: ${attendDTO.formattedAttendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span>
-				    <span>퇴근: --:--:--</span>
-				  </div>
-				  </div>
-				  <div class="worktime">근무시간 : 00h 00m</div>
-				  <div class="button-row">
-			          <button onclick="location.href='/attend/in'">출근</button>
-			          <button onclick="location.href='/attend/out'">퇴근</button>
-			      </div>
+			<!-- 왼쪽 (출근 / 근무시간) -->
+			<div class="panel check-in">
+			
+				<div class="today-header">
+					<span>오늘</span>
+					<span>${todayDate}</span>
+				</div>
+				
+				<div class="time-info">
+				<div class="time-circle">
+				<div class="times-row">
+					<span>출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
+					<span>퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
+				</div>
+			</div>
+			<div class="worktime">근무시간 : <span>${attendDTO.workTime}</span></div>
+				<div class="button-row">
+				  
+					<c:choose>
+					
+						<c:when test="${attendDTO.attendIn eq null}">
+							<button onclick="location.href='/attend/in'" style="background-color:#1976d2;">출근</button>
+							<button disabled style="background-color:gray;">퇴근</button>
+						</c:when>
+						
+						<c:when test="${attendDTO.attendIn ne null and attendDTO.attendOut eq null}">
+							<button disabled style="background-color:gray;">출근</button>
+							<button onclick="location.href='/attend/out'" style="background-color:#1976d2;">퇴근</button>
+						</c:when>
+						
+						<c:otherwise>
+							<button disabled style="background-color:gray;">출근</button>
+							<button disabled style="background-color:gray;">퇴근</button>
+						</c:otherwise>
+					
+					</c:choose>
+				</div>
 			      </div>
 	        </div>
 	
