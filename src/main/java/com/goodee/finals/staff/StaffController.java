@@ -18,6 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 public class StaffController {
 	@Autowired
 	private StaffService staffService;
+	
+	@GetMapping
+	public String getStaffList() {
+		return "staff/list";
+	}
 
 	@GetMapping("login")
 	public String getStaffLogin() {
