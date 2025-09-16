@@ -21,14 +21,19 @@ class StaffRepositoryTest {
 	private PasswordEncoder passwordEncoder;
 	
 	@Test
-	void staffInsertTest() {
-		StaffDTO staffDTO = new StaffDTO();
-		staffDTO.setStaffCode(20250001);
-		staffDTO.setStaffPw(passwordEncoder.encode("0000"));
-		staffDTO.setDeptDTO(deptRepository.findById(1000).orElseThrow());
-		staffDTO.setJobDTO(jobRepository.findById(1100).orElseThrow());
+	void staffInsertTest() throws InterruptedException {
+		for (int i = 0; i < 100; i++) {
+			StaffDTO staffDTO = new StaffDTO();
+			staffDTO.setStaffCode(20250101 + i);
+			staffDTO.setStaffName("정유니");
+			staffDTO.setStaffPw(passwordEncoder.encode("0000"));
+			staffDTO.setDeptDTO(deptRepository.findById(1000).orElseThrow());
+			staffDTO.setJobDTO(jobRepository.findById(1100).orElseThrow());
+			staffRepository.saveAndFlush(staffDTO);
+			
+			Thread.sleep(500);
+		}
 		
-		staffRepository.saveAndFlush(staffDTO);
 	}
 	
 	@Test
