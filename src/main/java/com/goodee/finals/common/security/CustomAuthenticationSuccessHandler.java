@@ -19,14 +19,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		String rememberId = request.getParameter("rememberId");
-		log.info("{}", rememberId);
 		
 		if (rememberId != null) {
 			Cookie cookie = new Cookie("rememberId", request.getParameter("staffCode"));
 			cookie.setPath("/");
 			cookie.setMaxAge(60 * 60 * 24 * 365);
 			cookie.setHttpOnly(true);
-			log.info("난 쿠키 줬음");
 			
 			response.addCookie(cookie);
 		} 
