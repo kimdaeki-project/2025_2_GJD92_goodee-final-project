@@ -75,7 +75,7 @@
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    	<div class="mt-5">
 	    		<div class="col-10 offset-1 d-flex justify-content-between">
-	    			<div class="d-flex gap-1">
+	    			<div class="d-flex gap-3">
 	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">정원</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalStaff }</p>

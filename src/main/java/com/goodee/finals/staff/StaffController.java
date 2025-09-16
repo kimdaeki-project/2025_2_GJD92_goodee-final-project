@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,14 @@ public class StaffController {
 		model.addAttribute("totalStaff", totalStaff);
 		
 		return "staff/list";
+	}
+	
+	@GetMapping("{staffCode}")
+	public String getStaffDetail(@PathVariable Integer staffCode, Model model) {
+		StaffDTO staffDTO = staffService.getStaff(staffCode);
+		model.addAttribute("staff", staffDTO);
+		
+		return "staff/detail";
 	}
 
 	@GetMapping("login")

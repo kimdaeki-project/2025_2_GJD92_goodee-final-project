@@ -38,6 +38,10 @@ public class StaffService implements UserDetailsService {
 	@Autowired
 	private FileService fileService;
 	
+	public StaffDTO getStaff(Integer staffCode) {
+		return staffRepository.findById(staffCode).orElseThrow();
+	}
+	
 	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
 		return staffRepository.findAllBySearch(search, pageable);
 	}
@@ -117,6 +121,8 @@ public class StaffService implements UserDetailsService {
 		
 		return staffDTO;
 	}
+
+	
 
 	
 
