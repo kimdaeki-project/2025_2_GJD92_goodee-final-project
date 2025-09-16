@@ -2,13 +2,17 @@ package com.goodee.finals.ride;
 
 import java.time.LocalDate;
 
+import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +33,7 @@ public class RideDTO {
 	
 	@Id  // 기본키(PK), 모든 엔티티에는 반드시 하나 이상의 @Id가 필요함
 	@Column(name = "rideCode")
-	private Long rideCode;  // 어트랙션 번호 (PK)
+	private String rideCode;  // 어트랙션 번호 (PK)
 	
 	@Column(name = "rideName", nullable = false)
 	private String rideName;  // 어트랙션 이름
@@ -38,10 +42,10 @@ public class RideDTO {
 	private String rideType;  // 어트랙션 기종
 	
 	@Column(name ="rideCapacity", nullable = false)
-	private Long rideCapacity;  // 탑승인원
+	private String  rideCapacity;  // 탑승인원
 	
 	@Column(name = "rideDuration", nullable = false)
-	private Long rideDuration;  // 운행시간
+	private String  rideDuration;  // 운행시간
 	
 	@Column(name = "rideRule", columnDefinition = "LONGTEXT", nullable = false)
 	private String rideRule;  // 이용정보
@@ -53,11 +57,15 @@ public class RideDTO {
 	private LocalDate rideDate;  // 개장일
 	
 	@Column(name = "rideState", nullable = false)
-	private Long rideState;  // 운행상태
+	private Integer  rideState;  // 운행상태
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;  // 사원번호
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "rideDTO", cascade = CascadeType.ALL)
+	private RideAttachmentDTO rideAttachmentDTO;
 	 
 	
 }
