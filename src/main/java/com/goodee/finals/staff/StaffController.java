@@ -1,6 +1,10 @@
 package com.goodee.finals.staff;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +25,16 @@ public class StaffController {
 	private StaffService staffService;
 	
 	@GetMapping
-	public String getStaffList() {
+	public String getStaffList(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("search", search);
+		
+		long totalStaff = staffService.getTotalStaff();
+		model.addAttribute("totalStaff", totalStaff);
+		
 		return "staff/list";
 	}
 
@@ -47,7 +60,7 @@ public class StaffController {
 		String resultMsg = "사원 등록 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
 		
-		if (!result) {
+		if (result) {
 			resultMsg = "사원을 성공적으로 등록했습니다.";
 			resultIcon = "success";
 			String resultUrl = "/staff/list";

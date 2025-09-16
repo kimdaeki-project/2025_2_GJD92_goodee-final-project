@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +37,14 @@ public class StaffService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private FileService fileService;
+	
+	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
+		return staffRepository.findAllBySearch(search, pageable);
+	}
+	
+	public long getTotalStaff() {
+		return staffRepository.count();
+	}
 	
 	public boolean registStaff(StaffDTO staffDTO, MultipartFile attach) {
 		staffDTO = setStaffDefault(staffDTO);
@@ -107,6 +117,12 @@ public class StaffService implements UserDetailsService {
 		
 		return staffDTO;
 	}
+
+	
+
+	
+
+	
 
 	
 

@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,25 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		log.info("로그인 성공");
+		String rememberId = request.getParameter("rememberId");
+		
+		if (rememberId != null) {
+			Cookie cookie = new Cookie("rememberId", request.getParameter("staffCode"));
+			cookie.setPath("/");
+			cookie.setMaxAge(60 * 60 * 24 * 365);
+			cookie.setHttpOnly(true);
+			
+			response.addCookie(cookie);
+		} 
+		
+		if (rememberId == null) {
+			Cookie cookie = new Cookie("rememberId", null);
+			cookie.setPath("/");
+			cookie.setMaxAge(0);
+			cookie.setHttpOnly(true);
+			
+			response.addCookie(cookie);
+		}
 		
 		response.sendRedirect("/");
 	}
