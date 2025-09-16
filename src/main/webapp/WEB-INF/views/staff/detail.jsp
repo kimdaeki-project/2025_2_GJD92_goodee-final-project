@@ -157,7 +157,7 @@
     			</div>
     			
     			<div class="form-group row mt-5 d-flex justify-content-center align-items-center">
-    				<button type="button" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">수정</button>
+    				<button type="button" onclick="location.href = '/staff/${ staff.staffCode }/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">수정</button>
     				<button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">목록</button>
     			</div> 
     		</div>

@@ -79,7 +79,7 @@
     		<div class="col-6 offset-3">
     			<div class="form-group row mt-5">
     				<div class="col-4 text-center">
-	    				<img id="preview" width="150" height="150" style="object-fit: cover;" class="border border-1 border-dark p-1" />
+	    				<img id="preview" width="150" height="150" style="object-fit: cover;" <c:if test="${ not empty staffDTO.staffName }">src="/file/staff/${ staffDTO.staffAttachmentDTO.attachmentDTO.savedName }"</c:if> class="border border-1 border-dark p-1" />
 							<label for="attach">
 								<div class="btn btn-outline-secondary px-2 py-0 m-auto">프로필 사진 등록</div>
 							</label>
@@ -184,7 +184,7 @@
     			</div>
     			
     			<div class="form-group row mt-5 d-flex justify-content-center align-items-center">
-    				<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">등록</button>
+    				<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty staffDTO.staffName ? "등록" : "수정" }</button>
     				<button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">취소</button>
     			</div> 
     		</div>
@@ -198,8 +198,8 @@
 	<script src="/js/staff/regist.js"></script>
 	<script>
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='사원 등록']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "사원 등록"
+		document.querySelector("i[data-content='${ empty staffDTO.staffName ? "사원 등록" : "사원 조회" }']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "${ empty staffDTO.staffName ? '사원 등록' : '사원 정보 수정' }"
 	</script>
 </body>
 
