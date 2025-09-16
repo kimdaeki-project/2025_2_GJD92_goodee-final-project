@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -35,6 +38,18 @@ public class StaffService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private FileService fileService;
+	
+	public StaffDTO getStaff(Integer staffCode) {
+		return staffRepository.findById(staffCode).orElseThrow();
+	}
+	
+	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
+		return staffRepository.findAllBySearch(search, pageable);
+	}
+	
+	public long getTotalStaff() {
+		return staffRepository.count();
+	}
 	
 	public boolean registStaff(StaffDTO staffDTO, MultipartFile attach) {
 		staffDTO = setStaffDefault(staffDTO);
@@ -73,6 +88,43 @@ public class StaffService implements UserDetailsService {
 		else return false;
 	}
 	
+	public boolean updateStaff(StaffDTO staffDTO, MultipartFile attach) {
+		staffDTO = setStaffUpdate(staffDTO);
+		
+		if (attach != null && attach.getSize() > 0) {
+			StaffDTO before = staffRepository.findById(staffDTO.getStaffCode()).orElseThrow();
+			AttachmentDTO beforeAttach = before.getStaffAttachmentDTO().getAttachmentDTO();
+			attachmentRepository.deleteById(beforeAttach.getAttachNum());
+			
+			AttachmentDTO attachmentDTO = new AttachmentDTO();
+			
+			try {
+				String fileName = fileService.saveFile(FileService.STAFF, attach);
+				
+				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setOriginName(attach.getOriginalFilename());
+				attachmentDTO.setSavedName(fileName);
+				
+				attachmentRepository.save(attachmentDTO);
+				
+				StaffAttachmentDTO staffAttachmentDTO = new StaffAttachmentDTO();
+				staffAttachmentDTO.setStaffDTO(staffDTO);
+				staffAttachmentDTO.setAttachmentDTO(attachmentDTO);
+				
+				staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		StaffDTO result = staffRepository.saveAndFlush(staffDTO);
+		
+		// TODO 기존 첨부 이미지 실제 파일 삭제 로직 추가
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
 	private StaffDTO setStaffDefault(StaffDTO staffDTO) {
 		staffDTO.setDeptDTO(deptRepository.findById(staffDTO.getInputDeptCode()).orElseThrow());
 		staffDTO.setJobDTO(jobRepository.findById(staffDTO.getInputJobCode()).orElseThrow());
@@ -92,6 +144,23 @@ public class StaffService implements UserDetailsService {
 		
 		return staffDTO;
 	}
+	
+	private StaffDTO setStaffUpdate(StaffDTO after) {
+		after.setDeptDTO(deptRepository.findById(after.getInputDeptCode()).orElseThrow());
+		after.setJobDTO(jobRepository.findById(after.getInputJobCode()).orElseThrow());
+		
+		StaffDTO before = staffRepository.findById(after.getStaffCode()).orElseThrow();
+		
+		after.setStaffLocked(before.getStaffLocked());
+		after.setStaffEnabled(before.getStaffEnabled());
+		
+		after.setStaffRemainLeave(before.getStaffRemainLeave());
+		after.setStaffUsedLeave(before.getStaffUsedLeave());
+		
+		after.setStaffPw(before.getStaffPw());
+		
+		return after;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -107,6 +176,16 @@ public class StaffService implements UserDetailsService {
 		
 		return staffDTO;
 	}
+
+	
+
+	
+
+	
+
+	
+
+	
 
 	
 
