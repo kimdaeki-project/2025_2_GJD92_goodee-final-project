@@ -1,5 +1,7 @@
 package com.goodee.finals.ride;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -19,6 +21,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 // findAll() → 전체 조회
 // findById(id) → 단일 조회
 // deleteById(id) → 삭제
-public interface RideRepository extends JpaRepository<RideDTO, Integer> {
+public interface RideRepository extends JpaRepository<RideDTO, String> {
+	
+	// 어트랙션 기종으로 조회
+	List<RideDTO> findByRideType(String rideType);
 
 }

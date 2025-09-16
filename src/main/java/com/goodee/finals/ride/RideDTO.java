@@ -2,6 +2,7 @@ package com.goodee.finals.ride;
 
 import java.time.LocalDate;
 
+import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.staff.StaffDTO;
 
@@ -13,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,7 +66,8 @@ public class RideDTO {
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;  // 사원번호
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "rideDTO", cascade = CascadeType.ALL)
+	// 어트랙션 하나에 첨부파일 하나
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "rideDTO", cascade = CascadeType.ALL)
 	private RideAttachmentDTO rideAttachmentDTO;
 	 
 	
