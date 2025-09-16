@@ -42,6 +42,10 @@ public class StaffService implements UserDetailsService {
 		return staffRepository.findAllBySearch(search, pageable);
 	}
 	
+	public long getTotalStaff() {
+		return staffRepository.count();
+	}
+	
 	public boolean registStaff(StaffDTO staffDTO, MultipartFile attach) {
 		staffDTO = setStaffDefault(staffDTO);
 		
@@ -113,6 +117,8 @@ public class StaffService implements UserDetailsService {
 		
 		return staffDTO;
 	}
+
+	
 
 	
 

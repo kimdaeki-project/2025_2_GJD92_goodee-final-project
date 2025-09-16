@@ -32,6 +32,9 @@ public class StaffController {
 		model.addAttribute("staffList", staffList);
 		model.addAttribute("search", search);
 		
+		long totalStaff = staffService.getTotalStaff();
+		model.addAttribute("totalStaff", totalStaff);
+		
 		return "staff/list";
 	}
 
