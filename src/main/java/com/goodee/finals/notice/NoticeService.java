@@ -32,8 +32,8 @@ public class NoticeService {
 	@Autowired
 	private AttachmentRepository attachmentRepository;
 	
-	@Autowired
-	private NoticeAttachmentRepository noticeAttachmentRepository;
+//	@Autowired
+//	private NoticeAttachmentRepository noticeAttachmentRepository;
 	
 	@Autowired
 	private FileService fileService;
@@ -101,7 +101,7 @@ public class NoticeService {
 		
 		if (deleteFiles.size() > 0 && deleteFiles != null) {
 			for (Long attachNum : deleteFiles) {
-				noticeAttachmentRepository.deleteById(attachNum);
+//				noticeAttachmentRepository.deleteById(attachNum);
 				attachmentRepository.deleteById(attachNum);
 			}
 		}

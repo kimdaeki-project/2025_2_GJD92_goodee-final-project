@@ -25,7 +25,7 @@
     	</form>
     
     	<!-- 공지 존재 -->
-    	<c:if test="${ notice.content.size() gt 0 }">
+    	<c:if test="${ totalNotice gt 0 }">
     	<div>
     	
     	</div>
@@ -79,6 +79,7 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		<c:if test="${ notice.content.size() gt 0 }">
 		<div>
 			<c:if test="${ notice.hasPrevious() }">
 	    		<a href="?page=${ notice.number - 1 }&keyword=${ pager.keyword }">이전</a>
@@ -93,10 +94,11 @@
 			</c:if>
     	</div>
     	</c:if>
+    	</c:if>
     	<!-- 공지 존재 -->
     	
     	<!-- 공지 없음 -->
-		<c:if test="${ notice.content.size() eq 0 }">
+		<c:if test="${ totalNotice eq 0 }">
 			<div>검색된 결과가 없습니다.</div>
 		</c:if>    	
     	<!-- 공지 없음 -->

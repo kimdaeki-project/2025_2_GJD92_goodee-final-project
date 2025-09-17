@@ -35,6 +35,7 @@ public class NoticeController {
 		model.addAttribute("notice", resultNotice);
 		model.addAttribute("pinned", resultPinned);
 		model.addAttribute("pager", noticePager);
+		model.addAttribute("totalNotice", resultNotice.getContent().size() + resultPinned.size());
 		return "notice/list";
 	}
 	
