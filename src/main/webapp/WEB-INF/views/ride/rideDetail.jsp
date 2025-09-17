@@ -87,16 +87,20 @@
 		    <div class="form-group row mt-4 text-end">
 		      <div class="col-sm-12">
 		      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
-		        <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">수정</button>
+		      	<form action="${pageContext.request.contextPath }/ride/${ride.rideCode}/update"
+		      			method="get" style="display: inline;">
+			        <button type="submit" 
+			        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
+			        		style="width: 100px;">수정</button>
+		        </form>
+		        
 		        <!-- 삭제 버튼 -->
 		        <form action="${pageContext.request.contextPath}/ride/${ride.rideCode}/delete" 
 			          method="post" style="display:inline;">
-			      <button type="submit" 
-			              class="btn btn-sm btn-outline-secondary" 
-			              style="width: 100px;"
-			              onclick="return confirm('정말 삭제하시겠습니까?');">
-			        삭제
-			      </button>
+			        <button type="submit" 
+			                class="btn btn-sm btn-outline-secondary" 
+			                style="width: 100px;"
+			                onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
 			    </form>
 		      </div>
 		    </div>
