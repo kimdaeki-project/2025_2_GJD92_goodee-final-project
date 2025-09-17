@@ -177,16 +177,24 @@ public class StaffService implements UserDetailsService {
 		return staffDTO;
 	}
 
-	
+	public void lockStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		staffDTO.setStaffLocked(false);
+		
+		staffRepository.saveAndFlush(staffDTO);
+	}
 
-	
-
-	
-
-	
-
-	
-
-	
+	public boolean unlockStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		
+		if (staffDTO.getStaffLocked()) {
+			return false;
+		} else {
+			staffDTO.setStaffLocked(true);
+			staffRepository.saveAndFlush(staffDTO);
+			
+			return true;
+		}
+	}
 
 }

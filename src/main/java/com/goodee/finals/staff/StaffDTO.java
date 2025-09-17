@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.lost.LostDTO;
+import com.goodee.finals.notice.NoticeDTO;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,6 +27,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,6 +35,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(of = "staffCode")
 @Entity
 @Table(name = "staff")
 public class StaffDTO implements UserDetails {
@@ -60,6 +64,9 @@ public class StaffDTO implements UserDetails {
 	
 	private Integer staffUsedLeave;
 	private Integer staffRemainLeave;
+	
+	@OneToMany(mappedBy = "staffDTO")
+	private List<NoticeDTO> notices;
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
@@ -98,6 +105,16 @@ public class StaffDTO implements UserDetails {
 		grantList.add(new SimpleGrantedAuthority(jobDTO.getJobName()));
 		
 		return grantList;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return staffLocked;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return staffEnabled;
 	}
 	
 }

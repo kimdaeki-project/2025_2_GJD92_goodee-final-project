@@ -30,6 +30,7 @@ public class HomeController {
         if (auth == null || auth.getName().equals("anonymousUser")) {
             return "redirect:/staff/login";
         }
+
 		
 		AttendDTO attendDTO = attendService.findAttend();
 		log.info("{}", attendDTO);
