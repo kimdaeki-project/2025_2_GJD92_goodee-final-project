@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -96,6 +97,16 @@ public class NoticeController {
 		model.addAttribute("file", result);
 		model.addAttribute("type", "notice");
 		return "fileDownView";
+	}
+	
+	@PostMapping("pinned") @ResponseBody
+	public boolean pinned() {
+		boolean result = false;
+		List<NoticeDTO> resultPinned = noticeService.pinned("");
+		if (resultPinned.size() >= 5) {
+			result = true;
+		}
+		return result;
 	}
 	
 }

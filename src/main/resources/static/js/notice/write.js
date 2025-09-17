@@ -13,13 +13,57 @@ btn.addEventListener('click', () => {
 	newFiles.forEach(f => dt.items.add(f));
 	input.files = dt.files;
 	if (data == 'write') {
+		const pinned = document.getElementById("noticePinned");
 		form.setAttribute('action', '/notice/write');
-		form.submit();
+		
+		if (pinned.checked) {
+			fetch('/notice/pinned', {
+				method: 'POST'
+			})
+			.then(response => response.json())
+			.then(response => {
+				if (response) {
+					Swal.fire({
+						text: "상단고정은 최대 5개까지 가능합니다.",
+						icon: "warning",
+						showCancelButton: false,
+						confirmButtonColor: "#3085d6",
+						confirmButtonText: "확인"
+					}).then(result => console.log(result));
+				} else {
+					form.submit();
+				}
+			});			
+		} else {
+			form.submit();
+		}
 	} else if (data == 'edit') {
-		let deleteFiles = document.querySelector('#deleteFiles')
+		let deleteFiles = document.querySelector('#deleteFiles');
+		const pinned = document.getElementById("noticePinned");
 		deleteFiles.value = deleteExistingFiles.join(",");
 		form.setAttribute('action', './edit');
-		form.submit();
+		
+		if (pinned.checked) {
+			fetch('/notice/pinned', {
+				method: 'POST'
+			})
+			.then(response => response.json())
+			.then(response => {
+				if (response) {
+					Swal.fire({
+						text: "상단고정은 최대 5개까지 가능합니다.",
+						icon: "warning",
+						showCancelButton: false,
+						confirmButtonColor: "#3085d6",
+						confirmButtonText: "확인"
+					}).then(result => console.log(result));
+				} else {
+					form.submit();
+				}
+			});			
+		} else {
+			form.submit();
+		}
 	}
 });
 // -------------------------------------------------- //

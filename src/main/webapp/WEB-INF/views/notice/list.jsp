@@ -111,6 +111,7 @@
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 		document.querySelector("i[data-content='공지사항']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "공지사항"
 	</script>
 </body>
 
