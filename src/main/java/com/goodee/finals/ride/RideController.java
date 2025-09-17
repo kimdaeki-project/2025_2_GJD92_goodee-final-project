@@ -94,7 +94,7 @@ public class RideController {
 	@PostMapping("{rideCode}/update")
 	public String updateRide(@PathVariable("rideCode") String rideCode, @ModelAttribute RideDTO rideDTO, MultipartFile attach) throws Exception {
 		rideDTO.setRideCode(rideCode);
-		rideService.updateRide(rideDTO, attach);
+		rideService.updateRide(rideDTO, attach);  // 새 첨부 파일이 있으면 교체
 		
 		return "redirect:/ride";  // 수정 후 목록으로 이동
 	}
