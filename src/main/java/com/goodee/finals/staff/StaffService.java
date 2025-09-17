@@ -197,16 +197,19 @@ public class StaffService implements UserDetailsService {
 		}
 	}
 
-	public boolean updateStaffPassword(PasswordDTO passwordDTO) {
+	public int updateStaffPassword(PasswordDTO passwordDTO) {
 		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();
 		
-		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return false;
-		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return false;
+		// TODO 비밀번호 유효성 검사
+		if (passwordDTO.getNewPw().equals("0000")) return 400;
+		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return 401;
+		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return 402;
+		if (passwordEncoder.matches(passwordDTO.getNewPw(), staffDTO.getStaffPw())) return 403;
 		
 		staffDTO.setStaffPw(passwordEncoder.encode(passwordDTO.getNewPw()));
 		staffRepository.saveAndFlush(staffDTO);
 		
-		return true;
+		return 200;
 	}
 
 }
