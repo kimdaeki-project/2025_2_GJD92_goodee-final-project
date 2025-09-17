@@ -12,6 +12,7 @@ public class HomeController {
 		if (SecurityContextHolder.getContext() != null) {
 			System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 		}
+		// test
 		
 		return "index";
 	}
