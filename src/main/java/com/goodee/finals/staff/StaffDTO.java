@@ -93,5 +93,15 @@ public class StaffDTO implements UserDetails {
 		
 		return grantList;
 	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return staffLocked;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return staffEnabled;
+	}
 	
 }

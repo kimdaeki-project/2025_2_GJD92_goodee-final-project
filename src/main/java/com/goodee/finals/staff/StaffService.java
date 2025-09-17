@@ -177,6 +177,13 @@ public class StaffService implements UserDetailsService {
 		return staffDTO;
 	}
 
+	public void lockStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		staffDTO.setStaffLocked(false);
+		
+		staffRepository.saveAndFlush(staffDTO);
+	}
+
 	
 
 	
