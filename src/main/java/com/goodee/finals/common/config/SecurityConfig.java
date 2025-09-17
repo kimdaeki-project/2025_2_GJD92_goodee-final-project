@@ -28,7 +28,6 @@ public class SecurityConfig {
 	@Autowired
 	private CustomSessionInformationExpiredStrategy customSessionInformationExpiredStrategy;
 	
-	@Bean
 	SessionRegistry sessionRegistry() {
 		return new SessionRegistryImpl();
 	}
