@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DriveRepository extends JpaRepository<DriveDTO, Long> {
 
+	public DriveDTO findByDriveName(String driveName);
+	
 }

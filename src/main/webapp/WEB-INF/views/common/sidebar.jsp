@@ -56,7 +56,7 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="/drive/list">
+        <a class="nav-link text-dark" href="/drive">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="드라이브">folder</i>
           <span class="nav-link-text ms-1 text-sm">드라이브</span>
         </a>

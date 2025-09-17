@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>드라이브</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -16,7 +16,7 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
+    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh; min-width: 180px;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
 			   
@@ -92,7 +92,6 @@
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
-	document.querySelector("i[data-content='']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("#navTitle").textContent = "드라이브"
 	</script>
 </body>

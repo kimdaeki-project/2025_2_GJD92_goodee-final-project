@@ -23,7 +23,7 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
+    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh; min-width: 180px;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
 			   
@@ -89,32 +89,38 @@
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    
 		    <!-- 여기에 메인 컨텐츠 작성 -->
-		    <div class="p-5">
+		    <div class="p-6">
 			<form:form method="post" modelAttribute="driveDTO">
 				<div>
 					<form:label path="driveName">드라이브 이름 : </form:label>
 					<form:input path="driveName" cssClass="border-1 rounded"/>
+					<form:errors path="driveName"></form:errors>
+				</div>
+				<div class="mt-5 d-flex align-items-center">
+					<span>드라이브 공유 :</span>
+					<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" data-bs-toggle="modal" data-bs-target="#shareModal">
+					  <i class="material-symbols-rounded opacity-5 fs-5">group_add</i>
+					</button>
+				</div>
+				<table class="col-6 offset-md-1 table w-50 mb-4">
+				  <thead>
+				    <tr>
+				      <th scope="col" colspan="3" class="text-center">추가된 사용자</th>
+				      <th scope="col" class="text-center">직급</th>
+				      <th scope="col" class="text-center">소속</th>
+				    </tr>
+				  </thead>
+				  <tbody class="table-group-divider text-center" id="savedStaff">
+					  <!-- 추가된 사용자 -->
+				      <!-- 추가된 사용자 -->
+				      <!-- 추가된 사용자 -->
+				  </tbody>
+				</table>
+			    <div class="col-6 offset-md-1">
+					<button class="btn btn-outline-secondary bg-gradient-dark btn-drive-save">저장</button>
+					<button type="button" class="btn btn-outline-secondary" >취소</button>
 				</div>
 			</form:form>
-			<div class="mt-5 d-flex align-items-center">
-				<span>드라이브 공유 :</span>
-				<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" data-bs-toggle="modal" data-bs-target="#shareModal">
-				  <i class="material-symbols-rounded opacity-5 fs-5">group_add</i>
-				</button>
-			</div>
-			<table class="col-6 offset-md-1 table w-25">
-			  <thead>
-			    <tr>
-			      <th scope="col" colspan="3" class="text-center">추가된 사용자</th>
-			      <th scope="col" class="text-center">직급</th>
-			      <th scope="col" class="text-center">소속</th>
-			    </tr>
-			  </thead>
-			  <tbody class="table-group-divider text-center" id="savedStaff" name="savedStaff">
-				  <!-- 추가된 사용자 -->
-			      <!-- 추가된 사용자 -->
-			  </tbody>
-			</table>
 		</div>	 
 	    
 	    </section>

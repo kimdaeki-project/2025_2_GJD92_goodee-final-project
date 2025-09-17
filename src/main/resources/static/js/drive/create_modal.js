@@ -24,7 +24,6 @@ new Sortable(selectedList, {
 document.addEventListener('DOMContentLoaded', function () {
 	document.addEventListener('shown.bs.modal', function(e) { // shown.bs.modal 모달 창이 켜졌을때 실행
 		if (e.target.id === 'shareModal') {
-			
 			fetch('/drive/staffList') // 사원 리스트 DB에서 조회
 			.then(r => r.json())
 			.then(r => {
@@ -38,13 +37,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
-
 /*
 	모달창에 체크된 사원들 오른쪽으로 이동
 */
 addBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList');
-	const savedStaff = document.getElementById('savedStaff'); // tbody
+	const savedStaff = document.getElementById('savedStaff');
 	
 	// 요소 확인용 안전장치
 	if (!staffList || !savedStaff) {
@@ -111,28 +109,28 @@ saveBtn.addEventListener('click', () => {
 	// span에 저장된 data-staff-code를 가져오기 위함
 	const spans = selectedList.querySelectorAll('span')
 	
-	spans.forEach(span => {
+	spans.forEach((span, i) => {
 		const staffCode = span.getAttribute('data-staff-code');
 		
 		const staff = staffs.find(s => s.staffCode == staffCode)
 		// 반환된값이 없다면 종료
 		if(!staff) return;
 		
-		// ㄴ
+		// tr생성
 		const tr = document.createElement('tr');
 		tr.innerHTML = `
 				<th scope="row">
 				<button class="btn-close btn-close-white remove-saved" aria-label="Remove"></button>
-				<input type="hidden" value="${staff.staffCode}">
+				<input type="hidden" name="driveShareDTOs[${i}].staffDTO.staffCode" value="${staff.staffCode}">
 				</th>
 				<td><i class="material-symbols-rounded opacity-5 fs-5">contacts_product</i></td>
 				<td>${staff.staffName}</td>
 				<td>${staff.jobDTO.jobDetail}</td>
 				<td>${staff.deptDTO.deptDetail}</td>`;
-		
+				
 		// 생성한 태그에 click이벤트 연결
 		tr.querySelector('.remove-saved').addEventListener('click', () => {
-			tr.remove();
+			tr.remove(); 
 		})		
 		
 		// 메인 컨텐츠에 추가

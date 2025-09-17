@@ -1,8 +1,11 @@
 package com.goodee.finals.drive;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.CascadeType;
@@ -31,10 +34,12 @@ public class DriveDTO {
 	private Long driveNum;
 	private String driveName;
 	private Boolean isPersonal;
-	private LocalDate driveDate;
+	@CreationTimestamp
+	private LocalDateTime driveDate;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
+	@JsonIgnore
 	private StaffDTO staffDTO;
 	
 	@OneToMany(mappedBy = "driveDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
