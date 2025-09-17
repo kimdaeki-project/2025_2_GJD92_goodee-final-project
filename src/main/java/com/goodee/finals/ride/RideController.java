@@ -70,7 +70,34 @@ public class RideController {
 	
 	
 	// 어트랙션 수정
+	// 어트랙션 수정 폼으로 이동(기존 입력된 데이터 가지고 감)
+	// GET/update : 기존 정보 + 첨부파일 attachmentDTO 모델에 넣어줌
+	@GetMapping("{rideCode}/update")
+	public String updateRideForm(@PathVariable("rideCode") String rideCode, Model model) throws Exception {
+		// 기존 데이터 조회
+		RideDTO rideDTO = rideService.getRideById(rideCode);
+		model.addAttribute("rideDTO", rideDTO);
+		
+		// 첨부파일 있으면 JSP에 따로 전달
+	    if (rideDTO.getRideAttachmentDTO() != null) {
+	        model.addAttribute("attachmentDTO", rideDTO.getRideAttachmentDTO().getAttachmentDTO());
+	    }
 
+	    // 등록/수정 모드 구분값 내려주기
+	    model.addAttribute("mode", "edit");
+	    return "ride/rideAdd";
+		
+	 }
+	
+	// 어트랙션 수정
+	// POST/update : MultipartFile attach 같이 받음
+	@PostMapping("{rideCode}/update")
+	public String updateRide(@PathVariable("rideCode") String rideCode, @ModelAttribute RideDTO rideDTO, MultipartFile attach) throws Exception {
+		rideDTO.setRideCode(rideCode);
+		rideService.updateRide(rideDTO, attach);
+		
+		return "redirect:/ride";  // 수정 후 목록으로 이동
+	}
 	
 	
 	// 어트랙션 삭제

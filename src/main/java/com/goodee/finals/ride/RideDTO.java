@@ -2,6 +2,8 @@ package com.goodee.finals.ride;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.staff.StaffDTO;
@@ -56,6 +58,7 @@ public class RideDTO {
 	private String rideInfo;  // 어트랙션 설명
 	
 	@Column(name = "rideDate", nullable = false)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate rideDate;  // 개장일
 	
 	@Column(name = "rideState", nullable = false)

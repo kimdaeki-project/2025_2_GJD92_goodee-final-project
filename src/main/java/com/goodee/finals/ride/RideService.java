@@ -1,5 +1,6 @@
 package com.goodee.finals.ride;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,17 @@ import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
-
+import com.goodee.finals.staff.StaffController;
+import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.staff.StaffRepository;
 import jakarta.transaction.Transactional;
 
 @Service
 public class RideService {
+
+    private final StaffController staffController;
+
+    private final StaffRepository staffRepository;
 
     private final AttachmentRepository attachmentRepository;
 
@@ -23,9 +30,11 @@ public class RideService {
 	@Autowired
 	private RideRepository rideRepository;
 
-    RideService(FileService fileService, AttachmentRepository attachmentRepository) {
+    RideService(FileService fileService, AttachmentRepository attachmentRepository, StaffRepository staffRepository, StaffController staffController) {
         this.fileService = fileService;
         this.attachmentRepository = attachmentRepository;
+        this.staffRepository = staffRepository;
+        this.staffController = staffController;
     }
 	
 	// 어트랙션 전체 조회(리스트)
@@ -34,35 +43,7 @@ public class RideService {
 	}
 	
 	// 등록/수정
-	public RideDTO saveRide(RideDTO rideDTO, MultipartFile attach) throws Exception {
-		
-//		String fileName = null;
-//		AttachmentDTO attachmentDTO = new AttachmentDTO();
-//		
-//		if (attach != null && attach.getSize() > 0) {
-//			try {
-//				fileName = fileService.saveFile(FileService.RIDE, attach);
-//				
-//				attachmentDTO.setAttachSize(attach.getSize());
-//				attachmentDTO.setOriginName(attach.getOriginalFilename());
-//				attachmentDTO.setSavedName(fileName);
-//				
-//				attachmentRepository.save(attachmentDTO);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		} 
-//		
-//		RideAttachmentDTO rideAttachmentDTO = new RideAttachmentDTO();
-//		rideAttachmentDTO.setRideDTO(rideDTO);
-//		rideAttachmentDTO.setAttachmentDTO(attachmentDTO);
-//		
-//		rideDTO.setRideAttachmentDTO(rideAttachmentDTO);
-//		RideDTO result = rideRepository.save(rideDTO);
-//		
-//		return rideRepository.save(rideDTO);
-//	}
-		
+	public RideDTO saveRide(RideDTO rideDTO, MultipartFile attach) throws Exception {	
 		AttachmentDTO attachmentDTO = null;
 
 		// 새 파일 저장
@@ -110,6 +91,52 @@ public class RideService {
     }
     
     // 수정
+    public void updateRide(RideDTO rideDTO, MultipartFile attach) throws Exception {
+    	RideDTO existing = rideRepository.findById(rideDTO.getRideCode())
+                .orElseThrow(() -> new Exception("수정할 어트랙션이 없습니다."));
+
+        // null 값이 아닌 것만 업데이트
+        if (rideDTO.getRideName() != null) existing.setRideName(rideDTO.getRideName());
+        if (rideDTO.getRideType() != null) existing.setRideType(rideDTO.getRideType());
+        if (rideDTO.getRideCapacity() != null) existing.setRideCapacity(rideDTO.getRideCapacity());
+        if (rideDTO.getRideDuration() != null) existing.setRideDuration(rideDTO.getRideDuration());
+        if (rideDTO.getRideInfo() != null) existing.setRideInfo(rideDTO.getRideInfo());
+        if (rideDTO.getRideDate() != null) existing.setRideDate(rideDTO.getRideDate());
+        if (rideDTO.getRideState() != null) existing.setRideState(rideDTO.getRideState());
+        if (rideDTO.getRideRule() != null) existing.setRideRule(rideDTO.getRideRule());
+        if (rideDTO.getStaffDTO() != null) {
+            existing.setStaffDTO(rideDTO.getStaffDTO());
+        }
+        
+        // === 첨부파일 교체 ===
+        if (attach != null && !attach.isEmpty()) {
+            // 기존 첨부파일 있으면 삭제
+            if (existing.getRideAttachmentDTO() != null) {
+                AttachmentDTO oldAttach = existing.getRideAttachmentDTO().getAttachmentDTO();
+                // attachmentRepository.delete(oldAttach);   // DB 삭제
+                // new File("/upload/path/" + oldAttach.getSavedName()).delete(); // 실제 파일 삭제
+            }
+
+            // 새 첨부파일 저장
+            String fileName = attach.getOriginalFilename();
+            String saveName = System.currentTimeMillis() + "_" + fileName;
+            String savePath = "/upload/path/" + saveName;
+            attach.transferTo(new File(savePath));
+
+            AttachmentDTO newAttach = new AttachmentDTO();
+            newAttach.setOriginName(fileName);
+            newAttach.setSavedName(saveName);
+            newAttach.setAttachSize(attach.getSize());
+
+            RideAttachmentDTO rideAttachment = new RideAttachmentDTO();
+            rideAttachment.setRideDTO(existing);
+            rideAttachment.setAttachmentDTO(newAttach);
+
+            existing.setRideAttachmentDTO(rideAttachment);
+        }
+
+        rideRepository.save(existing);
+    }
     
 	
 	// 삭제
