@@ -135,4 +135,11 @@ public class StaffController {
 		return "common/result";
 	}
 	
+	@PostMapping("password/update")
+	public String postStaffPasswordUpdate(PasswordDTO passwordDTO) {
+		log.info("{}", passwordDTO.getOldPw());
+		
+		return null;
+	}
+	
 }

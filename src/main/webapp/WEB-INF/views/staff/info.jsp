@@ -51,6 +51,7 @@
         			<li class="list-group-item border-0 mt-2 ps-0 pt-0 d-flex align-items-center"><i class="material-symbols-rounded me-1 text-dark">post</i><strong class="text-dark">우편번호:</strong> &nbsp; ${ staff.staffPostcode }</li>
         			<li class="list-group-item border-0 mt-2 ps-0 pt-0 d-flex align-items-center"><i class="material-symbols-rounded me-1 text-dark">home</i><strong class="text-dark">주소:</strong> &nbsp; ${ staff.staffAddress }</li>
         			<li class="list-group-item border-0 mt-2 ps-0 pt-0 d-flex align-items-center"><i class="material-symbols-rounded me-1 text-dark">home</i><strong class="text-dark">상세주소:</strong> &nbsp; ${ staff.staffAddressDetail }</li>
+        			<li class="list-group-item border-0 mt-2 ps-0 pt-0 d-flex align-items-center"><i class="material-symbols-rounded me-1 text-dark">apartment</i><strong class="text-dark">입사일:</strong> &nbsp; ${ staff.staffHireDate }</li>
         		</ul>
         		
         		<div class="col-4 mt-5 ms-5 d-flex justify-content-center">
@@ -60,7 +61,7 @@
         	
         	<div class="col-3">
         		<div style="height: 30vh">
-	        		<form id="passwordUpdate" action="/staff/password/update" method="POST">
+	        		<form id="passwordUpdate">
 	        			<label for="oldPw" class="form-label"><strong class="text-dark">현재 비밀번호</strong></label>
 	        			<input type="password" id="oldPw" name="oldPw" class="form-control w-50" />
 	        			
@@ -73,7 +74,7 @@
         		</div>
         		
         		<div class="col-4 mt-5 ms-5 d-flex justify-content-center">
-        			<button type="submit" class="btn btn-outline-secondary bg-gradient-dark text-white">비밀번호 변경</button>
+        			<button type="button" onclick="changePw()" class="btn btn-outline-secondary bg-gradient-dark text-white">비밀번호 변경</button>
         		</div>
         	</div>
         	
@@ -86,6 +87,7 @@
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/staff/info.js"></script>
 </body>
 
 </html>
