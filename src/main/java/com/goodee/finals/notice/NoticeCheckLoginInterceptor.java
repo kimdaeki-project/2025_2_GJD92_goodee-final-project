@@ -20,9 +20,13 @@ public class NoticeCheckLoginInterceptor implements HandlerInterceptor {
 			flag = true;
 		}
 		else {
-			request.setAttribute("msg", "먼저 로그인을 진행해주세요.");
-			request.setAttribute("url", "/staff/login");
-			request.getRequestDispatcher("/WEB-INF/views/notice/result.jsp").forward(request, response);
+//			resultMsg : 결과창에 띄울 메시지
+//			resultIcon : 결과창에 뜨는 아이콘 (success, warning, info, error, question)
+//			resultUrl : 결과창이 뜬 후에 이동할 URL (절대경로)
+			request.setAttribute("resultMsg", "먼저 로그인을 진행해주세요.");
+			request.setAttribute("resultIcon", "warning");
+			request.setAttribute("resultUrl", "/staff/login");
+			request.getRequestDispatcher("/WEB-INF/views/common/result.jsp").forward(request, response);
 			return flag;
 		}
 		return flag;

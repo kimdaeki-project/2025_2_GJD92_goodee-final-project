@@ -32,9 +32,6 @@ public class NoticeService {
 	@Autowired
 	private AttachmentRepository attachmentRepository;
 	
-//	@Autowired
-//	private NoticeAttachmentRepository noticeAttachmentRepository;
-	
 	@Autowired
 	private FileService fileService;
 
@@ -97,11 +94,11 @@ public class NoticeService {
 		return result.get();
 	}
 
+	@Transactional
 	public NoticeDTO edit(NoticeDTO noticeDTO, MultipartFile[] files, List<Long> deleteFiles) {
 		
-		if (deleteFiles.size() > 0 && deleteFiles != null) {
+		if (deleteFiles != null && deleteFiles.size() > 0) {
 			for (Long attachNum : deleteFiles) {
-//				noticeAttachmentRepository.deleteById(attachNum);
 				attachmentRepository.deleteById(attachNum);
 			}
 		}

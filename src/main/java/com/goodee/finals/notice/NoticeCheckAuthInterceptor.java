@@ -31,9 +31,10 @@ public class NoticeCheckAuthInterceptor implements HandlerInterceptor {
 		if (noticeId == loginId) {
 			flag = true;
 		} else {
-			request.setAttribute("msg", "작성자만 접근가능합니다.");
-			request.setAttribute("url", "/notice");
-			request.getRequestDispatcher("/WEB-INF/views/notice/result.jsp").forward(request, response);
+			request.setAttribute("resultMsg", "작성자만 접근가능합니다.");
+			request.setAttribute("resultIcon", "warning");
+			request.setAttribute("resultUrl", "/notice");
+			request.getRequestDispatcher("/WEB-INF/views/common/result.jsp").forward(request, response);
 			return flag;
 		}
 		

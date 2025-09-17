@@ -41,6 +41,7 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:if test="${ notice.number eq 0 }">
 				<c:forEach items="${ pinned }" var="n">
 					<tr class="table-info">
 						<th scope="row">&#x1F4E2;</th>
@@ -59,6 +60,7 @@
 						<td>${ n.noticeHits }</td>
 					</tr>
 				</c:forEach>
+				</c:if>
 				<c:forEach items="${ notice.content }" var="n">
 					<tr>
 						<th scope="row">${ n.noticeNum }</th>
