@@ -41,21 +41,21 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 		} else if (staffPw == null || staffPw.equals("")) {
 			resultMsg = "비밀번호를 입력해주세요.";
 		} else if (exception instanceof InternalAuthenticationServiceException) {
-			resultMsg = "존재하지 않는 계정입니다. 인사부서에 문의해주세요.";
+			resultMsg = "존재하지 않는 계정입니다.";
 		} else if (exception instanceof DisabledException) {
-			resultMsg = "비활성화된 계정입니다. 인사부서에 문의해주세요.";
+			resultMsg = "비활성화된 계정입니다.";
 		} else if (exception instanceof LockedException) {
-			resultMsg = "차단된 계정입니다. 인사부터에 문의해주세요.";
+			resultMsg = "차단된 계정입니다.";
 		} else if (exception instanceof BadCredentialsException) {
 			Integer loginFailureCount = (Integer) session.getAttribute("loginFailureCount");
-			resultMsg = "비밀번호를 잘못 입력하였습니다. 로그인이 5번 실패할 경우 계정이 차단됩니다.";
+			resultMsg = "비밀번호를 잘못 입력하였습니다.";
 			
 			if (loginFailureCount == null) {
 				session.setAttribute("loginFailureCount", 1);
 			} else if (loginFailureCount < 4) {
 				session.setAttribute("loginFailureCount", loginFailureCount + 1);
 			} else {
-				resultMsg = "로그인을 5번 실패해 계정이 차단되었습니다. 인사부서에 문의해주세요.";
+				resultMsg = "로그인을 5번 실패해 계정이 차단되었습니다.";
 				session.removeAttribute("loginFailureCount");
 				
 				staffService.lockStaff(Integer.valueOf(staffCode));

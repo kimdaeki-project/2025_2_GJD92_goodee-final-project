@@ -115,4 +115,24 @@ public class StaffController {
 		return "common/result";
 	}
 	
+	@GetMapping("{staffCode}/unlock")
+	public String getStaffUnlock(@PathVariable Integer staffCode, Model model) {
+		boolean result = staffService.unlockStaff(staffCode);
+		
+		String resultMsg = "이미 차단 해제된 계정입니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "계정 차단이 해제되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
 }
