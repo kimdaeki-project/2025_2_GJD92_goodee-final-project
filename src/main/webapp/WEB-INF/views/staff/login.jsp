@@ -26,14 +26,14 @@
               <div class="card-body">
                 <form role="form" class="text-start" method="POST">
                   <div class="input-group input-group-outline my-3">
-                    <input type="text" name="staffCode" class="form-control" placeholder="사원번호">
+                    <input type="text" name="staffCode" class="form-control" placeholder="사원번호" value="${ cookie.rememberId.value }">
                   </div>
                   <div class="input-group input-group-outline mb-3">
-                    <input type="password" name="staffPw" class="form-control" placeholder="비밀번호">
+                    <input type="password" name="staffPw" class="form-control" placeholder="비밀번호 (로그인 5회 실패 시 계정이 차단됩니다)">
                   </div>
                   <div class="form-check form-switch d-flex align-items-center mb-3">
-                    <input class="form-check-input" type="checkbox" id="rememberId">
-                    <label class="form-check-label mb-0 ms-3" for="rememberId">아이디 기억하기</label>
+                    <input class="form-check-input" type="checkbox" id="rememberId" name="rememberId" value="true" <c:if test="${ not empty cookie.rememberId.value }">checked</c:if>>
+                    <label class="form-check-label mb-0 ms-3" for="rememberId">사원번호 기억하기</label>
                   </div>
                   <div class="text-center">
                     <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">로그인</button>

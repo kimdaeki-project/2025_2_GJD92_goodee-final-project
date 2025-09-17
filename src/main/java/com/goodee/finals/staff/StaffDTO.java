@@ -6,9 +6,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 import com.goodee.finals.ride.RideDTO;
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -26,6 +28,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,6 +36,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(of = "staffCode")
 @Entity
 @Table(name = "staff")
 public class StaffDTO implements UserDetails {
@@ -54,7 +58,9 @@ public class StaffDTO implements UserDetails {
 	private String staffAddress;
 	private String staffAddressDetail;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate staffHireDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate staffFireDate;
 	
 	private Integer staffUsedLeave;
@@ -96,6 +102,16 @@ public class StaffDTO implements UserDetails {
 		grantList.add(new SimpleGrantedAuthority(jobDTO.getJobName()));
 		
 		return grantList;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return staffLocked;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return staffEnabled;
 	}
 	
 }

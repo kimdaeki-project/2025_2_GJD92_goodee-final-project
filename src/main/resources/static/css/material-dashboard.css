@@ -5820,9 +5820,9 @@ fieldset:disabled .btn {
   --bs-pagination-focus-color: #e91e63;
   --bs-pagination-focus-bg: #e5e5e5;
   --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25);
-  --bs-pagination-active-color: #fff;
-  --bs-pagination-active-bg: #e91e63;
-  --bs-pagination-active-border-color: #e91e63;
+  --bs-pagination-active-color: #ffffff;
+  --bs-pagination-active-bg: #e5e5e5;
+  --bs-pagination-active-border-color: #d4d4d4;
   --bs-pagination-disabled-color: #525252;
   --bs-pagination-disabled-bg: #fff;
   --bs-pagination-disabled-border-color: #d4d4d4;
@@ -25690,7 +25690,7 @@ hr.horizontal.gray-light {
 }
 
 .sidenav {
-  z-index: 9999;
+  z-index: 999;
 }
 
 .sidenav .navbar-brand,
