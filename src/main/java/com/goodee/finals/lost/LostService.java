@@ -81,6 +81,15 @@ public class LostService {
 		else return null;
 	}
 	
-	
+//	public boolean updateLost(LostDTO lostDTO, MultipartFile attach) {
+//		lostDTO = setLostUpdate(lostDTO);
+//		
+//		
+//	}
+//	
+//	private LostDTO setLostUpdate(LostDTO after) {
+//		LostDTO before = lostRepository.findById(after.getLostNum()).orElseThrow();
+//		
+//	}
 	
 }

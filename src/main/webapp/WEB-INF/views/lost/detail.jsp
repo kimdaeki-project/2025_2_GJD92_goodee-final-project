@@ -68,10 +68,11 @@
       	</tbody>
       </table>  
       
-      <button onclick="history.back();" >목록</button>
       <button onclick="location.href='/lost/${lostNum}/update'">수정</button>
       <button onclick="location.href='/lost/${lostNum}/delete'">삭제</button>
+		<br>
         
+      <button onclick="history.back();" >목록</button>
     </div>
     
     </section>

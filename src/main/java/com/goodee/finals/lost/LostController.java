@@ -55,11 +55,11 @@ public class LostController {
 	public String write(LostDTO lostDTO, MultipartFile attach, Model model) throws Exception {
 		LostDTO result = lostService.write(lostDTO, attach);
 		
-		String resultMsg = "품목 등록 중 오류가 발생했습니다.";
+		String resultMsg = "분실물 등록 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
 		
 		if (result != null) {
-			resultMsg = "품목을 성공적으로 등록했습니다.";
+			resultMsg = "분실물을 성공적으로 등록했습니다.";
 			resultIcon = "success";
 			String resultUrl = "/lost";
 			model.addAttribute("resultUrl", resultUrl);
@@ -74,10 +74,24 @@ public class LostController {
 	@GetMapping("{lostNum}/update")
 	public String getLostUpdate(@PathVariable Long lostNum, Model model) {
 		LostDTO lostDTO = lostService.getLost(lostNum);
-		log.info("{}", lostDTO);
 		model.addAttribute("lostDTO", lostDTO);
 		
 		return "lost/write";
+	}
+	
+	@PostMapping("{lostNum}/update")
+	public String postLostUpdate(LostDTO lostDTO, MultipartFile attach, Model model) {
+//		boolean result = lostService.updateLost(lostDTO, attach);
+		
+		String resultMsg = "분실물 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 }

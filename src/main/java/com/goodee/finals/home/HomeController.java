@@ -33,7 +33,6 @@ public class HomeController {
 
 		
 		AttendDTO attendDTO = attendService.findAttend();
-		log.info("{}", attendDTO);
 		model.addAttribute("attendDTO", attendDTO);
 		
 		// ✅ 오늘 날짜 추가

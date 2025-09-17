@@ -72,10 +72,10 @@
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
     
     <div class="form-box">
-      <h2>분실물 등록</h2>
-      <form action="/lost/write" method="post" enctype="multipart/form-data">
+      <h2>${empty lostDTO.lostNum ? "분실물 등록" : "분실물 수정" }</h2>
+      <form method="post" enctype="multipart/form-data">
         
-        <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty staffDTO.staffName }">src="/file/staff/${ staffDTO.staffAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+        <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty lostDTO.lostNum }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
         <div class="form-group">
         <br>
           <label for="itemName">분실물명</label>
@@ -94,7 +94,7 @@
         
         <div class="form-group">
           <label for="file">사진첨부</label>
-          <input type="file" name="attach">
+          <input type="file" id="attach" name="attach">
         </div>
 	        
         <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty lostDTO.lostNum ? "등록" : "수정" }</button>
@@ -105,6 +105,7 @@
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/lost/write.js"></script>
 	<script>
 		document.querySelector("i[data-content='분실물']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "분실물"
