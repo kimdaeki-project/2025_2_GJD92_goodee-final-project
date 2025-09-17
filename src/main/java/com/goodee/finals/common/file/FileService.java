@@ -32,4 +32,9 @@ public class FileService {
 		FileCopyUtils.copy(attach.getBytes(), file);
 		return fileName;
 	}
+	
+	public boolean fileDelete(String attachType, String fileName) {
+		File file = new File(baseDir + attachType, fileName);
+		return file.delete();
+	}
 }

@@ -1,0 +1,43 @@
+.uploader {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 파일 카드 */
+.file-card {
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    background-color: #fff;
+}
+
+.file-card img {
+    object-fit: cover;
+    width: 64px;
+    height: 64px;
+    border-radius: .25rem;
+}
+
+.file-card .file-meta {
+    flex: 1;
+    min-width: 0;
+    margin-left: .75rem;
+}
+
+.file-card .file-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-card .file-info {
+    font-size: .875rem;
+    color: #6c757d;
+}
+
+.file-card button {
+    margin-left: .5rem;
+}

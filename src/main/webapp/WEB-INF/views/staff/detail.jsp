@@ -127,8 +127,9 @@
 		    			<p class="ms-4">${ staff.staffPostcode }</p>
     				</div>
     				
-    				<div class="col-6 d-flex align-items-end">
-    					
+    				<div class="col-5">
+    					<h5>계정 상태</h5>
+		    			<p class="ms-4" <c:if test="${ not staff.staffLocked }">style="color: red;"</c:if>>${ not staff.staffEnabled ? '비활성화' : not staff.staffLocked ? '차단' : '정상' }</p>
     				</div>
     			</div>
     			
@@ -158,6 +159,7 @@
     			
     			<div class="form-group row mt-5 d-flex justify-content-center align-items-center">
     				<button type="button" onclick="location.href = '/staff/${ staff.staffCode }/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">수정</button>
+    				<button type="button" onclick="unlock(${ staff.staffCode })" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;" <c:if test="${ staff.staffLocked }">disabled</c:if>>차단 해제</button>
     				<button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">목록</button>
     			</div> 
     		</div>
@@ -166,6 +168,7 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/staff/detail.js"></script>
 	<script>
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='사원 조회']").parentElement.classList.add("bg-gradient-dark", "text-white")

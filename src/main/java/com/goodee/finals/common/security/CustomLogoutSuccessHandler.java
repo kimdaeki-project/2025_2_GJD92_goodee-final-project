@@ -17,9 +17,11 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		log.info("로그아웃 성공!");
+		request.setAttribute("resultMsg", "로그아웃 되었습니다.");
+		request.setAttribute("resultIcon", "success");
+		request.setAttribute("resultUrl", "/");
 		
-		response.sendRedirect("/");
+		request.getRequestDispatcher("/WEB-INF/views/common/result.jsp").forward(request, response);
 	}
 
 }

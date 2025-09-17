@@ -177,16 +177,39 @@ public class StaffService implements UserDetailsService {
 		return staffDTO;
 	}
 
-	
+	public void lockStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		staffDTO.setStaffLocked(false);
+		
+		staffRepository.saveAndFlush(staffDTO);
+	}
 
-	
+	public boolean unlockStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		
+		if (staffDTO.getStaffLocked()) {
+			return false;
+		} else {
+			staffDTO.setStaffLocked(true);
+			staffRepository.saveAndFlush(staffDTO);
+			
+			return true;
+		}
+	}
 
-	
-
-	
-
-	
-
-	
+	public int updateStaffPassword(PasswordDTO passwordDTO) {
+		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();
+		
+		// TODO 비밀번호 유효성 검사
+		if (passwordDTO.getNewPw().equals("0000")) return 400;
+		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return 401;
+		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return 402;
+		if (passwordEncoder.matches(passwordDTO.getNewPw(), staffDTO.getStaffPw())) return 403;
+		
+		staffDTO.setStaffPw(passwordEncoder.encode(passwordDTO.getNewPw()));
+		staffRepository.saveAndFlush(staffDTO);
+		
+		return 200;
+	}
 
 }

@@ -115,4 +115,57 @@ public class StaffController {
 		return "common/result";
 	}
 	
+	@GetMapping("{staffCode}/unlock")
+	public String getStaffUnlock(@PathVariable Integer staffCode, Model model) {
+		boolean result = staffService.unlockStaff(staffCode);
+		
+		String resultMsg = "이미 차단 해제된 계정입니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "계정 차단이 해제되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@PostMapping("password/update")
+	public String postStaffPasswordUpdate(PasswordDTO passwordDTO, Model model) {
+		int result = staffService.updateStaffPassword(passwordDTO);
+		
+		String resultMsg = "비밀번호 변경 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result == 200) {
+			resultMsg = "비밀번호가 변경되었습니다. 다시 로그인해주세요.";
+			resultIcon = "success";
+			String resultUrl = "/staff/logout";
+			model.addAttribute("resultUrl", resultUrl);
+		} else if (result == 400) {
+			resultMsg = "기본 비밀번호는 사용할 수 없습니다.";
+		} else if (result == 401) {
+			resultMsg = "현재 비밀번호가 일치하지 않습니다.";
+		} else if (result == 402) {
+			resultMsg = "비밀번호 확인이 일치하지 않습니다.";
+		} else if (result == 403) {
+			resultMsg = "현재 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.";
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("password/change")
+	public String getStaffPasswordChange() {
+		return "staff/default-pw";
+	}
+	
 }
