@@ -29,7 +29,7 @@
                     <input type="text" name="staffCode" class="form-control" placeholder="사원번호" value="${ cookie.rememberId.value }">
                   </div>
                   <div class="input-group input-group-outline mb-3">
-                    <input type="password" name="staffPw" class="form-control" placeholder="비밀번호">
+                    <input type="password" name="staffPw" class="form-control" placeholder="비밀번호 (로그인 5회 실패 시 계정이 차단됩니다)">
                   </div>
                   <div class="form-check form-switch d-flex align-items-center mb-3">
                     <input class="form-check-input" type="checkbox" id="rememberId" name="rememberId" value="true" <c:if test="${ not empty cookie.rememberId.value }">checked</c:if>>

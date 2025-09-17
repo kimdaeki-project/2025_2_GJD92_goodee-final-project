@@ -25,6 +25,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,6 +33,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(of = "staffCode")
 @Entity
 @Table(name = "staff")
 public class StaffDTO implements UserDetails {
@@ -97,6 +99,16 @@ public class StaffDTO implements UserDetails {
 		grantList.add(new SimpleGrantedAuthority(jobDTO.getJobName()));
 		
 		return grantList;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return staffLocked;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return staffEnabled;
 	}
 	
 }
