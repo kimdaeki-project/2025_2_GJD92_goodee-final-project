@@ -114,20 +114,9 @@
 	      </form:select>
 	    </div>
 	  </div>
-	
-	  <!-- 사진첨부 -->
-	  <%-- <div class="form-group row mb-3">
-	    <label class="col-sm-4 col-form-label text-start">사진첨부</label>
-	    <div class="col-sm-5">
-	      <input type="file" name="attach" class="form-control">
-	      <c:if test="${rideDTO.attachmentDTO != null }">
-	      	<p>현재 파일 : ${rideDTO.attachmentDTO.originName }</p>
-	      </c:if>
-	    </div>
-	  </div> --%>
 	  
 	  <!-- 사진첨부 -->
-	  <div class="form-group row mb-3">
+	  <%-- <div class="form-group row mb-3">
 	    <label class="col-sm-4 col-form-label text-start">사진첨부</label>
 	    <div class="col-sm-5">
 	      <input type="file" name="attach" class="form-control">
@@ -142,8 +131,36 @@
 	        </p>
 	      </c:if>
 	    </div>
-	  </div>
+	  </div> --%>
 	  
+<!-- 사진첨부 -->
+<div class="form-group row mb-3">
+  <label class="col-sm-4 col-form-label text-start">사진첨부</label>
+  <div class="col-sm-5">
+
+    <c:choose>
+      <c:when test="${mode eq 'edit' && attachmentDTO != null}">
+        <div class="input-group">
+          <!-- 기존 파일명 readonly 표시 -->
+          <input type="text" class="form-control" value="${attachmentDTO.originName}" readonly>
+
+          <!-- 파일 변경 버튼 -->
+          <label class="btn btn-outline-secondary mb-0">
+            파일 변경
+            <input type="file" name="attach" hidden>
+          </label>
+        </div>
+      </c:when>
+
+      <c:otherwise>
+        <input type="file" name="attach" class="form-control">
+      </c:otherwise>
+    </c:choose>
+
+  </div>
+</div>
+
+
 	
 	  <!-- 버튼 -->
 	  <div class="form-group row mt-4 text-center">
