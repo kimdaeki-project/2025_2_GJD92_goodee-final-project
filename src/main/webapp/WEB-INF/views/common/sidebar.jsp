@@ -4,7 +4,7 @@
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-    <a class="navbar-brand px-4 py-3 m-0" href="#">
+    <a class="navbar-brand px-4 py-3 m-0" href="/">
       <img src="/images/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
       <span class="ms-1 text-sm text-dark">GOODEE WORLD</span>
     </a>
@@ -63,7 +63,7 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="/staff">
+        <a class="nav-link text-dark" href="/staff?page=0">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="사원">diversity_3</i>
           <span class="nav-link-text ms-1 text-sm">사원</span>
         </a>
