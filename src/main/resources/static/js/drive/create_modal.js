@@ -1,26 +1,37 @@
 console.log('create_modal.js 연결')
 
-let staff = [];
-//const savedStaff = document.querySelectorAll()
+let staffs = [];
+let currentDept = null;
 
-// 모달의 회원 추가 버튼
-const addBtn = document.getElementById('addBtn');
-const saveBtn = document.getElementById('saveStaffBtn');
-const deptBtn = document.querySelectorAll('.dept-btn');
+const addBtn = document.getElementById('addBtn'); // 회원 추가[모달]
+const selectedList = document.getElementById("selectedList"); // 추가된 회원[모달] 
+const saveBtn = document.getElementById('saveStaffBtn'); // 추가된 회원 저장[모달]
+const deptBtn = document.querySelectorAll('.dept-btn'); // 부서 선택[모달]
+const searchInput = document.getElementById('searchInput'); // 사원 검색[모달]
+
+/*
+	드래그 이동
+	jsp에 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script> 라이브러리 추가
+	import한 modal.jsp 위에 위치시켜야함
+*/
+new Sortable(selectedList, {
+	animation: 150,           // 드래그 애니메이션
+	ghostClass: "drag-ghost", // 드래그 중인 요소 스타일
+	chosenClass: "drag-chosen",
+	dragClass: "dragging"
+});
 
 document.addEventListener('DOMContentLoaded', function () {
-	// 모달 창이 켜졌을때 실행
-	document.addEventListener('shown.bs.modal', function(e) {
+	document.addEventListener('shown.bs.modal', function(e) { // shown.bs.modal 모달 창이 켜졌을때 실행
 		if (e.target.id === 'shareModal') {
 			
-			// 사원 리스트 가져옴
-			fetch('/drive/staffList')
+			fetch('/drive/staffList') // 사원 리스트 DB에서 조회
 			.then(r => r.json())
 			.then(r => {
-				// 전역 변수에 저장
-				staff = r;
-				staff.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode);
-				renderStaff(staff);
+				staffs = r; // 전역 변수에 저장
+				staffs.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 직급별로 정렬
+				currentDept = staffs // 최초 선택된 부서는 전체로 초기화
+				renderStaff(staffs); // 사원 리스트 랜더링
 			})
 			.catch(error => console.log('fetch에러', error))
 		}
@@ -33,12 +44,11 @@ document.addEventListener('DOMContentLoaded', function () {
 */
 addBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList');
-	const selectedList = document.getElementById('selectedList');
 	const savedStaff = document.getElementById('savedStaff'); // tbody
 	
 	// 요소 확인용 안전장치
-	if (!staffList || !selectedList || !savedStaff) {
-		console.log('staffList or selectedList 요소없음')
+	if (!staffList || !savedStaff) {
+		console.log('staffList or savedStaff 태그 없음')
 		return;	
 	}
 	
@@ -48,8 +58,8 @@ addBtn.addEventListener('click', () => {
 	// 이미 추가되어있는 사원	
 	const mainStaffCode = Array.from(savedStaff.querySelectorAll('input[type="hidden"')).map(input => input.value);
 	
-	// 중복사원이 검사
-	// 중복사원 존재시 선택된 체크박스 모두 해제 후 메서드 즉시 종료
+	// 중복 사원이 체크
+	// 중복 사원 존재시 선택된 체크박스 모두 해제 후 메서드 즉시 종료
 	for (const check of checkedBoxes) {
 		const staffCode = check.value;
 		if (mainStaffCode.includes(staffCode)) {
@@ -67,11 +77,9 @@ addBtn.addEventListener('click', () => {
 		const text = li.querySelector('span').textContent // 사원 정보 태그 가져옴
 		const value = check.value; // StaffCode 가져옴 
 		
-		// 추가된 리스트에 등록할 li 생성
+		// 모달 오른쪽에 등록할 li 생성
 		const newLi = document.createElement('li');
 		newLi.className = 'list-group-item d-flex justify-content-between align-items-center';
-		
-		// X버튼과 빼내온 사원 정보 생성
 		newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn" aria-label="Remove"></button>`;
 
 		// 삭제 버튼 동작 추가		
@@ -89,15 +97,14 @@ addBtn.addEventListener('click', () => {
 
 
 /*
-	메인 컨텐츠에 사원 추가
+	추가된 사원 저장(메인 컨텐츠에 추가)
 */
 saveBtn.addEventListener('click', () => {
-	const selectedList = document.getElementById('selectedList');
 	const savedStaff = document.getElementById('savedStaff'); // tbody의 id
 	
-	// 해당 태그가 있는지 확인하는 안전장치
-	if(!selectedList || !savedStaff) {
-		console.log('selectedList or savedStaff 태그 없음')
+	// 요소 확인용 안전장치
+	if(!savedStaff) {
+		console.log('savedStaff 태그 없음')
 		return;
 	}
 	
@@ -105,31 +112,34 @@ saveBtn.addEventListener('click', () => {
 	const spans = selectedList.querySelectorAll('span')
 	
 	spans.forEach(span => {
-		//console.log(el)
 		const staffCode = span.getAttribute('data-staff-code');
-		// 배열의 staffCode와 span태그의 data속성으로 가져온 staffCode가 일치하는 객체를 반환  
-		const staffObj = staff.find(s => s.staffCode == staffCode)
-		// 반환된값이 없다면 종료
-		if(!staffObj) return;
 		
+		const staff = staffs.find(s => s.staffCode == staffCode)
+		// 반환된값이 없다면 종료
+		if(!staff) return;
+		
+		// ㄴ
 		const tr = document.createElement('tr');
 		tr.innerHTML = `
 				<th scope="row">
 				<button class="btn-close btn-close-white remove-saved" aria-label="Remove"></button>
-				<input type="hidden" value="${staffObj.staffCode}">
+				<input type="hidden" value="${staff.staffCode}">
 				</th>
 				<td><i class="material-symbols-rounded opacity-5 fs-5">contacts_product</i></td>
-				<td>${staffObj.staffName}</td>
-				<td>${staffObj.jobDTO.jobDetail}</td>
-				<td>${staffObj.deptDTO.deptDetail}</td>`;
-				
+				<td>${staff.staffName}</td>
+				<td>${staff.jobDTO.jobDetail}</td>
+				<td>${staff.deptDTO.deptDetail}</td>`;
+		
+		// 생성한 태그에 click이벤트 연결
 		tr.querySelector('.remove-saved').addEventListener('click', () => {
 			tr.remove();
 		})		
 		
+		// 메인 컨텐츠에 추가
 		savedStaff.appendChild(tr);
 	})
 	
+	// 저장 후 모달 숨김 처리 및 selectedList 초기화
 	const modalEl = document.getElementById('shareModal');
 	const modal = bootstrap.Modal.getInstance(modalEl);
 	if(modal) modal.hide();
@@ -142,58 +152,54 @@ saveBtn.addEventListener('click', () => {
 */
 deptBtn.forEach(d => {
 	d.addEventListener('click', function(e){
-		const teamName = e.target.getAttribute('data-team');
-		console.log(teamName);
-		if(teamName == '전체') {
-			renderStaff(staff);
+		
+		searchInput.value = ''; // 부서 변경시 검색란 초기화
+		const deptName = e.target.getAttribute('data-team'); // 버튼에 저장된 data-team 가져옴
+		console.log("선택된 부서 : " + deptName);
+		
+		if(deptName == '전체') { // '전체' 일때만 모든 사원 출력
+			currentDept = staffs 
+			renderStaff(staffs);
 			return;
 		}
 				
-		const team = staff.filter(s => s.deptDTO.deptDetail == teamName);
-		team.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode);
-		renderStaff(team);
+		const DeptStaff = staffs.filter(s => s.deptDTO.deptDetail == deptName); // 부서에 해당하는 사원 필터링
+		currentDept = DeptStaff.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 현재 부서 설정
+		renderStaff(currentDept);
 	})
 })
 
-
+/*
+	검색 - input이벤트 =  value값이 변경될때마다 감지
+*/
+searchInput.addEventListener('input', (e) => {
+	const keyword = e.target.value;
+	
+	// 현재 선택된 부서에서 이름,직급을 키워드로 검색 후 반환
+	const filteredStaff = currentDept.filter(s => 
+		s.staffName.includes(keyword) ||
+		s.jobDTO.jobDetail.includes(keyword)
+	);
+	renderStaff(filteredStaff); // 결과물 랜더링
+})
 
 
 /*
 	모달창 사원 목록 랜더링 (매개변수 : 랜더링할 리스트)
 */
 function renderStaff(list) {
+	const staffList = document.getElementById('staffList');
+	if(!staffList) return; // 태그확인 안전장치	
 	
-	const ul = document.getElementById('staffList');
-	// ul이 없다면 메서드 종료	
-	if(!ul) return;
-	
-	// ul태그 내용 초기화
-	ul.innerHTML = '';	
+	staffList.innerHTML = ''; // 사원목록 초기화
 	list.forEach(staff => {
 		// li 태그 생성
 		const li = document.createElement('li');
-		// 생성한 li 태그에 class 추가
 		li.className = 'list-group-item d-flex align-items-center'
-		
-		// li태그 내부에 다른 태크들 추가
 		li.innerHTML = `<input type="checkbox" class="me-2" value="${staff.staffCode}">
-		      <span>${staff.staffName} (${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}</span>`;
-		// ul안에 생성한 li 태그 추가
-		ul.appendChild(li);
+		      <span>${staff.staffName}(${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}</span>`;
+		
+		// 사원목록에 추가
+		staffList.appendChild(li);
 	})
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

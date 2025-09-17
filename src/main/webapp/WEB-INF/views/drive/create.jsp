@@ -122,6 +122,7 @@
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<c:import url="/WEB-INF/views/drive/modal.jsp"></c:import>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script src="/js/drive/create_modal.js"></script>
 	<script>
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")

@@ -34,7 +34,7 @@
 					<!-- 검색 -->
 					<div class="col-12 col-lg-5 h-100">
 						<div class="border rounded p-3 h-100 d-flex flex-column">
-							<input type="text" id="searchInput" class="form-control mb-2" placeholder="이름, 직책, 소속 입력">
+							<input type="text" id="searchInput" class="form-control mb-2" placeholder="이름, 직책 입력">
 							<ul id="staffList" class="list-group flex-grow-1 overflow-auto">
 							
 							<!-- 사원 리스트 출력 -->

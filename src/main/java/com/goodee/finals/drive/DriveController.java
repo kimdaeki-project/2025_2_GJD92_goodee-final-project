@@ -21,7 +21,7 @@ public class DriveController {
 	@Autowired
 	private DriveService driveService;
 	
-	@GetMapping("list")
+	@GetMapping
 	public String list() {
 		return "drive/list";
 	}
@@ -34,26 +34,9 @@ public class DriveController {
 	@GetMapping("staffList")
 	@ResponseBody
 	public List<StaffDTO> staffList() {
-		
 		List<StaffDTO> list = driveService.staffList();
-
 		System.out.println("DriveController staffList 사이즈 : " + list.size());
-		
 		return list;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//테스트중
-	@GetMapping("test")
-	public String test() { 
-		return "drive/test/modal_test";
 	}
 	
 }
