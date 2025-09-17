@@ -3,6 +3,8 @@ package com.goodee.finals.lost;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,14 +23,24 @@ public class LostService {
 
 	@Autowired
 	private FileService fileService;
-	
 	@Autowired
 	private AttachmentRepository attachmentRepository;
-	
 	@Autowired
 	private LostRepository lostRepository;
 	
-	public boolean write(LostDTO lostDTO, MultipartFile attach) {
+	public Page<LostDTO> getLostSearchList(String search, Pageable pageable) {
+		return lostRepository.findAllBySearch(search, pageable);
+	}
+	
+	public long getTotalLost() {
+		return lostRepository.count();
+	}
+	
+	public LostDTO getLost(Long lostNum) {
+		return lostRepository.findById(lostNum).orElseThrow();
+	}
+	
+	public LostDTO write(LostDTO lostDTO, MultipartFile attach) {
 		StaffDTO staffDTO = new StaffDTO();
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 		staffDTO.setStaffCode(staffCode);
@@ -42,13 +54,9 @@ public class LostService {
 			try {
 				fileName = fileService.saveFile(FileService.LOST, attach);
 				
-				log.info("{}", attach);
 				attachmentDTO.setAttachSize(attach.getSize());
-				log.info("{}", attach.getSize());
 				attachmentDTO.setOriginName(attach.getOriginalFilename());
-				log.info("{}", attach.getOriginalFilename());
 				attachmentDTO.setSavedName(fileName);
-				log.info("{}", fileName);
 				
 				attachmentRepository.save(attachmentDTO);
 			} catch (IOException e) {
@@ -69,8 +77,10 @@ public class LostService {
 		lostDTO.setLostAttachmentDTO(lostAttachmentDTO);
 		LostDTO result = lostRepository.save(lostDTO);
 		
-		if (result != null) return true;
-		else return false;
+		if (result != null) return lostDTO;
+		else return null;
 	}
+	
+	
 	
 }

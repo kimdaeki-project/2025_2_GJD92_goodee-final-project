@@ -21,10 +21,20 @@ public class AttendController {
 	public String attendIn(AttendDTO attendDTO, Model model) {
 		AttendDTO result = attendService.attendIn(attendDTO);
 		
+		String resultMsg = "출근처리 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
 		if (result != null) {
+			resultMsg = "출근처리가 완료되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/";
 			model.addAttribute("attendDTO", result);
 			log.info("출근체크");
-			return "redirect:/";
+			
+			model.addAttribute("resultMsg", resultMsg);
+			model.addAttribute("resultIcon", resultIcon);
+			
+			return "common/result";
 		} else {
 			return null;
 		}
@@ -35,10 +45,20 @@ public class AttendController {
 	public String attendOut(AttendDTO attendDTO, Model model) {
 		AttendDTO result = attendService.attendOut(attendDTO);
 		
+		String resultMsg = "퇴근처리 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
 		if (result != null) {
+			resultMsg = "퇴근처리가 완료되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/";
 			model.addAttribute("attendDTO", result);
 			log.info("퇴근체크");
-			return "redirect:/";
+			
+			model.addAttribute("resultMsg", resultMsg);
+			model.addAttribute("resultIcon", resultIcon);
+			
+			return "common/result";
 		} else {
 			return null;
 		}

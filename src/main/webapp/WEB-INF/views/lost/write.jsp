@@ -75,28 +75,30 @@
       <h2>분실물 등록</h2>
       <form action="/lost/write" method="post" enctype="multipart/form-data">
         
+        <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty staffDTO.staffName }">src="/file/staff/${ staffDTO.staffAttachmentDTO.attachmentDTO.savedName }"</c:if> />
         <div class="form-group">
+        <br>
           <label for="itemName">분실물명</label>
-          <input type="text" id="itemName" name="lostName" required>
+          <input type="text" name="lostName" value="${lostDTO.lostName }" required>
         </div>
         
         <div class="form-group">
           <label for="owner">습득자</label>
-          <input type="text" id="owner" name="lostFinder" required>
+          <input type="text" name="lostFinder" value="${lostDTO.lostFinder }" required>
         </div>
         
         <div class="form-group">
           <label for="ownerPhone">습득자 전화번호</label>
-          <input type="text" id="ownerPhone" name="lostFinderPhone" required>
+          <input type="text" name="lostFinderPhone" value="${lostDTO.lostFinderPhone }" required>
         </div>
         
         <div class="form-group">
-        <img id="preview" width="150" height="150" style="object-fit: cover;" class="border border-1 border-dark p-1" />
           <label for="file">사진첨부</label>
-          <input type="file" id="file" name="attach">
+          <input type="file" name="attach">
         </div>
-        
-        <button type="submit" class="btn-submit">등록</button>
+	        
+        <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty lostDTO.lostNum ? "등록" : "수정" }</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">취소</button>
       </form>
     </div>
     
