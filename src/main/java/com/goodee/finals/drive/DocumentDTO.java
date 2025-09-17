@@ -2,7 +2,6 @@ package com.goodee.finals.drive;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;

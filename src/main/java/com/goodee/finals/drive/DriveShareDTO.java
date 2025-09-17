@@ -1,5 +1,6 @@
 package com.goodee.finals.drive;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;
@@ -22,11 +23,13 @@ import lombok.Setter;
 @IdClass(DriveShareDTO.PK.class)
 public class DriveShareDTO {
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "staffCode", nullable = false)
 	@Id
 	private StaffDTO staffDTO;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "driveNum", nullable = false)
 	@Id

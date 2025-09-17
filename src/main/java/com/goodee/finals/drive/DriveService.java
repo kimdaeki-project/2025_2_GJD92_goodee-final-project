@@ -11,18 +11,21 @@ import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 
-@Service
-public class DriveService {
+import lombok.extern.slf4j.Slf4j;
 
+@Service
+@Slf4j
+public class DriveService {
+	
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
 	
 	@Autowired
 	private DriveRepository driveRepository;
-	
 	@Autowired
 	private StaffRepository staffRepository;
-	
+	@Autowired
+	private DriveShareRepository driveShareRepository;
 	@Autowired
 	private FileService fileService;
 	
@@ -31,6 +34,8 @@ public class DriveService {
 	}
 	
 	public void createDrive(DriveDTO driveDTO) {
+		boolean result = false;
+		
 		// 드라이브 이름 중복 조회
 		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());
 		if(existDriveName != null) {
@@ -42,28 +47,32 @@ public class DriveService {
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
 			driveDTO.setIsPersonal(true);
 			driveDTO = driveRepository.save(driveDTO); // DB에 드라이브 저장
-			makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
+			result = makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 			return;
 		}
 
 		// 공용 드라이브
 		driveDTO.setIsPersonal(false);
-		driveDTO = driveRepository.save(driveDTO);//
-		System.out.println("생성된 날짜 불러옴 : " + driveDTO.getDriveDate());
+		driveDTO = driveRepository.save(driveDTO);
+		result = makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
+//		List<DriveShareDTO> list = driveShareRepository.saveAll(driveDTO.getDriveShareDTOs());
+//		for (DriveShareDTO driveShareDTO : list) {
+//			log.info("{}", driveShareDTO);
+//		}
 		
 		// 생성된 PK로 Dir생성
 		
 		
 	}
 	
-	public void makeDriveDir(String path) {
+	public boolean makeDriveDir(String path) {
 		File file = new File(path);
 		System.out.println("makeDriveDir : " + path);
 		boolean result = false;
 		if(!file.exists()) {
 			result = file.mkdirs();
 		}
-		System.out.println(result);
+		return result;
 	}
 	
 	
