@@ -99,7 +99,11 @@ public class NoticeService {
 		
 		if (deleteFiles != null && deleteFiles.size() > 0) {
 			for (Long attachNum : deleteFiles) {
-				attachmentRepository.deleteById(attachNum);
+				String savedName = attachmentRepository.findById(attachNum).get().getSavedName();
+				boolean deleteResult = fileService.fileDelete(FileService.NOTICE, savedName);
+				if (deleteResult) {					
+					attachmentRepository.deleteById(attachNum);
+				}
 			}
 		}
 		

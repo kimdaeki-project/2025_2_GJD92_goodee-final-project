@@ -65,7 +65,8 @@
 		        window.existingFiles.push({
 		            name: "${ file.attachmentDTO.originName }",
 		            size: ${ file.attachmentDTO.attachSize },
-		            attachNum: ${ file.attachmentDTO.attachNum }
+		            attachNum: ${ file.attachmentDTO.attachNum },
+		            url: '/file/notice/${ file.attachmentDTO.savedName }'
 		        });
 		    </c:forEach>
 		</script>

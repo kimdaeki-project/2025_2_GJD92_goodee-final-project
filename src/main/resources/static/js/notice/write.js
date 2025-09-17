@@ -107,7 +107,7 @@ const deleteExistingFiles = [];
 		    // 이미지인지 확인
 		    if(file.name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)){
 		        const img = document.createElement('img');
-		        // img.src = file.url || ("/uploads/" + file.savedName); // 서버 저장 경로 맞게 수정
+		        img.src = file.url;
 		        img.style.width = '100%';
 		        img.style.height = '100%';
 		        img.style.objectFit = 'cover';
