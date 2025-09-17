@@ -8,6 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class PasswordDTO {
+	private Integer staffCode;
 	private String oldPw;
 	private String newPw;
 	private String newPwChk;

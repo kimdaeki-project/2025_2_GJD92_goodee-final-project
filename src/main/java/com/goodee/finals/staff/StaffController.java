@@ -136,10 +136,23 @@ public class StaffController {
 	}
 	
 	@PostMapping("password/update")
-	public String postStaffPasswordUpdate(PasswordDTO passwordDTO) {
-		log.info("{}", passwordDTO.getOldPw());
+	public String postStaffPasswordUpdate(PasswordDTO passwordDTO, Model model) {
+		boolean result = staffService.updateStaffPassword(passwordDTO);
 		
-		return null;
+		String resultMsg = "비밀번호가 일치하지 않습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "비밀번호가 변경되었습니다. 다시 로그인해주세요.";
+			resultIcon = "success";
+			String resultUrl = "/staff/logout";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 }

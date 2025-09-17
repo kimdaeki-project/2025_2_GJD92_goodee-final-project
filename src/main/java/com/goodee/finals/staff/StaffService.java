@@ -197,4 +197,16 @@ public class StaffService implements UserDetailsService {
 		}
 	}
 
+	public boolean updateStaffPassword(PasswordDTO passwordDTO) {
+		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();
+		
+		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return false;
+		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return false;
+		
+		staffDTO.setStaffPw(passwordEncoder.encode(passwordDTO.getNewPw()));
+		staffRepository.saveAndFlush(staffDTO);
+		
+		return true;
+	}
+
 }

@@ -62,6 +62,8 @@
         	<div class="col-3">
         		<div style="height: 30vh">
 	        		<form id="passwordUpdate">
+	        			<input type="hidden" id="staffCode" name="staffCode" value="${ staff.staffCode }" />
+	        		
 	        			<label for="oldPw" class="form-label"><strong class="text-dark">현재 비밀번호</strong></label>
 	        			<input type="password" id="oldPw" name="oldPw" class="form-control w-50" />
 	        			
