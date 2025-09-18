@@ -46,7 +46,7 @@
 						<li>
 							<div class="nav-link text-dark d-flex align-items-center">
 								<i class="material-symbols-rounded opacity-5 fs-5" data-content="공용드라이브">keyboard_arrow_down</i> 
-								<span class="nav-link-text ms-1 text-sm">공용드라이브</span>
+								<span class="nav-link-text ms-1 mt-2 text-sm">공용드라이브</span>
 							</div>
 							<ul class="navbar-nav" id="drive-share">
 								<!-- 공용 드라이브 반복문 시작 -->
@@ -64,7 +64,7 @@
 				<div class="p-6">
 					<form:form method="post" modelAttribute="driveDTO">
 						<div class="d-flex align-items-center gap-1 w-50">
-							<form:label path="driveName" cssClass="ms-0 me-1 fs-6">드라이브 이름 : </form:label>
+							<form:label path="driveName" cssClass="ms-0 me-1 mb-0 fs-6">드라이브 이름 : </form:label>
 							<form:input path="driveName" cssClass="form-control w-auto" />
 						</div>
 						<div>
@@ -94,7 +94,7 @@
 						</table>
 						<div class="col-6 offset-md-1">
 							<button class="btn btn-outline-secondary bg-gradient-dark btn-drive-save">저장</button>
-							<button type="button" class="btn btn-outline-secondary">취소</button>
+							<button type="button" class="btn btn-outline-secondary" onclick="history.back()">취소</button>
 						</div>
 					</form:form>
 				</div>

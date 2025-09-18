@@ -44,7 +44,7 @@
 						<li>
 							<div class="nav-link text-dark d-flex align-items-center">
 								<i class="material-symbols-rounded opacity-5 fs-5" data-content="공용드라이브">keyboard_arrow_down</i> 
-								<span class="nav-link-text ms-1 text-sm">공용드라이브</span>
+								<span class="nav-link-text ms-1 mt-2 text-sm">공용드라이브</span>
 							</div>
 							<ul class="navbar-nav" id="drive-share">
 								<!-- 반복문 -->

@@ -36,7 +36,7 @@ public class DriveDTO {
 	@NotBlank(message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
 	private String driveName;
 	private Boolean isPersonal;
-	private Long defaultDrive;
+	private Long defaultDriveNum;
 	@CreationTimestamp
 	private LocalDateTime driveDate;
 	
