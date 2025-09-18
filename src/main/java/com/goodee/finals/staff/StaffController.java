@@ -196,6 +196,26 @@ public class StaffController {
 		return "common/result";
 	}
 	
+	@GetMapping("{staffCode}/enable")
+	public String getStaffEnable(@PathVariable Integer staffCode, Model model) {
+		boolean result = staffService.enableStaff(staffCode);
+		
+		String resultMsg = "이미 활성화된 계정입니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "계정이 활성화 되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
 	@PostMapping("password/update")
 	public String postStaffPasswordUpdate(PasswordDTO passwordDTO, Model model) {
 		int result = staffService.updateStaffPassword(passwordDTO);

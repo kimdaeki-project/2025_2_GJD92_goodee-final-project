@@ -162,6 +162,20 @@ public class StaffService implements UserDetailsService {
 			return true;
 		}
 	}
+	
+	public boolean enableStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		
+		if (staffDTO.getStaffEnabled()) {
+			return false;
+		} else {
+			staffDTO.setStaffEnabled(true);
+			staffDTO.setStaffFireDate(null);
+			staffRepository.saveAndFlush(staffDTO);
+			
+			return true;
+		}
+	}
 
 	public int updateStaffPassword(PasswordDTO passwordDTO) {
 		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();

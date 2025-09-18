@@ -160,7 +160,12 @@
     			<div class="form-group row mt-5 d-flex justify-content-center align-items-center">
     				<button type="button" onclick="location.href = '/staff/${ staff.staffCode }/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">수정</button>
     				<button type="button" onclick="unlock(${ staff.staffCode })" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;" <c:if test="${ staff.staffLocked }">disabled</c:if>>차단 해제</button>
-    				<button type="button" onclick="disable(${ staff.staffCode })" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;" <c:if test="${ not empty staff.staffFireDate }">disabled</c:if>>비활성화</button>
+    				<c:if test="${ staff.staffEnabled }">
+	    				<button type="button" onclick="disable(${ staff.staffCode })" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">비활성화</button>
+    				</c:if>
+    				<c:if test="${ not staff.staffEnabled }">
+	    				<button type="button" onclick="enable(${ staff.staffCode })" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">활성화</button>
+    				</c:if>
     				<button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">목록</button>
     			</div> 
     		</div>
