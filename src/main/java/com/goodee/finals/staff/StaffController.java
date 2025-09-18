@@ -92,6 +92,26 @@ public class StaffController {
 		return "staff/list-leave";
 	}
 	
+	@PostMapping("leave/update")
+	public String postStaffLeaveUpdate(LeaveDTO leaveDTO, Model model) {
+		boolean result = staffService.updateStaffLeave(leaveDTO);
+		
+		String resultMsg = "연차 정보 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "연차 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/leave";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
 	@GetMapping("quit")
 	public String getStaffQuit(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";

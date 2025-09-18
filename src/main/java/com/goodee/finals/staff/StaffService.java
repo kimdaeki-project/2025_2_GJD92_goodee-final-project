@@ -195,6 +195,18 @@ public class StaffService implements UserDetailsService {
 		return 200;
 	}
 	
+	public boolean updateStaffLeave(LeaveDTO leaveDTO) {
+		StaffDTO staffDTO = staffRepository.findById(leaveDTO.getStaffCode()).orElseThrow();
+		
+		staffDTO.setStaffRemainLeave(leaveDTO.getStaffRemainLeave());
+		staffDTO.setStaffUsedLeave(leaveDTO.getStaffUsedLeave());
+		
+		StaffDTO result = staffRepository.saveAndFlush(staffDTO);
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
 	
 	
 	

@@ -8,3 +8,27 @@ function movePage(page) {
 		location.href = `/staff/leave?page=${page}`
 	}
 }
+
+function setStaffCode(staffCode, remainLeave, usedLeave) {
+	document.querySelector("#staffCode").value = staffCode
+	document.querySelector("#staffRemainLeave").value = remainLeave
+	document.querySelector("#staffUsedLeave").value = usedLeave
+}
+
+function updateLeave() {
+	const form = document.querySelector("#updateLeaveForm")
+	
+	Swal.fire({
+	  text: "연차 정보를 수정하시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+	    form.submit()
+	  }
+	});
+}

@@ -115,8 +115,9 @@
 		    					<th class="col-2">이름</th>
 		    					<th class="col-2">부서</th>
 		    					<th class="col-2">직위</th>
+		    					<th class="col-2">연차일수</th>
 		    					<th class="col-2">사용연차</th>
-		    					<th class="col-2">잔여연차</th>
+		    					<th class="col-1">조정</th>
 		    				</tr>
 		    			</thead>
 		    			<tbody>
@@ -127,8 +128,11 @@
 			    					<td><a href="/staff/${ staff.staffCode }" style="color: #737373;">${ staff.staffName }</a></td>
 			    					<td>${ staff.deptDTO.deptDetail }</td>
 			    					<td>${ staff.jobDTO.jobDetail }</td>
-			    					<td>${ staff.staffUsedLeave }</td>
 			    					<td>${ staff.staffRemainLeave }</td>
+			    					<td>${ staff.staffUsedLeave }</td>
+			    					<td class="d-flex justify-content-center align-items-center">
+			    						<button type="button" class="btn btn-primary bg-gradient-dark text-white py-0 m-0" onclick="setStaffCode(${ staff.staffCode }, ${ staff.staffRemainLeave }, ${ staff.staffUsedLeave })" style="height: 25px;" data-bs-toggle="modal" data-bs-target="#updateModal">수정</button>
+			    					</td>
 		    					</tr>
 		    				</c:forEach>
 		    				
@@ -164,6 +168,39 @@
 					  </ul>
 					</nav>
 		    </div>
+		    
+		    <!-- Modal -->
+				<div class="modal fade" id="updateModal" tabindex="-1">
+				  <div class="modal-dialog modal-dialog-centered">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="exampleModalLabel">연차 정보 수정</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				      </div>
+				      <div class="modal-body">
+				      	<div class="col-8 offset-2">
+					        <form id="updateLeaveForm" action="/staff/leave/update" method="POST">
+					        	<input type="hidden" id="staffCode" name="staffCode" />
+					        	
+					        	<div>
+					        		<label for="staffRemainLeave">전체 연차</label>
+						        	<input type="text" id="staffRemainLeave" name="staffRemainLeave" class="form-control" />
+					        	</div>
+					        	
+					        	<div class="mt-3">
+					        		<label for="staffUsedLeave">사용 연차</label>
+						        	<input type="text" id="staffUsedLeave" name="staffUsedLeave" class="form-control" />
+					        	</div>				        	
+					        </form>
+				      	</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				        <button type="button" onclick="updateLeave()" class="btn btn-primary bg-gradient-dark text-white">저장</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 	    
 	    </section>
     </div>
