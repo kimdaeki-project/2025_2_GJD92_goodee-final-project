@@ -15,6 +15,29 @@
 		.table tbody tr:last-child th {
 			border-bottom: 1px solid #dee2e6;
 		}
+		/* 높이 통일 */
+		.input-group .form-control,
+		.input-group .btn {
+		    height: 40px !important;
+		    line-height: 1.5 !important;
+		}
+		
+		/* 왼쪽 input → 오른쪽 모서리 각지게 */
+		.input-group .form-control {
+		    border-top-right-radius: 0 !important;
+		    border-bottom-right-radius: 0 !important;
+		}
+		
+		/* 오른쪽 버튼 → 왼쪽 모서리 각지게 */
+		.input-group .btn {
+		    border-top-left-radius: 0 !important;
+		    border-bottom-left-radius: 0 !important;
+		}
+		
+		.input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3) {
+		    border-top-right-radius: 0 !important;
+		    border-bottom-right-radius: 0 !important;
+		}
 	</style>
 </head>
 
@@ -38,7 +61,7 @@
     	<!-- 공지 존재 -->
     	<c:if test="${ totalNotice gt 0 }">
 		<table class="table table-hover align-middle text-center">
-			<thead class="table-light">
+			<thead>
 				<tr>
 					<th scope="col">No</th>
 					<th scope="col">부서</th>
@@ -52,7 +75,7 @@
 				<!-- 고정공지 -->
 				<c:if test="${ notice.number eq 0 }">
 				<c:forEach items="${ pinned }" var="n">
-					<tr class="table-info fw-bold">
+					<tr class="fw-bold">
 						<th scope="row">&#x1F4E2;</th>
 						<td>${ n.staffDTO.deptDTO.deptDetail }팀</td>
 						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>
