@@ -106,7 +106,7 @@
 			<ul class="pagination justify-content-center">
 				<c:if test="${ notice.hasPrevious() and pager.startPage gt 1 }">
 					<li class="page-item">
-						<a class="page-link" href="?page=${ pager.startPage - 1 }&keyword=${ pager.keyword }">이전</a>
+						<a class="page-link" href="?page=${ pager.startPage - 1 }&keyword=${ pager.keyword }">&lt;</a>
 					</li>
 				</c:if>
 				
@@ -118,7 +118,7 @@
 				
 				<c:if test="${ notice.hasNext() and pager.endPage + 1 ne notice.totalPages }">
 					<li class="page-item">
-						<a class="page-link" href="?page=${ pager.endPage + 1 }&keyword=${ pager.keyword }">다음</a>
+						<a class="page-link" href="?page=${ pager.endPage + 1 }&keyword=${ pager.keyword }">&gt;</a>
 					</li>
 				</c:if>
 			</ul>
