@@ -26,7 +26,7 @@ public class RideAttachmentDTO {
 	
 	@Id
     @OneToOne
-    @JoinColumn(name = "rideCode", unique = true, insertable = false, updatable = false)
+    @JoinColumn(name = "rideCode", insertable = false, updatable = false)
     private RideDTO rideDTO;
 
 	@Id
