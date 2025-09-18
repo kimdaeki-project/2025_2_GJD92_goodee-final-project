@@ -7,7 +7,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>내 정보</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -27,7 +27,7 @@
         <div class="row gx-4 mb-2">
           <div class="col-auto">
             <div class="position-relative">
-              <img width="100" height="100" src="/file/staff/${ staff.staffAttachmentDTO.attachmentDTO.savedName }" alt="profile_image" class="border-radius-lg shadow-sm">
+              <img width="100" height="100" style="object-fit: cover;" src="/file/staff/${ staff.staffAttachmentDTO.attachmentDTO.savedName }" alt="profile_image" class="border-radius-lg shadow-sm">
             </div>
           </div>
           <div class="col-auto my-auto">
@@ -55,7 +55,7 @@
         		</ul>
         		
         		<div class="col-4 mt-5 ms-5 d-flex justify-content-center">
-        			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white">수정</button>
+        			<button type="button" onclick="location.href = '/staff/info/update'" class="btn btn-outline-secondary bg-gradient-dark text-white">수정</button>
         		</div>
         	</div>
         	
