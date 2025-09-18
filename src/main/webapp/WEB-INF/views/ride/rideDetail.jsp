@@ -1,11 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
+	
+	<!-- 세부정보 밑줄 제거(bootstrap) -->
+	<style>
+		.ride-info .table,
+		.ride-info .table th,
+		.ride-info .table td,
+		.ride-info .table tr { border: none !important; }
+	</style>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -83,27 +92,30 @@
 				  </div>
 			</div>
 			
-			<!-- 버튼 -->
-		    <div class="form-group row mt-4 text-end">
-		      <div class="col-sm-12">
-		      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
-		      	<form action="${pageContext.request.contextPath }/ride/${ride.rideCode}/update"
-		      			method="get" style="display: inline;">
-			        <button type="submit" 
-			        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
-			        		style="width: 100px;">수정</button>
-		        </form>
-		        
-		        <!-- 삭제 버튼 -->
-		        <form action="${pageContext.request.contextPath}/ride/${ride.rideCode}/delete" 
-			          method="post" style="display:inline;">
-			        <button type="submit" 
+			<!-- 버튼 --><!-- 로그인 사용자 정보 꺼내기 -->
+			<sec:authorize access="isAuthenticated()">
+			<sec:authentication property="principal" var="staff" />
+			
+			<!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
+			<c:if test="${staff.deptDTO.deptCode eq 1003}">
+			    <div class="form-group row mt-4 text-end">
+			      <div class="col-sm-12">
+			      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
+			      	<form action="${pageContext.request.contextPath }/ride/${ride.rideCode}/update"
+			      			method="get" style="display: inline;">
+				        <button type="submit" 
+				        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
+				        		style="width: 100px;">수정</button>
+			        </form>
+			        <!-- 삭제 버튼 -->
+			        <button type="button" 
 			                class="btn btn-sm btn-outline-secondary" 
 			                style="width: 100px;"
-			                onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
-			    </form>
-		      </div>
-		    </div>
+			                onclick="ridedelete('${ ride.rideCode }')">삭제</button>
+			      </div>
+			    </div>
+		    </c:if>
+		    </sec:authorize>
 			
 			
 		  </div>
@@ -114,8 +126,10 @@
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/ride/detail.js"></script>
 	<script>
-		document.querySelector("i[data-content='']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "어트랙션"
 	</script>
 </body>
 

@@ -19,8 +19,18 @@
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: hidden scroll;">
     
     <!-- 여기에 코드 작성 -->
-	<h1 class="text-center mb-5">어트랙션 등록</h1>
-	<form:form method="post" modelAttribute="rideDTO" enctype="multipart/form-data" class="container col-8">
+	<h1 class="text-center mb-5">
+	  <c:choose>
+	    <c:when test="${mode eq 'edit'}">어트랙션 수정</c:when>
+	    <c:otherwise>어트랙션 등록</c:otherwise>
+	  </c:choose>
+	</h1>
+
+	<form:form method="post" 
+	           modelAttribute="rideDTO" 
+	           enctype="multipart/form-data" 
+	           class="container col-8"
+	           data-mode="${mode}">
 	
 	  <!-- 어트랙션 이름 -->
 	  <div class="form-group row mb-3">
@@ -116,67 +126,56 @@
 	  </div>
 	  
 	  <!-- 사진첨부 -->
-	  <%-- <div class="form-group row mb-3">
-	    <label class="col-sm-4 col-form-label text-start">사진첨부</label>
-	    <div class="col-sm-5">
-	      <input type="file" name="attach" class="form-control">
+	<div class="form-group row mb-3">
+	  <form:label path="rideState" class="col-sm-4 col-form-label text-start">첨부파일</form:label>
+	  <div class="col-sm-5">
+	    <c:if test="${not empty rideDTO.rideAttachmentDTO}">
+	      <!-- 기존 파일 존재 여부 -->
+	      <input type="hidden" id="hasExistingFile" value="true"/>
+	    </c:if>
+	    <c:if test="${empty rideDTO.rideAttachmentDTO}">
+	      <input type="hidden" id="hasExistingFile" value="false"/>
+	    </c:if>
 	
-	      <!-- 수정 모드일 때 기존 파일 출력 -->
-	      <c:if test="${mode eq 'edit' && attachmentDTO != null}">
-	        <p>
-	          현재 파일 :
-	          <a href="${pageContext.request.contextPath}/file/${attachmentDTO.savedName}" target="_blank">
-	            ${attachmentDTO.originName}
-	          </a>
-	        </p>
-	      </c:if>
-	    </div>
-	  </div> --%>
-	  
-<!-- 사진첨부 -->
-<div class="form-group row mb-3">
-  <label class="col-sm-4 col-form-label text-start">사진첨부</label>
-  <div class="col-sm-5">
-
-    <c:choose>
-      <c:when test="${mode eq 'edit' && attachmentDTO != null}">
-        <div class="input-group">
-          <!-- 기존 파일명 readonly 표시 -->
-          <input type="text" class="form-control" value="${attachmentDTO.originName}" readonly>
-
-          <!-- 파일 변경 버튼 -->
-          <label class="btn btn-outline-secondary mb-0">
-            파일 변경
-            <input type="file" name="attach" hidden>
-          </label>
-        </div>
-      </c:when>
-
-      <c:otherwise>
-        <input type="file" name="attach" class="form-control">
-      </c:otherwise>
-    </c:choose>
-
-  </div>
-</div>
-
+	    <img id="preview"
+	         style="object-fit: cover; width:200px; height:200px; !important;"
+	         <c:if test="${ not empty rideDTO.rideName }">
+	           src="/file/ride/${ rideDTO.rideAttachmentDTO.attachmentDTO.savedName }"
+	         </c:if>
+	         class="border border-1 border-dark p-1"/>
+	    <label for="attach">
+	      <div class="btn btn-outline-secondary px-2 py-0 m-auto">어트랙션 사진 등록</div>
+	    </label>
+	  </div>
+	  <input type="file" class="d-none" id="attach" name="attach"/>
+	</div>
 
 	
 	  <!-- 버튼 -->
 	  <div class="form-group row mt-4 text-center">
 	    <div class="col-sm-12">
-	      <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">등록</button>
+	      <c:choose>
+	        <c:when test="${mode eq 'edit'}">
+	          <button type="submit"
+	                  class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
+	                  style="width: 100px;">수정</button>
+	        </c:when>
+	        <c:otherwise>
+	          <button type="submit"
+	                  class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
+	                  style="width: 100px;">등록</button>
+	        </c:otherwise>
+	      </c:choose>
 	      <a href="/ride" class="btn btn-sm btn-outline-secondary" style="width: 100px;">취소</a>
 	    </div>
 	  </div>
 	
 	</form:form>
 
-    
-    
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/ride/rideAdd.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "어트랙션"
