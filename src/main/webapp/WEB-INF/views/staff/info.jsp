@@ -27,7 +27,7 @@
         <div class="row gx-4 mb-2">
           <div class="col-auto">
             <div class="position-relative">
-              <img width="100" height="100" src="/file/staff/${ staff.staffAttachmentDTO.attachmentDTO.savedName }" alt="profile_image" class="border-radius-lg shadow-sm">
+              <img width="100" height="100" style="object-fit: cover;" src="/file/staff/${ staff.staffAttachmentDTO.attachmentDTO.savedName }" alt="profile_image" class="border-radius-lg shadow-sm">
             </div>
           </div>
           <div class="col-auto my-auto">

@@ -221,7 +221,7 @@ public class StaffService implements UserDetailsService {
 		AttachmentDTO beforeAttach = before.getStaffAttachmentDTO().getAttachmentDTO();
 		attachmentRepository.deleteById(beforeAttach.getAttachNum());
 		
-		// TODO 기존 첨부 이미지 실제 파일 삭제 로직 추가
+		fileService.fileDelete(FileService.STAFF, beforeAttach.getSavedName());
 		
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
 		
