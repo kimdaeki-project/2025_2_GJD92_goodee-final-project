@@ -6,7 +6,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Log In</title>
+	<title>비밀번호 변경</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
