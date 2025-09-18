@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -7,6 +8,7 @@
 	<meta charset="UTF-8">
 	<title>드라이브</title>
 	
+	<link rel="stylesheet" href="/css/drive/detail.css" />
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -16,50 +18,86 @@
 	<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 		<c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
 		<div class="d-flex">
-			<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh; min-width: 180px;">
-				<div class="w-100">
-					<ul class="navbar-nav">
-					
-						<!-- 내 드라이브 시작 -->
-						<li>
-							<div class="nav-link text-dark d-flex justify-content-between">
-								<div class="d-flex align-items-center">
-									<i class="material-symbols-rounded opacity-5 fs-5" >keyboard_arrow_down</i> 
-									<span class="sub-nav-link-text ms-1 text-sm">내드라이브</span>
-								</div>
-								<div class="d-flex text-center">
-									<a class="nav-link text-dark d-flex align-items-center" href="/drive/create">
-										 <i class="material-symbols-rounded opacity-5 fs-5" >add</i>
-									</a>
-								</div>
-							</div>
-							<ul class="navbar-nav" id="drive-my">
-								<!-- 반복문 -->
-								<c:import url="/WEB-INF/views/drive/side-myDrive.jsp"></c:import>
-							</ul>
-						</li>
-						<!-- 내 드라이브 끝 -->
+			<c:import url="/WEB-INF/views/drive/drive-sidebar.jsp"></c:import>
+			<section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3 p-4">
 
-						<!-- 공용 드라이브 시작 -->
-						<li>
-							<div class="nav-link text-dark d-flex align-items-center">
-								<i class="material-symbols-rounded opacity-5 fs-5" data-content="공용드라이브">keyboard_arrow_down</i> 
-								<span class="nav-link-text ms-1 mt-2 text-sm">공용드라이브</span>
-							</div>
-							<ul class="navbar-nav" id="drive-share">
-								<!-- 반복문 -->
-								<c:import url="/WEB-INF/views/drive/side-shareDrive.jsp"></c:import>
-							</ul>
-						</li>
-						<!-- 공용 드라이브 끝 -->
-					</ul>
+				<!-- 여기에 코드 작성 -->
+				<!-- 여기에 코드 작성 -->
+				<!-- 툴바 -->
+				<div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+				
+				  <!-- 업로드 -->
+				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">업로드</button>
+				
+				  <!-- 새 문서 -->
+				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">새 문서</button>
+				
+				  <!-- 파일 유형 -->
+				  <div class="d-flex align-items-center gap-2">
+				    <select class="form-select form-select-sm w-auto align-self-center rounded" id="fileTypeSelect">
+				      <option value="" selected>파일 유형: 선택</option>
+				      <option value="DOC">문서</option>
+				      <option value="IMAGE">이미지</option>
+				      <option value="VIDEO">동영상</option>
+				      <option value="AUDIO">오디오</option>
+				    </select>
+				  </div>
+				
+				  <!-- 다운로드 -->
+				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center mb-0"
+				          id="downloadBtn">
+				    <span class="material-symbols-rounded">download</span>
+				  </button>
+				
+				  <!-- 삭제 -->
+				  <button type="button" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center mb-0"
+				          id="deleteBtn">
+				    <span class="material-symbols-rounded">delete</span>
+				  </button>
 				</div>
-			</aside>
-			<section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3"
-				style="height: 92vh; overflow: hidden scroll;">
-
-				<!-- 여기에 코드 작성 -->
-				<!-- 여기에 코드 작성 -->
+					
+					<div class="table-responsive">
+					  <table class="table table-hover align-middle mb-0 table-figma drive-table">
+					    <thead class="border-top">
+					      <tr>
+					        <th class="text-center" style="width:36px;"><input type="checkbox" id="checkAll"/></th>
+					        <th>이름</th>
+					        <th style="width:180px;">등록일</th>
+					        <th style="width:120px;">용량</th>
+					        <th style="width:120px;">종류</th>
+					        <th style="width:140px;">등록자</th>
+					      </tr>
+					    </thead>
+					    <tbody>
+						  <c:choose>
+						    <c:when test="${not empty documents}">
+						      <c:forEach var="doc" items="${documents}">
+						        <tr>
+						          <td class="text-center"><input type="checkbox" value="${doc.documentId}" /></td>
+						          <td>${doc.fileName}</td>
+						          <td><fmt:formatDate value="${doc.createdAt}" pattern="yyyy-MM-dd HH:mm"/></td>
+						          <td>${doc.size} KB</td>
+						          <td>${doc.type}</td>
+						          <td>${doc.uploader}</td>
+						        </tr>
+						      </c:forEach>
+						    </c:when>
+						    <c:otherwise>
+						      <!-- 데이터 없을 때만 flex 중앙 정렬 -->
+						      <tr>
+						        <td colspan="6" class="border-0">
+						          <div class="d-flex justify-content-center align-items-center text-secondary" style="height:60vh;">
+						            등록된 파일이 없습니다.
+						          </div>
+						        </td>
+						      </tr>
+						    </c:otherwise>
+						  </c:choose>
+						</tbody>
+					  </table>
+					</div>
+					
+				
 				<!-- 여기에 코드 작성 -->
 				<!-- 여기에 코드 작성 -->
 
@@ -69,6 +107,7 @@
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("#navTitle").textContent = "드라이브"
 	</script>
 </body>

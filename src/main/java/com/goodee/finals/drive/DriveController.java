@@ -36,8 +36,9 @@ public class DriveController {
     }
 	
     @ModelAttribute
-    public void sideBarList(Model model) {
+    public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
 		List<DriveDTO> myDriveList = driveService.myDrive(staffDTO);
 		List<DriveShareDTO> shareDriveList = driveService.shareDrive(staffDTO);
 		
@@ -49,25 +50,15 @@ public class DriveController {
 	@GetMapping
 	public String getDefaultDrive(Model model) {
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		DriveDTO drive = driveService.getDefaultDrive(staffDTO);
-		
-		model.addAttribute("drive", drive);
-		System.out.println(drive.getDriveName());
-		System.out.println(drive.getDefaultDriveNum());
-		System.out.println(drive.getIsPersonal());
-		System.out.println(drive.getDriveDate());
+		DriveDTO driveDTO = driveService.getDefaultDrive(staffDTO);
+		model.addAttribute("driveDTO", driveDTO);
 		return "drive/detail";
 	}
 	
 	@GetMapping("{driveNum}")
 	public String selectedDrive(@PathVariable Long driveNum, Model model) {
-		System.out.println(driveNum);
 		DriveDTO driveDTO = driveService.getDrive(driveNum);
-		
-		System.out.println(driveDTO.getDriveName());
-		System.out.println(driveDTO.getIsPersonal());
-		System.out.println(driveDTO.getDefaultDriveNum());
-		System.out.println(driveDTO.getDriveNum());
+		model.addAttribute("driveDTO", driveDTO);
 		return "drive/detail";
 	}
 	
@@ -82,9 +73,6 @@ public class DriveController {
 	        return "drive/create";
 	    }
 		
-		for(DriveShareDTO ds : driveDTO.getDriveShareDTOs()) {
-			System.out.println(ds.getStaffDTO().getStaffCode());
-		}
 		
 		// TODO - 드라이브 생성자정보가 필요해서 로그인체크용 - 나중에 삭제
 		StaffDTO staffDTO = null;
@@ -118,7 +106,6 @@ public class DriveController {
 	@ResponseBody
 	public List<StaffResponseDTO> staffList() {
 		List<StaffResponseDTO> list = driveService.staffList();
-		System.out.println(list.size());
 		return list;
 	}
 	
