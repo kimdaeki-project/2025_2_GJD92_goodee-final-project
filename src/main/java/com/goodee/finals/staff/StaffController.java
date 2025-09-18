@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,8 +63,6 @@ public class StaffController {
 	
 	@PostMapping("{staffCode}/update")
 	public String postStaffUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
-		log.info("{}", staffDTO.getStaffCode());
-		
 		boolean result = staffService.updateStaff(staffDTO, attach);
 		
 		String resultMsg = "사원 정보 수정 중 오류가 발생했습니다.";
@@ -88,6 +89,40 @@ public class StaffController {
 	@GetMapping("info")
 	public String getStaffInfo() {
 		return "staff/info";
+	}
+	
+	@GetMapping("info/update")
+	public String getStaffInfoUpdate(Model model) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+		model.addAttribute("staffDTO", staffDTO);
+		
+		return "staff/info-update";
+	}
+	
+	@PostMapping("info/update")
+	public String postStaffInfoUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		boolean result = staffService.updateStaffFromInfo(staffDTO, attach);
+		
+		String resultMsg = "내 정보 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "내 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/info";
+			model.addAttribute("resultUrl", resultUrl);
+			
+			staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(staffDTO, authentication.getCredentials(), authentication.getAuthorities()));
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 	@GetMapping("regist")

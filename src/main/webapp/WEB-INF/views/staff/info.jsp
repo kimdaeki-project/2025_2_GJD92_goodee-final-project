@@ -55,7 +55,7 @@
         		</ul>
         		
         		<div class="col-4 mt-5 ms-5 d-flex justify-content-center">
-        			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white">수정</button>
+        			<button type="button" onclick="location.href = '/staff/info/update'" class="btn btn-outline-secondary bg-gradient-dark text-white">수정</button>
         		</div>
         	</div>
         	

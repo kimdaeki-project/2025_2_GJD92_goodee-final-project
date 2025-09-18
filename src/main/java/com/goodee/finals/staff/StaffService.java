@@ -89,77 +89,29 @@ public class StaffService implements UserDetailsService {
 	}
 	
 	public boolean updateStaff(StaffDTO staffDTO, MultipartFile attach) {
-		staffDTO = setStaffUpdate(staffDTO);
+		setStaffUpdate(staffDTO);
 		
 		if (attach != null && attach.getSize() > 0) {
-			StaffDTO before = staffRepository.findById(staffDTO.getStaffCode()).orElseThrow();
-			AttachmentDTO beforeAttach = before.getStaffAttachmentDTO().getAttachmentDTO();
-			attachmentRepository.deleteById(beforeAttach.getAttachNum());
-			
-			AttachmentDTO attachmentDTO = new AttachmentDTO();
-			
-			try {
-				String fileName = fileService.saveFile(FileService.STAFF, attach);
-				
-				attachmentDTO.setAttachSize(attach.getSize());
-				attachmentDTO.setOriginName(attach.getOriginalFilename());
-				attachmentDTO.setSavedName(fileName);
-				
-				attachmentRepository.save(attachmentDTO);
-				
-				StaffAttachmentDTO staffAttachmentDTO = new StaffAttachmentDTO();
-				staffAttachmentDTO.setStaffDTO(staffDTO);
-				staffAttachmentDTO.setAttachmentDTO(attachmentDTO);
-				
-				staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			changeStaffAttach(staffDTO, attach);
 		}
 		
 		StaffDTO result = staffRepository.saveAndFlush(staffDTO);
-		
-		// TODO 기존 첨부 이미지 실제 파일 삭제 로직 추가
 		
 		if (result != null) return true;
 		else return false;
 	}
 	
-	private StaffDTO setStaffDefault(StaffDTO staffDTO) {
-		staffDTO.setDeptDTO(deptRepository.findById(staffDTO.getInputDeptCode()).orElseThrow());
-		staffDTO.setJobDTO(jobRepository.findById(staffDTO.getInputJobCode()).orElseThrow());
+	public boolean updateStaffFromInfo(StaffDTO staffDTO, MultipartFile attach) {
+		staffDTO = setStaffUpdateFromInfo(staffDTO);
 		
-		int year = LocalDate.now().getYear();
-		Integer lastStaffCode = staffRepository.findLastStaffCode();
-		
-		if (lastStaffCode == null || (lastStaffCode / 10000) != year) {
-			staffDTO.setStaffCode((year * 10000) + 1);
-		} else {
-			staffDTO.setStaffCode(lastStaffCode + 1);
+		if (attach != null && attach.getSize() > 0) {
+			changeStaffAttach(staffDTO, attach);
 		}
 		
-		staffDTO.setStaffPw(passwordEncoder.encode("0000"));
-		staffDTO.setStaffUsedLeave(0);
-		staffDTO.setStaffRemainLeave(0);
+		StaffDTO result = staffRepository.saveAndFlush(staffDTO);
 		
-		return staffDTO;
-	}
-	
-	private StaffDTO setStaffUpdate(StaffDTO after) {
-		after.setDeptDTO(deptRepository.findById(after.getInputDeptCode()).orElseThrow());
-		after.setJobDTO(jobRepository.findById(after.getInputJobCode()).orElseThrow());
-		
-		StaffDTO before = staffRepository.findById(after.getStaffCode()).orElseThrow();
-		
-		after.setStaffLocked(before.getStaffLocked());
-		after.setStaffEnabled(before.getStaffEnabled());
-		
-		after.setStaffRemainLeave(before.getStaffRemainLeave());
-		after.setStaffUsedLeave(before.getStaffUsedLeave());
-		
-		after.setStaffPw(before.getStaffPw());
-		
-		return after;
+		if (result != null) return true;
+		else return false;
 	}
 
 	@Override
@@ -210,6 +162,86 @@ public class StaffService implements UserDetailsService {
 		staffRepository.saveAndFlush(staffDTO);
 		
 		return 200;
+	}
+	
+	
+	
+	
+	// Inner Methods
+	
+	private StaffDTO setStaffDefault(StaffDTO staffDTO) {
+		staffDTO.setDeptDTO(deptRepository.findById(staffDTO.getInputDeptCode()).orElseThrow());
+		staffDTO.setJobDTO(jobRepository.findById(staffDTO.getInputJobCode()).orElseThrow());
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = staffRepository.findLastStaffCode();
+		
+		if (lastStaffCode == null || (lastStaffCode / 10000) != year) {
+			staffDTO.setStaffCode((year * 10000) + 1);
+		} else {
+			staffDTO.setStaffCode(lastStaffCode + 1);
+		}
+		
+		staffDTO.setStaffPw(passwordEncoder.encode("0000"));
+		staffDTO.setStaffUsedLeave(0);
+		staffDTO.setStaffRemainLeave(0);
+		
+		return staffDTO;
+	}
+	
+	private void setStaffUpdate(StaffDTO after) {
+		after.setDeptDTO(deptRepository.findById(after.getInputDeptCode()).orElseThrow());
+		after.setJobDTO(jobRepository.findById(after.getInputJobCode()).orElseThrow());
+		
+		StaffDTO before = staffRepository.findById(after.getStaffCode()).orElseThrow();
+		
+		after.setStaffLocked(before.getStaffLocked());
+		after.setStaffEnabled(before.getStaffEnabled());
+		
+		after.setStaffRemainLeave(before.getStaffRemainLeave());
+		after.setStaffUsedLeave(before.getStaffUsedLeave());
+		
+		after.setStaffPw(before.getStaffPw());
+	}
+	
+	private StaffDTO setStaffUpdateFromInfo(StaffDTO after) {
+		StaffDTO before = staffRepository.findById(after.getStaffCode()).orElseThrow();
+		
+		before.setStaffEmail(after.getStaffEmail());
+		before.setStaffPhone(after.getStaffPhone());
+		before.setStaffPostcode(after.getStaffPostcode());
+		before.setStaffAddress(after.getStaffAddress());
+		before.setStaffAddressDetail(after.getStaffAddressDetail());
+		
+		return before;
+	}
+	
+	private void changeStaffAttach(StaffDTO staffDTO, MultipartFile attach) {
+		StaffDTO before = staffRepository.findById(staffDTO.getStaffCode()).orElseThrow();
+		AttachmentDTO beforeAttach = before.getStaffAttachmentDTO().getAttachmentDTO();
+		attachmentRepository.deleteById(beforeAttach.getAttachNum());
+		
+		// TODO 기존 첨부 이미지 실제 파일 삭제 로직 추가
+		
+		AttachmentDTO attachmentDTO = new AttachmentDTO();
+		
+		try {
+			String fileName = fileService.saveFile(FileService.STAFF, attach);
+			
+			attachmentDTO.setAttachSize(attach.getSize());
+			attachmentDTO.setOriginName(attach.getOriginalFilename());
+			attachmentDTO.setSavedName(fileName);
+			
+			attachmentRepository.save(attachmentDTO);
+			
+			StaffAttachmentDTO staffAttachmentDTO = new StaffAttachmentDTO();
+			staffAttachmentDTO.setStaffDTO(staffDTO);
+			staffAttachmentDTO.setAttachmentDTO(attachmentDTO);
+			
+			staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
