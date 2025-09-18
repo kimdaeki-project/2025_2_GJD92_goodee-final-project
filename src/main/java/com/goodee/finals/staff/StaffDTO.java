@@ -12,11 +12,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
 import com.goodee.finals.notice.NoticeDTO;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -79,6 +82,9 @@ public class StaffDTO implements UserDetails {
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffEnabled;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<RideDTO> rideDTOs;
+	
 	
 	// For Input
 	@Transient
