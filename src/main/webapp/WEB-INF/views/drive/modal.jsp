@@ -24,9 +24,9 @@
 							<div class="d-grid gap-1">
 								<!-- DB에서 가져온 부서 목록-->
 								<button class="btn btn-light text-start dept-btn" data-team="전체">전체</button>
-								<button class="btn btn-light text-start dept-btn" data-team="인사팀">인사팀</button>
-								<button class="btn btn-light text-start dept-btn" data-team="운영팀">운영팀</button>
-								<button class="btn btn-light text-start dept-btn" data-team="시설팀">시설팀</button>
+								<button class="btn btn-light text-start dept-btn" data-team="인사">인사팀</button>
+								<button class="btn btn-light text-start dept-btn" data-team="운영">운영팀</button>
+								<button class="btn btn-light text-start dept-btn" data-team="시설">시설팀</button>
 							</div>
 						</div>
 					</div>

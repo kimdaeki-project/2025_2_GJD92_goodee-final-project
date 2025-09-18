@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
 addBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList');
 	const savedStaff = document.getElementById('savedStaff');
-	
+
 	// 요소 확인용 안전장치
 	if (!staffList || !savedStaff) {
 		console.log('staffList or savedStaff 태그 없음')
@@ -56,17 +56,26 @@ addBtn.addEventListener('click', () => {
 	// 이미 추가되어있는 사원	
 	const mainStaffCode = Array.from(savedStaff.querySelectorAll('input[type="hidden"')).map(input => input.value);
 	
-	// 중복 사원이 체크
-	// 중복 사원 존재시 선택된 체크박스 모두 해제 후 메서드 즉시 종료
+	// 중복 및 본인 추가 제외
 	for (const check of checkedBoxes) {
 		const staffCode = check.value;
+		// 중복
 		if (mainStaffCode.includes(staffCode)) {
-			alert('이미 추가된 사용자 입니다')
 			for(const chk of checkedBoxes) {
 				chk.checked = false;				
 			}
+			alert('이미 추가된 사용자 입니다')
 			return;
 		}
+		// 본인 추가 제외
+		if(staffCode == loginStaffCode) {
+			for(const chk of checkedBoxes) {
+				chk.checked = false;				
+			}
+			alert('자기 자신을 추가할 수 없습니다');
+			return;
+		}
+		
 	}
  	
 	// 체크된 사원들을 오른쪽으로 이동시킴
@@ -161,6 +170,7 @@ deptBtn.forEach(d => {
 			return;
 		}
 				
+		
 		const DeptStaff = staffs.filter(s => s.deptDTO.deptDetail == deptName); // 부서에 해당하는 사원 필터링
 		currentDept = DeptStaff.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 현재 부서 설정
 		renderStaff(currentDept);
@@ -191,6 +201,7 @@ function renderStaff(list) {
 	
 	staffList.innerHTML = ''; // 사원목록 초기화
 	list.forEach(staff => {
+		
 		// li 태그 생성
 		const li = document.createElement('li');
 		li.className = 'list-group-item d-flex align-items-center'

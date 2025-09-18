@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
+import com.goodee.finals.drive.DriveShareDTO;
 import com.goodee.finals.notice.NoticeDTO;
 
 import jakarta.persistence.CascadeType;
@@ -85,8 +86,12 @@ public class StaffDTO implements UserDetails {
 	@Transient
 	private Integer inputJobCode;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DriveDTO> driveDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DriveShareDTO> driveShareDTOs;
 	
 	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DocumentDTO> documentDTOs;

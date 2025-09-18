@@ -57,7 +57,7 @@
       
       <li class="nav-item">
         <a class="nav-link text-dark" href="/drive">
-          <i class="material-symbols-rounded opacity-5 fs-5" data-content="드라이브">folder</i>
+          <i class="material-symbols-rounded opacity-5 fs-5" data-content="드라이브">cloud_upload</i>
           <span class="nav-link-text ms-1 text-sm">드라이브</span>
         </a>
       </li>

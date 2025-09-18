@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,6 +33,7 @@ public class DriveDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long driveNum;
+	@NotBlank(message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
 	private String driveName;
 	private Boolean isPersonal;
 	@CreationTimestamp
