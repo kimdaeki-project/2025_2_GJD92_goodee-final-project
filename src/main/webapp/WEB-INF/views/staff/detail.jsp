@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>사원</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -35,14 +35,14 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/leave?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="연차 현황">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">연차 현황</span>
 			        </a>
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/quit?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="퇴사자 조회">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">퇴사자 조회</span>
 			        </a>

@@ -77,22 +77,22 @@
 	    		<div class="col-10 offset-1 d-flex justify-content-between">
 	    			<div class="d-flex gap-3">
 	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">정원</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalStaff }</p>
-		    			</div>
-		    			
-		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">전체 연차</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">연차</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용 연차</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결근</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">잔여 연차</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    			</div>
+		    			
+		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용률</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
 		    			</div>
 	    			</div>
@@ -115,8 +115,8 @@
 		    					<th class="col-2">이름</th>
 		    					<th class="col-2">부서</th>
 		    					<th class="col-2">직위</th>
-		    					<th class="col-2">연락처</th>
-		    					<th class="col-2">상태</th>
+		    					<th class="col-2">사용연차</th>
+		    					<th class="col-2">잔여연차</th>
 		    				</tr>
 		    			</thead>
 		    			<tbody>
@@ -127,8 +127,8 @@
 			    					<td><a href="/staff/${ staff.staffCode }" style="color: #737373;">${ staff.staffName }</a></td>
 			    					<td>${ staff.deptDTO.deptDetail }</td>
 			    					<td>${ staff.jobDTO.jobDetail }</td>
-			    					<td>${ staff.staffPhone }</td>
-			    					<td></td>
+			    					<td>${ staff.staffUsedLeave }</td>
+			    					<td>${ staff.staffRemainLeave }</td>
 		    					</tr>
 		    				</c:forEach>
 		    				
@@ -169,11 +169,11 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/staff/list.js"></script>
+	<script src="/js/staff/list-leave.js"></script>
 	<script>
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='사원 조회']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "사원 조회"
+		document.querySelector("i[data-content='연차 현황']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "연차 현황"
 	</script>
 </body>
 

@@ -19,7 +19,6 @@ import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -45,6 +44,10 @@ public class StaffService implements UserDetailsService {
 	
 	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
 		return staffRepository.findAllBySearch(search, pageable);
+	}
+	
+	public Page<StaffDTO> getStaffQuitSearchList(String search, Pageable pageable) {
+		return staffRepository.findAllQuitBySearch(search, pageable);
 	}
 	
 	public long getTotalStaff() {

@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Log In</title>
+	<title>Goodee World Groupware</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>

@@ -80,6 +80,28 @@ public class StaffController {
 		
 		return "common/result";
 	}
+	
+	@GetMapping("leave")
+	public String getStaffLeave(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("search", search);
+		
+		return "staff/list-leave";
+	}
+	
+	@GetMapping("quit")
+	public String getStaffQuit(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffDTO> staffList = staffService.getStaffQuitSearchList(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("search", search);
+		
+		return "staff/list-quit";
+	}
 
 	@GetMapping("login")
 	public String getStaffLogin() {
