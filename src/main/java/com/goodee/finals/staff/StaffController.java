@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.goodee.finals.drive.DriveService;
-
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class StaffController {
 	@Autowired
 	private StaffService staffService;
-	@Autowired
-	private DriveService driveService;
 	
 	@GetMapping
 	public String getStaffList(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
@@ -185,10 +181,6 @@ public class StaffController {
 	@PostMapping("regist")
 	public String postStaffRegist(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
 		boolean result = staffService.registStaff(staffDTO, attach);
-		
-		if(result) {
-			result = driveService.createDefaultDrive(staffDTO);
-		}
 		
 		String resultMsg = "사원 등록 중 오류가 발생했습니다.";
 		String resultIcon = "warning";

@@ -42,6 +42,7 @@ public class DriveService {
 		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공용 드라이브
 	}
 	
+	// 지속되는 프록시 에러해결
 	public List<StaffResponseDTO> staffList() {
 		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
