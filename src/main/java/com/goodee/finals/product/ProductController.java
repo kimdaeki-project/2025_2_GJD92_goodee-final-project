@@ -24,7 +24,7 @@ public class ProductController {
 	private ProductService productService;
 	
 	@GetMapping("")
-	public String getProductlist(@PageableDefault(size = 10, sort = "lost_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+	public String getProductlist(@PageableDefault(size = 10, sort = "product_code", direction = Direction.DESC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";
 		
 		Page<ProductDTO> productList = productService.getProductSearchList(search,pageable);
