@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import com.goodee.finals.ride.RideDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
 
 
@@ -69,6 +71,10 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToMany(mappedBy = "staffDTO")
 	private List<NoticeDTO> notices;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<ChatUserDTO> chatUserDTOs;
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
