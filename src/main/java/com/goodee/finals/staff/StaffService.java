@@ -148,6 +148,20 @@ public class StaffService implements UserDetailsService {
 			return true;
 		}
 	}
+	
+	public boolean disableStaff(Integer staffCode) {
+		StaffDTO staffDTO = staffRepository.findById(staffCode).orElseThrow();
+		
+		if (!staffDTO.getStaffEnabled()) {
+			return false;
+		} else {
+			staffDTO.setStaffEnabled(false);
+			staffDTO.setStaffFireDate(LocalDate.now());
+			staffRepository.saveAndFlush(staffDTO);
+			
+			return true;
+		}
+	}
 
 	public int updateStaffPassword(PasswordDTO passwordDTO) {
 		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();
@@ -243,5 +257,5 @@ public class StaffService implements UserDetailsService {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

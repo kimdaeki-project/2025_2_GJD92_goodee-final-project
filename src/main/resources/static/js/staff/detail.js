@@ -13,3 +13,19 @@ function unlock(staffCode) {
 	  }
 	});
 }
+
+function disable(staffCode) {
+	Swal.fire({
+	  text: "해당 계정을 비활성화 하시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "해제",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+	    location.href = `/staff/${staffCode}/disable`
+	  }
+	});
+}

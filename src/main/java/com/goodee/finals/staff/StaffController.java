@@ -88,6 +88,12 @@ public class StaffController {
 	
 	@GetMapping("info")
 	public String getStaffInfo() {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(staffDTO, authentication.getCredentials(), authentication.getAuthorities()));
+		
 		return "staff/info";
 	}
 	
@@ -159,6 +165,26 @@ public class StaffController {
 		
 		if (result) {
 			resultMsg = "계정 차단이 해제되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("{staffCode}/disable")
+	public String getStaffDisable(@PathVariable Integer staffCode, Model model) {
+		boolean result = staffService.disableStaff(staffCode);
+		
+		String resultMsg = "이미 비활성화된 계정입니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "계정이 비활성화 되었습니다.";
 			resultIcon = "success";
 			String resultUrl = "/staff/" + staffCode;
 			model.addAttribute("resultUrl", resultUrl);
