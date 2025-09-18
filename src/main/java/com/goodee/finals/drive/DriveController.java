@@ -36,7 +36,7 @@ public class DriveController {
     }
 	
     @ModelAttribute
-    public void driveList(Model model) {
+    public void sideBarList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<DriveDTO> myDriveList = driveService.myDrive(staffDTO);
 		List<DriveShareDTO> shareDriveList = driveService.shareDrive(staffDTO);
@@ -47,14 +47,28 @@ public class DriveController {
     }
     
 	@GetMapping
-	public String list(Model model) {
+	public String getDefaultDrive(Model model) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		DriveDTO drive = driveService.getDefaultDrive(staffDTO);
+		
+		model.addAttribute("drive", drive);
+		System.out.println(drive.getDriveName());
+		System.out.println(drive.getDefaultDriveNum());
+		System.out.println(drive.getIsPersonal());
+		System.out.println(drive.getDriveDate());
 		return "drive/detail";
 	}
 	
 	@GetMapping("{driveNum}")
-	public String driveDetail(@PathVariable Long driveNum, Model model) {
-//		DriveDTO driveDTO = driveService.getDrive(driveNum);
-		return "";
+	public String selectedDrive(@PathVariable Long driveNum, Model model) {
+		System.out.println(driveNum);
+		DriveDTO driveDTO = driveService.getDrive(driveNum);
+		
+		System.out.println(driveDTO.getDriveName());
+		System.out.println(driveDTO.getIsPersonal());
+		System.out.println(driveDTO.getDefaultDriveNum());
+		System.out.println(driveDTO.getDriveNum());
+		return "drive/detail";
 	}
 	
 	@GetMapping("create")

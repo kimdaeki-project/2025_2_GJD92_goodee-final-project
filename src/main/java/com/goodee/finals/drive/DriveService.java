@@ -46,6 +46,16 @@ public class DriveService {
 		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
 	
+	public DriveDTO getDefaultDrive(StaffDTO staffDTO) {
+		DriveDTO driveDTO = driveRepository.findByStaffDTO_StaffCodeAndIsPersonalTrueAndDefaultDriveNumIsNotNull(staffDTO.getStaffCode());
+		if(driveDTO != null) return driveDTO;
+		else return null;
+	}
+	
+	public DriveDTO getDrive(Long driveNum) {
+		return driveRepository.findById(driveNum).orElseThrow();
+	}
+	
 	public DriveDTO createDrive(DriveDTO driveDTO) {
 		boolean result = false;
 		
@@ -59,7 +69,7 @@ public class DriveService {
 		// 1. 개인용 드라이브
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
 			driveDTO.setIsPersonal(true);
-			driveDTO.setDefaultDrive(null);
+			driveDTO.setDefaultDriveNum(null);
 			driveDTO = driveRepository.save(driveDTO); // DB에 저장
 			result = makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 			return driveDTO;
@@ -69,7 +79,7 @@ public class DriveService {
 		driveDTO.setIsPersonal(false);
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
-			driveDTO.setDefaultDrive(null);
+			driveDTO.setDefaultDriveNum(null);
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(driveDTO);
 		}		
@@ -82,10 +92,11 @@ public class DriveService {
 	// 사원 등록시 기본드라이브 생성
 	public boolean createDefaultDrive(StaffDTO staffDTO) {
 		DriveDTO driveDTO = new DriveDTO();
-		driveDTO.setDefaultDrive(Long.valueOf(staffDTO.getStaffCode())) ;
 		driveDTO.setDriveName(staffDTO.getStaffName() + "님의 드라이브");
 		driveDTO.setIsPersonal(true);
 		driveDTO.setStaffDTO(staffDTO);
+		driveDTO = driveRepository.save(driveDTO);
+		driveDTO.setDefaultDriveNum(driveDTO.getDriveNum());
 		driveDTO = driveRepository.save(driveDTO);
 		
 		if(driveDTO != null) return true;
