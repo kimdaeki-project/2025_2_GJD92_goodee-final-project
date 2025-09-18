@@ -1,8 +1,8 @@
 package com.goodee.finals.drive;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
+import com.goodee.finals.staff.StaffResponseDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,22 +42,8 @@ public class DriveService {
 		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공용 드라이브
 	}
 	
-	public List<StaffDTO> staffList() {
-//		List<StaffDTO> list = staffRepository.findAll();
-//		List<StaffDTO> newList = new ArrayList<>();
-//		
-//		for(StaffDTO staff : list) {
-//			StaffDTO staffDTO = new StaffDTO();
-//			staffDTO.setDeptDTO(staff.getDeptDTO());
-//			staffDTO.setJobDTO(staff.getJobDTO());
-//			staffDTO.setStaffCode(staff.getStaffCode());
-//			staffDTO.setStaffName(staff.getStaffName());
-//			newList.add(staffDTO);
-//		}
-//		return newList;
-		List<StaffDTO> list = staffRepository.findAllWithDeptAndJob();
-		return list;
-		
+	public List<StaffResponseDTO> staffList() {
+		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
 	
 	public DriveDTO createDrive(DriveDTO driveDTO) {
@@ -72,6 +59,7 @@ public class DriveService {
 		// 1. 개인용 드라이브
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
 			driveDTO.setIsPersonal(true);
+			driveDTO.setDefaultDrive(null);
 			driveDTO = driveRepository.save(driveDTO); // DB에 저장
 			result = makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 			return driveDTO;
@@ -81,6 +69,7 @@ public class DriveService {
 		driveDTO.setIsPersonal(false);
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
+			driveDTO.setDefaultDrive(null);
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(driveDTO);
 		}		
@@ -88,6 +77,19 @@ public class DriveService {
 		makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 		return driveDTO; 
 		
+	}
+	
+	// 사원 등록시 기본드라이브 생성
+	public boolean createDefaultDrive(StaffDTO staffDTO) {
+		DriveDTO driveDTO = new DriveDTO();
+		driveDTO.setDefaultDrive(Long.valueOf(staffDTO.getStaffCode())) ;
+		driveDTO.setDriveName(staffDTO.getStaffName() + "님의 드라이브");
+		driveDTO.setIsPersonal(true);
+		driveDTO.setStaffDTO(staffDTO);
+		driveDTO = driveRepository.save(driveDTO);
+		
+		if(driveDTO != null) return true;
+		else return false;
 	}
 	
 	public boolean makeDriveDir(String path) {
