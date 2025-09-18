@@ -62,17 +62,17 @@
 				<input type="hidden" name="deleteFiles" id="deleteFiles">
 			</c:if>
 
-			<!-- 버튼 -->
-			<div class="d-flex justify-content-end gap-2 mt-4">
-				<c:if test="${ notice eq null }">
-					<button id="btn-write" data-kind="write" class="btn btn-dark px-4">등록</button>
-				</c:if>
-				<c:if test="${ notice ne null }">
-					<button id="btn-write" data-kind="edit" class="btn btn-dark px-4">수정</button>
-				</c:if>
-				<button type="reset" class="btn btn-outline-secondary px-4" id="btn-cancel">취소</button>
-			</div>
 		</form>
+		<!-- 버튼 -->
+		<div class="d-flex justify-content-end gap-2 mt-4" style="max-width:1000px; margin:0 auto;">
+			<c:if test="${ notice eq null }">
+				<button id="btn-write" data-kind="write" class="btn btn-dark px-4">등록</button>
+			</c:if>
+			<c:if test="${ notice ne null }">
+				<button id="btn-write" data-kind="edit" class="btn btn-dark px-4">수정</button>
+			</c:if>
+			<button type="reset" class="btn btn-outline-secondary px-4" id="btn-cancel">취소</button>
+		</div>
 
 		<script>
 		    window.existingFiles = window.existingFiles || [];
