@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+
+<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh; min-width: 200px;">
+	<div class="w-100">
+		<ul class="navbar-nav">
+		
+			<!-- 내 드라이브 시작 -->
+			<li>
+				<div class="nav-link text-dark d-flex justify-content-between">
+					<div class="d-flex align-items-center">
+						<a class="material-symbols-rounded opacity-5 fs-5" data-bs-toggle="collapse" href="#collapseMyDrive"
+						   role="button" aria-expanded="false" aria-controls="collapseMyDrive">keyboard_arrow_down</a> 
+						<span class="sub-nav-link-text ms-1 text-sm">내드라이브</span>
+					</div>
+					<div class="d-flex text-center">
+						<a class="nav-link text-dark d-flex align-items-center" href="/drive/create"> 
+							<i class="material-symbols-rounded opacity-5 fs-5" data-content="내드라이브">add</i>
+						</a>
+					</div>
+				</div>
+				<div class="collapse show" id="collapseMyDrive">
+					<ul class="navbar-nav" id="drive-my">
+						<!-- 내 드라이브-->
+						<c:forEach items="${ myDriveList }" var="myDrive">
+							<li class="nav-item">
+								<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
+									<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
+									<span class="nav-link-text ms-1 text-sm">${ myDrive.driveName }</span>
+								</a>
+							</li>
+						</c:forEach>
+					</ul>
+				</div>
+			</li>
+			<!-- 내 드라이브 끝 -->
+
+			<!-- 공용 드라이브 시작 -->
+			<li>
+				<div class="nav-link text-dark d-flex align-items-center">
+					<a class="material-symbols-rounded opacity-5 fs-5" data-bs-toggle="collapse" href="#collapseShareDrive"
+						   role="button" aria-expanded="false" aria-controls="collapseShareDrive">keyboard_arrow_down</a> 
+					<span class="nav-link-text ms-1 mt-2 text-sm">공용드라이브</span>
+				</div>
+				<div class="collapse show" id="collapseShareDrive">
+					<ul class="navbar-nav" id="drive-share">
+						<!-- 반복문 -->
+						<c:forEach items="${ shareDriveList }" var="shareDrive">
+							<li class="nav-item">
+								<a class="nav-link text-dark" href="/drive/${ shareDrive.driveDTO.driveNum }">
+									<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ shareDrive.driveDTO.driveName }">folder_shared</i>
+									<span class="nav-link-text ms-1 text-sm">${ shareDrive.driveDTO.driveName }</span>
+								</a>
+							</li>
+						</c:forEach>
+					</ul>
+				</div>
+			</li>
+			<!-- 공용 드라이브 끝 -->
+		</ul>
+	</div>
+</aside>
