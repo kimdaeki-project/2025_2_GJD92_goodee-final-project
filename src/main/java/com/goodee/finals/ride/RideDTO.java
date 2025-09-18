@@ -64,6 +64,9 @@ public class RideDTO {
 	@Column(name = "rideState", nullable = false)
 	private Integer  rideState;  // 운행상태
 	
+	@Column(columnDefinition = "boolean default false")
+	private boolean rideDeleted = false;  // 논리적 삭제
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")

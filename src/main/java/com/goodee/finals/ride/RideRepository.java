@@ -25,5 +25,11 @@ public interface RideRepository extends JpaRepository<RideDTO, String> {
 	
 	// 어트랙션 기종으로 조회
 	List<RideDTO> findByRideType(String rideType);
+	
+	// 삭제 안 된 전체
+    List<RideDTO> findByRideDeletedFalse();
+
+    // 삭제 안 된 + 타입별
+    List<RideDTO> findByRideTypeAndRideDeletedFalse(String rideType);
 
 }
