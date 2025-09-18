@@ -34,6 +34,7 @@ public class LostController {
 		
 		long totalLost = lostService.getTotalLost();
 		model.addAttribute("totalLost", totalLost);
+		log.info("{}", totalLost);
 		
 		return "lost/list";
 	}
@@ -47,7 +48,7 @@ public class LostController {
 	}
 	
 	@GetMapping("write")
-	public String write() throws Exception {
+	public String write() {
 		return "lost/write";
 	}
 	
@@ -81,12 +82,38 @@ public class LostController {
 	
 	@PostMapping("{lostNum}/update")
 	public String postLostUpdate(LostDTO lostDTO, MultipartFile attach, Model model) {
-//		boolean result = lostService.updateLost(lostDTO, attach);
+		boolean result = lostService.updateLost(lostDTO, attach);
 		
 		String resultMsg = "분실물 수정 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
 		
+		if (result) {
+			resultMsg = "분실물 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/lost/" + lostDTO.getLostNum();
+			model.addAttribute("resultUrl", resultUrl);
+		}
 		
+			
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@PostMapping("{lostNum}/delete")
+	public String delete(LostDTO lostDTO, Model model) {
+		LostDTO result = lostService.delete(lostDTO);
+		
+		String resultMsg = "분실물 삭제 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result != null) {
+			resultMsg = "분실물 정보를 삭제했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/lost";
+			model.addAttribute("resultUrl", resultUrl);
+		}
 		
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);

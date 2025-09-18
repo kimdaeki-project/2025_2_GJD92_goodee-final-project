@@ -14,7 +14,7 @@
     <ul class="navbar-nav">
     
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="대시보드">dashboard</i>
           <span class="nav-link-text ms-1 text-sm">대시보드</span>
         </a>
@@ -91,7 +91,7 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/product">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="재고">remove_shopping_cart</i>
           <span class="nav-link-text ms-1 text-sm">재고</span>
         </a>

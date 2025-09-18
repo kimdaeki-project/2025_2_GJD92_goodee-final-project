@@ -6,6 +6,7 @@ import com.goodee.finals.common.attachment.LostAttachmentDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,8 @@ public class LostDTO {
 	private String lostFinder;
 	private String lostFinderPhone;
 	private LocalDate lostDate = LocalDate.now();
+	@Column(columnDefinition = "boolean default false")
+	private boolean lostDelete;
 	
 	// 분실물 작성자
 	@ManyToOne

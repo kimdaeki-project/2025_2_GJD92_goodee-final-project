@@ -15,9 +15,11 @@ import com.goodee.finals.common.attachment.LostAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Transactional
 @Slf4j
 public class LostService {
 
@@ -81,15 +83,58 @@ public class LostService {
 		else return null;
 	}
 	
-//	public boolean updateLost(LostDTO lostDTO, MultipartFile attach) {
-//		lostDTO = setLostUpdate(lostDTO);
-//		
-//		
-//	}
-//	
-//	private LostDTO setLostUpdate(LostDTO after) {
-//		LostDTO before = lostRepository.findById(after.getLostNum()).orElseThrow();
-//		
-//	}
+	public boolean updateLost(LostDTO lostDTO, MultipartFile attach) {
+		lostDTO = setLostUpdate(lostDTO);
+		
+		if(attach != null && attach.getSize() > 0) {
+			LostDTO before = lostRepository.findById(lostDTO.getLostNum()).orElseThrow();
+			AttachmentDTO beforeAttach = before.getLostAttachmentDTO().getAttachmentDTO();
+			
+			String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
+			boolean deleteResult = fileService.fileDelete(FileService.LOST, savedName);
+			
+			if(deleteResult) {
+				attachmentRepository.deleteById(beforeAttach.getAttachNum());
+			}
+			
+			AttachmentDTO attachmentDTO = new AttachmentDTO();
+			
+			try {
+				String fileName = fileService.saveFile(FileService.LOST, attach);
+				
+				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setOriginName(attach.getOriginalFilename());
+				attachmentDTO.setSavedName(fileName);
+				
+				attachmentRepository.save(attachmentDTO);
+				
+				LostAttachmentDTO lostAttachmentDTO = new LostAttachmentDTO();
+				lostAttachmentDTO.setLostDTO(lostDTO);
+				lostAttachmentDTO.setAttachmentDTO(attachmentDTO);
+				
+				lostDTO.setLostAttachmentDTO(lostAttachmentDTO);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		LostDTO result = lostRepository.saveAndFlush(lostDTO);
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
+	private LostDTO setLostUpdate(LostDTO after) {
+		LostDTO before = lostRepository.findById(after.getLostNum()).orElseThrow();
+		after.setStaffDTO(before.getStaffDTO());
+		
+		return after;
+	}
+	
+	public LostDTO delete(LostDTO lostDTO) {
+		lostDTO.setLostDelete(true);
+		LostDTO result = lostRepository.save(lostDTO);
+		return result;
+	}
 	
 }

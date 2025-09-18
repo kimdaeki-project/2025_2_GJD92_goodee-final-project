@@ -131,10 +131,6 @@
       border-bottom: 1px solid #eee;
     }
 
-    .notices table td:nth-child(2) {
-      color: #1976d2;
-    }
-
     /* 어트랙션 상태 강조 */
     .attraction-status table td:last-child {
       color: red;
@@ -237,11 +233,30 @@
 	        <div class="panel notices">
 	          <h2>공지사항</h2>
 	          <table>
-	            <tr><td>번호</td><td>제목</td><td>작성자</td><td>작성일</td></tr>
-	            <tr><td>7</td><td>신규 입사자 교육 일정 안내</td><td>김은하</td><td>2025-09-11</td></tr>
-	            <tr><td>6</td><td>놀이물 별 점검 개선 안내</td><td>권호찬</td><td>2025-09-07</td></tr>
-	            <tr><td>5</td><td>주말 근무 교대 신청 마감일 안내</td><td>권호찬</td><td>2025-09-07</td></tr>
+	            <tr>
+		            <td>번호</td>
+		            <td>부서</td>
+		            <td>제목</td>
+		            <td>작성자</td>
+		            <td>작성일</td>
+	            </tr>
+	          <c:forEach items="${noticeList}" var="notice">
+	            <tr>
+		            <td>${notice.noticeNum }</td>
+		            <td>${notice.staffDTO.deptDTO.deptDetail }</td>
+		            <td><a href="/notice/${ notice.noticeNum }">${ notice.noticeTitle }</a></td>
+		            <td>${notice.staffDTO.staffName }</td>
+		            <td>${notice.noticeDate }</td>
+	            </tr>
+	          
+	          </c:forEach>
 	          </table>
+<!-- 	          <table> -->
+<!-- 	            <tr><td>번호</td><td>제목</td><td>작성자</td><td>작성일</td></tr> -->
+<!-- 	            <tr><td>7</td><td>신규 입사자 교육 일정 안내</td><td>김은하</td><td>2025-09-11</td></tr> -->
+<!-- 	            <tr><td>6</td><td>놀이물 별 점검 개선 안내</td><td>권호찬</td><td>2025-09-07</td></tr> -->
+<!-- 	            <tr><td>5</td><td>주말 근무 교대 신청 마감일 안내</td><td>권호찬</td><td>2025-09-07</td></tr> -->
+<!-- 	          </table> -->
 	        </div>
 
       	</section>

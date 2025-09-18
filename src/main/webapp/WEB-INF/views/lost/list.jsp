@@ -53,6 +53,10 @@
 		    	</div>
 		    </div>
 		    
+		    <c:if test="${ totalLost eq 0 }">
+				<div>검색된 결과가 없습니다.</div>
+			</c:if>
+		    
     <div class="d-flex justify-content-center aling-items-center">
 		    	<nav aria-label="Page navigation example">
 					  <ul class="pagination">
@@ -80,7 +84,7 @@
 					  </ul>
 					</nav>
 		    </div>
-		    
+			
 		    <button onclick="location.href='/lost/write'">등록</button>
     </section>
   </main>

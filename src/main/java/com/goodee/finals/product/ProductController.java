@@ -1,32 +1,50 @@
 package com.goodee.finals.product;
 
 import com.goodee.finals.GoodeeFinalProjectApplication;
+import com.goodee.finals.lost.LostDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/product/**")
 public class ProductController {
-
-    private final GoodeeFinalProjectApplication goodeeFinalProjectApplication;
-
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
-	
-
-    ProductController(GoodeeFinalProjectApplication goodeeFinalProjectApplication) {
-        this.goodeeFinalProjectApplication = goodeeFinalProjectApplication;
-    }
 			
+	@Autowired
+	private ProductService productService;
+	
 	@GetMapping("")
-	public String list() {
-		System.out.println(passwordEncoder.encode("0000"));
+	public String getProductlist(@PageableDefault(size = 10, sort = "lost_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<ProductDTO> productList = productService.getProductSearchList(search,pageable);
+		
+		model.addAttribute("productList", productList);
+		model.addAttribute("search", search);
+		
+		long totalProduct = productService.getTotalProduct();
+		model.addAttribute("totalProduct", totalProduct);
+		
+		
 		return "product/list";
+	}
+	
+	@GetMapping("{productCode}")
+	public String getProductDetail(@PathVariable Integer productCode, Model model) {
+		ProductDTO productDTO = productService.getProduct(productCode);
+		model.addAttribute("productDTO", productDTO);
+		
+		return "product/detail";
 	}
 	
 	@GetMapping("write")
@@ -35,9 +53,23 @@ public class ProductController {
 	}
 	
 	@PostMapping("write")
-	public void write(ProductDTO productDTO) {
+	public String write(ProductDTO productDTO, MultipartFile attach, Model model) {
+		ProductDTO result = productService.write(productDTO, attach);
 		
-		System.out.println(productDTO.toString());
+		String resultMsg = "물품 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result != null) {
+			resultMsg = "물품을 성공적으로 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/product";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 		
 	}
 	
