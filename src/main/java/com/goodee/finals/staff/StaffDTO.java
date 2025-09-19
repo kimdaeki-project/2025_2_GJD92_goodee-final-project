@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.goodee.finals.ride.RideDTO;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.notice.NoticeDTO;
 
 
@@ -82,6 +83,8 @@ public class StaffDTO implements UserDetails {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private List<RideDTO> rideDTOs;
 	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<InspectionDTO> inspectionDTOs;
 	
 	// For Input
 	@Transient
