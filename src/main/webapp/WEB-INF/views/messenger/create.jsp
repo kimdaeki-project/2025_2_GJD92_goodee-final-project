@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +9,13 @@
 </head>
 <body>
 	<h4>방 생성</h4>
+	<div>
+		<a href="/msg">채팅방 목록</a>
+	</div>
+	<sec:authorize access="isAuthenticated()">
+		<sec:authentication property="principal" var="logged" />
+		<input type="hidden" id="logged" value="${ logged.staffCode }">
+	</sec:authorize>
 	<form action="/msg/create" method="post" id="form">
 		<label for="chatRoomName">채팅방 이름</label>
 		<input type="text" name="chatRoomName" id="chatRoomName">
@@ -26,41 +34,6 @@
 		<button id="createRoom">생성</button>
 	</div>
 	
-	<script type="text/javascript">
-		const addBtns = document.querySelectorAll('.add-user');
-		const addedUsers = document.querySelector('#addedUsers');
-		let room = [];
-		addBtns.forEach(el => {
-			el.addEventListener('click', () => {				
-				const nameDiv = document.createElement('div');
-				
-				const nameSpan = document.createElement('span');
-				nameSpan.innerText = el.value;
-				
-				const axe = document.createElement('button');
-				axe.setAttribute('type', 'button');
-				axe.innerText = 'X';
-				
-				nameDiv.appendChild(nameSpan);
-				nameDiv.appendChild(axe);
-				
-				addedUsers.appendChild(nameDiv);
-				room.push(el.value);
-			});
-		});
-		
-		// ...
-		
-		const createRoomBtn = document.querySelector('#createRoom');
-		const form = document.querySelector('#form');
-		createRoomBtn.addEventListener('click', () => {
-			if (room.length > 0) {
-				let addedStaff = document.querySelector('#addedStaff');
-				addedStaff.value = room.join(",");
-				console.log(addedStaff.value)
-				form.submit();
-			}
-		});
-	</script>
+	<script type="text/javascript" src="/js/messenger/create.js"></script>
 </body>
 </html>
