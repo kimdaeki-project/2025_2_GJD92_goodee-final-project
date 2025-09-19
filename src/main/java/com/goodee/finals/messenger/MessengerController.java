@@ -3,6 +3,7 @@ package com.goodee.finals.messenger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -61,7 +63,19 @@ public class MessengerController {
 		messages.sort(Comparator.comparing(MessengerTestDTO::getChatBodyNum));
 		model.addAttribute("chatRoomNum", chatRoomDTO.getChatRoomNum());
 		model.addAttribute("chat", messages);
+		model.addAttribute("next", result.hasNext());
 		return "messenger/chat";
+	}
+	
+	@PostMapping("load") @ResponseBody
+	public boolean load(@RequestBody Map<String, Object> loadData, @PageableDefault(size = 20, sort = "chatBodyNum", direction= Sort.Direction.DESC) Pageable pageable) {
+		System.out.println(loadData.get("chatRoomNum"));
+		System.out.println(loadData.get("page"));
+		// 1. pageable에 page 번호 세팅
+		// 2. 쿼리로 다음 메시지 가져오기
+		// 3. Map에 다음 메시지 목록 + hasNext() 값 세팅해서 json으로 보내주기
+		// 4. 프론트에서는 그걸 받아서 next 값 업데이트 하고 프론트 화면 업데이트하기
+		return true;
 	}
 	
 }

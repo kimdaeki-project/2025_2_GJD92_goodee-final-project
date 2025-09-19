@@ -8,6 +8,26 @@
 <title>메신저</title>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<style>
+  /* 채팅 영역 */
+  #messages {
+    width: 100%;                /* 필요에 따라 조정 */
+    height: 300px;              /* 원하는 채팅창 높이 */
+    overflow-y: auto;           /* 세로 스크롤 */
+    border: 1px solid #ccc;     /* 구분선 */
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #fafafa;  /* 보기 좋게 배경색 */
+  }
+
+  /* 메시지 스타일 */
+  #messages div {
+    margin: 5px 0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #fff;
+  }
+</style>
 </head>
 <body>
 	<h2>메신저</h2>
@@ -19,51 +39,16 @@
 		<sec:authentication property="principal" var="staff" />
 		<input type="hidden" id="messageSender" value="${ staff.staffCode }">
 		<input type="hidden" id="messageSenderName" value="${ staff.staffName }">
+		<input type="hidden" id="next" value="${ next }">
+		<input type="hidden" id="page" value="0">
 	</sec:authorize>
 	<button id="sendButton">전송</button>
 	<input type="hidden" id="chatRoomNum" value="${ chatRoomNum }">
 	<div id="messages">
 		<c:forEach items="${ chat }" var="c">
-			<div>${ c.staffName }: ${ c.chatBodyContent }(${ c.chatBodyDtm })</div>
+			<div>${ c.staffName }: ${ c.chatBodyContent }</div>
 		</c:forEach>
 	</div>
-	<script type="text/javascript">
-		const chatRoomNum = document.querySelector('#chatRoomNum').value;
-	    const socket = new SockJS('http://192.168.1.35/ws-stomp');
-	    const stompClient = Stomp.over(socket);
-	    stompClient.connect({}, function (frame) {
-	        console.log('Connected: ' + frame);
-	        
-	        stompClient.subscribe('/sub/chat' + chatRoomNum, function (message) { // 구독 경로
-	            const receivedMessage = JSON.parse(message.body); // 메시지 파싱
-	            displayMessage(receivedMessage); // 화면에 메시지 표시
-	        });
-
-	        document.getElementById('sendButton').addEventListener('click', function () {
-	            const contents = document.querySelector('#messageInput').value;
-	            const sender = document.querySelector('#messageSender').value;
-	            const senderName = document.querySelector('#messageSenderName').value;
-	            const message = {
-	                type: "SEND", // 고정된 type
-	                contents: contents, // 입력된 내용
-	                chatRoomNum: chatRoomNum,
-	                staffCode: sender,
-					chatBodyContent: contents,
-					staffName: senderName
-					// 날짜, 삭제 여부는 컨트롤러에서 세팅
-	            };
-	            stompClient.send("/pub/chat" + chatRoomNum, {}, JSON.stringify(message)); // 메세지 전송 경로
-	            document.getElementById('messageInput').value = ''; // 입력 필드 초기화
-	        });
-	    });
-	    // 화면에 메시지를 추가하는 함수
-	    function displayMessage(message) {
-	        const messagesDiv = document.getElementById('messages');
-	        const messageElement = document.createElement('div');
-	        messageElement.textContent = message.staffName + ': ' + message.chatBodyContent + '(' + message.chatBodyDtm + ')'; // 메시지 내용 설정
-	        messagesDiv.appendChild(messageElement); // 메시지 추가
-	        messagesDiv.scrollTop = messagesDiv.scrollHeight; // 스크롤을 맨 아래로
-	    }
-	</script>
+	<script type="text/javascript" src="/js/messenger/connect.js"></script>
 </body>
 </html>
