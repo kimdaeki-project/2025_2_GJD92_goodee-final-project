@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffResponseDTO;
 
@@ -26,14 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DriveController {
 
-    private final AttachmentRepository attachmentRepository;
-
 	@Autowired
 	private DriveService driveService;
-
-    DriveController(AttachmentRepository attachmentRepository) {
-        this.attachmentRepository = attachmentRepository;
-    }
 	
     @ModelAttribute
     public void sideBarDriveList(Model model) {
@@ -72,20 +65,7 @@ public class DriveController {
 		if (bindingResult.hasErrors()) {
 	        return "drive/create";
 	    }
-		
-		
-		// TODO - 드라이브 생성자정보가 필요해서 로그인체크용 - 나중에 삭제
-		StaffDTO staffDTO = null;
-		Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(obj instanceof StaffDTO) {
-			staffDTO = (StaffDTO) obj;
-		} else {
-			model.addAttribute("resultMsg", "로그인안됨");
-			model.addAttribute("resultIcon", "error");
-			model.addAttribute("resultUrl", "/drive");
-			return "common/result";
-		}
-
+		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		driveDTO.setStaffDTO(staffDTO);
 		driveDTO = driveService.createDrive(driveDTO);
 		
@@ -102,11 +82,60 @@ public class DriveController {
 		return "common/result";
 	}
 	
+	@GetMapping("{driveNum}/update")
+	public String updateDrive(@PathVariable Long driveNum, Model model) {
+		DriveDTO driveDTO = driveService.getDrive(driveNum);
+		model.addAttribute("driveDTO", driveDTO);
+		return "drive/create";
+	}
+	
+	@PostMapping("{driveNum}/update")
+	public String updateDrive(@Valid DriveDTO driveDTO,BindingResult bindingResult, Model model) {
+		if(bindingResult.hasErrors()) {
+			return "drive/create";
+		}
+		
+		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		driveDTO.setStaffDTO(staffDTO);
+		driveDTO = driveService.updateDrive(driveDTO);
+		if(driveDTO != null) {
+			model.addAttribute("resultMsg", "드라이브 등록 완료");
+			model.addAttribute("resultIcon", "success");
+			model.addAttribute("resultUrl", "/drive");
+		} else {
+			model.addAttribute("resultMsg", "드라이브 등록 실패");
+			model.addAttribute("resultIcon", "error");
+			model.addAttribute("resultUrl", "/drive/create");
+		}
+		return "common/result";
+	}
+	
+	@PostMapping("/delete")
+	@ResponseBody
+	public DriveDTO deleteDrive(Long driveNum) {
+		System.out.println(driveNum);
+		if(driveNum == null) {
+			return null;
+		}
+		DriveDTO driveDTO = new DriveDTO();
+		driveDTO.setDriveNum(driveNum);
+		// 논리적 삭제
+		driveDTO = driveService.deleteDrive(driveDTO); 
+		
+		if(driveDTO == null) {
+			return null;
+		}
+		
+		return driveDTO;
+	}
+	
 	@GetMapping("staffList")
 	@ResponseBody
 	public List<StaffResponseDTO> staffList() {
 		List<StaffResponseDTO> list = driveService.staffList();
 		return list;
 	}
+
+	
 	
 }

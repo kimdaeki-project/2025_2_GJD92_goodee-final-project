@@ -42,7 +42,6 @@ public class DriveService {
 		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공용 드라이브
 	}
 	
-	// 지속되는 프록시 에러해결
 	public List<StaffResponseDTO> staffList() {
 		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
@@ -58,8 +57,6 @@ public class DriveService {
 	}
 	
 	public DriveDTO createDrive(DriveDTO driveDTO) {
-		boolean result = false;
-		
 		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    // 드라이브 이름 중복 조회
 		if(existDriveName != null) {
 			System.out.println("DriveService : 중복된이름 존재 메서드 종료");
@@ -71,37 +68,77 @@ public class DriveService {
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
 			driveDTO.setIsPersonal(true);
 			driveDTO.setDefaultDriveNum(null);
-			driveDTO = driveRepository.save(driveDTO); // DB에 저장
-			result = makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
+			driveDTO.setDriveEnabled(true);
+			driveDTO = driveRepository.save(driveDTO);
+			makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 			return driveDTO;
 		}
 
 		// 2. 공용 드라이브
-		driveDTO.setIsPersonal(false);
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
-			driveDTO.setDefaultDriveNum(null);
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(driveDTO);
 		}		
+		driveDTO.setDefaultDriveNum(null);
+		driveDTO.setIsPersonal(false);
+		driveDTO.setDriveEnabled(true);
 		driveDTO = driveRepository.save(driveDTO);
 		makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 		return driveDTO; 
+	}
+	
+	public DriveDTO updateDrive(DriveDTO driveDTO) {
+		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    // 드라이브 이름 중복 조회
+		if(existDriveName != null && !existDriveName.getDriveNum().equals(driveDTO.getDriveNum())) { // 중복이름과 PK가 같지 않은경우 return;
+			System.out.println("DriveService : 중복된이름 존재 메서드 종료");
+			return null;
+		}
 		
+		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
+			driveDTO.setIsPersonal(true);
+			driveDTO.setDriveEnabled(true);
+			return driveRepository.save(driveDTO);
+		}
+		
+		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
+			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
+			driveDTO.setDefaultDriveNum(null);
+			driveDTO.setDriveEnabled(true);
+			driveDTO.setIsPersonal(false);
+			driveShare.setStaffDTO(staffDTO);
+			driveShare.setDriveDTO(driveDTO);
+		}
+		return driveRepository.save(driveDTO);
+	}
+	
+	public DriveDTO deleteDrive(DriveDTO driveDTO) {
+		driveDTO = driveRepository.findById(driveDTO.getDriveNum()).orElseThrow();
+		if(driveDTO == null) {
+			return null;
+		}
+		driveDTO.setDriveEnabled(false);
+		driveDTO = driveRepository.save(driveDTO);
+		
+		System.out.println(driveDTO.getDriveNum());
+		System.out.println(driveDTO.getDriveName());
+		System.out.println(driveDTO.getDriveEnabled());
+		System.out.println(driveDTO.getDriveDate());
+		
+		return driveDTO;
 	}
 	
 	// 사원 등록시 기본드라이브 생성
-	public boolean createDefaultDrive(StaffDTO staffDTO) {
+	public DriveDTO createDefaultDrive(StaffDTO staffDTO) {
 		DriveDTO driveDTO = new DriveDTO();
-		driveDTO.setDriveName(staffDTO.getStaffName() + "님의 드라이브");
+		driveDTO.setDriveName(staffDTO.getStaffName() + "님");
 		driveDTO.setIsPersonal(true);
 		driveDTO.setStaffDTO(staffDTO);
+		driveDTO.setDriveEnabled(true);
 		driveDTO = driveRepository.save(driveDTO);
 		driveDTO.setDefaultDriveNum(driveDTO.getDriveNum());
 		driveDTO = driveRepository.save(driveDTO);
-		
-		if(driveDTO != null) return true;
-		else return false;
+		return driveDTO;
 	}
 	
 	public boolean makeDriveDir(String path) {

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html>
 
@@ -26,7 +27,7 @@
 					<form:form method="post" modelAttribute="driveDTO">
 						<div class="d-flex align-items-center gap-1 w-50">
 							<form:label path="driveName" cssClass="ms-0 me-1 mb-0 fs-6">드라이브 이름 : </form:label>
-							<form:input path="driveName" cssClass="form-control w-auto" />
+							<form:input path="driveName" cssClass="form-control w-auto" value="${ driveDTO.driveName }"/>
 						</div>
 						<div>
 							<form:errors path="driveName" cssClass="text-danger small"></form:errors>
@@ -51,11 +52,33 @@
 								<!-- 추가된 사용자 -->
 								<!-- 추가된 사용자 -->
 								
+								<c:if test="${not empty driveDTO and driveDTO.driveEnabled}">
+									<c:forEach items="${ driveDTO.driveShareDTOs }" var="driveShareDTO" varStatus="vs">
+										<tr class="shareStaff">
+											<th scope="row">
+												<button type="button" class="btn-close btn-close-white remove-saved" aria-label="Remove"></button>
+												<input type="hidden" name="driveShareDTOs[${ vs.index }].staffDTO.staffCode" value="${driveShareDTO.staffDTO.staffCode}">
+											</th>
+											<td><i class="material-symbols-rounded opacity-5 fs-5">contacts_product</i></td>
+											<td>${driveShareDTO.staffDTO.staffName}</td>
+											<td>${driveShareDTO.staffDTO.jobDTO.jobDetail}</td>
+											<td>${driveShareDTO.staffDTO.deptDTO.deptDetail}</td>
+										</tr>
+									</c:forEach>
+								</c:if>
+								
 							</tbody>
 						</table>
-						<div class="col-6 offset-md-1">
-							<button class="btn btn-outline-secondary bg-gradient-dark btn-drive-save">저장</button>
-							<button type="button" class="btn btn-outline-secondary" onclick="history.back()">취소</button>
+						<div class="d-flex">
+							<div class="col-6 offset-md-1">
+								<button class="btn btn-outline-secondary bg-gradient-dark btn-drive-save">저장</button>
+								<button type="button" class="btn btn-outline-secondary" onclick="history.back()">취소</button>
+							</div>
+							<div>
+								<c:if test="${ not empty driveDTO.driveNum }">
+									<button type="button" class="btn btn-outline-danger" onclick="deleteDrive(${driveDTO.driveNum})">드라이브 삭제</button>
+								</c:if>
+							</div>							
 						</div>
 					</form:form>
 				</div>
@@ -66,12 +89,16 @@
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<c:import url="/WEB-INF/views/drive/modal.jsp"></c:import>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-	<script src="/js/drive/create.js"></script>
 	<script>
+	let lastIndexOfStaffList = ${empty driveDTO.driveShareDTOs ? 0 : fn:length(driveDTO.driveShareDTOs)};
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("#navTitle").textContent = "드라이브 추가"
 	const loginStaffCode = ${ staffDTO.staffCode }
 	</script>
+	<c:if test="${not empty driveDTO}">
+	document.querySelector("i[data-content='${driveDTO.driveName}']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	</c:if>
+	<script src="/js/drive/create.js"></script>
 </body>
 
 </html>

@@ -20,17 +20,26 @@
 					</div>
 				</div>
 				<div class="collapse show" id="collapseMyDrive">
-					<ul class="navbar-nav" id="drive-my">
-						<!-- 내 드라이브-->
-						<c:forEach items="${ myDriveList }" var="myDrive">
-							<li class="nav-item">
-								<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
-									<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
-									<span class="nav-link-text ms-1 text-sm">${ myDrive.driveName }</span>
-								</a>
-							</li>
-						</c:forEach>
-					</ul>
+					<div class="d-flex">
+						<ul class="navbar-nav" id="drive-my">
+							<!-- 내 드라이브-->
+							<c:forEach items="${ myDriveList }" var="myDrive">
+								<c:if test="${ myDrive.driveEnabled }">
+									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
+										<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
+											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
+											<span class="nav-link-text ms-1 text-sm">${ myDrive.driveName }</span>
+										</a>
+										<div class="d-flex align-items-center drive-setting">
+											<a href="/drive/${ myDrive.driveNum }/update" class="d-flex align-items-center" style="text-decoration: none;">
+												<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveNum }">settings</i>
+											</a>
+										</div>
+									</li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
 				</div>
 			</li>
 			<!-- 내 드라이브 끝 -->
@@ -46,12 +55,14 @@
 					<ul class="navbar-nav" id="drive-share">
 						<!-- 반복문 -->
 						<c:forEach items="${ shareDriveList }" var="shareDrive">
-							<li class="nav-item">
-								<a class="nav-link text-dark" href="/drive/${ shareDrive.driveDTO.driveNum }">
-									<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ shareDrive.driveDTO.driveName }">folder_shared</i>
-									<span class="nav-link-text ms-1 text-sm">${ shareDrive.driveDTO.driveName }</span>
-								</a>
-							</li>
+							<c:if test="${ shareDrive.driveDTO.driveEnabled }">
+								<li class="nav-item">
+									<a class="nav-link text-dark" href="/drive/${ shareDrive.driveDTO.driveNum }">
+										<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ shareDrive.driveDTO.driveName }">folder_shared</i>
+										<span class="nav-link-text ms-1 text-sm">${ shareDrive.driveDTO.driveName }</span>
+									</a>
+								</li>
+							</c:if>
 						</c:forEach>
 					</ul>
 				</div>

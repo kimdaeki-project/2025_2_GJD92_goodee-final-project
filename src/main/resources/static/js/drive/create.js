@@ -8,6 +8,9 @@ const selectedList = document.getElementById("selectedList"); // 추가된 회�
 const saveBtn = document.getElementById('saveStaffBtn'); // 추가된 회원 저장[모달]
 const deptBtn = document.querySelectorAll('.dept-btn'); // 부서 선택[모달]
 const searchInput = document.getElementById('searchInput'); // 사원 검색[모달]
+const shareStaffs = document.querySelectorAll('.shareStaff');
+console.log(lastIndexOfStaffList);
+console.log(loginStaffCode)
 
 /*
 	드래그 이동
@@ -35,6 +38,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			.catch(error => console.log('fetch에러', error))
 		}
 	});
+	
+	if(shareStaffs) {
+		shareStaffs.forEach((tr) => {
+			tr.querySelector('.remove-saved').addEventListener('click', () => {
+					tr.remove(); 
+				})		
+		})	
+	}
 });
 
 /*
@@ -129,14 +140,16 @@ saveBtn.addEventListener('click', () => {
 		const tr = document.createElement('tr');
 		tr.innerHTML = `
 				<th scope="row">
-				<button class="btn-close btn-close-white remove-saved" aria-label="Remove"></button>
-				<input type="hidden" name="driveShareDTOs[${i}].staffDTO.staffCode" value="${staff.staffCode}">
+				<button type="button" class="btn-close btn-close-white remove-saved" aria-label="Remove"></button>
+				<input type="hidden" name="driveShareDTOs[${lastIndexOfStaffList}].staffDTO.staffCode" value="${staff.staffCode}">
 				</th>
 				<td><i class="material-symbols-rounded opacity-5 fs-5">contacts_product</i></td>
 				<td>${staff.staffName}</td>
 				<td>${staff.jobDTO.jobDetail}</td>
-				<td>${staff.deptDTO.deptDetail}</td>`;
+				<td>${staff.deptDTO.deptDetail}</td>`
+				;
 				
+		lastIndexOfStaffList++;
 		// 생성한 태그에 click이벤트 연결
 		tr.querySelector('.remove-saved').addEventListener('click', () => {
 			tr.remove(); 
@@ -211,4 +224,28 @@ function renderStaff(list) {
 		// 사원목록에 추가
 		staffList.appendChild(li);
 	})
+}
+
+function deleteDrive(driveNum) {
+	
+	let msg = '정말 드라이브를 삭제하시겠습니까? 드라이브는 복구되지 않습니다. 신중히 결정부탁합니다.'
+	if(!confirm(msg)) {
+		return;
+	}
+	
+	let params = new URLSearchParams();	
+	params.append('driveNum', driveNum);
+	fetch('/drive/delete', {
+		method : 'post',
+		body: params
+	})
+	.then(r => r.json())
+	.then(r => {
+		console.log(r)
+		console.log('응답 받음');
+	})
+	.catch(e => {
+		console.log("실패")
+	})
+	
 }
