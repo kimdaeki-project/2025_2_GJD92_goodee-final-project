@@ -11,6 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.goodee.finals.approval.ApprovalDTO;
+import com.goodee.finals.approval.ApproverDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.notice.NoticeDTO;
 
@@ -68,6 +71,12 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private ApprovalDTO approvalDTO;
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private ApproverDTO approverDTO;
 	
 	@Column(insertable = false)
 	@ColumnDefault("1")
