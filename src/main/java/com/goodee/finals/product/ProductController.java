@@ -24,7 +24,7 @@ public class ProductController {
 	private ProductService productService;
 	
 	@GetMapping("")
-	public String getProductlist(@PageableDefault(size = 10, sort = "product_code", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+	public String getProductList(@PageableDefault(size = 10, sort = "product_code", direction = Direction.DESC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";
 		
 		Page<ProductDTO> productList = productService.getProductSearchList(search,pageable);
@@ -35,8 +35,12 @@ public class ProductController {
 		long totalProduct = productService.getTotalProduct();
 		model.addAttribute("totalProduct", totalProduct);
 		
-		
 		return "product/list";
+	}
+	
+	@GetMapping("manage")
+	public String getProductManageList(@PageableDefault(size = 10, sort = "pm_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+		return "product/manageList";
 	}
 	
 	@GetMapping("{productCode}")
@@ -48,7 +52,9 @@ public class ProductController {
 	}
 	
 	@GetMapping("write")
-	public String write() {
+	public String write(Model model) {
+		// 품목타입리스트 가져오기
+		
 		return "product/write";
 	}
 	
@@ -72,5 +78,54 @@ public class ProductController {
 		return "common/result";
 		
 	}
+	
+	@GetMapping("{productCode}/update")
+	public String getProductUpdate(@PathVariable Integer productCode, Model model) {
+		ProductDTO productDTO = productService.getProduct(productCode);
+		model.addAttribute("productDTO", productDTO);
+		
+		return "product/write";
+	}
+	
+	public String postProductUpdate(ProductDTO productDTO, MultipartFile attach, Model model) {
+		boolean result = productService.updateProduct(productDTO, attach);
+		
+		String resultMsg = "물품 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "물품 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/product/" + productDTO.getProductCode();
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	public String delete(ProductDTO productDTO, Model model) {
+		ProductDTO result = productService.delete(productDTO);
+		
+		String resultMsg = "물품 삭제 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result != null) {
+			resultMsg = "물품 정보를 삭제했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/product";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	
+	
 	
 }

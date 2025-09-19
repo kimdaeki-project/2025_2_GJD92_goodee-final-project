@@ -35,7 +35,7 @@ public class LostService {
 	}
 	
 	public long getTotalLost() {
-		return lostRepository.count();
+	    return lostRepository.countByLostDeleteFalse();
 	}
 	
 	public LostDTO getLost(Long lostNum) {

@@ -7,11 +7,8 @@
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
 	<style type="text/css">
-		.sidenav .nav-link {
-  white-space: nowrap; /* 줄바꿈 방지 */
-}
 aside.sidenav {
-  width: 200px !important;   /* 원하는 값 (180~220px 정도 추천) */
+  width: 225px !important;   /* 원하는 값 (180~220px 정도 추천) */
   min-width: 200px !important;
   max-width: 200px !important;
 }
@@ -124,7 +121,7 @@ aside.sidenav {
 	<script src="/js/product/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='물품 리스트']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "재고"
 	</script>
 </body>

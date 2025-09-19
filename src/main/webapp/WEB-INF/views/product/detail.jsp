@@ -81,8 +81,8 @@
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
-		document.querySelector("i[data-content='분실물']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "분실물"
+		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "재고"
 	</script>
 </body>
 

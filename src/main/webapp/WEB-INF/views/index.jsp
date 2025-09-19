@@ -231,7 +231,7 @@
 	
 	        <!-- 공지사항 -->
 	        <div class="panel notices">
-	          <h2>공지사항</h2>
+	          <h2>공지사항</h2><a href="/notice">더보기</a>
 	          <table>
 	            <tr>
 		            <td>번호</td>

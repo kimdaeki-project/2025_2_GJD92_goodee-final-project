@@ -32,7 +32,7 @@ public class ProductDTO {
 	private Long productAmount;
 	private LocalDate productDate;
 	@Column(columnDefinition = "boolean default false")
-	private boolean ProducttDelete;
+	private boolean productDelete;
 	
 	// 물품 작성자
 	@ManyToOne

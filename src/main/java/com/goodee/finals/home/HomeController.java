@@ -48,7 +48,12 @@ public class HomeController {
 		// 공지사항 - 목록 5개 출력
 		List<NoticeDTO> noticeList = noticeService.getRecentNoticesForDashboard();
 		model.addAttribute("noticeList", noticeList);
-	    log.info("{}", noticeList.toString());
+		
+		// 결재현황
+		
+		// 어트랙션 운용현황
+		
+		// 날씨
 		
 		return "index";
 	}

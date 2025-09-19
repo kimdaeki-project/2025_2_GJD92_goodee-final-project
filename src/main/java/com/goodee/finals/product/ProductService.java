@@ -33,7 +33,7 @@ public class ProductService {
 	}
 	
 	public long getTotalProduct() {
-		return productRepository.count();
+		return productRepository.countByProductDeleteFalse();
 	}
 	
 	public ProductDTO getProduct(Integer productCode) {
@@ -80,6 +80,61 @@ public class ProductService {
 		
 		if (result != null) return productDTO;
 		else return null;
+	}
+	
+	public boolean updateProduct(ProductDTO productDTO, MultipartFile attach) {
+		productDTO = setProductUpdate(productDTO);
+		
+		if(attach != null && attach.getSize() > 0) {
+			ProductDTO before = productRepository.findById(productDTO.getProductCode()).orElseThrow();
+			AttachmentDTO beforeAttach = before.getProductAttachmentDTO().getAttachmentDTO();
+			
+			String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
+			boolean deleteResult = fileService.fileDelete(FileService.PRODUCT, savedName);
+			
+			if(deleteResult) {
+				attachmentRepository.deleteById(beforeAttach.getAttachNum());
+			}
+			
+			AttachmentDTO attachmentDTO = new AttachmentDTO();
+			
+			try {
+				String fileName = fileService.saveFile(FileService.LOST, attach);
+				
+				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setOriginName(attach.getOriginalFilename());
+				attachmentDTO.setSavedName(fileName);
+				
+				attachmentRepository.save(attachmentDTO);
+				
+				ProductAttachmentDTO productAttachmentDTO = new ProductAttachmentDTO();
+				productAttachmentDTO.setProductDTO(productDTO);
+				productAttachmentDTO.setAttachmentDTO(attachmentDTO);
+				
+				productDTO.setProductAttachmentDTO(productAttachmentDTO);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		ProductDTO result = productRepository.saveAndFlush(productDTO);
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
+	private ProductDTO setProductUpdate(ProductDTO after) {
+		ProductDTO before = productRepository.findById(after.getProductCode()).orElseThrow();
+		after.setStaffDTO(before.getStaffDTO());
+		
+		return after;
+	}
+	
+	public ProductDTO delete(ProductDTO productDTO) {
+		productDTO.setProductDelete(true);
+		ProductDTO result = productRepository.save(productDTO);
+		return result;
 	}
 	
 }

@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.goodee.finals.common.security.CustomSessionInformationExpiredStrategy;
@@ -71,5 +73,9 @@ public class AttendService {
         return attendRepository.findByStaffDTOStaffCodeAndAttendDate(staffCode, today)
                 .orElse(null); // 있으면 AttendDTO, 없으면 null
 	}
+	
+	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, Pageable pageable) {
+        return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable);
+    }
 	
 }

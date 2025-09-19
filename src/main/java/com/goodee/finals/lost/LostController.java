@@ -93,7 +93,6 @@ public class LostController {
 			String resultUrl = "/lost/" + lostDTO.getLostNum();
 			model.addAttribute("resultUrl", resultUrl);
 		}
-		
 			
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);

@@ -23,7 +23,7 @@
       <div class="col-md-4">
         <!-- 이달 근태 현황 -->
         <div class="card mb-3">
-          <div class="card-header">이달근태 현황 <span class="float-end">9월</span></div>
+          <div class="card-header">이상근태 현황 <span class="float-end">9월</span></div>
           <div class="card-body">
             <div class="row text-center">
               <div class="col">지각<br><strong>1</strong></div>
@@ -49,7 +49,7 @@
         <div class="card">
           <div class="card-header">근로시간 현황 <span class="float-end">09-15 ~ 09-21</span></div>
           <div class="card-body">
-            <p>주 근로시간 : 00h 00m</p>
+            <p>주 근로시간 : 40h 00m</p>
             <p>누적 근로시간 : 00h 00m</p>
             <p>잔여 근로시간 : 00h 00m</p>
             <p>연장 근로시간 : 00h 00m</p>
@@ -60,7 +60,27 @@
       <!-- 오른쪽 출퇴근 내역 -->
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">출퇴근 내역 <span class="float-end">2025-09</span></div>
+          <div class="card-header">출퇴근 내역
+          <form action="${pageContext.request.contextPath}/attend/monthly" method="get">
+    <input type="hidden" name="staffCode" value="${staffCode}" />
+
+    <label for="year">년도</label>
+    <select name="year" id="year">
+        <c:forEach var="y" begin="2020" end="2030">
+            <option value="${y}" <c:if test="${y == year}">selected</c:if>>${y}</option>
+        </c:forEach>
+    </select>
+
+    <label for="month">월</label>
+    <select name="month" id="month">
+        <c:forEach var="m" begin="1" end="12">
+            <option value="${m}" <c:if test="${m == month}">selected</c:if>>${m}월</option>
+        </c:forEach>
+    </select>
+
+    <button type="submit">조회</button>
+</form>
+          
           <div class="card-body">
             <table class="table table-bordered text-center align-middle">
               <thead class="table-light">
@@ -75,15 +95,17 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2025-09-10</td>
-                  <td>08:57:22</td>
-                  <td>18:02:00</td>
-                  <td>09h 04m</td>
-                  <td>09h 04m</td>
-                  <td>지각</td>
-                  <td>-</td>
-                </tr>
+              <c:forEach items="attendances" var="attend">
+	                <tr>
+	                  <td>${attend.attendNum }</td>
+	                  <td>08:57:22</td>
+	                  <td>18:02:00</td>
+	                  <td>09h 04m</td>
+	                  <td>09h 04m</td>
+	                  <td>지각</td>
+	                  <td>-</td>
+	                </tr>
+                </c:forEach>
               </tbody>
             </table>
 
