@@ -75,21 +75,6 @@
           <span class="nav-link-text ms-1 text-sm">어트랙션</span>
         </a>
       </li>
-      
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 점검">build</i>
-          <span class="nav-link-text ms-1 text-sm">어트랙션 점검</span>
-        </a>
-      </li>
-      
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고">siren</i>
-          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고</span>
-        </a>
-      </li>
-      
       <li class="nav-item">
         <a class="nav-link text-dark" href="#">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="재고">remove_shopping_cart</i>
