@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,8 +63,6 @@ public class StaffController {
 	
 	@PostMapping("{staffCode}/update")
 	public String postStaffUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
-		log.info("{}", staffDTO.getStaffCode());
-		
 		boolean result = staffService.updateStaff(staffDTO, attach);
 		
 		String resultMsg = "사원 정보 수정 중 오류가 발생했습니다.";
@@ -79,6 +80,48 @@ public class StaffController {
 		
 		return "common/result";
 	}
+	
+	@GetMapping("leave")
+	public String getStaffLeave(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("search", search);
+		
+		return "staff/list-leave";
+	}
+	
+	@PostMapping("leave/update")
+	public String postStaffLeaveUpdate(LeaveDTO leaveDTO, Model model) {
+		boolean result = staffService.updateStaffLeave(leaveDTO);
+		
+		String resultMsg = "연차 정보 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "연차 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/leave";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("quit")
+	public String getStaffQuit(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffDTO> staffList = staffService.getStaffQuitSearchList(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("search", search);
+		
+		return "staff/list-quit";
+	}
 
 	@GetMapping("login")
 	public String getStaffLogin() {
@@ -87,7 +130,47 @@ public class StaffController {
 	
 	@GetMapping("info")
 	public String getStaffInfo() {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(staffDTO, authentication.getCredentials(), authentication.getAuthorities()));
+		
 		return "staff/info";
+	}
+	
+	@GetMapping("info/update")
+	public String getStaffInfoUpdate(Model model) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+		model.addAttribute("staffDTO", staffDTO);
+		
+		return "staff/info-update";
+	}
+	
+	@PostMapping("info/update")
+	public String postStaffInfoUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		boolean result = staffService.updateStaffFromInfo(staffDTO, attach);
+		
+		String resultMsg = "내 정보 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "내 정보를 수정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/info";
+			model.addAttribute("resultUrl", resultUrl);
+			
+			staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(staffDTO, authentication.getCredentials(), authentication.getAuthorities()));
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 	@GetMapping("regist")
@@ -124,6 +207,46 @@ public class StaffController {
 		
 		if (result) {
 			resultMsg = "계정 차단이 해제되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("{staffCode}/disable")
+	public String getStaffDisable(@PathVariable Integer staffCode, Model model) {
+		boolean result = staffService.disableStaff(staffCode);
+		
+		String resultMsg = "이미 비활성화된 계정입니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "계정이 비활성화 되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/staff/" + staffCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("{staffCode}/enable")
+	public String getStaffEnable(@PathVariable Integer staffCode, Model model) {
+		boolean result = staffService.enableStaff(staffCode);
+		
+		String resultMsg = "이미 활성화된 계정입니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "계정이 활성화 되었습니다.";
 			resultIcon = "success";
 			String resultUrl = "/staff/" + staffCode;
 			model.addAttribute("resultUrl", resultUrl);
