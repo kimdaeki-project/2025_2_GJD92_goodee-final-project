@@ -1,15 +1,8 @@
 package com.goodee.finals.ride;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,26 +11,24 @@ import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.StaffController;
-import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 import jakarta.transaction.Transactional;
-import lombok.extern.java.Log;
 
 @Service
 @Transactional
 public class RideService {
 
 	@Autowired
-    private final StaffController staffController;
+    private StaffController staffController;
 
 	@Autowired
-    private final StaffRepository staffRepository;
+    private StaffRepository staffRepository;
 
 	@Autowired
-    private final AttachmentRepository attachmentRepository;
+    private AttachmentRepository attachmentRepository;
 	
 	@Autowired
-    private final FileService fileService;
+    private FileService fileService;
    
 	@Autowired
 	private RideRepository rideRepository;

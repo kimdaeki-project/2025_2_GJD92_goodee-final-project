@@ -67,7 +67,7 @@ public class RideDTO {
 	@Column(columnDefinition = "boolean default false")
 	private boolean rideDeleted = false;  // 논리적 삭제
 	
-	
+	// 사원이 여러개의 어트랙션 담당 가능
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;  // 사원번호
