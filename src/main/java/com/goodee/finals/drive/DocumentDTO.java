@@ -21,7 +21,7 @@ import lombok.Setter;
 public class DocumentDTO {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long docNum;
 	
 	private String docName;

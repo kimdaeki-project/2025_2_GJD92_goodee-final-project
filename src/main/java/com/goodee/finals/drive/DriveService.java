@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.goodee.finals.common.file.FileService;
+import com.goodee.finals.staff.DeptDTO;
+import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 import com.goodee.finals.staff.StaffResponseDTO;
@@ -29,6 +31,8 @@ public class DriveService {
 	@Autowired
 	private StaffRepository staffRepository;
 	@Autowired
+	private DeptRepository deptRepository;
+	@Autowired
 	private DriveShareRepository driveShareRepository;
 	@Autowired
 	private FileService fileService;
@@ -44,6 +48,10 @@ public class DriveService {
 	
 	public List<StaffResponseDTO> staffList() {
 		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
+	}
+	
+	public List<DeptDTO> deptList() {
+		return deptRepository.findAll();
 	}
 	
 	public DriveDTO getDefaultDrive(StaffDTO staffDTO) {

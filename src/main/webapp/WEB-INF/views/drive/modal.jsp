@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <div class="modal fade" id="shareModal" data-bs-backdrop="static"
-	data-bs-keyboard="false" tabindex="-1">
+	data-bs-keyboard="true" tabindex="-1">
 	<!-- (정중앙) -->
 	<div class="modal-dialog modal-xl modal-dialog-centered">
 		<div class="modal-content">
@@ -24,9 +24,12 @@
 							<div class="d-grid gap-1">
 								<!-- DB에서 가져온 부서 목록-->
 								<button class="btn btn-light text-start dept-btn" data-team="전체">전체</button>
-								<button class="btn btn-light text-start dept-btn" data-team="인사">인사팀</button>
-								<button class="btn btn-light text-start dept-btn" data-team="운영">운영팀</button>
-								<button class="btn btn-light text-start dept-btn" data-team="시설">시설팀</button>
+								<c:forEach items="${ deptList }" var="dept">
+									<c:if test="${ dept.deptDetail eq '임원' }">
+										<button class="btn btn-light text-start dept-btn" data-team="${ dept.deptDetail }">${ dept.deptDetail }</button>
+									</c:if>
+									<button class="btn btn-light text-start dept-btn" data-team="${ dept.deptDetail }">${ dept.deptDetail }팀</button>
+								</c:forEach>
 							</div>
 						</div>
 					</div>

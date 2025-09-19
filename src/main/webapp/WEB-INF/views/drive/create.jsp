@@ -34,7 +34,8 @@
 						</div>
 						<div class="mt-4 d-flex align-items-center">
 							<span class="fs-6">드라이브 공유 :</span>
-							<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" data-bs-toggle="modal" data-bs-target="#shareModal">
+							<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" 
+								data-bs-toggle="modal" data-bs-target="#shareModal">
 								<i class="material-symbols-rounded opacity-5 fs-5">group_add</i>
 							</button>
 						</div>
@@ -47,11 +48,7 @@
 								</tr>
 							</thead>
 							<tbody class="table-group-divider text-center" id="savedStaff">
-							
 								<!-- 추가된 사용자 -->
-								<!-- 추가된 사용자 -->
-								<!-- 추가된 사용자 -->
-								
 								<c:if test="${not empty driveDTO and driveDTO.driveEnabled}">
 									<c:forEach items="${ driveDTO.driveShareDTOs }" var="driveShareDTO" varStatus="vs">
 										<tr class="shareStaff">
@@ -90,13 +87,14 @@
 	<c:import url="/WEB-INF/views/drive/modal.jsp"></c:import>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script>
-	let lastIndexOfStaffList = ${empty driveDTO.driveShareDTOs ? 0 : fn:length(driveDTO.driveShareDTOs)};
-	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
-	document.querySelector("#navTitle").textContent = "드라이브 추가"
 	const loginStaffCode = ${ staffDTO.staffCode }
+	let lastIndexOfStaffList = ${empty driveDTO.driveShareDTOs ? 0 : fn:length(driveDTO.driveShareDTOs)};
+	document.querySelector("#navTitle").textContent = "드라이브 추가"
+	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	</script>
-	<c:if test="${not empty driveDTO}">
-	document.querySelector("i[data-content='${driveDTO.driveName}']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	
+	<c:if test="${not empty driveDTO.driveNum}">
+	<script>document.querySelector("i[data-content='${driveDTO.driveName}']").parentElement.classList.add("bg-gradient-dark", "text-white")</script>
 	</c:if>
 	<script src="/js/drive/create.js"></script>
 </body>

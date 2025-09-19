@@ -30,11 +30,13 @@
 											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
 											<span class="nav-link-text ms-1 text-sm">${ myDrive.driveName }</span>
 										</a>
-										<div class="d-flex align-items-center drive-setting">
-											<a href="/drive/${ myDrive.driveNum }/update" class="d-flex align-items-center" style="text-decoration: none;">
-												<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveNum }">settings</i>
-											</a>
-										</div>
+										<c:if test="${ not empty driveDTO and myDrive.driveNum eq driveDTO.driveNum }">
+											<div class="d-flex align-items-center drive-setting">
+												<a href="/drive/${ myDrive.driveNum }/update" class="d-flex align-items-center" style="text-decoration: none;">
+													<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveNum }">settings</i>
+												</a>
+											</div>
+										</c:if>
 									</li>
 								</c:if>
 							</c:forEach>
@@ -43,13 +45,15 @@
 				</div>
 			</li>
 			<!-- 내 드라이브 끝 -->
-
-			<!-- 공용 드라이브 시작 -->
+			
+			<hr class="my-1 bg-dark">
+			
+			<!-- 공유 드라이브 시작 -->
 			<li>
 				<div class="nav-link text-dark d-flex align-items-center">
 					<a class="material-symbols-rounded opacity-5 fs-5" data-bs-toggle="collapse" href="#collapseShareDrive"
 						   role="button" aria-expanded="false" aria-controls="collapseShareDrive">keyboard_arrow_down</a> 
-					<span class="nav-link-text ms-1 mt-2 text-sm">공용드라이브</span>
+					<span class="nav-link-text ms-1 text-sm">공용드라이브</span>
 				</div>
 				<div class="collapse show" id="collapseShareDrive">
 					<ul class="navbar-nav" id="drive-share">
@@ -67,7 +71,7 @@
 					</ul>
 				</div>
 			</li>
-			<!-- 공용 드라이브 끝 -->
+			<!-- 공유 드라이브 끝 -->
 		</ul>
 	</div>
 </aside>

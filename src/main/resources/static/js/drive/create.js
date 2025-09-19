@@ -10,7 +10,7 @@ const deptBtn = document.querySelectorAll('.dept-btn'); // 부서 선택[모달]
 const searchInput = document.getElementById('searchInput'); // 사원 검색[모달]
 const shareStaffs = document.querySelectorAll('.shareStaff');
 console.log(lastIndexOfStaffList);
-console.log(loginStaffCode)
+console.log('현재 접속중인 사용자' + loginStaffCode)
 
 /*
 	드래그 이동
@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			.then(r => {
 				staffs = r; // 전역 변수에 저장
 				staffs.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 직급별로 정렬
+				staffs = staffs.filter(staff => staff.staffCode != loginStaffCode) // 본인 제외
 				currentDept = staffs // 최초 선택된 부서는 전체로 초기화
 				renderStaff(staffs); // 사원 리스트 랜더링
 			})
@@ -62,17 +63,17 @@ addBtn.addEventListener('click', () => {
 	}
 	
 	// 체크되어있는 요소들을 가져옴
-	const checkedBoxes = staffList.querySelectorAll('input[type="checkbox"]:checked');
+	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked');
 
 	// 이미 추가되어있는 사원	
 	const mainStaffCode = Array.from(savedStaff.querySelectorAll('input[type="hidden"')).map(input => input.value);
 	
 	// 중복 및 본인 추가 제외
-	for (const check of checkedBoxes) {
+	for (const check of checkedInput) {
 		const staffCode = check.value;
 		// 중복
 		if (mainStaffCode.includes(staffCode)) {
-			for(const chk of checkedBoxes) {
+			for(const chk of checkedInput) {
 				chk.checked = false;				
 			}
 			alert('이미 추가된 사용자 입니다')
@@ -80,7 +81,7 @@ addBtn.addEventListener('click', () => {
 		}
 		// 본인 추가 제외
 		if(staffCode == loginStaffCode) {
-			for(const chk of checkedBoxes) {
+			for(const chk of checkedInput) {
 				chk.checked = false;				
 			}
 			alert('자기 자신을 추가할 수 없습니다');
@@ -90,7 +91,7 @@ addBtn.addEventListener('click', () => {
 	}
  	
 	// 체크된 사원들을 오른쪽으로 이동시킴
-	checkedBoxes.forEach((check) => {
+	checkedInput.forEach((check) => {
 		const li = check.closest('li'); // chk.closest('li') 상위(부모)방향으로 이동하며 가장 가까운 li태그를 반환
 		const text = li.querySelector('span').textContent // 사원 정보 태그 가져옴
 		const value = check.value; // StaffCode 가져옴 
@@ -129,7 +130,7 @@ saveBtn.addEventListener('click', () => {
 	// span에 저장된 data-staff-code를 가져오기 위함
 	const spans = selectedList.querySelectorAll('span')
 	
-	spans.forEach((span, i) => {
+	spans.forEach((span) => {
 		const staffCode = span.getAttribute('data-staff-code');
 		
 		const staff = staffs.find(s => s.staffCode == staffCode)
