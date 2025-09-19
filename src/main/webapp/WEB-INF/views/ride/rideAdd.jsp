@@ -6,7 +6,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>어트랙션</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -16,10 +16,52 @@
   
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
-    <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: hidden scroll;">
-    
-    <!-- 여기에 코드 작성 -->
-	<h1 class="text-center mb-5">
+    <div class="d-flex">
+    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
+    		<div class="w-100">
+			    <ul class="navbar-nav">
+			    
+			      <!-- 메뉴 개수만큼 추가 -->
+			      <li class="nav-item">
+			        <a class="nav-link text-dark" href="/ride">
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 목록">diversity_3</i>
+			          <span class="nav-link-text ms-1 text-sm">어트랙션 목록</span>
+			        </a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link text-dark" href="#">
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="삭제된 어트랙션 목록">diversity_3</i>
+			          <span class="nav-link-text ms-1 text-sm">삭제된 어트랙션 목록</span>
+			        </a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link text-dark" href="/inspection">
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 점검">diversity_3</i>
+			          <span class="nav-link-text ms-1 text-sm">어트랙션 점검</span>
+			        </a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link text-dark" href="#">
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고 목록">diversity_3</i>
+			          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고 목록</span>
+			        </a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link text-dark" href="#">
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고">diversity_3</i>
+			          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고</span>
+			        </a>
+			      </li>
+			      
+			      
+			      
+			    </ul>
+			  </div>
+    	</aside>
+	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
+	    
+		    <!-- 여기에 코드 작성 -->
+			<h1 class="text-center mb-5">
 	  <c:choose>
 	    <c:when test="${mode eq 'edit'}">어트랙션 수정</c:when>
 	    <c:otherwise>어트랙션 등록</c:otherwise>
@@ -61,7 +103,7 @@
 	    <form:label path="rideType" class="col-sm-4 col-form-label text-start">어트랙션 기종</form:label>
 	    <div class="col-sm-5">
 	      <form:select path="rideType" cssClass="form-select">
-	        <form:option value="">어트랙션 기종을 선택하세요</form:option>
+	        <form:option value="">-- 어트랙션 기종을 선택하세요 --</form:option>
 	        <form:option value="A11">레일형 어트랙션</form:option>
 	        <form:option value="B11">회전형 어트랙션</form:option>
 	        <form:option value="C11">수상형 어트랙션</form:option>
@@ -116,7 +158,7 @@
 	    <form:label path="rideState" class="col-sm-4 col-form-label text-start">운행상태</form:label>
 	    <div class="col-sm-5">
 	      <form:select path="rideState" cssClass="form-select">
-	        <form:option value="">운행 상태를 선택하세요</form:option>
+	        <form:option value="">-- 운행 상태를 선택하세요 --</form:option>
 	        <form:option value="200">운영</form:option>
 	        <form:option value="300">운휴</form:option>
 	        <form:option value="400">고장</form:option>
@@ -171,14 +213,16 @@
 	  </div>
 	
 	</form:form>
-
-    </section>
+			
+	    
+	    </section>
+    </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/ride/rideAdd.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "어트랙션"
+		document.querySelector("i[data-content='어트랙션 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "어트랙션 목록"
 	</script>
 </body>
 
