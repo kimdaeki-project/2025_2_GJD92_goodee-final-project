@@ -77,22 +77,22 @@
 	    		<div class="col-10 offset-1 d-flex justify-content-between">
 	    			<div class="d-flex gap-3">
 	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">정원</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalStaff }</p>
-		    			</div>
-		    			
-		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">전체 연차</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">연차</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용 연차</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결근</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">잔여 연차</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    			</div>
+		    			
+		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용률</p>
 		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
 		    			</div>
 	    			</div>
@@ -115,8 +115,9 @@
 		    					<th class="col-2">이름</th>
 		    					<th class="col-2">부서</th>
 		    					<th class="col-2">직위</th>
-		    					<th class="col-2">연락처</th>
-		    					<th class="col-2">상태</th>
+		    					<th class="col-2">연차일수</th>
+		    					<th class="col-2">사용연차</th>
+		    					<th class="col-1">조정</th>
 		    				</tr>
 		    			</thead>
 		    			<tbody>
@@ -127,8 +128,11 @@
 			    					<td><a href="/staff/${ staff.staffCode }" style="color: #737373;">${ staff.staffName }</a></td>
 			    					<td>${ staff.deptDTO.deptDetail }</td>
 			    					<td>${ staff.jobDTO.jobDetail }</td>
-			    					<td>${ staff.staffPhone }</td>
-			    					<td></td>
+			    					<td>${ staff.staffRemainLeave }</td>
+			    					<td>${ staff.staffUsedLeave }</td>
+			    					<td class="d-flex justify-content-center align-items-center">
+			    						<button type="button" class="btn btn-primary bg-gradient-dark text-white py-0 m-0" onclick="setStaffCode(${ staff.staffCode }, ${ staff.staffRemainLeave }, ${ staff.staffUsedLeave })" style="height: 25px;" data-bs-toggle="modal" data-bs-target="#updateModal">수정</button>
+			    					</td>
 		    					</tr>
 		    				</c:forEach>
 		    				
@@ -164,16 +168,49 @@
 					  </ul>
 					</nav>
 		    </div>
+		    
+		    <!-- Modal -->
+				<div class="modal fade" id="updateModal" tabindex="-1">
+				  <div class="modal-dialog modal-dialog-centered">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="exampleModalLabel">연차 정보 수정</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				      </div>
+				      <div class="modal-body">
+				      	<div class="col-8 offset-2">
+					        <form id="updateLeaveForm" action="/staff/leave/update" method="POST">
+					        	<input type="hidden" id="staffCode" name="staffCode" />
+					        	
+					        	<div>
+					        		<label for="staffRemainLeave">전체 연차</label>
+						        	<input type="text" id="staffRemainLeave" name="staffRemainLeave" class="form-control" />
+					        	</div>
+					        	
+					        	<div class="mt-3">
+					        		<label for="staffUsedLeave">사용 연차</label>
+						        	<input type="text" id="staffUsedLeave" name="staffUsedLeave" class="form-control" />
+					        	</div>				        	
+					        </form>
+				      	</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				        <button type="button" onclick="updateLeave()" class="btn btn-primary bg-gradient-dark text-white">저장</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 	    
 	    </section>
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/staff/list.js"></script>
+	<script src="/js/staff/list-leave.js"></script>
 	<script>
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='사원 조회']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "사원 조회"
+		document.querySelector("i[data-content='연차 현황']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "연차 현황"
 	</script>
 </body>
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -26,6 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		String rememberId = request.getParameter("rememberId");
+		HttpSession session = request.getSession();
 		
 		if (rememberId != null) {
 			Cookie cookie = new Cookie("rememberId", request.getParameter("staffCode"));
@@ -44,6 +45,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			
 			response.addCookie(cookie);
 		}
+		
+		session.removeAttribute("loginFailureCount");
 		
 		StaffDTO user = (StaffDTO) authentication.getPrincipal();
 		
