@@ -2,11 +2,13 @@ package com.goodee.finals.messenger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -68,14 +70,15 @@ public class MessengerController {
 	}
 	
 	@PostMapping("load") @ResponseBody
-	public boolean load(@RequestBody Map<String, Object> loadData, @PageableDefault(size = 20, sort = "chatBodyNum", direction= Sort.Direction.DESC) Pageable pageable) {
-		System.out.println(loadData.get("chatRoomNum"));
-		System.out.println(loadData.get("page"));
-		// 1. pageable에 page 번호 세팅
-		// 2. 쿼리로 다음 메시지 가져오기
-		// 3. Map에 다음 메시지 목록 + hasNext() 값 세팅해서 json으로 보내주기
-		// 4. 프론트에서는 그걸 받아서 next 값 업데이트 하고 프론트 화면 업데이트하기
-		return true;
+	public Map<String, Object> load(@RequestBody Map<String, String> loadData, @PageableDefault(size = 20, sort = "chatBodyNum", direction= Sort.Direction.DESC) Pageable pageable) {
+		Page<MessengerTestDTO> result = messengerService.chatList(PageRequest.of(Integer.parseInt(loadData.get("chatRoomNum")), pageable.getPageSize(), pageable.getSort()), Long.parseLong(loadData.get("chatRoomNum")));
+		List<MessengerTestDTO> messages = new ArrayList<>(result.getContent());
+		// messages.sort(Comparator.comparing(MessengerTestDTO::getChatBodyNum));
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("messages", messages);
+		response.put("next", result.hasNext());
+		return response;
 	}
 	
 }

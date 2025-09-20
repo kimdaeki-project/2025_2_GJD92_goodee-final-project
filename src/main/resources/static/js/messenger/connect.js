@@ -36,7 +36,7 @@ function displayMessage(message) {
 }
 // 무한 스크롤 구현하기
 const messageBox = document.querySelector('#messages');
-const next = document.querySelector('#next').value;
+let next = document.querySelector('#next').value;
 let page = document.querySelector('#page').value;
 messageBox.addEventListener('scroll', () => {
 	if (messageBox.scrollTop === 0 && next) {
@@ -45,7 +45,6 @@ messageBox.addEventListener('scroll', () => {
 });
 
 function loadMessages() {
-	console.log('다음 메시지를 가져오세요!');	
 	page++;
 	fetch('/msg/load', {
 		method: 'POST',
@@ -56,5 +55,17 @@ function loadMessages() {
 		})
 	})
 	.then(response => response.json())
-	.then(response => console.log(response));
+	.then(response => {
+		const oldHeight = messageBox.scrollHeight;
+		
+		response.messages.forEach(msg => {
+			const div = document.createElement('div');
+			div.textContent = msg.staffName + ': ' + msg.chatBodyContent;
+			messageBox.prepend(div);
+		});
+		
+		const newHeight = messageBox.scrollHeight;
+		messageBox.scrollTop = newHeight - oldHeight;
+		next = response.next;
+	});
 }
