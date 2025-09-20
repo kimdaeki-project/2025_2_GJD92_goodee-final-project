@@ -3,14 +3,12 @@ package com.goodee.finals.drive;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,9 +35,9 @@ public class DriveDTO {
 	private Long driveNum;
 	@NotBlank(message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
 	private String driveName;
+	private Long driveDefaultNum;
 	private Boolean isPersonal;
 	private Boolean driveEnabled;
-	private Long defaultDriveNum;
 	@CreationTimestamp
 	private LocalDateTime driveDate;
 	

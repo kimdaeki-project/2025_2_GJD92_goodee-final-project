@@ -55,7 +55,7 @@ public class DriveService {
 	}
 	
 	public DriveDTO getDefaultDrive(StaffDTO staffDTO) {
-		DriveDTO driveDTO = driveRepository.findByStaffDTO_StaffCodeAndIsPersonalTrueAndDefaultDriveNumIsNotNull(staffDTO.getStaffCode());
+		DriveDTO driveDTO = driveRepository.findByStaffDTO_StaffCodeAndIsPersonalTrueAndDriveDefaultNumIsNotNull(staffDTO.getStaffCode());
 		if(driveDTO != null) return driveDTO;
 		else return null;
 	}
@@ -67,7 +67,7 @@ public class DriveService {
 	public DriveDTO createDrive(DriveDTO driveDTO) {
 		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    // 드라이브 이름 중복 조회
 		if(existDriveName != null) {
-			System.out.println("DriveService : 중복된이름 존재 메서드 종료");
+			System.out.println("DriveService createDrive : 중복된이름 존재 메서드 종료");
 			return null;
 		}
 		
@@ -75,7 +75,7 @@ public class DriveService {
 		// 1. 개인용 드라이브
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
 			driveDTO.setIsPersonal(true);
-			driveDTO.setDefaultDriveNum(null);
+			driveDTO.setDriveDefaultNum(null);
 			driveDTO.setDriveEnabled(true);
 			driveDTO = driveRepository.save(driveDTO);
 			makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
@@ -88,7 +88,7 @@ public class DriveService {
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(driveDTO);
 		}		
-		driveDTO.setDefaultDriveNum(null);
+		driveDTO.setDriveDefaultNum(null);
 		driveDTO.setIsPersonal(false);
 		driveDTO.setDriveEnabled(true);
 		driveDTO = driveRepository.save(driveDTO);
@@ -111,7 +111,7 @@ public class DriveService {
 		
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
-			driveDTO.setDefaultDriveNum(null);
+			driveDTO.setDriveDefaultNum(null);
 			driveDTO.setDriveEnabled(true);
 			driveDTO.setIsPersonal(false);
 			driveShare.setStaffDTO(staffDTO);
@@ -127,12 +127,6 @@ public class DriveService {
 		}
 		driveDTO.setDriveEnabled(false);
 		driveDTO = driveRepository.save(driveDTO);
-		
-		System.out.println(driveDTO.getDriveNum());
-		System.out.println(driveDTO.getDriveName());
-		System.out.println(driveDTO.getDriveEnabled());
-		System.out.println(driveDTO.getDriveDate());
-		
 		return driveDTO;
 	}
 	
@@ -144,7 +138,7 @@ public class DriveService {
 		driveDTO.setStaffDTO(staffDTO);
 		driveDTO.setDriveEnabled(true);
 		driveDTO = driveRepository.save(driveDTO);
-		driveDTO.setDefaultDriveNum(driveDTO.getDriveNum());
+		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
 		driveDTO = driveRepository.save(driveDTO);
 		return driveDTO;
 	}

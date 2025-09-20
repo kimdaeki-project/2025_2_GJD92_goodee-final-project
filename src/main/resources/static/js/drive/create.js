@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		shareStaffs.forEach((tr) => {
 			tr.querySelector('.remove-saved').addEventListener('click', () => {
 					tr.remove(); 
-				})		
+			})		
 		})	
 	}
 });
@@ -76,17 +76,15 @@ addBtn.addEventListener('click', () => {
 			for(const chk of checkedInput) {
 				chk.checked = false;				
 			}
-			alert('이미 추가된 사용자 입니다')
+			Swal.fire({
+		        text: "이미 추가된 사용자 입니다",
+		        icon: "info",
+		        confirmButtonColor: "#191919",
+		        confirmButtonText: "확인"
+	  	    });
 			return;
 		}
 		// 본인 추가 제외
-		if(staffCode == loginStaffCode) {
-			for(const chk of checkedInput) {
-				chk.checked = false;				
-			}
-			alert('자기 자신을 추가할 수 없습니다');
-			return;
-		}
 		
 	}
  	
@@ -227,26 +225,48 @@ function renderStaff(list) {
 	})
 }
 
-function deleteDrive(driveNum) {
-	
-	let msg = '정말 드라이브를 삭제하시겠습니까? 드라이브는 복구되지 않습니다. 신중히 결정부탁합니다.'
-	if(!confirm(msg)) {
+function deleteDrive(driveNum, driveDefaultNum) {
+	if(driveDefaultNum != null) {
+		Swal.fire({
+	        text: "기본드라이브는 삭제할 수 없습니다",
+	        icon: "erorr",
+	        confirmButtonColor: "#3085d6",
+	        confirmButtonText: "확인"
+  	    });
 		return;
-	}
+	}	
 	
-	let params = new URLSearchParams();	
-	params.append('driveNum', driveNum);
-	fetch('/drive/delete', {
-		method : 'post',
-		body: params
-	})
-	.then(r => r.json())
-	.then(r => {
-		console.log(r)
-		console.log('응답 받음');
-	})
-	.catch(e => {
-		console.log("실패")
-	})
+	Swal.fire({
+	   title: "정말 삭제하시겠습니까?",
+	   text: '삭제된 드라이브는 복구되지 않습니다.',
+	   icon: "error",
+	   showCancelButton: true,
+	   confirmButtonColor: "#191919",
+	   cancelButtonColor: "#FFFFFF",
+	   confirmButtonText: "삭제",
+	   cancelButtonText: "취소",
+	   customClass: {
+	       cancelButton: 'my-cancel-btn'
+	     }
+	}).then((result) => {
+		if (!result.isConfirmed) {
+	 	return;
+		}
 	
+		let params = new URLSearchParams();	
+		params.append('driveNum', driveNum);
+		
+		fetch('/drive/delete', {
+			method : 'post',
+			body: params
+		})
+		.then(r => r.json())
+		.then(r => {
+			console.log(r)
+			console.log('응답 받음');
+		})
+		.catch(e => {
+			console.log("실패", e)
+		});
+	});
 }

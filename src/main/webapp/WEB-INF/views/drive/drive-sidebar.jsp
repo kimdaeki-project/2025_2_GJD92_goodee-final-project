@@ -28,7 +28,7 @@
 									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
 										<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
 											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
-											<span class="nav-link-text ms-1 text-sm">${ myDrive.driveName }</span>
+											<span class="nav-link-text ms-1 text-sm text-truncate" style="max-width: 110px;" title="${myDrive.driveName}">${ myDrive.driveName }</span>
 										</a>
 										<c:if test="${ not empty driveDTO and myDrive.driveNum eq driveDTO.driveNum }">
 											<div class="d-flex align-items-center drive-setting">
@@ -63,7 +63,7 @@
 								<li class="nav-item">
 									<a class="nav-link text-dark" href="/drive/${ shareDrive.driveDTO.driveNum }">
 										<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ shareDrive.driveDTO.driveName }">folder_shared</i>
-										<span class="nav-link-text ms-1 text-sm">${ shareDrive.driveDTO.driveName }</span>
+										<span class="nav-link-text ms-1 text-sm text-truncate" title="${ shareDrive.driveDTO.driveName }" style="max-width: 180px;">${ shareDrive.driveDTO.driveName }</span>
 									</a>
 								</li>
 							</c:if>

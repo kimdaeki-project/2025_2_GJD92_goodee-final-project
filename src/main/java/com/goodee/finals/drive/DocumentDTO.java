@@ -25,7 +25,9 @@ public class DocumentDTO {
 	private Long docNum;
 	
 	private String docName;
+	private String docStatus;
 	private LocalDate docDate;
+	private LocalDate docExpire;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")

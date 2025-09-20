@@ -27,19 +27,19 @@
 				<div class="d-flex align-items-center flex-wrap gap-2 mb-3">
 				
 				  <!-- 업로드 -->
-				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">업로드</button>
-				
+				  <a href="/drive/${ driveDTO.driveNum }/upload" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">업로드</a>
+					
 				  <!-- 새 문서 -->
-				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">새 문서</button>
+<!-- 				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">새 문서</button> -->
 				
 				  <!-- 파일 유형 -->
 				  <div class="d-flex align-items-center gap-2">
 				    <select class="form-select form-select-sm w-auto align-self-center rounded" id="fileTypeSelect">
 				      <option value="" selected>파일 유형: 선택</option>
-				      <option value="DOC">문서</option>
-				      <option value="IMAGE">이미지</option>
-				      <option value="VIDEO">동영상</option>
-				      <option value="AUDIO">오디오</option>
+				      <option value="doc">문서</option>
+				      <option value="image">이미지</option>
+				      <option value="video">동영상</option>
+				      <option value="audio">오디오</option>
 				    </select>
 				  </div>
 				
@@ -70,15 +70,15 @@
 					    </thead>
 					    <tbody>
 						  <c:choose>
-						    <c:when test="${not empty documents}">
-						      <c:forEach var="doc" items="${documents}">
+						    <c:when test="${ not empty documents }">
+						      <c:forEach var="doc" items="${ documents }">
 						        <tr>
-						          <td class="text-center"><input type="checkbox" value="${doc.documentId}" /></td>
-						          <td>${doc.fileName}</td>
-						          <td><fmt:formatDate value="${doc.createdAt}" pattern="yyyy-MM-dd HH:mm"/></td>
-						          <td>${doc.size} KB</td>
-						          <td>${doc.type}</td>
-						          <td>${doc.uploader}</td>
+						          <td class="text-center"><input type="checkbox" value="${ doc.documentId }" /></td>
+						          <td>${ doc.fileName }</td>
+						          <td><fmt:formatDate value="${ doc.createdAt }" pattern="yyyy-MM-dd HH:mm"/></td>
+						          <td>${ doc.size } KB</td>
+						          <td>${ doc.type }</td>
+						          <td>${ doc.uploader }</td>
 						        </tr>
 						      </c:forEach>
 						    </c:when>

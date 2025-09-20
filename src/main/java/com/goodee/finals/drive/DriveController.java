@@ -29,6 +29,13 @@ public class DriveController {
 	@Autowired
 	private DriveService driveService;
 	
+	@GetMapping("staffList")
+	@ResponseBody
+	public List<StaffResponseDTO> staffList() {
+		List<StaffResponseDTO> list = driveService.staffList();
+		return list;
+	}
+
     @ModelAttribute
     public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -74,10 +81,11 @@ public class DriveController {
 			model.addAttribute("resultMsg", "드라이브 등록 완료");
 			model.addAttribute("resultIcon", "success");
 			model.addAttribute("resultUrl", "/drive");
-		} 
-		model.addAttribute("resultMsg", "드라이드 등록 실패");
-		model.addAttribute("resultIcon", "error");
-		model.addAttribute("resultUrl", "/drive/create");
+		} else {
+			model.addAttribute("resultMsg", "드라이드 등록 실패");
+			model.addAttribute("resultIcon", "error");
+			model.addAttribute("resultUrl", "/drive/create");
+		}
 		return "common/result";
 	}
 	
@@ -114,10 +122,6 @@ public class DriveController {
 	@PostMapping("/delete")
 	@ResponseBody
 	public DriveDTO deleteDrive(Long driveNum) {
-		System.out.println(driveNum);
-		if(driveNum == null) {
-			return null;
-		}
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
 		// 논리적 삭제
@@ -126,17 +130,14 @@ public class DriveController {
 		if(driveDTO == null) {
 			return null;
 		}
-		
 		return driveDTO;
 	}
 	
-	@GetMapping("staffList")
-	@ResponseBody
-	public List<StaffResponseDTO> staffList() {
-		List<StaffResponseDTO> list = driveService.staffList();
-		return list;
+	@GetMapping("{driveNum}/upload")
+	public String uploadDocument(DriveDTO driveDTO) {
+		System.out.println(driveDTO.getDriveNum());
+		return "drive/document/add";
 	}
-
 	
 	
 }

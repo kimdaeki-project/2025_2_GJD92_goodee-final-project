@@ -10,6 +10,7 @@
 	<meta charset="UTF-8">
 	<title>드라이브추가</title>
 	
+	<link rel="stylesheet" href="/css/drive/create.css" />
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -49,17 +50,17 @@
 							</thead>
 							<tbody class="table-group-divider text-center" id="savedStaff">
 								<!-- 추가된 사용자 -->
-								<c:if test="${not empty driveDTO and driveDTO.driveEnabled}">
+								<c:if test="${ not empty driveDTO and driveDTO.driveEnabled }">
 									<c:forEach items="${ driveDTO.driveShareDTOs }" var="driveShareDTO" varStatus="vs">
 										<tr class="shareStaff">
 											<th scope="row">
 												<button type="button" class="btn-close btn-close-white remove-saved" aria-label="Remove"></button>
-												<input type="hidden" name="driveShareDTOs[${ vs.index }].staffDTO.staffCode" value="${driveShareDTO.staffDTO.staffCode}">
+												<input type="hidden" name="driveShareDTOs[${ vs.index }].staffDTO.staffCode" value="${ driveShareDTO.staffDTO.staffCode }">
 											</th>
 											<td><i class="material-symbols-rounded opacity-5 fs-5">contacts_product</i></td>
-											<td>${driveShareDTO.staffDTO.staffName}</td>
-											<td>${driveShareDTO.staffDTO.jobDTO.jobDetail}</td>
-											<td>${driveShareDTO.staffDTO.deptDTO.deptDetail}</td>
+											<td>${ driveShareDTO.staffDTO.staffName }</td>
+											<td>${ driveShareDTO.staffDTO.jobDTO.jobDetail }</td>
+											<td>${ driveShareDTO.staffDTO.deptDTO.deptDetail }</td>
 										</tr>
 									</c:forEach>
 								</c:if>
@@ -73,7 +74,7 @@
 							</div>
 							<div>
 								<c:if test="${ not empty driveDTO.driveNum }">
-									<button type="button" class="btn btn-outline-danger" onclick="deleteDrive(${driveDTO.driveNum})">드라이브 삭제</button>
+									<button type="button" class="btn btn-outline-danger" onclick="deleteDrive(${ driveDTO.driveNum }, ${ driveDTO.driveDefaultNum })">드라이브 삭제</button>
 								</c:if>
 							</div>							
 						</div>
