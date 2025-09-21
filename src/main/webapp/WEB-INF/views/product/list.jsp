@@ -63,9 +63,9 @@ aside.sidenav {
 			    			<thead>
 			    				<tr>
 			    					<th class="col-2">물품번호</th>
-			    					<th class="col-1">물품타입</th>
-			    					<th class="col-2">물품명</th>
-			    					<th class="col-3">수량</th>
+			    					<th class="col-2">물품타입</th>
+			    					<th class="col-3">물품명</th>
+			    					<th class="col-1">수량</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>

@@ -1,12 +1,9 @@
 package com.goodee.finals.attend;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -88,7 +85,6 @@ public class AttendController {
 	@GetMapping("")
 	public String list(@RequestParam(required = false) Integer year,
 			            @RequestParam(required = false) Integer month,
-			            @PageableDefault(size = 10, sort = "attendDate", direction = Direction.DESC ) Pageable pageable,
 			            Model model) {
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 		log.info("{}", staffCode);
@@ -97,9 +93,8 @@ public class AttendController {
 	    int targetYear = (year == null) ? now.getYear() : year;
 	    int targetMonth = (month == null) ? now.getMonthValue() : month;
 		
-	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, pageable);
+	    List<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth);
 
-	    
 	    model.addAttribute("attendances", attendances);
 	    model.addAttribute("year", targetYear);
 	    model.addAttribute("month", targetMonth);

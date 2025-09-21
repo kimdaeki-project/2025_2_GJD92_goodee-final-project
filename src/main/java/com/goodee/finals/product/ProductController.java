@@ -117,6 +117,7 @@ public class ProductController {
 		return "common/result";
 	}
 	
+	@PostMapping("{productCode}/delete")
 	public String delete(ProductDTO productDTO, Model model) {
 		ProductDTO result = productService.delete(productDTO);
 		

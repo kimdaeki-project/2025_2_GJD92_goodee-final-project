@@ -95,12 +95,12 @@
                 </tr>
               </thead>
               <tbody>
-              <c:forEach items="attendances" var="attend">
+              <c:forEach items="${attendances }" var="attend">
 	                <tr>
-	                  <td>${attend.attendNum }</td>
-	                  <td>08:57:22</td>
-	                  <td>18:02:00</td>
-	                  <td>09h 04m</td>
+	                  <td>${attend.attendDate }</td>
+	                  <td>${attend.attendIn eq null ? "--:--:--" : attend.formattedAttendIn}</td>
+	                  <td>${attend.attendOut eq null ? "--:--:--" : attend.formattedAttendOut}</td>
+	                  <td>${attend.workTime }</td>
 	                  <td>09h 04m</td>
 	                  <td>지각</td>
 	                  <td>-</td>
@@ -109,14 +109,6 @@
               </tbody>
             </table>
 
-            <!-- 페이징 -->
-            <nav>
-              <ul class="pagination justify-content-center">
-                <li class="page-item disabled"><a class="page-link">&lt;</a></li>
-                <li class="page-item active"><a class="page-link">1</a></li>
-                <li class="page-item"><a class="page-link">&gt;</a></li>
-              </ul>
-            </nav>
           </div>
         </div>
       </div>

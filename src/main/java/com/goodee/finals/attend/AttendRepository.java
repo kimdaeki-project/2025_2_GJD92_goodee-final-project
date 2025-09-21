@@ -1,10 +1,9 @@
 package com.goodee.finals.attend;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,8 +19,7 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 	           "WHERE FUNCTION('YEAR', a.attendDate) = :year " +
 	           "AND FUNCTION('MONTH', a.attendDate) = :month " +
 	           "AND a.staffDTO.staffCode = :staffCode")
-	    Page<AttendDTO> findMonthlyAttendances(@Param("year") int year,
+	    List<AttendDTO> findMonthlyAttendances(@Param("year") int year,
 	                                           @Param("month") int month,
-	                                           @Param("staffCode") Integer staffCode,
-	                                           Pageable pageable);
+	                                           @Param("staffCode") Integer staffCode);
 }

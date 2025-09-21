@@ -125,40 +125,14 @@ public class LostService {
 	}
 	
 	private void setLostUpdate(LostDTO after) {
-		
-		log.info("{}", after.getLostNum());
-		log.info("{}", after.getLostFinder());
-		log.info("{}", after.getLostFinderPhone());
-		log.info("{}", after.getLostName());
-		log.info("{}", after.getLostDate());
-		
 		LostDTO before = lostRepository.findById(after.getLostNum()).orElseThrow();
 		
 		after.setStaffDTO(before.getStaffDTO());
-		
-		log.info("{}", before.getLostNum());
-		log.info("{}", before.getLostFinder());
-		log.info("{}", before.getLostFinderPhone());
-		log.info("{}", before.getLostName());
-		log.info("{}", before.getLostDate());
-		log.info("{}", before.getStaffDTO().getInputDeptCode());
-		log.info("{}", before.getStaffDTO().getInputJobCode());
-		log.info("{}", before.getStaffDTO().getPassword());
-		log.info("{}", before.getStaffDTO().getStaffAddress());
-		log.info("{}", before.getStaffDTO().getStaffAddressDetail());
-		log.info("{}", before.getStaffDTO().getStaffCode());
-		log.info("{}", before.getStaffDTO().getStaffEmail());
-		log.info("{}", before.getStaffDTO().getStaffEnabled());
-		log.info("{}", before.getStaffDTO().getStaffGender());
-		log.info("{}", before.getStaffDTO().getStaffLocked());
-		log.info("{}", before.getStaffDTO().getStaffName());
-		log.info("{}", before.getStaffDTO().getStaffPhone());
-		log.info("{}", before.getStaffDTO().getStaffPostcode());
-		log.info("{}", before.getStaffDTO().getStaffPw());
-		log.info("{}", before.getStaffDTO().getUsername());
 	}
 	
+	
 	public LostDTO delete(LostDTO lostDTO) {
+		lostDTO = lostRepository.findById(lostDTO.getLostNum()).orElseThrow();
 		lostDTO.setLostDelete(true);
 		LostDTO result = lostRepository.save(lostDTO);
 		return result;

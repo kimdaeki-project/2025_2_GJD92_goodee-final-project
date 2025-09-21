@@ -59,10 +59,14 @@ aside.sidenav {
 			    		<table class="table text-center">
 			    			<thead>
 			    				<tr>
+			    					<th class="col-1">번호</th>
+			    					<th class="col-2">등록일자</th>
 			    					<th class="col-2">물품번호</th>
-			    					<th class="col-1">물품타입</th>
+			    					<th class="col-2">물품타입</th>
 			    					<th class="col-2">물품명</th>
-			    					<th class="col-3">수량</th>
+			    					<th class="col-1">수량</th>
+			    					<th class="col-1">재고</th>
+			    					<th class="col-2">작성자</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -155,6 +156,7 @@ public class ProductService {
 	}
 	
 	public ProductDTO delete(ProductDTO productDTO) {
+		productDTO = productRepository.findById(productDTO.getProductCode()).orElseThrow();
 		productDTO.setProductDelete(true);
 		ProductDTO result = productRepository.save(productDTO);
 		return result;
