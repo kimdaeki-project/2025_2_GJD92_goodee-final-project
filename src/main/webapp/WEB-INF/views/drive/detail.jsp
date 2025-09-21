@@ -27,8 +27,9 @@
 				<div class="d-flex align-items-center flex-wrap gap-2 mb-3">
 				
 				  <!-- 업로드 -->
-				  <a href="/drive/${ driveDTO.driveNum }/upload" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">업로드</a>
-					
+				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0"
+						   data-bs-toggle="modal" data-bs-target="#uploadModal">업로드</button>
+				  
 				  <!-- 새 문서 -->
 <!-- 				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">새 문서</button> -->
 				
@@ -83,7 +84,7 @@
 						      </c:forEach>
 						    </c:when>
 						    <c:otherwise>
-						      <!-- 데이터 없을 때만 flex 중앙 정렬 -->
+						      <!-- 데이터 없을 때만 중앙 정렬 -->
 						      <tr>
 						        <td colspan="6" class="border-0">
 						          <div class="d-flex justify-content-center align-items-center text-secondary" style="height:60vh;">
@@ -97,19 +98,17 @@
 					  </table>
 					</div>
 					
-				
-				<!-- 여기에 코드 작성 -->
-				<!-- 여기에 코드 작성 -->
-
 			</section>
 		</div>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<c:import url="/WEB-INF/views/drive/upload-modal.jsp"></c:import>
 	<script>
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("#navTitle").textContent = "드라이브"
 	</script>
+	<script src="/js/drive/detail.js"></script>
 </body>
 
 </html>

@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.staff.DeptDTO;
+import com.goodee.finals.staff.JobDTO;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffResponseDTO;
 
@@ -29,13 +31,6 @@ public class DriveController {
 	@Autowired
 	private DriveService driveService;
 	
-	@GetMapping("staffList")
-	@ResponseBody
-	public List<StaffResponseDTO> staffList() {
-		List<StaffResponseDTO> list = driveService.staffList();
-		return list;
-	}
-
     @ModelAttribute
     public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -45,25 +40,34 @@ public class DriveController {
 		model.addAttribute("shareDriveList", shareDriveList);
 		model.addAttribute("staffDTO", staffDTO);
     }
+	
+	@GetMapping("staffList")
+	@ResponseBody
+	public List<StaffResponseDTO> staffList() {
+		List<StaffResponseDTO> list = driveService.staffList();
+		return list;
+	}
     
 	@GetMapping
-	public String getDefaultDrive(Model model) {
+	public String getDefaultDrive(@ModelAttribute DocumentDTO documentDTO, Model model) {
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		DriveDTO driveDTO = driveService.getDefaultDrive(staffDTO);
+		model.addAttribute("jobList", driveService.getJobList());
 		model.addAttribute("driveDTO", driveDTO);
 		return "drive/detail";
 	}
 	
 	@GetMapping("{driveNum}")
-	public String selectedDrive(@PathVariable Long driveNum, Model model) {
+	public String selectedDrive(@PathVariable Long driveNum, @ModelAttribute DocumentDTO documentDTO, Model model) {
 		DriveDTO driveDTO = driveService.getDrive(driveNum);
+		model.addAttribute("jobList", driveService.getJobList());
 		model.addAttribute("driveDTO", driveDTO);
 		return "drive/detail";
 	}
 	
 	@GetMapping("create")
 	public String create(@ModelAttribute DriveDTO driveDTO, Model model) {
-		List<DeptDTO> deptList = driveService.deptList();
+		List<DeptDTO> deptList = driveService.getDeptList();
 		model.addAttribute("deptList", deptList);
 		return "drive/create";
 	}
@@ -77,22 +81,25 @@ public class DriveController {
 		driveDTO.setStaffDTO(staffDTO);
 		driveDTO = driveService.createDrive(driveDTO);
 		
+		String resultMsg = "드라이브 등록 실패";
+		String resultIcon = "error";
+		
 		if(driveDTO != null) {
-			model.addAttribute("resultMsg", "드라이브 등록 완료");
-			model.addAttribute("resultIcon", "success");
-			model.addAttribute("resultUrl", "/drive");
-		} else {
-			model.addAttribute("resultMsg", "드라이드 등록 실패");
-			model.addAttribute("resultIcon", "error");
-			model.addAttribute("resultUrl", "/drive/create");
-		}
+			resultMsg = "드라이브 등록 완료";
+			resultIcon = "success";
+			String resultUrl = "/drive";
+			model.addAttribute("resultUrl", resultUrl);
+		} 
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
 		return "common/result";
 	}
 	
 	@GetMapping("{driveNum}/update")
 	public String updateDrive(@PathVariable Long driveNum, Model model) {
 		DriveDTO driveDTO = driveService.getDrive(driveNum);
-		List<DeptDTO> deptList = driveService.deptList();
+		List<DeptDTO> deptList = driveService.getDeptList();
 		model.addAttribute("driveDTO", driveDTO);
 		model.addAttribute("deptList", deptList);
 		return "drive/create";
@@ -107,15 +114,19 @@ public class DriveController {
 		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		driveDTO.setStaffDTO(staffDTO);
 		driveDTO = driveService.updateDrive(driveDTO);
+		
+		String resultMsg = "드라이브 등록 실패";
+		String resultIcon = "error";
+		
 		if(driveDTO != null) {
-			model.addAttribute("resultMsg", "드라이브 등록 완료");
-			model.addAttribute("resultIcon", "success");
-			model.addAttribute("resultUrl", "/drive/" + driveDTO.getDriveNum());
-		} else {
-			model.addAttribute("resultMsg", "드라이브 등록 실패");
-			model.addAttribute("resultIcon", "error");
-			model.addAttribute("resultUrl", "/drive/create");
-		}
+			resultMsg = "드라이브 등록 완료";
+			resultIcon = "success";
+			String resultUrl = "/drive/" + driveDTO.getDriveNum();
+			model.addAttribute("resultUrl", resultUrl);
+		} 
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
 		return "common/result";
 	}
 	
@@ -133,11 +144,12 @@ public class DriveController {
 		return driveDTO;
 	}
 	
-	@GetMapping("{driveNum}/upload")
-	public String uploadDocument(DriveDTO driveDTO) {
-		System.out.println(driveDTO.getDriveNum());
-		return "drive/document/add";
+	@PostMapping("{driveNum}/upload")
+	public String uploadDocument(@PathVariable Long driveNum, JobDTO jobDTO, MultipartFile[] attaches) {
+		driveService.uploadDocument(driveNum, jobDTO, attaches);
+		return "";
 	}
+	
 	
 	
 }

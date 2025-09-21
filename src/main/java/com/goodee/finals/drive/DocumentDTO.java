@@ -2,6 +2,8 @@ package com.goodee.finals.drive;
 
 import java.time.LocalDate;
 
+import com.goodee.finals.staff.DeptDTO;
+import com.goodee.finals.staff.JobDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;
@@ -36,5 +38,14 @@ public class DocumentDTO {
 	@ManyToOne
 	@JoinColumn(name = "driveNum")
 	private DriveDTO driveDTO;
+	
+	@ManyToOne
+	@JoinColumn(name = "jobCode")
+	private JobDTO jobDTO;
+	
+	@ManyToOne
+	@JoinColumn(name = "deptCode")
+	private DeptDTO deptDTO;
+	
 	
 }

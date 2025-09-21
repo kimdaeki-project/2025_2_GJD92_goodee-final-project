@@ -85,7 +85,7 @@
 		</div>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<c:import url="/WEB-INF/views/drive/modal.jsp"></c:import>
+	<c:import url="/WEB-INF/views/drive/share-modal.jsp"></c:import>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script>
 	const loginStaffCode = ${ staffDTO.staffCode }

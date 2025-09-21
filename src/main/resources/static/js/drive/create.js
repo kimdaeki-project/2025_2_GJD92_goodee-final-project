@@ -228,9 +228,9 @@ function renderStaff(list) {
 function deleteDrive(driveNum, driveDefaultNum) {
 	if(driveDefaultNum != null) {
 		Swal.fire({
-	        text: "기본드라이브는 삭제할 수 없습니다",
-	        icon: "erorr",
-	        confirmButtonColor: "#3085d6",
+	        text: "기본드라이브는 삭제할 수 없습니다!",
+	        icon: "error",
+	        confirmButtonColor: "#191919",
 	        confirmButtonText: "확인"
   	    });
 		return;
@@ -262,8 +262,17 @@ function deleteDrive(driveNum, driveDefaultNum) {
 		})
 		.then(r => r.json())
 		.then(r => {
-			console.log(r)
-			console.log('응답 받음');
+			if(r != null) {
+				Swal.fire({
+			        text: "드라이브 삭제 완료",
+			        icon: "success",
+			        confirmButtonColor: "#191919",
+			        confirmButtonText: "확인"
+		  	    })
+				.then((result) => {
+					if(result) location.href="/drive"
+				})		
+			}
 		})
 		.catch(e => {
 			console.log("실패", e)

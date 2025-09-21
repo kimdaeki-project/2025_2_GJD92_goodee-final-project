@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
+import com.goodee.finals.staff.JobDTO;
+import com.goodee.finals.staff.JobRepository;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 import com.goodee.finals.staff.StaffResponseDTO;
@@ -33,6 +36,8 @@ public class DriveService {
 	@Autowired
 	private DeptRepository deptRepository;
 	@Autowired
+	private JobRepository jobRepository;
+	@Autowired
 	private DriveShareRepository driveShareRepository;
 	@Autowired
 	private FileService fileService;
@@ -50,8 +55,12 @@ public class DriveService {
 		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
 	
-	public List<DeptDTO> deptList() {
+	public List<DeptDTO> getDeptList() {
 		return deptRepository.findAll();
+	}
+	
+	public List<JobDTO> getJobList() {
+		return jobRepository.findAll();
 	}
 	
 	public DriveDTO getDefaultDrive(StaffDTO staffDTO) {
@@ -97,27 +106,32 @@ public class DriveService {
 	}
 	
 	public DriveDTO updateDrive(DriveDTO driveDTO) {
-		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    // 드라이브 이름 중복 조회
+		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    
 		if(existDriveName != null && !existDriveName.getDriveNum().equals(driveDTO.getDriveNum())) { // 중복이름과 PK가 같지 않은경우 return;
 			System.out.println("DriveService : 중복된이름 존재 메서드 종료");
 			return null;
 		}
 		
-		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
-			driveDTO.setIsPersonal(true);
-			driveDTO.setDriveEnabled(true);
-			return driveRepository.save(driveDTO);
+		DriveDTO originDrive = driveRepository.findById(driveDTO.getDriveNum()).orElseThrow();
+		originDrive.getDriveShareDTOs().clear(); // 기존 드라이브 연간관계 끊기
+		
+		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().isEmpty()) {
+			originDrive.setIsPersonal(true);
+			originDrive.setDriveEnabled(true);
+			return driveRepository.save(originDrive);
 		}
 		
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
+			if(driveShare.getStaffDTO() == null) continue;	// TODO JSP에서 인덱스 꼬임 방어용 나중에 수정 
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
 			driveDTO.setDriveDefaultNum(null);
 			driveDTO.setDriveEnabled(true);
 			driveDTO.setIsPersonal(false);
 			driveShare.setStaffDTO(staffDTO);
-			driveShare.setDriveDTO(driveDTO);
+			driveShare.setDriveDTO(originDrive);
+			originDrive.getDriveShareDTOs().add(driveShare);
 		}
-		return driveRepository.save(driveDTO);
+		return driveRepository.save(originDrive);
 	}
 	
 	public DriveDTO deleteDrive(DriveDTO driveDTO) {
@@ -153,5 +167,10 @@ public class DriveService {
 		return result;
 	}
 	
+	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile[] attaches) {
+		
+		
+		return null;
+	}
 	
 }
