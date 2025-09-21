@@ -1,5 +1,7 @@
 package com.goodee.finals.product;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ public class ProductService {
 	private AttachmentRepository attachmentRepository;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private ProductTypeRepository productTypeRepository;
 	
 	public Page<ProductDTO> getProductSearchList(String search, Pageable pageable) {
 		return productRepository.findAllBySearch(search, pageable);
@@ -40,12 +44,17 @@ public class ProductService {
 		return productRepository.findById(productCode).orElseThrow();
 	}
 	
+	public List<ProductTypeDTO> getProductTypeList() {
+		return productTypeRepository.findAll();
+	}
+	
 	public ProductDTO write(ProductDTO productDTO, MultipartFile attach) {
 		StaffDTO staffDTO = new StaffDTO();
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 		staffDTO.setStaffCode(staffCode);
 		
 		productDTO.setStaffDTO(staffDTO);
+		productDTO = setProductDefault(productDTO);
 		
 		String fileName = null;
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
@@ -82,8 +91,24 @@ public class ProductService {
 		else return null;
 	}
 	
+	private ProductDTO setProductDefault(ProductDTO productDTO) {
+		log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
+		Integer productTypeCode = productDTO.getProductTypeDTO().getProductTypeCode();
+		Integer lastProductCode = productRepository.findTopProductCodeByProductType(productTypeCode);
+		if(lastProductCode == null) {
+			productDTO.setProductCode((productTypeCode * 10000) + 1);
+			log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
+			log.info("null인지");
+		} else {
+			productDTO.setProductCode(lastProductCode + 1);
+			log.info("null이 아닌지");
+		}
+		
+		return productDTO;
+	}
+	
 	public boolean updateProduct(ProductDTO productDTO, MultipartFile attach) {
-		productDTO = setProductUpdate(productDTO);
+		setProductUpdate(productDTO);
 		
 		if(attach != null && attach.getSize() > 0) {
 			ProductDTO before = productRepository.findById(productDTO.getProductCode()).orElseThrow();
@@ -99,7 +124,7 @@ public class ProductService {
 			AttachmentDTO attachmentDTO = new AttachmentDTO();
 			
 			try {
-				String fileName = fileService.saveFile(FileService.LOST, attach);
+				String fileName = fileService.saveFile(FileService.PRODUCT, attach);
 				
 				attachmentDTO.setAttachSize(attach.getSize());
 				attachmentDTO.setOriginName(attach.getOriginalFilename());
@@ -124,11 +149,9 @@ public class ProductService {
 		else return false;
 	}
 	
-	private ProductDTO setProductUpdate(ProductDTO after) {
+	private void setProductUpdate(ProductDTO after) {
 		ProductDTO before = productRepository.findById(after.getProductCode()).orElseThrow();
 		after.setStaffDTO(before.getStaffDTO());
-		
-		return after;
 	}
 	
 	public ProductDTO delete(ProductDTO productDTO) {

@@ -1,7 +1,8 @@
 package com.goodee.finals.product;
 
-import com.goodee.finals.GoodeeFinalProjectApplication;
-import com.goodee.finals.lost.LostDTO;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/product/**")
+@Slf4j
 public class ProductController {
 			
 	@Autowired
@@ -54,12 +56,16 @@ public class ProductController {
 	@GetMapping("write")
 	public String write(Model model) {
 		// 품목타입리스트 가져오기
+		List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
+		model.addAttribute("productTypeList", productTypeList);
 		
 		return "product/write";
 	}
 	
 	@PostMapping("write")
 	public String write(ProductDTO productDTO, MultipartFile attach, Model model) {
+		log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
+		
 		ProductDTO result = productService.write(productDTO, attach);
 		
 		String resultMsg = "물품 등록 중 오류가 발생했습니다.";
@@ -82,11 +88,16 @@ public class ProductController {
 	@GetMapping("{productCode}/update")
 	public String getProductUpdate(@PathVariable Integer productCode, Model model) {
 		ProductDTO productDTO = productService.getProduct(productCode);
+		
 		model.addAttribute("productDTO", productDTO);
+		// 품목타입리스트 가져오기
+		List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
+		model.addAttribute("productTypeList", productTypeList);
 		
 		return "product/write";
 	}
 	
+	@PostMapping("{productCode}/update")
 	public String postProductUpdate(ProductDTO productDTO, MultipartFile attach, Model model) {
 		boolean result = productService.updateProduct(productDTO, attach);
 		

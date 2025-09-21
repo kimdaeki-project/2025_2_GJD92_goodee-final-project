@@ -84,7 +84,7 @@ public class LostService {
 	}
 	
 	public boolean updateLost(LostDTO lostDTO, MultipartFile attach) {
-		lostDTO = setLostUpdate(lostDTO);
+		setLostUpdate(lostDTO);
 		
 		if(attach != null && attach.getSize() > 0) {
 			LostDTO before = lostRepository.findById(lostDTO.getLostNum()).orElseThrow();
@@ -124,11 +124,38 @@ public class LostService {
 		else return false;
 	}
 	
-	private LostDTO setLostUpdate(LostDTO after) {
+	private void setLostUpdate(LostDTO after) {
+		
+		log.info("{}", after.getLostNum());
+		log.info("{}", after.getLostFinder());
+		log.info("{}", after.getLostFinderPhone());
+		log.info("{}", after.getLostName());
+		log.info("{}", after.getLostDate());
+		
 		LostDTO before = lostRepository.findById(after.getLostNum()).orElseThrow();
+		
 		after.setStaffDTO(before.getStaffDTO());
 		
-		return after;
+		log.info("{}", before.getLostNum());
+		log.info("{}", before.getLostFinder());
+		log.info("{}", before.getLostFinderPhone());
+		log.info("{}", before.getLostName());
+		log.info("{}", before.getLostDate());
+		log.info("{}", before.getStaffDTO().getInputDeptCode());
+		log.info("{}", before.getStaffDTO().getInputJobCode());
+		log.info("{}", before.getStaffDTO().getPassword());
+		log.info("{}", before.getStaffDTO().getStaffAddress());
+		log.info("{}", before.getStaffDTO().getStaffAddressDetail());
+		log.info("{}", before.getStaffDTO().getStaffCode());
+		log.info("{}", before.getStaffDTO().getStaffEmail());
+		log.info("{}", before.getStaffDTO().getStaffEnabled());
+		log.info("{}", before.getStaffDTO().getStaffGender());
+		log.info("{}", before.getStaffDTO().getStaffLocked());
+		log.info("{}", before.getStaffDTO().getStaffName());
+		log.info("{}", before.getStaffDTO().getStaffPhone());
+		log.info("{}", before.getStaffDTO().getStaffPostcode());
+		log.info("{}", before.getStaffDTO().getStaffPw());
+		log.info("{}", before.getStaffDTO().getUsername());
 	}
 	
 	public LostDTO delete(LostDTO lostDTO) {

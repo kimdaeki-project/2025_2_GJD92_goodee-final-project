@@ -75,16 +75,19 @@
       <h2>${empty productDTO.productCode ? "물품 등록" : "물품 수정" }</h2>
       <form method="post" enctype="multipart/form-data">
         
-        <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty productDTO.productCode }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+        <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
         <div class="form-group">
         <br>
         	<p>물품타입</p>
-        	<select name="productType">
-<%--         		<c:forEach items=""> --%>
-				<option selected>--선택--</option>
-				<option value="1">기념품</option>
-				<option value="2">수리소모품</option>
-<%-- 				</c:forEach> --%>
+        	<select name="productTypeDTO.productTypeCode">
+				<option value="">--선택--</option>
+        		<c:forEach items="${productTypeList }" var = "productType">
+				<option value="${productType.productTypeCode }"
+					<c:if test="${productType.productTypeCode == productDTO.productTypeDTO.productTypeCode}">
+		                selected
+		            </c:if>>
+				${productType.productTypeName }</option>
+				</c:forEach>
 			</select>
         
           <label for="itemName">믈품명</label>

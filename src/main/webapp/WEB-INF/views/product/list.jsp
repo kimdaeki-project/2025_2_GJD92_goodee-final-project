@@ -73,8 +73,8 @@ aside.sidenav {
 			    				<c:forEach var="product" items="${ productList.content }">
 			    					<tr>
 				    					<td>${ product.productCode }</td>
-				    					<td><a href="/product/${ product.productCode }" style="color: #737373;">${ product.lostName }</a></td>
-				    					<td>${ product.staffDTO.productName }</td>
+				    					<td>${ product.productTypeDTO.productTypeName}</td>
+				    					<td><a href="/product/${ product.productCode }" style="color: #737373;">${ product.productName }</a></td>
 				    					<td>${ product.productAmount }</td>
 			    					</tr>
 			    				</c:forEach>

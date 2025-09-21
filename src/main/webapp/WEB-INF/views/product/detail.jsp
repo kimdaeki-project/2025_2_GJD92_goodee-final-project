@@ -49,32 +49,36 @@
     <div class="form-box">
       <h2>분실물 상세</h2>
       
-      <img width="300" height="300" style="object-fit: cover;" src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"/>
+      <img width="300" height="300" style="object-fit: cover;" src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
       
       <table>
       	<tbody>
       		<tr>
       			<td>분실물번호</td>
-      			<td>${lostDTO.lostNum }</td>
+      			<td>${productDTO.productCode }</td>
       		</tr>
       		<tr>
       			<td>등록일자</td>
-      			<td>${lostDTO.lostDate }</td>
+      			<td>${productDTO.productDate }</td>
       		</tr>
       		<tr>
       			<td>분실물명</td>
-      			<td>${lostDTO.lostName }</td>
+      			<td>${productDTO.productName }</td>
+      		</tr>
+      		<tr>
+      			<td>수량</td>
+      			<td>${productDTO.productAmount }</td>
       		</tr>
       	</tbody>
       </table>  
       
-      <button onclick="location.href='/lost/${lostNum}/update'">수정</button>
-      <form action="/lost/${lostNum }/delete" method="post">
+      <button onclick="location.href='/product/${productCode}/update'">수정</button>
+      <form action="/product/${productCode }/delete" method="post">
 	      <button type="submit">삭제</button>
 	  </form>
 		<br>
         
-      <button onclick="location.href='/lost'" >목록</button>
+      <button onclick="location.href='/product'" >목록</button>
     </div>
     
     </section>

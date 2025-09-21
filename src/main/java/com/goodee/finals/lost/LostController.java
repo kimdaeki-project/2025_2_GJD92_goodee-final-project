@@ -34,7 +34,6 @@ public class LostController {
 		
 		long totalLost = lostService.getTotalLost();
 		model.addAttribute("totalLost", totalLost);
-		log.info("{}", totalLost);
 		
 		return "lost/list";
 	}

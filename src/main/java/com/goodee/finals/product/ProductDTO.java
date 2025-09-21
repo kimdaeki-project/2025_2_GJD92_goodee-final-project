@@ -27,10 +27,9 @@ public class ProductDTO {
 
 	@Id
 	private Integer productCode;
-	private String productType;
 	private String productName;
-	private Long productAmount;
-	private LocalDate productDate;
+	private Long productAmount = 0L;
+	private LocalDate productDate = LocalDate.now();
 	@Column(columnDefinition = "boolean default false")
 	private boolean productDelete;
 	
@@ -38,6 +37,11 @@ public class ProductDTO {
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;
+	
+	// 물품 카테고리
+	@ManyToOne
+	@JoinColumn(name = "productTypeCode")
+	private ProductTypeDTO productTypeDTO;
 
 	// 물품 사진파일
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
