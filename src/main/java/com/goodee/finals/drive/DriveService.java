@@ -1,6 +1,8 @@
 package com.goodee.finals.drive;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.common.attachment.AttachmentDTO;
+import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.file.FileService;
+import com.goodee.finals.home.HomeController;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.JobDTO;
@@ -25,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class DriveService {
+
+    private final HomeController homeController;
 	
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
@@ -38,9 +45,18 @@ public class DriveService {
 	@Autowired
 	private JobRepository jobRepository;
 	@Autowired
+	private AttachmentRepository attachmentRepository;
+	@Autowired
+	private DocumentRepository documentRepository;
+	@Autowired
 	private DriveShareRepository driveShareRepository;
 	@Autowired
 	private FileService fileService;
+
+
+    DriveService(HomeController homeController) {
+        this.homeController = homeController;
+    }
 	
 	
 	public List<DriveDTO> myDrive(StaffDTO staffDTO) {
@@ -61,6 +77,10 @@ public class DriveService {
 	
 	public List<JobDTO> getJobList() {
 		return jobRepository.findAll();
+	}
+	
+	public List<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO) {
+		return documentRepository.findAllByDriveDTO_DriveNum(driveDTO.getDriveNum());
 	}
 	
 	public DriveDTO getDefaultDrive(StaffDTO staffDTO) {
@@ -84,10 +104,12 @@ public class DriveService {
 		// 1. 개인용 드라이브
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().size() < 1) {
 			driveDTO.setIsPersonal(true);
-			driveDTO.setDriveDefaultNum(null);
 			driveDTO.setDriveEnabled(true);
+			driveDTO.setDriveDefaultNum(null);
+			driveDTO.setDriveName(driveDTO.getDriveName().trim());
 			driveDTO = driveRepository.save(driveDTO);
 			makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
+			
 			return driveDTO;
 		}
 
@@ -97,11 +119,14 @@ public class DriveService {
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(driveDTO);
 		}		
-		driveDTO.setDriveDefaultNum(null);
 		driveDTO.setIsPersonal(false);
 		driveDTO.setDriveEnabled(true);
+		driveDTO.setDriveDefaultNum(null);
+		driveDTO.setDriveName(driveDTO.getDriveName().trim());
 		driveDTO = driveRepository.save(driveDTO);
+		
 		makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
+		
 		return driveDTO; 
 	}
 	
@@ -117,20 +142,20 @@ public class DriveService {
 		
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().isEmpty()) {
 			originDrive.setIsPersonal(true);
-			originDrive.setDriveEnabled(true);
+			originDrive.setDriveName(driveDTO.getDriveName().trim());
 			return driveRepository.save(originDrive);
 		}
 		
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
 			if(driveShare.getStaffDTO() == null) continue;	// TODO JSP에서 인덱스 꼬임 방어용 나중에 수정 
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
-			driveDTO.setDriveDefaultNum(null);
-			driveDTO.setDriveEnabled(true);
-			driveDTO.setIsPersonal(false);
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(originDrive);
+			originDrive.setIsPersonal(false);
+			originDrive.setDriveName(driveDTO.getDriveName().trim());
 			originDrive.getDriveShareDTOs().add(driveShare);
 		}
+		
 		return driveRepository.save(originDrive);
 	}
 	
@@ -141,6 +166,7 @@ public class DriveService {
 		}
 		driveDTO.setDriveEnabled(false);
 		driveDTO = driveRepository.save(driveDTO);
+		
 		return driveDTO;
 	}
 	
@@ -151,12 +177,16 @@ public class DriveService {
 		driveDTO.setIsPersonal(true);
 		driveDTO.setStaffDTO(staffDTO);
 		driveDTO.setDriveEnabled(true);
+		
 		driveDTO = driveRepository.save(driveDTO);
 		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
+		
 		driveDTO = driveRepository.save(driveDTO);
+		
 		return driveDTO;
 	}
 	
+	// TODO -- FileService에서 파일저장시 디렉토리 없으면 생성해줌. 임의로 생성할 필요 없음
 	public boolean makeDriveDir(String path) {
 		File file = new File(path);
 		System.out.println("makeDriveDir : " + path);
@@ -167,10 +197,59 @@ public class DriveService {
 		return result;
 	}
 	
-	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile[] attaches) {
+	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
+		AttachmentDTO attachmentDTO = new AttachmentDTO();
+		if(attach != null && attach.getSize() != 0) {
+			try {
+				String path = FileService.DRIVE + "/" + driveNum;
+				String fileName = fileService.saveFile(path, attach);
+				
+				attachmentDTO.setSavedName(fileName);
+				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setOriginName(attach.getOriginalFilename());
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		LocalDate currentDate = LocalDate.now();
 		
+		DriveDTO driveDTO = new DriveDTO();
+		driveDTO.setDriveNum(driveNum);
 		
-		return null;
+		DocumentDTO documentDTO = new DocumentDTO();
+		documentDTO.setJobDTO(jobDTO);
+		documentDTO.setStaffDTO(staffDTO);
+		documentDTO.setDriveDTO(driveDTO);
+		documentDTO.setDocStatus("ACTIVE");
+		documentDTO.setDocDate(currentDate);
+		documentDTO.setDocExpire(currentDate.plusDays(6));
+		documentDTO.setDocContentType(attach.getContentType());
+		documentDTO.setAttachmentDTO(attachmentDTO);
+		
+		return documentRepository.save(documentDTO);
+	}
+	
+	public boolean deleteDocByAttachNum(StaffDTO staffDTO, Long[] attachNums) {
+		boolean result = true;
+		
+		try {
+			for(Long attachNum : attachNums) {		// 삭제 실패시 EmptyResultDataAccessException 발생 
+				DocumentDTO documentDTO = documentRepository.findByattachmentDTO_AttachNum(attachNum);
+				
+				Integer regStaff = documentDTO.getStaffDTO().getStaffCode();
+				Integer currentStaff = staffDTO.getStaffCode();
+				
+				if(!regStaff.equals(currentStaff)) return false;
+				documentDTO.setDocStatus("DELETED");
+				
+				documentRepository.save(documentDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
 	}
 	
 }

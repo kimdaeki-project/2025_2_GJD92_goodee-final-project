@@ -25,10 +25,14 @@
 								<!-- DB에서 가져온 부서 목록-->
 								<button class="btn btn-light text-start dept-btn" data-team="전체">전체</button>
 								<c:forEach items="${ deptList }" var="dept">
-									<c:if test="${ dept.deptDetail eq '임원' }">
-										<button class="btn btn-light text-start dept-btn" data-team="${ dept.deptDetail }">${ dept.deptDetail }</button>
-									</c:if>
-									<button class="btn btn-light text-start dept-btn" data-team="${ dept.deptDetail }">${ dept.deptDetail }팀</button>
+									<c:choose>
+										<c:when test="${ dept.deptDetail eq '임원' }">
+											<button class="btn btn-light text-start dept-btn" data-team="${ dept.deptDetail }">${ dept.deptDetail }</button>
+										</c:when>
+										<c:otherwise>
+											<button class="btn btn-light text-start dept-btn" data-team="${ dept.deptDetail }">${ dept.deptDetail }팀</button>
+										</c:otherwise>
+									</c:choose>
 								</c:forEach>
 							</div>
 						</div>

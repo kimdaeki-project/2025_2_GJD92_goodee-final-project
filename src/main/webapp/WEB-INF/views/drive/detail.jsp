@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html>
 
@@ -46,13 +46,13 @@
 				
 				  <!-- 다운로드 -->
 				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center mb-0"
-				          id="downloadBtn">
+				          id="btnDownloadFile" disabled>
 				    <span class="material-symbols-rounded">download</span>
 				  </button>
 				
 				  <!-- 삭제 -->
 				  <button type="button" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center mb-0"
-				          id="deleteBtn">
+				          id="btnDeleteFile" onclick="deleteFile(${ driveDTO.driveNum })" disabled>
 				    <span class="material-symbols-rounded">delete</span>
 				  </button>
 				</div>
@@ -63,24 +63,26 @@
 					      <tr>
 					        <th class="text-center" style="width:36px;"><input type="checkbox" id="checkAll"/></th>
 					        <th>이름</th>
-					        <th style="width:180px;">등록일</th>
-					        <th style="width:120px;">용량</th>
-					        <th style="width:120px;">종류</th>
-					        <th style="width:140px;">등록자</th>
+					        <th style="width:180px;" class="text-center">등록일</th>
+					        <th style="width:120px;" class="text-center">용량</th>
+					        <th style="width:120px;" class="text-center">종류</th>
+					        <th style="width:140px;" class="text-center">등록자</th>
 					      </tr>
 					    </thead>
 					    <tbody>
 						  <c:choose>
-						    <c:when test="${ not empty documents }">
-						      <c:forEach var="doc" items="${ documents }">
-						        <tr>
-						          <td class="text-center"><input type="checkbox" value="${ doc.documentId }" /></td>
-						          <td>${ doc.fileName }</td>
-						          <td><fmt:formatDate value="${ doc.createdAt }" pattern="yyyy-MM-dd HH:mm"/></td>
-						          <td>${ doc.size } KB</td>
-						          <td>${ doc.type }</td>
-						          <td>${ doc.uploader }</td>
-						        </tr>
+						    <c:when test="${ not empty docList }">
+						      <c:forEach items="${ docList }" var="doc" >
+<%-- 							      <c:if test="${ StaffDTO.JobDTO.jobCode gt doc.JobDTO.JobCode }"> --%>
+							        <tr>
+							          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
+							          <td>${ doc.attachmentDTO.originName }</td>
+							          <td class="text-center">${ doc.docDate }
+							          <td class="text-center">${ doc.attachmentDTO.attachSize } KB</td>
+							          <td class="text-center">${ doc.docContentType }</td>
+							          <td class="text-center">${ doc.staffDTO.staffName }</td>
+							        </tr>
+<%-- 							        </c:if> --%>
 						      </c:forEach>
 						    </c:when>
 						    <c:otherwise>

@@ -34,8 +34,10 @@ public class DriveController {
     @ModelAttribute
     public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
 		List<DriveDTO> myDriveList = driveService.myDrive(staffDTO);
 		List<DriveShareDTO> shareDriveList = driveService.shareDrive(staffDTO);
+		
 		model.addAttribute("myDriveList", myDriveList);
 		model.addAttribute("shareDriveList", shareDriveList);
 		model.addAttribute("staffDTO", staffDTO);
@@ -45,6 +47,7 @@ public class DriveController {
 	@ResponseBody
 	public List<StaffResponseDTO> staffList() {
 		List<StaffResponseDTO> list = driveService.staffList();
+		
 		return list;
 	}
     
@@ -52,16 +55,22 @@ public class DriveController {
 	public String getDefaultDrive(@ModelAttribute DocumentDTO documentDTO, Model model) {
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		DriveDTO driveDTO = driveService.getDefaultDrive(staffDTO);
+		
+		model.addAttribute("docList", driveService.getDocListByDriveNum(driveDTO));
 		model.addAttribute("jobList", driveService.getJobList());
 		model.addAttribute("driveDTO", driveDTO);
+		
 		return "drive/detail";
 	}
 	
 	@GetMapping("{driveNum}")
 	public String selectedDrive(@PathVariable Long driveNum, @ModelAttribute DocumentDTO documentDTO, Model model) {
 		DriveDTO driveDTO = driveService.getDrive(driveNum);
+		
+		model.addAttribute("docList", driveService.getDocListByDriveNum(driveDTO));
 		model.addAttribute("jobList", driveService.getJobList());
 		model.addAttribute("driveDTO", driveDTO);
+		
 		return "drive/detail";
 	}
 	
@@ -145,11 +154,34 @@ public class DriveController {
 	}
 	
 	@PostMapping("{driveNum}/upload")
-	public String uploadDocument(@PathVariable Long driveNum, JobDTO jobDTO, MultipartFile[] attaches) {
-		driveService.uploadDocument(driveNum, jobDTO, attaches);
-		return "";
+	public String uploadDocument(@PathVariable Long driveNum, JobDTO jobDTO, MultipartFile attach, Model model) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		DocumentDTO documentDTO = driveService.uploadDocument(driveNum, jobDTO, attach, staffDTO);
+		
+		String resultMsg = "파일 업로드 실패";
+		String resultIcon = "error";
+		
+		if(documentDTO != null) {
+			resultMsg = "파일 업로드 성공";
+			resultIcon = "success";
+			String resultUrl = "/drive/" + driveNum;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
-	
+	@PostMapping("{driveNum}/delete")
+	@ResponseBody
+	public boolean deleteDocument(@PathVariable Long driveNum ,Long[] attachNums) {
+		if(attachNums.length < 1) return false;
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		boolean result = driveService.deleteDocByAttachNum(staffDTO, attachNums);
+		
+		return result;
+	}
 	
 }

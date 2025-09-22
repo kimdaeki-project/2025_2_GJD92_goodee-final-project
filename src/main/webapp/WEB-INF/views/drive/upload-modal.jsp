@@ -18,7 +18,7 @@
                  style="cursor: pointer; min-height: 150px;">
               <span class="material-symbols-rounded fs-1 mb-2">upload_file</span>
               <p class="mb-0">파일을 이 영역에 드래그하거나 클릭하여 업로드</p>
-              <input type="file" id="fileInput" name="attaches" class="d-none">
+              <input type="file" id="fileInput" name="attach" class="d-none">
               <div id="fileName" class="mt-2 small text-muted"></div>
             </div>
             
@@ -26,7 +26,7 @@
             <div class="mt-4">
               <label for="jobCode" class="form-label">다운로드 권한</label>
               <select name="jobCode" id="jobCode" class="form-select">
-              	<option value="0">전체</option>
+              	<option value="1202">전체</option>
               	<c:if test="${ not empty jobList }">
               	  <c:forEach items="${ jobList }" var="job">
               	    <option value="${ job.jobCode }">${ job.jobDetail }</option>

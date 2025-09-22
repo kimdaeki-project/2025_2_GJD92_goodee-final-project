@@ -3,11 +3,11 @@ console.log('create_modal.js 연결')
 let staffs = [];
 let currentDept = null;
 
-const addBtn = document.getElementById('addBtn'); // 회원 추가[모달]
-const selectedList = document.getElementById("selectedList"); // 추가된 회원[모달] 
-const saveBtn = document.getElementById('saveStaffBtn'); // 추가된 회원 저장[모달]
-const deptBtn = document.querySelectorAll('.dept-btn'); // 부서 선택[모달]
-const searchInput = document.getElementById('searchInput'); // 사원 검색[모달]
+const addBtn = document.getElementById('addBtn');              // 회원 추가[모달]
+const selectedList = document.getElementById("selectedList");  // 추가된 회원[모달] 
+const saveBtn = document.getElementById('saveStaffBtn');       // 추가된 회원 저장[모달]
+const deptBtn = document.querySelectorAll('.dept-btn');        // 부서 선택[모달]
+const searchInput = document.getElementById('searchInput');    // 사원 검색[모달]
 const shareStaffs = document.querySelectorAll('.shareStaff');
 console.log(lastIndexOfStaffList);
 console.log('현재 접속중인 사용자' + loginStaffCode)
@@ -158,7 +158,7 @@ saveBtn.addEventListener('click', () => {
 		savedStaff.appendChild(tr);
 	})
 	
-	// 저장 후 모달 숨김 처리 및 selectedList 초기화
+	// 저장 후 모달 숨김 처리 및 추가된 사원 초기화
 	const modalEl = document.getElementById('shareModal');
 	const modal = bootstrap.Modal.getInstance(modalEl);
 	if(modal) modal.hide();
@@ -178,7 +178,7 @@ deptBtn.forEach(d => {
 		
 		if(deptName == '전체') { // '전체' 일때만 모든 사원 출력
 			currentDept = staffs 
-			renderStaff(staffs);
+			renderStaff(currentDept);
 			return;
 		}
 				
