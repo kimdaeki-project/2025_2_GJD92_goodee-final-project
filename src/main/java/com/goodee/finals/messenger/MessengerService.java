@@ -157,8 +157,7 @@ public class MessengerService {
 		Long chatBodyNum = chatUserDTO.getChatBodyNum();
 		
 		List<MessengerTestDTO> result = messengerRepository.unreadCounts(r, staffCode, chatBodyNum);
-		System.out.println("안 읽은 개수: " + result.size());
-		return 0;
+		return result.size();
 	}
 	
 }

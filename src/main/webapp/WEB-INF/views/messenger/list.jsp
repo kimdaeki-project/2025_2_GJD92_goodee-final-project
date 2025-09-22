@@ -44,8 +44,8 @@
 	                    badge.innerText = data[roomId];
 	                }
 	            } */
-	        })
-	        .catch(err => console.error(err));
+	            console.log(data);
+	        });
 	    }, 5000);
 </script>
 </body>

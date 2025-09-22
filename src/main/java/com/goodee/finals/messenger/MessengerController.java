@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.goodee.finals.staff.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,29 +14,18 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.goodee.finals.common.security.CustomAuthenticationFailureHandler;
 import com.goodee.finals.staff.StaffDTO;
 
 @RequestMapping("/msg/**") @Controller
 public class MessengerController {
-
-    private final StaffService staffService;
-
-    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 	
 	@Autowired
 	MessengerService messengerService;
-
-    MessengerController(CustomAuthenticationFailureHandler customAuthenticationFailureHandler, StaffService staffService) {
-        this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
-        this.staffService = staffService;
-    }
     
     @GetMapping("")
     public String home(Model model) {
@@ -133,13 +121,16 @@ public class MessengerController {
 	}
 	
 	@PostMapping("unread/count")
-	public void getUnreadCounts(@RequestBody List<Long> rooms) {
+	public Map<Long, Integer> getUnreadCounts(@RequestBody List<Long> rooms) {
+		Map<Long, Integer> result = new HashMap<>();
 		for (Long r : rooms) {
 			// 이거 임시임 나중에 해제좀 조건문
 			if (r == 9) {
 				int count = messengerService.getUnreadCounts(r);
+				result.put(r, count);
 			}
 		}
+		return result;
 	}
 	
 }
