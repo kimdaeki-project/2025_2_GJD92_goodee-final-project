@@ -1,5 +1,6 @@
 /**
- * create.jsp javascript file
+ * create.jsp 랑 연동
+ * 채팅방 생성하는 스크립트 코드
  */
 const addBtns = document.querySelectorAll('.add-user');
 const addedUsers = document.querySelector('#addedUsers');

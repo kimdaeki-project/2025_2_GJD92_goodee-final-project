@@ -20,5 +20,7 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 		   "FROM MessengerTestDTO cb " +
 		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyDelete = false")
 	Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum);
+
+	List<ChatRoomDTO> findByChatRoomGroupFalseAndChatUserDTOsStaffDTOStaffCode(Integer loggedStaffCode);
 	
 }

@@ -1,8 +1,12 @@
+/**
+ * chat.jsp 랑 연동
+ * 채팅, 화면에 메시지 출력, 메시지 DB에 저장, 무한 스크롤 로직 스크립트
+ */
 const chatRoomNum = document.querySelector('#chatRoomNum').value;
 const socket = new SockJS('http://192.168.1.35/ws-stomp');
 const stompClient = Stomp.over(socket);
 stompClient.connect({}, function (frame) {
-    console.log('Connected: ' + frame);
+    console.log('Connected: ' + frame); // 커넥션 콘솔에 표시
     
     stompClient.subscribe('/sub/chat' + chatRoomNum, function (message) { // 구독 경로
         const receivedMessage = JSON.parse(message.body); // 메시지 파싱
@@ -15,7 +19,7 @@ stompClient.connect({}, function (frame) {
         const senderName = document.querySelector('#messageSenderName').value;
         const message = {
             type: "SEND", // 고정된 type
-            contents: contents, // 입력된 내용
+            contents: contents,
             chatRoomNum: chatRoomNum,
             staffCode: sender,
 			chatBodyContent: contents,
@@ -23,7 +27,7 @@ stompClient.connect({}, function (frame) {
 			// 날짜, 삭제 여부는 컨트롤러에서 세팅
         };
         stompClient.send("/pub/chat" + chatRoomNum, {}, JSON.stringify(message)); // 메세지 전송 경로
-        document.getElementById('messageInput').value = ''; // 입력 필드 초기화
+        document.getElementById('messageInput').value = '';
     });
 });
 //화면에 메시지 출력하기
@@ -43,7 +47,7 @@ messageBox.addEventListener('scroll', () => {
 		loadMessages();
 	}
 });
-
+// 무한 스크롤 메시지 가져오기
 function loadMessages() {
 	page++;
 	fetch('/msg/load', {

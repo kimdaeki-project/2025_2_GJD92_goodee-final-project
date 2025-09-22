@@ -32,7 +32,7 @@
 <body>
 	<h2>메신저</h2>
 	<div>
-		<a href="/msg">채팅방 목록</a>
+		<a href="/msg/room">채팅방 목록</a>
 	</div>
 	<input type="text" id="messageInput" placeholder="메시지를 입력하세요" />
 	<sec:authorize access="isAuthenticated()">
