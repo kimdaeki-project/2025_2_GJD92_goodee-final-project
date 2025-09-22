@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,13 +26,14 @@ public class ApproverDTO {
 	private Integer apvrType;
 	private Integer apvrSeq;
 	private Integer apvrState;
+	private Boolean apvrResult;
 	private LocalDateTime apvrDtm;
 	
 	@ManyToOne
 	@JoinColumn(name = "aprvCode")
 	@JsonIgnore
 	private ApprovalDTO approvalDTO;
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;
 }

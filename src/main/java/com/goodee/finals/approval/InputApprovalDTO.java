@@ -11,6 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class InputApprovalDTO {
+	private String aprvCode;
 	private String aprvTitle;
 	private String aprvContent;
 	private LocalDate aprvExe;

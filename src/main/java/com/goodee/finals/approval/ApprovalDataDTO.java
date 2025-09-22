@@ -1,6 +1,7 @@
 package com.goodee.finals.approval;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -39,6 +41,6 @@ public class ApprovalDataDTO {
 	@JsonIgnore
 	private ApprovalDTO approvalDTO;
 	
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "approvalDataDTO", cascade = CascadeType.ALL)
-	private ApprovalAttachmentDTO approvalAttachmentDTO;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "approvalDataDTO", cascade = CascadeType.ALL)
+	private List<ApprovalAttachmentDTO> approvalAttachmentDTOs;
 }

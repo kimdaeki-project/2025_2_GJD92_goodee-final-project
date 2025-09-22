@@ -136,7 +136,7 @@
 				    		
 				    		<tr class="hard-line">
 				    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>문</span><span>서</span><span>번</span><span>호</span></p></td>
-				    			<td colspan="4"></td>
+				    			<td colspan="4"><input type="hidden" name="aprvCode" value="${ aprvCode }">${ aprvCode }</td>
 				    		</tr>
 				    		
 				    		<tr class="hard-line">

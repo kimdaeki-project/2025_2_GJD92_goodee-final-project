@@ -1,5 +1,6 @@
 package com.goodee.finals.approval;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,7 +36,6 @@ public class ApprovalController {
 	@GetMapping("staff")
 	@ResponseBody
 	public List<StaffDTO> getApprovalStaffList() {
-		log.info("요청 들어옴");
 		return staffService.getStaffAll();
 	}
 	
@@ -44,17 +44,41 @@ public class ApprovalController {
 		LocalDate nowDate = LocalDate.now();
 		List<DeptDTO> deptList = approvalService.getDeptList();
 		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
 		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
 		
 		return "approval/draft";
 	}
 	
 	@PostMapping("draft")
-	public String postApprovalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile attach, Model model) {
-		log.info("{}", attach.getSize());
+	public String postApprovalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach, Model model) throws IOException {
+		boolean result = approvalService.sendNormalDraft(inputApprovalDTO, attach);
 		
-		return null;
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 }
