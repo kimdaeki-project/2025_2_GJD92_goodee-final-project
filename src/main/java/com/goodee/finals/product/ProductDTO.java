@@ -43,6 +43,11 @@ public class ProductDTO {
 	@JoinColumn(name = "productTypeCode")
 	private ProductTypeDTO productTypeDTO;
 
+	// 물품관리대장
+	@ManyToOne
+	@JoinColumn(name = "pmNum")
+	private ProductManageDTO productManageDTO;
+	
 	// 물품 사진파일
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
 	private ProductAttachmentDTO productAttachmentDTO;

@@ -23,11 +23,12 @@
       <div class="col-md-4">
         <!-- 이달 근태 현황 -->
         <div class="card mb-3">
-          <div class="card-header">이상근태 현황 <span class="float-end">9월</span></div>
+          <div class="card-header">이상근태 현황 <span class="float-end"><small>${month }월</small></span></div>
+          
           <div class="card-body">
             <div class="row text-center">
-              <div class="col">지각<br><strong>1</strong></div>
-              <div class="col">조퇴<br><strong>2</strong></div>
+              <div class="col">지각<br><strong>${lateCount }</strong></div>
+              <div class="col">조퇴<br><strong>${earlyLeaveCount }</strong></div>
               <div class="col">결근<br><strong>1</strong></div>
             </div>
           </div>
@@ -38,16 +39,18 @@
           <div class="card-header">연차 현황</div>
           <div class="card-body text-center">
             <div class="row">
-              <div class="col">잔여<br><strong>9</strong></div>
-              <div class="col">사용<br><strong>3</strong></div>
-              <div class="col">총 연차<br><strong>12</strong></div>
+              <div class="col">잔여<br><strong>${staffDTO.staffRemainLeave - staffDTO.staffUsedLeave }</strong></div>
+              <div class="col">사용<br><strong>${staffDTO.staffUsedLeave }</strong></div>
+              <div class="col">총 연차<br><strong>${staffDTO.staffRemainLeave }</strong></div>
             </div>
           </div>
         </div>
 
         <!-- 근로시간 현황 -->
         <div class="card">
-          <div class="card-header">근로시간 현황 <span class="float-end">09-15 ~ 09-21</span></div>
+          <div class="card-header">근로시간 현황 <span class="float-end"><i class="material-symbols-rounded me-2 text-lg">date_range</i>
+                  <small>23 - 30 March 2020</small>
+                </span></div>
           <div class="card-body">
             <p>주 근로시간 : 40h 00m</p>
             <p>누적 근로시간 : 00h 00m</p>
@@ -62,7 +65,7 @@
         <div class="card">
           <div class="card-header">출퇴근 내역
           <form action="${pageContext.request.contextPath}/attend/monthly" method="get">
-    <input type="hidden" name="staffCode" value="${staffCode}" />
+    <input type="hidden" name="staffCode" value="${staffDTO.staffCode}" />
 
     <label for="year">년도</label>
     <select name="year" id="year">
@@ -78,11 +81,11 @@
         </c:forEach>
     </select>
 
-    <button type="submit">조회</button>
+    <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">조회</button>
 </form>
           
           <div class="card-body">
-            <table class="table table-bordered text-center align-middle">
+            <table class="table text-center align-middle">
               <thead class="table-light">
                 <tr>
                   <th>날짜</th>
@@ -95,19 +98,41 @@
                 </tr>
               </thead>
               <tbody>
-              <c:forEach items="${attendances }" var="attend">
+              <c:forEach items="${attendances.content }" var="attend">
 	                <tr>
 	                  <td>${attend.attendDate }</td>
 	                  <td>${attend.attendIn eq null ? "--:--:--" : attend.formattedAttendIn}</td>
 	                  <td>${attend.attendOut eq null ? "--:--:--" : attend.formattedAttendOut}</td>
 	                  <td>${attend.workTime }</td>
-	                  <td>09h 04m</td>
-	                  <td>지각</td>
-	                  <td>-</td>
+	                  <td>${attend.totalWorkTime }</td>
+	                  <td>${attend.attendStatus }</td>
+	                  <td>${attend.workStatus }</td>
 	                </tr>
                 </c:forEach>
               </tbody>
             </table>
+            
+             <!-- 페이징 -->
+            <nav>
+  <ul class="pagination justify-content-center">
+    <!-- 이전 페이지 -->
+    <li class="page-item ${attendances.hasPrevious() ? '' : 'disabled'}">
+      <a class="page-link" href="?page=${attendances.number - 1}&year=${year}&month=${month}">&lt;</a>
+    </li>
+    
+    <!-- 페이지 번호 -->
+    <c:forEach var="i" begin="0" end="${attendances.totalPages - 1}">
+      <li class="page-item ${i == attendances.number ? 'active' : ''}">
+        <a class="page-link" href="?page=${i}&year=${year}&month=${month}">${i + 1}</a>
+      </li>
+    </c:forEach>
+    
+    <!-- 다음 페이지 -->
+    <li class="page-item ${attendances.hasNext() ? '' : 'disabled'}">
+      <a class="page-link" href="?page=${attendances.number + 1}&year=${year}&month=${month}">&gt;</a>
+    </li>
+  </ul>
+</nav>
 
           </div>
         </div>

@@ -2,13 +2,12 @@ package com.goodee.finals.attend;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.goodee.finals.common.security.CustomSessionInformationExpiredStrategy;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 
@@ -18,17 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AttendService {
 
-    private final CustomSessionInformationExpiredStrategy customSessionInformationExpiredStrategy;
-
 	@Autowired
 	AttendRepository attendRepository;
 	
 	@Autowired
 	StaffRepository staffRepository;
-
-    AttendService(CustomSessionInformationExpiredStrategy customSessionInformationExpiredStrategy) {
-        this.customSessionInformationExpiredStrategy = customSessionInformationExpiredStrategy;
-    }
 
 	public AttendDTO attendIn(AttendDTO attendDTO) {
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -73,8 +66,16 @@ public class AttendService {
                 .orElse(null); // 있으면 AttendDTO, 없으면 null
 	}
 	
-	public List<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month) {
-        return attendRepository.findMonthlyAttendances(year, month, staffCode);
+	public long getLateCount(int staffCode) {
+        return attendRepository.countLateByStaffCode(staffCode, LocalTime.of(9, 0));
+    }
+
+    public long getEarlyLeaveCount(int staffCode) {
+        return attendRepository.countEarlyLeaveByStaffCode(staffCode, LocalTime.of(18, 0));
+    }
+	
+	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, Pageable pageable) {
+        return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable);
     }
 	
 }

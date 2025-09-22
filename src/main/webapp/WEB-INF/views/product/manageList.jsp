@@ -117,7 +117,7 @@ aside.sidenav {
 						</nav>
 			    </div>
 				
-			    <button onclick="location.href='/product/write'">등록</button>
+			    <button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/product/manageWrite'">입출고등록</button>
 	    </section>
     </div>
   </main>

@@ -17,6 +17,12 @@ aside.sidenav {
 }
 	
 	</style>
+	<!-- 부트스트랩 CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- 부트스트랩 JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -62,10 +68,10 @@ aside.sidenav {
 			    		<table class="table text-center">
 			    			<thead>
 			    				<tr>
-			    					<th class="col-2">물품번호</th>
+			    					<th class="col-1">물품번호</th>
 			    					<th class="col-2">물품타입</th>
 			    					<th class="col-3">물품명</th>
-			    					<th class="col-1">수량</th>
+			    					<th class="col-2">수량</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -116,7 +122,64 @@ aside.sidenav {
 						</nav>
 			    </div>
 				
-			    <button onclick="location.href='/product/write'">등록</button>
+<!-- 			    <button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/product/write'">등록</button> -->
+
+					<!-- 모달 버튼 -->
+<button type="button" class="btn btn-sm btn-primary bg-gradient-dark text-white me-3" data-toggle="modal" data-target="#exampleModal">
+  물품 등록
+</button>
+
+<!-- 모달 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>${empty productDTO.productCode ? "물품 등록" : "물품 수정" }</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <form method="post"
+      action="${empty productDTO.productCode ? '/product/write' : '/product/update'}"
+      enctype="multipart/form-data">
+       <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+        
+          <div class="form-group">
+            <label for="productName">물품명</label>
+          <input type="text" class="form-control" id="productName" name="productName" value="${productDTO.productName }" required>
+          </div>
+          <div class="form-group">
+            <label for="productType">물품타입</label>
+            <select name="productTypeDTO.productTypeCode">
+				<option value="">--선택--</option>
+        		<c:forEach items="${productTypeList }" var = "productType">
+				<option value="${productType.productTypeCode }"
+					<c:if test="${productType.productTypeCode == productDTO.productTypeDTO.productTypeCode}">
+		                selected
+		            </c:if>>
+				${productType.productTypeName }</option>
+				</c:forEach>
+			</select>
+          </div>
+<!--           <div class="form-group"> -->
+<!--             <label for="productImage">사진 첨부</label> -->
+<!--             <input type="file" class="form-control" id="productImage" name="productImage"> -->
+<!--           </div> -->
+          
+          <div class="form-group">
+          <label for="file">사진첨부</label>
+          <input type="file" class="form-control" id="file" name="attach">
+        </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty productDTO.productCode ? "등록" : "수정" }</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal";" style="width: 100px;">취소</button>
+      </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 	    </section>
     </div>
   </main>

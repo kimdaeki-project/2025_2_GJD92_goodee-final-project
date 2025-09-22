@@ -1,5 +1,6 @@
 package com.goodee.finals.attend;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -59,20 +60,69 @@ public class AttendDTO {
             return "--:--:--";
         }
 
-        // 1. LocalTime -> 나노초 변환
-        long inNano = attendIn.toNanoOfDay();
-        long outNano = attendOut.toNanoOfDay();
+        Duration duration = Duration.between(attendIn, attendOut);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
 
-        // 2. 차이 계산 (퇴근 - 출근)
-        long workNano = outNano - inNano;
-
-        // 3. 시/분/초로 변환
-        long hours = workNano / 3_600_000_000_000L;          // 1시간 = 3.6조 ns
-        long minutes = (workNano / 60_000_000_000L) % 60;    // 1분 = 60초
-        long seconds = (workNano / 1_000_000_000L) % 60;     // 1초 = 10억 ns
-
-        // 4. 원하는 포맷으로 반환
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format("%02dh %02dm", hours, minutes);
     }
-	
+    
+    public String getTotalWorkTime() {
+        if (attendIn == null || attendOut == null) {
+            return "--h --m";
+        }
+
+        Duration duration = Duration.between(attendIn, attendOut);
+
+        // 휴게시간 1시간 빼는 조건 체크
+        boolean isRestApplicable = attendIn.isBefore(LocalTime.NOON) && attendOut.isAfter(LocalTime.of(13, 0));
+
+        if (isRestApplicable) {
+            duration = duration.minusHours(1);
+            if (duration.isNegative()) {
+                duration = Duration.ZERO; // 음수 방지
+            }
+        }
+
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+
+        return String.format("%02dh %02dm", hours, minutes);
+    }
+    
+    public String getAttendStatus() {
+        if (attendIn == null && attendOut == null) {
+            return "결근";
+        }
+
+        boolean isLate = attendIn != null && attendIn.isAfter(LocalTime.of(9, 0));
+        boolean isEarlyLeave = attendOut != null && attendOut.isBefore(LocalTime.of(18, 0));
+
+        if (isLate && isEarlyLeave) return "지각, 조퇴";
+        if (isLate) return "지각";
+        if (isEarlyLeave) return "조퇴";
+
+        return "-";
+    }
+    
+    public String getWorkStatus() {
+        if (attendIn == null || attendOut == null) {
+            return "-";
+        }
+
+        Duration duration = Duration.between(attendIn, attendOut);
+
+        // 휴게시간 조건
+        boolean isRestApplicable = attendIn.isBefore(LocalTime.NOON) && attendOut.isAfter(LocalTime.of(13, 0));
+        if (isRestApplicable) {
+            duration = duration.minusHours(1);
+        }
+
+        // 연장근로 기준: 9시간 이상
+        if (duration.toMinutes() >= 540) {
+            return "연장근로";
+        }
+
+        return "-";
+    }
 }

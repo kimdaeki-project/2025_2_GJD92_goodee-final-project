@@ -85,6 +85,18 @@ public class ProductController {
 		
 	}
 	
+	@GetMapping("manageWrite")
+	public String manageWrite() {
+		return "product/manageWrite";
+	}
+	
+	@PostMapping("manageWrite")
+	public String manageWrite(Model model) {
+		
+		
+		return "product/manageWrite";
+	}
+	
 	@GetMapping("{productCode}/update")
 	public String getProductUpdate(@PathVariable Integer productCode, Model model) {
 		ProductDTO productDTO = productService.getProduct(productCode);

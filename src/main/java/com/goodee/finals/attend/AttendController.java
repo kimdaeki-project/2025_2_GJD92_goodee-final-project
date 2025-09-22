@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.staff.StaffService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +28,9 @@ public class AttendController {
 
 	@Autowired
 	private AttendService attendService;
+	
+	@Autowired
+	private StaffService staffService;
 	
 	// 대시보드
 	@PostMapping("in")
@@ -85,20 +95,25 @@ public class AttendController {
 	@GetMapping("")
 	public String list(@RequestParam(required = false) Integer year,
 			            @RequestParam(required = false) Integer month,
+			            @PageableDefault(size = 10, sort = "attendDate", direction = Direction.DESC ) Pageable pageable,
 			            Model model) {
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
-		log.info("{}", staffCode);
+		StaffDTO staffDTO = staffService.getStaff(staffCode);
 		
 		LocalDate now = LocalDate.now();
 	    int targetYear = (year == null) ? now.getYear() : year;
 	    int targetMonth = (month == null) ? now.getMonthValue() : month;
 		
-	    List<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth);
-
+	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, pageable);
+	    long lateCount = attendService.getLateCount(staffCode);
+	    long earlyLeaveCount = attendService.getEarlyLeaveCount(staffCode);
+	    
+	    model.addAttribute("staffDTO", staffDTO);
 	    model.addAttribute("attendances", attendances);
 	    model.addAttribute("year", targetYear);
 	    model.addAttribute("month", targetMonth);
-	    model.addAttribute("staffCode", staffCode);
+	    model.addAttribute("lateCount", lateCount);
+	    model.addAttribute("earlyLeaveCount", earlyLeaveCount);
 		
 		return "attend/list";
 	}
