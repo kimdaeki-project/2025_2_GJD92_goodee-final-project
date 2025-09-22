@@ -97,33 +97,33 @@
 			  </div>
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
-	    	<div class="mt-5 row d-flex justify-content-between" style="width: 95%; margin: 0 auto;">
-			    <div class="col-auto" style="width: 180px;">
-			    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
-	    				<div class="mt-4">
-		    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">기안서</a>
-	    				</div>
-	    				
-	    				<div class="mt-3">
-		    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">휴가 신청서</a>
-	    				</div>
-	    				
-	    				<div class="mt-3">
-		    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">연장 근무 신청서</a>
-	    				</div>
-	    				
-	    				<div class="mt-3">
-		    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">조기 퇴근 신청서</a>
-	    				</div>
-	    			</div>
-	    			
-	    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100">결재</button>
-	    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">불러오기</button>
-	    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">임시저장</button>
-			    </div>
-			    
-			    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
-			    	<form id="approvalForm" enctype="multipart/form-data">
+	    	<form id="approvalForm" method="POST" enctype="multipart/form-data">
+		    	<div class="mt-5 row d-flex justify-content-between" style="width: 95%; margin: 0 auto;">
+				    <div class="col-auto" style="width: 180px;">
+				    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
+		    				<div class="mt-4">
+			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">기안서</a>
+		    				</div>
+		    				
+		    				<div class="mt-3">
+			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">휴가 신청서</a>
+		    				</div>
+		    				
+		    				<div class="mt-3">
+			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">연장 근무 신청서</a>
+		    				</div>
+		    				
+		    				<div class="mt-3">
+			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">조기 퇴근 신청서</a>
+		    				</div>
+		    			</div>
+		    			
+		    			<button type="button" onclick="sendApproval()" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100">결재</button>
+		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">불러오기</button>
+		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">임시저장</button>
+				    </div>
+				    
+				    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
 			    		<sec:authentication property="principal" var="staff"/>
 			    		
 			    		<table class="mt-5 text-center" style="width: 100%">
@@ -142,6 +142,13 @@
 				    		<tr class="hard-line">
 				    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>기</span><span>안</span><span>일</span><span>자</span></p></td>
 				    			<td colspan="4">${ nowDate }</td>
+				    		</tr>
+				    		
+				    		<tr class="hard-line">
+				    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>시</span><span>행</span><span>일</span></p></td>
+				    			<td colspan="4">
+				    				<input type="date" name="aprvExe" />
+				    			</td>
 				    		</tr>
 				    		
 				    		<tr>
@@ -179,23 +186,39 @@
 				    			</td>
 				    		</tr>
 				    	</table>
-			    	</form>
-			    </div>
-			    
-			    <div class="col-auto" style="width: 180px;">
-			    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden auto; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
-	    				
-	    			</div>
-	    			
-	    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100">결재선 지정</button>
-	    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-2 w-100">수신자 지정</button>
-	    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-2 w-100">합의자 지정</button>
-			    </div>
-	    	</div>
-	    
+	
+				    </div>
+				    
+				    <div class="col-auto" style="width: 180px;">
+				    	<div class="rounded text-center w-100" style="border: 1px solid #686868; min-height: 500px; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
+				    		<div class="mt-1">
+			    				<ul id="approverList" class="list-unstyled">
+			    				
+			    				</ul>
+				    		</div>
+		    				
+		    				<div class="mt-5">
+			    				<ul id="receiptList" class="list-unstyled">
+			    				
+			    				</ul>
+		    				</div>
+		    				
+		    				<div class="mt-5">
+			    				<ul id="agreeList" class="list-unstyled">
+			    				
+			    				</ul>
+		    				</div>
+		    			</div>
+		    			
+		    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" data-bs-toggle="modal" data-bs-target="#shareModal">결재선 지정</button>
+				    </div>
+		    	</div>
+				</form>
 	    </section>
     </div>
   </main>
+  
+  <c:import url="/WEB-INF/views/approval/draft-modal.jsp"></c:import>
   
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	
@@ -204,6 +227,7 @@
 	
 	<!-- Summernote -->
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+	
 	
 	<script>
 		document.querySelector("i[data-content='전자결재']").parentElement.classList.add("bg-gradient-dark", "text-white")
@@ -215,9 +239,13 @@
 			  height: 350,
 			  minHeight: 350,
 			  maxHeight: 350
-		  });
-		});
+		  })
+		})
+		
+		const loginStaffCode = ${ staff.staffCode }
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+	<script src="/js/approval/draft.js"></script>
 </body>
 
 </html>
