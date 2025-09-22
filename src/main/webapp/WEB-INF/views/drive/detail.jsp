@@ -36,7 +36,7 @@
 				  <!-- 파일 유형 -->
 				  <div class="d-flex align-items-center gap-2">
 				    <select class="form-select form-select-sm w-auto align-self-center rounded" id="fileTypeSelect">
-				      <option value="" selected>파일 유형: 선택</option>
+				      <option value="all" selected>파일 유형: 선택</option>
 				      <option value="doc">문서</option>
 				      <option value="image">이미지</option>
 				      <option value="video">동영상</option>
@@ -46,7 +46,7 @@
 				
 				  <!-- 다운로드 -->
 				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center mb-0"
-				          id="btnDownloadFile" disabled>
+				          id="btnDownloadFile" onclick="downloadFile(${ driveDTO.driveNum })" disabled>
 				    <span class="material-symbols-rounded">download</span>
 				  </button>
 				
@@ -55,6 +55,25 @@
 				          id="btnDeleteFile" onclick="deleteFile(${ driveDTO.driveNum })" disabled>
 				    <span class="material-symbols-rounded">delete</span>
 				  </button>
+				  
+				  <!-- 검색 -->
+				  <div class="ms-auto d-flex align-items-center">
+					  <!-- 드롭다운 -->
+					  <select class="form-select form-select-sm me-1" id="searchType" style="width: 100px;">
+					    <option value="title">파일명</option>
+					    <option value="staff">등록자</option>
+					    <option value="content">등록일</option>
+					  </select>
+					
+					  <!-- 입력창 -->
+					  <input type="text" id="searchInput" class="form-control form-control-sm me-1"
+					         placeholder="검색" style="width: 200px;">
+					
+					  <!-- 버튼 -->
+					  <button type="button" class="btn btn-dark btn-sm mb-0" id="btnSearch">
+					    <span class="material-symbols-rounded">search</span>
+					  </button>
+					</div>
 				</div>
 					
 					<div class="table-responsive">
@@ -62,7 +81,7 @@
 					    <thead class="border-top">
 					      <tr>
 					        <th class="text-center" style="width:36px;"><input type="checkbox" id="checkAll"/></th>
-					        <th>이름</th>
+					        <th>파일명</th>
 					        <th style="width:180px;" class="text-center">등록일</th>
 					        <th style="width:120px;" class="text-center">용량</th>
 					        <th style="width:120px;" class="text-center">종류</th>
@@ -73,7 +92,7 @@
 						  <c:choose>
 						    <c:when test="${ not empty docList }">
 						      <c:forEach items="${ docList }" var="doc" >
-<%-- 							      <c:if test="${ StaffDTO.JobDTO.jobCode gt doc.JobDTO.JobCode }"> --%>
+							      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode and doc.docStatus eq 'ACTIVE'}">
 							        <tr>
 							          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
 							          <td>${ doc.attachmentDTO.originName }</td>
@@ -82,7 +101,7 @@
 							          <td class="text-center">${ doc.docContentType }</td>
 							          <td class="text-center">${ doc.staffDTO.staffName }</td>
 							        </tr>
-<%-- 							        </c:if> --%>
+							        </c:if>
 						      </c:forEach>
 						    </c:when>
 						    <c:otherwise>

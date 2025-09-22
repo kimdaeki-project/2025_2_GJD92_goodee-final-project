@@ -28,6 +28,10 @@ public class FileDownView extends AbstractView {
 		AttachmentDTO attachmentDTO = (AttachmentDTO)model.get("file");
 		String type = model.get("type").toString();
 		String filePath = "";
+		String driveNum = "";
+		if(model.get("driveNum") != null) {
+			driveNum = model.get("driveNum").toString();
+		}
 		
 		switch (type) {
 			case "staff": filePath = path + FileService.STAFF.toString(); break; 
@@ -36,7 +40,7 @@ public class FileDownView extends AbstractView {
 			case "approval": filePath = path + FileService.APPROVAL.toString(); break; 
 			case "ride": filePath = path + FileService.RIDE.toString(); break; 
 			case "lost": filePath = path + FileService.LOST.toString(); break; 
-			case "document": filePath = path + FileService.DRIVE.toString(); break; 
+			case "document": filePath = path + FileService.DRIVE.toString() + "/" + driveNum; break; 
 		}
 
 		File file = new File(filePath, attachmentDTO.getSavedName());

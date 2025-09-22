@@ -37,17 +37,17 @@ public class DriveService {
 	private String baseDir;
 	
 	@Autowired
+	private JobRepository jobRepository;
+	@Autowired
+	private DeptRepository deptRepository;
+	@Autowired
 	private DriveRepository driveRepository;
 	@Autowired
 	private StaffRepository staffRepository;
 	@Autowired
-	private DeptRepository deptRepository;
-	@Autowired
-	private JobRepository jobRepository;
+	private DocumentRepository documentRepository;
 	@Autowired
 	private AttachmentRepository attachmentRepository;
-	@Autowired
-	private DocumentRepository documentRepository;
 	@Autowired
 	private DriveShareRepository driveShareRepository;
 	@Autowired
@@ -108,7 +108,6 @@ public class DriveService {
 			driveDTO.setDriveDefaultNum(null);
 			driveDTO.setDriveName(driveDTO.getDriveName().trim());
 			driveDTO = driveRepository.save(driveDTO);
-			makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 			
 			return driveDTO;
 		}
@@ -124,8 +123,6 @@ public class DriveService {
 		driveDTO.setDriveDefaultNum(null);
 		driveDTO.setDriveName(driveDTO.getDriveName().trim());
 		driveDTO = driveRepository.save(driveDTO);
-		
-		makeDriveDir(baseDir + FileService.DRIVE + "/" + driveDTO.getDriveNum());
 		
 		return driveDTO; 
 	}
@@ -186,17 +183,6 @@ public class DriveService {
 		return driveDTO;
 	}
 	
-	// TODO -- FileService에서 파일저장시 디렉토리 없으면 생성해줌. 임의로 생성할 필요 없음
-	public boolean makeDriveDir(String path) {
-		File file = new File(path);
-		System.out.println("makeDriveDir : " + path);
-		boolean result = false;
-		if(!file.exists()) {
-			result = file.mkdirs();
-		}
-		return result;
-	}
-	
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
 		if(attach != null && attach.getSize() != 0) {
@@ -250,6 +236,14 @@ public class DriveService {
 			result = false;
 		}
 		return result;
+	}
+	
+	public AttachmentDTO getAttachByAttachNum(Long attachNum) {
+		return attachmentRepository.findById(attachNum).orElseThrow();
+	}
+	
+	public List<AttachmentDTO> getAttachListByAttachNum(List<Long> attachNums) {
+		return attachmentRepository.findAllById(attachNums);
 	}
 	
 }

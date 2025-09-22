@@ -140,5 +140,30 @@ function deleteFile(driveNum) {
 			console.log("실패", e)
 		});
 	});
+}
+
+
+function downloadFile(driveNum) {
+	const checkedFiles = Array.from(checkBoxes).filter(cb => cb.checked);
+	const attachNums = checkedFiles.map(cb => cb.value);
+
+	if (attachNums.length === 1) {		// 단일 파일
+		location.href = `/drive/${driveNum}/downloadDocument?attachNums=${attachNums[0]}`;
+	} else {		// ZIP 다운로드
+		const query = attachNums.map(num => "attachNums=" + num).join("&");
+		location.href = `/drive/${driveNum}/downloadDocument?` + query;
+	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+

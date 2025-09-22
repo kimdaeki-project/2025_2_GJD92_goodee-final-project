@@ -29,7 +29,7 @@ public class DocumentDTO {
 	private Long docNum;
 	
 	private String docName;
-	private String docStatus; // ACTIVE, DELETE, EXPIRE
+	private String docStatus; // ACTIVE, DELETED, EXPIRED
 	private LocalDate docDate;
 	private LocalDate docExpire;
 	private String docContentType;

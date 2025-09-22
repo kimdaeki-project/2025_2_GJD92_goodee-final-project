@@ -1,5 +1,6 @@
 package com.goodee.finals.drive;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.JobDTO;
 import com.goodee.finals.staff.StaffDTO;
@@ -47,7 +49,6 @@ public class DriveController {
 	@ResponseBody
 	public List<StaffResponseDTO> staffList() {
 		List<StaffResponseDTO> list = driveService.staffList();
-		
 		return list;
 	}
     
@@ -182,6 +183,26 @@ public class DriveController {
 		boolean result = driveService.deleteDocByAttachNum(staffDTO, attachNums);
 		
 		return result;
+	}
+	
+	@GetMapping("{driveNum}/downloadDocument")
+	public String downloadDocument(Long[] attachNums, @PathVariable Long driveNum, Model model) {
+		String type = "document";
+		
+		if (attachNums.length == 1) {
+			AttachmentDTO file = driveService.getAttachByAttachNum(attachNums[0]);
+			model.addAttribute("file", file);
+			model.addAttribute("type", type);
+			model.addAttribute("driveNum", driveNum);
+			return "fileDownView";
+		} else {
+			List<AttachmentDTO> files = driveService.getAttachListByAttachNum(Arrays.asList(attachNums));
+			model.addAttribute("files", files);
+			model.addAttribute("type", type);
+			model.addAttribute("driveNum", driveNum);
+			return "zipDownView";
+		}
+		
 	}
 	
 }
