@@ -73,3 +73,9 @@ function loadMessages() {
 		next = response.next;
 	});
 }
+// 안 읽은 메시지 수
+window.addEventListener("beforeunload", function() {
+	const formData = new FormData();
+	formData.append("chatRoomNum", chatRoomNum);
+	navigator.sendBeacon("/msg/exit", formData);
+});

@@ -23,5 +23,30 @@
 	<div>
 		<a href="/msg">멤버</a>
 	</div>
+	<script>	
+	    const rooms = [
+	        <c:forEach var="room" items="${ room }" varStatus="status">
+	            ${ room.chatRoomNum }<c:if test="${ !status.last }">,</c:if>
+	        </c:forEach>
+	    ];
+	    setInterval(() => {
+	        fetch("/msg/unread/count", {
+	            method: "POST",
+	            headers: {"Content-Type": "application/json"},
+	            body: JSON.stringify(rooms)
+	        })
+	        .then(res => res.json())
+	        .then(data => {
+	            // data = { 101: 3, 102: 0, 103: 5 }
+/* 	            for (const roomId in data) {
+	                const badge = document.querySelector(`#unread-count-${roomId}`);
+	                if (badge) {
+	                    badge.innerText = data[roomId];
+	                }
+	            } */
+	        })
+	        .catch(err => console.error(err));
+	    }, 5000);
+</script>
 </body>
 </html>

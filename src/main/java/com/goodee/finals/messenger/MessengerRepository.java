@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 
@@ -22,5 +24,29 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 	Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum);
 
 	List<ChatRoomDTO> findByChatRoomGroupFalseAndChatUserDTOsStaffDTOStaffCode(Integer loggedStaffCode);
+
+	@Query("SELECT cb " +
+		   "FROM MessengerTestDTO cb " + 
+		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.staffCode != :staffCode " +
+		   "ORDER BY cb.chatBodyDtm DESC")
+	List<MessengerTestDTO> getLatest(Long chatRoomNum, Integer staffCode);
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE ChatUserDTO cu " + 
+		   "SET cu.chatBodyNum = :chatBodyNum " + 
+		   "WHERE cu.chatRoomDTO.chatRoomNum = :chatRoomNum " + 
+		   "AND cu.staffDTO.staffCode = :staffCode")
+	int unread(Long chatRoomNum, Integer staffCode, Long chatBodyNum);
+
+	@Query("SELECT cu FROM ChatUserDTO cu WHERE cu.chatRoomDTO.chatRoomNum = :r AND cu.staffDTO.staffCode = :staffCode")
+	ChatUserDTO getLatestChat(Long r, Integer staffCode);
+	
+	@Query("SELECT cb " +
+		   "FROM MessengerTestDTO cb " + 
+		   "WHERE cb.chatRoomNum = :r AND cb.staffCode != :staffCode AND cb.chatBodyNum > :chatBodyNum")
+	List<MessengerTestDTO> unreadCounts(Long r, Integer staffCode, Long chatBodyNum);
+
+	
 	
 }

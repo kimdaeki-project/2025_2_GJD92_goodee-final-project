@@ -18,6 +18,7 @@ import lombok.Setter;
 @Entity @Table(name = "chat_user")
 @IdClass(ChatUserDTO.PK.class)
 public class ChatUserDTO {
+	private Long chatBodyNum;
 	@Id @ManyToOne @JoinColumn(name = "chatRoomNum")
 	private ChatRoomDTO chatRoomDTO;
 	@Id @ManyToOne @JoinColumn(name = "staffCode")

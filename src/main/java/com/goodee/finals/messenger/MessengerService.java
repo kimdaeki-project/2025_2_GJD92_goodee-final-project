@@ -138,5 +138,27 @@ public class MessengerService {
 
 		return result;
 	}
+
+	public void unread(Long chatRoomNum) {
+		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
+		Integer staffCode = staffDTO.get().getStaffCode();
+		
+		List<MessengerTestDTO> dto = messengerRepository.getLatest(chatRoomNum, staffCode);
+		Long chatBodyNum = dto.getFirst().getChatBodyNum();
+		
+		int result = messengerRepository.unread(chatRoomNum, staffCode, chatBodyNum);
+	}
+
+	public int getUnreadCounts(Long r) {
+		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
+		Integer staffCode = staffDTO.get().getStaffCode();
+		
+		ChatUserDTO chatUserDTO = messengerRepository.getLatestChat(r, staffCode);
+		Long chatBodyNum = chatUserDTO.getChatBodyNum();
+		
+		List<MessengerTestDTO> result = messengerRepository.unreadCounts(r, staffCode, chatBodyNum);
+		System.out.println("안 읽은 개수: " + result.size());
+		return 0;
+	}
 	
 }
