@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 @Controller
 public class RideController {
 
+	@Autowired
     private final RideRepository rideRepository;
 	
 	@Autowired

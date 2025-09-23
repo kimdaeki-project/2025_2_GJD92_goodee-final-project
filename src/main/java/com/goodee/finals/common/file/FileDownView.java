@@ -40,6 +40,7 @@ public class FileDownView extends AbstractView {
 			case "approval": filePath = path + FileService.APPROVAL.toString(); break; 
 			case "ride": filePath = path + FileService.RIDE.toString(); break; 
 			case "lost": filePath = path + FileService.LOST.toString(); break; 
+			case "inspection": filePath = path + FileService.INSPECTION.toString(); break; 
 			case "document": filePath = path + FileService.DRIVE.toString() + "/" + driveNum; break; 
 		}
 

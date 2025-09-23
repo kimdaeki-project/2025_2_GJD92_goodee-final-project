@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset="UTF-8">
-	<title>어트랙션</title>
+	<title>어트랙션 점검 기록 등록</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -21,8 +21,7 @@
     		<div class="w-100">
 			    <ul class="navbar-nav">
 			    
-			      <!-- 메뉴 개수만큼 추가 -->
-			    	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
+			     	<c:import url="/WEB-INF/views/inspection/inspection-template-side.jsp"></c:import>
 			      
 			      
 			    </ul>
@@ -31,64 +30,56 @@
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    
 		    <!-- 여기에 코드 작성 -->
-		    <div class="row">
+			 <div class="row">
         <div class="col-10">
 		  <!-- 레일형 / 고속형 어트랙션 -->
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-4">
-			      <h3 class="text-white text-capitalize ps-5 mt-3"> ${ride.rideName } </h3>
+			      <h3 class="text-white text-capitalize ps-5 mt-3"> ${inspection.rideDTO.rideName } </h3>
 			    </div>
 			  </div>
 		  
 			  <div class="card-body mt-4">
-				  <div class="row ride-content">
+				  <div class="row inspection-content">
 				    
-				    <!-- 왼쪽: 어트랙션 이미지 -->
+				    <!-- 왼쪽: 어트랙션 점검 기록 이미지 -->
 				    <div class="col-md-6 text-center">
 				      <img alt="" 
-				           src="/file/ride/${ ride.rideAttachmentDTO.attachmentDTO.savedName }" 
+				           src="/file/inspection/${ inspection.inspectionAttachmentDTO.attachmentDTO.savedName }" 
 				           style="width:400px; height:400px; object-fit:cover;">
 				    </div>
 				
 				    <!-- 오른쪽: 상세 정보 -->
-				    <div class="col-md-6 ride-info">
+				    <div class="col-md-6 inspection-info">
 				      <table class="table">
 				        <tr>
 				          <th>어트랙션 코드</th>
-				          <td>${ride.rideCode}</td>
-				        </tr>
-				        <tr>
-				          <th>담당자</th>
-				          <td>${ride.staffDTO.staffName} (${ride.staffDTO.staffCode})</td>
+				          <td>${inspection.rideDTO.rideCode}</td>
 				        </tr>
 				        <tr>
 				          <th>어트랙션 기종</th>
-				          <td>${ride.rideType}</td>
+				          <td>${inspection.rideDTO.rideType}</td>
 				        </tr>
 				        <tr>
-				          <th>탑승인원</th>
-				          <td>${ride.rideCapacity}</td>
+				          <th>점검유형</th>
+				          <td>${inspection.isptType}</td>
 				        </tr>
 				        <tr>
-				          <th>운행시간</th>
-				          <td>${ride.rideDuration}</td>
+				          <th>점검결과</th>
+				          <td>${inspection.isptResult}</td>
 				        </tr>
 				        <tr>
-				          <th>이용정보</th>
-				          <td>${ride.rideRule}</td>
+				          <th>담당자</th>
+				          <td>${inspection.staffDTO.staffName} (${inspection.staffDTO.staffCode})</td>
+				        </tr>
+						<tr>
+				          <th>점검 시작일</th>
+				          <td>${inspection.isptStart}</td>
 				        </tr>
 				        <tr>
-				          <th>어트랙션 설명</th>
-				          <td>${ride.rideInfo}</td>
-				        </tr>
-				        <tr>
-				          <th>개장일</th>
-				          <td>${ride.rideDate}</td>
-				        </tr>
-				        <tr>
-				          <th>운행상태</th>
-				          <td>${ride.rideState}</td>
+				          <th>점검 종료일</th>
+				          <td>${inspection.isptEnd}</td>
 				        </tr>
 				      </table>
 				    </div>
@@ -97,7 +88,7 @@
 			</div>
 			
 			<!-- 버튼 --><!-- 로그인 사용자 정보 꺼내기 -->
-			<sec:authorize access="isAuthenticated()">
+<%-- 			<sec:authorize access="isAuthenticated()">
 			<sec:authentication property="principal" var="staff" />
 			
 			<!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
@@ -119,22 +110,21 @@
 			      </div>
 			    </div>
 		    </c:if>
-		    </sec:authorize>
+		    </sec:authorize> --%>
 			
 			
 		  </div>
         </div>
 	  </div>  
-	    
+	
 	    </section>
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/ride/rideDetail.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='어트랙션 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "어트랙션 목록"
+		document.querySelector("i[data-content='어트랙션 점검']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "어트랙션 점검"
 	</script>
 </body>
 
