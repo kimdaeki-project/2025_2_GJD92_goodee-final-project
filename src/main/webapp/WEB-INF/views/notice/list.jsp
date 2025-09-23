@@ -9,36 +9,7 @@
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 
-	<style>
-		/* 테이블 마지막 줄 경계선 보정 */
-		.table tbody tr:last-child td,
-		.table tbody tr:last-child th {
-			border-bottom: 1px solid #dee2e6;
-		}
-		/* 높이 통일 */
-		.input-group .form-control,
-		.input-group .btn {
-		    height: 40px !important;
-		    line-height: 1.5 !important;
-		}
-		
-		/* 왼쪽 input → 오른쪽 모서리 각지게 */
-		.input-group .form-control {
-		    border-top-right-radius: 0 !important;
-		    border-bottom-right-radius: 0 !important;
-		}
-		
-		/* 오른쪽 버튼 → 왼쪽 모서리 각지게 */
-		.input-group .btn {
-		    border-top-left-radius: 0 !important;
-		    border-bottom-left-radius: 0 !important;
-		}
-		
-		.input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3) {
-		    border-top-right-radius: 0 !important;
-		    border-bottom-right-radius: 0 !important;
-		}
-	</style>
+	<link href="/css/notice/list.css" rel="stylesheet">
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
