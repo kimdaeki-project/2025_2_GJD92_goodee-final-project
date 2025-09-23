@@ -42,14 +42,14 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/approval">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="전자결재">fact_check</i>
           <span class="nav-link-text ms-1 text-sm">전자결재</span>
         </a>
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/attend">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="근태">schedule</i>
           <span class="nav-link-text ms-1 text-sm">근태</span>
         </a>
@@ -91,14 +91,14 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/product">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="재고">remove_shopping_cart</i>
           <span class="nav-link-text ms-1 text-sm">재고</span>
         </a>
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/lost">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="분실물">e911_avatar</i>
           <span class="nav-link-text ms-1 text-sm">분실물</span>
         </a>

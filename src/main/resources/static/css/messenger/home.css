@@ -1,0 +1,82 @@
+@charset "UTF-8";
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+}
+/* 좌측 사이드바 */
+.sidebar {
+    width: 60px;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+.sidebar .material-icons {
+    font-size: 28px;
+    margin: 20px 0;
+    cursor: pointer;
+    color: #444;
+    transition: color 0.2s;
+}
+.sidebar .material-icons:hover {
+    color: #000;
+}
+.sidebar .active {
+    color: #000;
+}
+
+/* 메인 컨텐츠 */
+.main {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.section-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    color: #333;
+}
+.member {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.member:hover {
+	background: #f9f9f9; 
+}
+.member img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    object-fit: cover;
+    margin-right: 12px;
+}
+.member-info {
+    display: flex;
+    flex-direction: column;
+}
+.member-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+}
+.member-role {
+    font-size: 13px;
+    color: #888; /* 회색으로 직급 표시 */
+}
+/* 내 프로필 아래 구분선 */
+.my-profile {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}

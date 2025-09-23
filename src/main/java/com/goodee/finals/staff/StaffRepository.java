@@ -21,4 +21,5 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 0")
 	Page<StaffDTO> findAllQuitBySearch(String search, Pageable pageable);
 	
+	List<StaffDTO> findByStaffCodeNot(Integer loggedStaff);
 }

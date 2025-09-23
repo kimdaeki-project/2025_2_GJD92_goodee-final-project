@@ -2,6 +2,7 @@ package com.goodee.finals.staff;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +45,10 @@ public class StaffService implements UserDetailsService {
 	
 	public StaffDTO getStaff(Integer staffCode) {
 		return staffRepository.findById(staffCode).orElseThrow();
+	}
+	
+	public List<StaffDTO> getStaffAll() {
+		return staffRepository.findAll();
 	}
 	
 	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {

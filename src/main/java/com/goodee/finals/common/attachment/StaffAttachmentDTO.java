@@ -1,5 +1,6 @@
 package com.goodee.finals.common.attachment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ public class StaffAttachmentDTO {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "staffCode", insertable = false, updatable = false)
+	@JsonIgnore
 	private StaffDTO staffDTO;
 	@Id
 	@OneToOne
