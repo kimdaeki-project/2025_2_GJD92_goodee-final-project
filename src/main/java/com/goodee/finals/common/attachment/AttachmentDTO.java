@@ -32,6 +32,9 @@ public class AttachmentDTO {
 	@JsonIgnore
 	private StaffAttachmentDTO staffAttachmentDTO;
 	
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private ApprovalAttachmentDTO approvalAttachmentDTO;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
