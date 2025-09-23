@@ -75,13 +75,15 @@
 			  </div>
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
+	    	<sec:authentication property="principal" var="staff"/>
+	    	
 	    	<div class="mt-5 row d-flex justify-content-between" style="width: 95%; margin: 0 auto;">
 			    <div class="col-auto" style="width: 180px;">
 			    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
 	    				
 	    			</div>
 	    			
-	    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-5 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>상신</button>
+	    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-5 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재</button>
 	    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-2 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>반려</button>
 			    </div>
 			    
@@ -189,7 +191,7 @@
 		    						<c:if test="${ approver.apvrSeq ne 0 }">
 		    						
 		    							<li>
-		    								<input type="hidden" name="approver" value="${ approver.staffDTO.staffCode }">
+		    								<input type="hidden" class="post-apvr" name="approver" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
 												<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
 													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">
 														<c:if test="${ approver.apvrType eq 712 }">승인</c:if>
@@ -227,6 +229,7 @@
 		    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 710 }">
 		    						
 		    							<li>
+		    								<input type="hidden" class="post-recp" name="receiver" value="${ approver.staffDTO.staffCode }">
 				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
 													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">수신</div>
 													<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
@@ -250,6 +253,7 @@
 		    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 713 }">
 		    						
 		    							<li>
+		    								<input type="hidden" class="post-agre" name="agreer" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
 				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
 													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">합의</div>
 													<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
@@ -274,13 +278,19 @@
 	    </section>
     </div>
   </main>
+  
+  <c:import url="/WEB-INF/views/approval/draft-modal.jsp"></c:import>
 
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 		document.querySelector("i[data-content='전자결재']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='내 결재함']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "전자 문서 조회"
+		
+		const loginStaffCode = ${ staff.staffCode }
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+	<script src="/js/approval/detail.js"></script>
 </body>
 
 </html>
