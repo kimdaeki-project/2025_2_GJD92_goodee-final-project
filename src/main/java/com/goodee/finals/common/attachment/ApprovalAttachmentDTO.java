@@ -1,12 +1,12 @@
 package com.goodee.finals.common.attachment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.approval.ApprovalDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,15 +18,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "staff_attach")
-@IdClass(StaffAttachmentDTO.PK.class)
-public class StaffAttachmentDTO {
+@Table(name = "approval_attach")
+@IdClass(ApprovalAttachmentDTO.PK.class)
+public class ApprovalAttachmentDTO {
 
 	@Id
-	@OneToOne
-	@JoinColumn(name = "staffCode", insertable = false, updatable = false)
-	@JsonIgnore
-	private StaffDTO staffDTO;
+	@ManyToOne
+	@JoinColumn(name = "aprvCode", insertable = false, updatable = false)
+	private ApprovalDTO approvalDTO;
 	@Id
 	@OneToOne
 	@JoinColumn(name = "attachNum", insertable = false, updatable = false)
@@ -36,7 +35,7 @@ public class StaffAttachmentDTO {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	public static class PK {
-		private Integer staffDTO;
+		private Integer approvalDTO;
 		private Long attachmentDTO;
 	}
 }
