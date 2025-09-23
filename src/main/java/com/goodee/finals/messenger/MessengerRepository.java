@@ -47,6 +47,9 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 		   "WHERE cb.chatRoomNum = :r AND cb.staffCode != :staffCode AND cb.chatBodyNum > :chatBodyNum")
 	List<MessengerTestDTO> unreadCounts(Long r, Integer staffCode, Long chatBodyNum);
 
+	@Query("SELECT cb FROM MessengerTestDTO cb WHERE cb.chatRoomNum = :r ORDER BY cb.chatBodyNum DESC LIMIT 1")
+	MessengerTestDTO getTrueLatest(Long r);
+
 	
 	
 }

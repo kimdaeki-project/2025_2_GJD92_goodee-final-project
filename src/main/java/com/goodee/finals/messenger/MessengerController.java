@@ -29,6 +29,7 @@ public class MessengerController {
     
     @GetMapping("")
     public String home(Model model) {
+    	
     	List<StaffDTO> result = messengerService.getStaff();
     	model.addAttribute("members", result);
     	return "messenger/home";
@@ -120,12 +121,18 @@ public class MessengerController {
 	}
 	
 	@PostMapping("unread/count") @ResponseBody
-	public Map<Long, Integer> getUnreadCounts(@RequestBody List<Long> rooms) {
-		Map<Long, Integer> result = new HashMap<>();
+	public Map<String, Object> getUnreadCounts(@RequestBody List<Long> rooms) {
+		Map<Long, Integer> unreadCountResult = new HashMap<>();
+		Map<Long, MessengerTestDTO> latestMessageResult = new HashMap<>();
 		for (Long r : rooms) {
 			int count = messengerService.getUnreadCounts(r);
-			result.put(r, count);
+			MessengerTestDTO latest = messengerService.getLatestMessage(r);
+			unreadCountResult.put(r, count);
+			latestMessageResult.put(r, latest);
 		}
+		Map<String, Object> result = new HashMap<>();
+		result.put("unread", unreadCountResult);
+		result.put("latest", latestMessageResult);
 		return result;
 	}
 	

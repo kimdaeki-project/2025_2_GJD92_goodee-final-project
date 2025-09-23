@@ -162,5 +162,14 @@ public class MessengerService {
 		List<MessengerTestDTO> result = messengerRepository.unreadCounts(r, staffCode, chatBodyNum);
 		return result.size();
 	}
+
+	public MessengerTestDTO getLatestMessage(Long r) {
+		MessengerTestDTO result = messengerRepository.getTrueLatest(r);
+		if (result == null || result.getChatBodyContent() == null || result.getChatBodyContent().equals("")) {
+			result = new MessengerTestDTO();
+			result.setChatBodyContent("메시지 없음");
+		}
+		return result;
+	}
 	
 }
