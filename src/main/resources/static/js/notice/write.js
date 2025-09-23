@@ -4,7 +4,7 @@
  */
 const btn = document.querySelector('#btn-write');
 const form = document.querySelector('#form');
-
+const cancelBtn = document.querySelector('#btn-cancel');
 const input = document.querySelector('#fileInput');
 
 btn.addEventListener('click', () => {
@@ -65,6 +65,23 @@ btn.addEventListener('click', () => {
 			form.submit();
 		}
 	}
+});
+
+cancelBtn.addEventListener('click', () => {
+	Swal.fire({
+		text: "게시글을 임시저장하시겠습니까?",
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#3085d6",
+		confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then(result => {
+		if (result.isConfirmed) {
+			console.log('미구현');
+		} else {
+			location.href = "/notice";
+		}
+	});
 });
 // -------------------------------------------------- //
 const existingFiles = window.existingFiles || [];

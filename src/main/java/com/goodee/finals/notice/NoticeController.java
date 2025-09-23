@@ -46,10 +46,13 @@ public class NoticeController {
 	}
 	
 	@PostMapping("write")
-	public String write(NoticeDTO noticeDTO, MultipartFile[] files) {
+	public String write(NoticeDTO noticeDTO, MultipartFile[] files, Model model) {
 		NoticeDTO result = noticeService.write(noticeDTO, files);
-		if (result != null) {			
-			return "redirect:/notice";
+		if (result != null) {
+			model.addAttribute("resultMsg", "게시글이 등록되었습니다.");
+			model.addAttribute("resultIcon", "success");
+			model.addAttribute("resultUrl", "/notice");
+			return "common/result";
 		} else {
 			return null;
 		}
@@ -70,10 +73,13 @@ public class NoticeController {
 	}
 	
 	@PostMapping("{noticeNum}/edit")
-	public String edit(NoticeDTO noticeDTO, @RequestParam(required = false) List<Long> deleteFiles, MultipartFile[] files) {
+	public String edit(NoticeDTO noticeDTO, @RequestParam(required = false) List<Long> deleteFiles, MultipartFile[] files, Model model) {
 		NoticeDTO result = noticeService.edit(noticeDTO, files, deleteFiles);
-		if (result != null) {			
-			return "redirect:/notice/" + noticeDTO.getNoticeNum();
+		if (result != null) {
+			model.addAttribute("resultMsg", "게시글이 수정되었습니다.");
+			model.addAttribute("resultIcon", "success");
+			model.addAttribute("resultUrl", "/notice/" + noticeDTO.getNoticeNum());
+			return "common/result";
 		} else {
 			return null;
 		}
@@ -82,10 +88,11 @@ public class NoticeController {
 	@PostMapping("{noticeNum}/delete")
 	public String delete(@PathVariable("noticeNum") NoticeDTO noticeDTO, Model model) {
 		NoticeDTO result = noticeService.delete(noticeDTO);
-		if (result != null) {
-			model.addAttribute("msg", "게시글이 삭제되었습니다.");
-			model.addAttribute("url", "/notice");
-			return "notice/result";
+		if (result != null) {			
+			model.addAttribute("resultMsg", "게시글이 삭제되었습니다.");
+			model.addAttribute("resultIcon", "success");
+			model.addAttribute("resultUrl", "/notice");
+			return "common/result";
 		} else {
 			return null;
 		}

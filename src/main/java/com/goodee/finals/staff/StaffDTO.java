@@ -14,8 +14,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
+import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -69,6 +73,10 @@ public class StaffDTO implements UserDetails {
 	@OneToMany(mappedBy = "staffDTO")
 	private List<NoticeDTO> notices;
 	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<ChatUserDTO> chatUserDTOs;
+	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
@@ -84,6 +92,9 @@ public class StaffDTO implements UserDetails {
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffEnabled;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<RideDTO> rideDTOs;
+	
 	
 	// For Input
 	@Transient
