@@ -14,15 +14,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
-import com.goodee.finals.ride.RideDTO;
-import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.inspection.InspectionDTO;
+import com.goodee.finals.drive.DocumentDTO;
+import com.goodee.finals.drive.DriveDTO;
+import com.goodee.finals.drive.DriveShareDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
 import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.productManage.ProductManageDTO;
+import com.goodee.finals.ride.RideDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -116,6 +118,16 @@ public class StaffDTO implements UserDetails {
 	private Integer inputDeptCode;
 	@Transient
 	private Integer inputJobCode;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DriveDTO> driveDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DriveShareDTO> driveShareDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DocumentDTO> documentDTOs;
 	
 	@Override
 	public String getUsername() {

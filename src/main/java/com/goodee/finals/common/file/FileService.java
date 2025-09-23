@@ -20,6 +20,7 @@ public class FileService {
 	public static final String DOCUMENT = "document"; // 문서
 	public static final String INSPECTION = "inspection"; // 점검 기록 파일
 	public static final String FAULT = "fault"; // 어트랙션 고장 첨부파일
+	public static final String DRIVE = "drive"; // 문서
 
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
