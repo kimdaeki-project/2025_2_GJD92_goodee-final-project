@@ -1,6 +1,6 @@
 package com.goodee.finals.common.attachment;
 
-import com.goodee.finals.approval.ApprovalDataDTO;
+import com.goodee.finals.approval.ApprovalDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,8 +24,8 @@ public class ApprovalAttachmentDTO {
 
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "aprvNum", insertable = false, updatable = false)
-	private ApprovalDataDTO approvalDataDTO;
+	@JoinColumn(name = "aprvCode", insertable = false, updatable = false)
+	private ApprovalDTO approvalDTO;
 	@Id
 	@OneToOne
 	@JoinColumn(name = "attachNum", insertable = false, updatable = false)
@@ -35,7 +35,7 @@ public class ApprovalAttachmentDTO {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	public static class PK {
-		private Long approvalDataDTO;
+		private Integer approvalDTO;
 		private Long attachmentDTO;
 	}
 }

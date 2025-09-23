@@ -5,6 +5,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +34,34 @@ public class ApprovalController {
 	private ApprovalService approvalService;
 
 	@GetMapping
-	public String getApprovalList() {
+	public String getApprovalList(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalListDTO> approvalList = approvalService.getApprovalList(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
+		return "approval/list";
+	}
+	
+	@GetMapping("request")
+	public String getApprovalRequestList() {
+		return "approval/list";
+	}
+	
+	@GetMapping("ready")
+	public String getApprovalReadyList() {
+		return "approval/list";
+	}
+	
+	@GetMapping("mine")
+	public String getApprovalMineList() {
+		return "approval/list";
+	}
+	
+	@GetMapping("finish")
+	public String getApprovalFinishList() {
 		return "approval/list";
 	}
 	

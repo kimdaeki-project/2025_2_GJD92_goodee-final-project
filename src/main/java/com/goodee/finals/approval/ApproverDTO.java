@@ -27,6 +27,7 @@ public class ApproverDTO {
 	private Integer apvrSeq;
 	private Integer apvrState;
 	private Boolean apvrResult;
+	private String apvrComment;
 	private LocalDateTime apvrDtm;
 	
 	@ManyToOne

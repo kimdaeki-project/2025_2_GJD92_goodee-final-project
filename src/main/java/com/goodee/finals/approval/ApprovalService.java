@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,46 +63,19 @@ public class ApprovalService {
 	public Integer findLastAprvCode() {
 		return approvalRepository.findLastAprvCode();
 	}
+	
+	public Page<ApprovalListDTO> getApprovalList(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllApproval(staffCode, search, pageable);
+	}
 
 	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach) throws IOException {
 		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, NORMAL);
 		setApprover(draft, inputApprovalDTO.getApprover());
 		
-		if (inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
-		if (inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
-		
-		ApprovalDataDTO approvalDataDTO = new ApprovalDataDTO();
-		approvalDataDTO.setApprovalDTO(draft);
-		approvalDataDTO.setAprvTitle(inputApprovalDTO.getAprvTitle());
-		approvalDataDTO.setAprvContent(inputApprovalDTO.getAprvContent());
-		approvalDataDTO.setAprvExe(inputApprovalDTO.getAprvExe());
-		
-		if (attach.length != 0) {
-			List<ApprovalAttachmentDTO> attachList = new ArrayList<>();
-			
-			for (MultipartFile file : attach) {
-				if (file != null && file.getSize() != 0) {
-					String fileName = fileService.saveFile(FileService.APPROVAL, file);
-					
-					AttachmentDTO attachmentDTO = new AttachmentDTO();
-					attachmentDTO.setOriginName(file.getOriginalFilename());
-					attachmentDTO.setSavedName(fileName);
-					attachmentDTO.setAttachSize(file.getSize());
-					
-					attachmentRepository.save(attachmentDTO);
-					
-					ApprovalAttachmentDTO approvalAttachmentDTO = new ApprovalAttachmentDTO();
-					approvalAttachmentDTO.setAttachmentDTO(attachmentDTO);
-					approvalAttachmentDTO.setApprovalDataDTO(approvalDataDTO);
-					
-					attachList.add(approvalAttachmentDTO);
-				}
-			}
-			
-			if (attachList.size() != 0) approvalDataDTO.setApprovalAttachmentDTOs(attachList);
-		}
-		
-		draft.setApprovalDataDTO(approvalDataDTO);
+		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
+		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
+		if (attach != null && attach.length != 0) setAttach(draft, attach);
+
 		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
 		
 		if (result != null) return true;
@@ -113,9 +88,14 @@ public class ApprovalService {
 		
 		approvalDTO.setAprvCode(Integer.valueOf(inputApprovalDTO.getAprvCode()));
 		approvalDTO.setAprvType(aprvType);
+		approvalDTO.setAprvTitle(inputApprovalDTO.getAprvTitle());
+		approvalDTO.setAprvContent(inputApprovalDTO.getAprvContent());
 		approvalDTO.setAprvDate(LocalDate.now());
+		approvalDTO.setAprvExe(inputApprovalDTO.getAprvExe());
 		approvalDTO.setAprvState(RUN);
 		approvalDTO.setStaffDTO(staffDTO);
+		approvalDTO.setAprvTotal(inputApprovalDTO.getApprover().size() + 1);
+		approvalDTO.setAprvCrnt(2);
 		
 		return approvalDTO;
 	}
@@ -168,6 +148,31 @@ public class ApprovalService {
 			
 			draft.getApproverDTOs().add(approverDTO);
 		}
+	}
+	
+	private void setAttach(ApprovalDTO draft, MultipartFile[] attach) throws IOException {
+		List<ApprovalAttachmentDTO> attachList = new ArrayList<>();
+		
+		for (MultipartFile file : attach) {
+			if (file != null && file.getSize() != 0) {
+				String fileName = fileService.saveFile(FileService.APPROVAL, file);
+				
+				AttachmentDTO attachmentDTO = new AttachmentDTO();
+				attachmentDTO.setOriginName(file.getOriginalFilename());
+				attachmentDTO.setSavedName(fileName);
+				attachmentDTO.setAttachSize(file.getSize());
+				
+				attachmentRepository.save(attachmentDTO);
+				
+				ApprovalAttachmentDTO approvalAttachmentDTO = new ApprovalAttachmentDTO();
+				approvalAttachmentDTO.setAttachmentDTO(attachmentDTO);
+				approvalAttachmentDTO.setApprovalDTO(draft);
+				
+				attachList.add(approvalAttachmentDTO);
+			}
+		}
+		
+		if (attachList.size() != 0) draft.setApprovalAttachmentDTOs(attachList);
 	}
 
 }
