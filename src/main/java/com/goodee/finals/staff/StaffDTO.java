@@ -17,9 +17,11 @@ import com.goodee.finals.approval.ApproverDTO;
 import com.goodee.finals.ride.RideDTO;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
-
+import com.goodee.finals.product.ProductDTO;
+import com.goodee.finals.productManage.ProductManageDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -85,6 +87,16 @@ public class StaffDTO implements UserDetails {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<ApproverDTO> approverDTOs;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<LostDTO> LostDTOs;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<ProductDTO> ProductDTOs;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<ProductManageDTO> ProductManageDTOs;
+	
 	
 	@Column(insertable = false)
 	@ColumnDefault("1")
