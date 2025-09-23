@@ -18,6 +18,8 @@ import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
+import com.goodee.finals.drive.DriveDTO;
+import com.goodee.finals.drive.DriveService;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ public class StaffService implements UserDetailsService {
 	private DeptRepository deptRepository;
 	@Autowired
 	private JobRepository jobRepository;
+	@Autowired
+	private DriveService driveService;
 	@Autowired
 	private AttachmentRepository attachmentRepository;
 	@Autowired
@@ -90,7 +94,9 @@ public class StaffService implements UserDetailsService {
 		staffAttachmentDTO.setAttachmentDTO(attachmentDTO);
 		
 		staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
-		StaffDTO result = staffRepository.save(staffDTO);
+		staffDTO = staffRepository.save(staffDTO);
+		
+		DriveDTO result = driveService.createDefaultDrive(staffDTO);
 		
 		if (result != null) return true;
 		else return false;

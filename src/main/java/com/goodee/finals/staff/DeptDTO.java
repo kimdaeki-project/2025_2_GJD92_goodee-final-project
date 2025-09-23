@@ -26,4 +26,5 @@ public class DeptDTO {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "deptDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<StaffDTO> staffDTOs;
+	
 }

@@ -35,7 +35,7 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/calendar">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="일정">calendar_month</i>
           <span class="nav-link-text ms-1 text-sm">일정</span>
         </a>
@@ -56,9 +56,9 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5 fs-5" data-content="문서">folder</i>
-          <span class="nav-link-text ms-1 text-sm">문서</span>
+        <a class="nav-link text-dark" href="/drive">
+          <i class="material-symbols-rounded opacity-5 fs-5" data-content="드라이브">cloud_upload</i>
+          <span class="nav-link-text ms-1 text-sm">드라이브</span>
         </a>
       </li>
       

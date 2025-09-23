@@ -3,6 +3,7 @@ package com.goodee.finals.common.attachment;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.goodee.finals.drive.DocumentDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -48,4 +49,8 @@ public class AttachmentDTO {
 	@JsonIgnore
 	private List<NoticeAttachmentDTO> noticeAttachmentDTOs;
 
+	@OneToOne(mappedBy = "attachmentDTO")
+	@JsonIgnore
+	private DocumentDTO documentDTO;
+	
 }
