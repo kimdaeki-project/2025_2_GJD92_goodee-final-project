@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <!-- Messenger -->
-<div class="fixed-plugin">
+<div class="fixed-plugin" onclick="openMessenger()">
   <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
     <i class="material-symbols-rounded py-2">sms</i>
   </a>
@@ -22,3 +22,13 @@
 
 <!-- Template JS -->
 <script src="/js/material-dashboard.js"></script>
+
+<script>
+  function openMessenger() {
+    window.open(
+      "/msg",
+      "MessengerWindow",
+      "width=400,height=500,resizable=no,scrollbars=yes"
+    );
+  }
+</script>

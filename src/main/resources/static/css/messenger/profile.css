@@ -1,0 +1,75 @@
+@charset "UTF-8";
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.profile-wrapper {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+.profile-wrapper img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 1px solid #999;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+.profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+.profile-role {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 25px;
+}
+.profile-info {
+    margin: 12px 0;
+    font-size: 15px;
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.profile-info .material-icons {
+    font-size: 20px;
+    color: #000;  /* 아이콘 검은색 통일 */
+}
+.profile-button {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 25px auto 0 auto;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.profile-button:hover {
+    background: #333;
+}
+.back-link {
+    display: block;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+    text-decoration: none;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
