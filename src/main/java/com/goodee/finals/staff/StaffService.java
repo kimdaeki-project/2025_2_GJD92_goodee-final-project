@@ -89,7 +89,7 @@ public class StaffService implements UserDetailsService {
 		staffAttachmentDTO.setAttachmentDTO(attachmentDTO);
 		
 		staffDTO.setStaffAttachmentDTO(staffAttachmentDTO);
-		staffRepository.save(staffDTO);
+		staffDTO = staffRepository.save(staffDTO);
 		
 		DriveDTO result = driveService.createDefaultDrive(staffDTO);
 		

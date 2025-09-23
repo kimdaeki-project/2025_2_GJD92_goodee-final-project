@@ -2,6 +2,7 @@ package com.goodee.finals.drive;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,7 +65,7 @@ public class DriveService {
 	}
 	
 	public List<JobDTO> getJobList() {
-		return jobRepository.findAll();
+		return jobRepository.findAllByOrderByJobCodeDesc();
 	}
 	
 	public List<DriveDTO> getAllMyDrive(StaffDTO staffDTO) {
@@ -79,12 +80,14 @@ public class DriveService {
 		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
 	
-	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, Pageable pageable) {
+	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, StaffDTO staffDTO, Pageable pageable) {
 		Long driveNum = driveDTO.getDriveNum();
 		String keyword = drivePager.getKeyword();
+		Integer jobCode = staffDTO.getJobDTO().getJobCode();
+		
 		if(keyword == null) keyword = "";
 		
-		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, pageable);
+		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, jobCode ,pageable);
 		drivePager.calc(result);
 		
 		return result;
@@ -193,6 +196,11 @@ public class DriveService {
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
 		
+		if(attach.getOriginalFilename().length() > 50) {
+			System.out.println("파일명이 너무 깁니다.");
+			return null;
+		}
+		
 		if(attach != null && attach.getSize() != 0) {
 			try {
 				String path = FileService.DRIVE + "/" + driveNum;
@@ -208,11 +216,21 @@ public class DriveService {
 		}
 		LocalDate currentDate = LocalDate.now();
 		String contentType = attach.getOriginalFilename();
-		String newContentType = contentType.substring(contentType.lastIndexOf(".") + 1).toUpperCase();
+		String newContentType = "";
 		
+		if(contentType.lastIndexOf(".") > 0) {
+			newContentType = contentType.substring(contentType.lastIndexOf(".") + 1).toUpperCase();
+		} else {
+			newContentType = contentType.substring(contentType.lastIndexOf("/") + 1).toUpperCase();
+		}
+		
+		if(jobDTO == null) {
+			jobDTO = new JobDTO();
+			jobDTO.setJobCode(1202);
+		}
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
-
+		
 		DocumentDTO documentDTO = new DocumentDTO();
 		documentDTO.setJobDTO(jobDTO);
 		documentDTO.setStaffDTO(staffDTO);

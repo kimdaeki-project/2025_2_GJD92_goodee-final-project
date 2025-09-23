@@ -24,10 +24,11 @@ public class JobDTO {
 	private String jobName;
 	private String jobDetail;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "jobDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "jobDTO", cascade = CascadeType.ALL)
 	private List<StaffDTO> staffDTOs;
 	
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "jobDTO", cascade = CascadeType.ALL)
 	private List<DocumentDTO> documentDTOs;
 	

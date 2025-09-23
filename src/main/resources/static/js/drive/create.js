@@ -9,8 +9,8 @@ const saveBtn = document.getElementById('saveStaffBtn');       // 추가된 회�
 const deptBtn = document.querySelectorAll('.dept-btn');        // 부서 선택[모달]
 const searchInput = document.getElementById('searchInput');    // 사원 검색[모달]
 const shareStaffs = document.querySelectorAll('.shareStaff');
-console.log(lastIndexOfStaffList);
-console.log('현재 접속중인 사용자' + loginStaffCode)
+const btnAddAllDeptStaff = document.getElementById("btnAddAllDeptStaff");
+
 
 /*
 	드래그 이동
@@ -49,6 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 });
 
+document.addEventListener("hidden.bs.modal", () => {
+	selectedList.innerHTML = '';
+})
+
 /*
 	모달창에 체크된 사원들 오른쪽으로 이동
 */
@@ -56,12 +60,6 @@ addBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList');
 	const savedStaff = document.getElementById('savedStaff');
 
-	// 요소 확인용 안전장치
-	if (!staffList || !savedStaff) {
-		console.log('staffList or savedStaff 태그 없음')
-		return;	
-	}
-	
 	// 체크되어있는 요소들을 가져옴
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked');
 
@@ -84,20 +82,18 @@ addBtn.addEventListener('click', () => {
 	  	    });
 			return;
 		}
-		// 본인 추가 제외
-		
 	}
  	
 	// 체크된 사원들을 오른쪽으로 이동시킴
 	checkedInput.forEach((check) => {
 		const li = check.closest('li'); // chk.closest('li') 상위(부모)방향으로 이동하며 가장 가까운 li태그를 반환
 		const text = li.querySelector('span').textContent // 사원 정보 태그 가져옴
-		const value = check.value; // StaffCode 가져옴 
+		const staffCode = check.value; // StaffCode 가져옴 
 		
 		// 모달 오른쪽에 등록할 li 생성
 		const newLi = document.createElement('li');
 		newLi.className = 'list-group-item d-flex justify-content-between align-items-center';
-		newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn" aria-label="Remove"></button>`;
+		newLi.innerHTML = `<span data-staff-code="${staffCode}">${text}</span><button class="btn-close btn-close-white remove-btn" aria-label="Remove"></button>`;
 
 		// 삭제 버튼 동작 추가		
 		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
@@ -111,6 +107,35 @@ addBtn.addEventListener('click', () => {
 		check.checked = false;
 	})
 })
+
+btnAddAllDeptStaff.addEventListener("click", () => {
+	currentDept.forEach((staff) => {
+		
+		const mainStaffCode = Array.from(savedStaff.querySelectorAll('input[type="hidden"]')).map(input => input.value);
+		if (mainStaffCode.includes(String(staff.staffCode))) {
+			Swal.fire({
+		        text: "이미 추가된 사용자 입니다",
+		        icon: "info",
+		        confirmButtonColor: "#191919",
+		        confirmButtonText: "확인"
+	  	    });
+			return;
+		}
+			
+		const newLi = document.createElement('li');
+		newLi.className = 'list-group-item d-flex justify-content-between align-items-center';
+		newLi.innerHTML = `<span data-staff-code="${staff.staffCode}">
+						  ${staff.staffName}(${staff.jobDTO.jobDetail})${staff.deptDTO.deptDetail}</span>
+						  <button class="btn-close btn-close-white remove-btn" aria-label="Remove"></button>`;
+		
+		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+			newLi.remove();
+		});
+		
+		selectedList.appendChild(newLi);
+	})
+})
+
 
 
 /*
@@ -174,15 +199,15 @@ deptBtn.forEach(d => {
 		
 		searchInput.value = ''; // 부서 변경시 검색란 초기화
 		const deptName = e.target.getAttribute('data-team'); // 버튼에 저장된 data-team 가져옴
+		btnAddAllDeptStaff.textContent = (deptName + " 전체 추가").trim();			
 		console.log("선택된 부서 : " + deptName);
 		
 		if(deptName == '전체') { // '전체' 일때만 모든 사원 출력
-			currentDept = staffs 
+			currentDept = staffs
 			renderStaff(currentDept);
+			btnAddAllDeptStaff.textContent = "전체 추가";
 			return;
 		}
-				
-		
 		const DeptStaff = staffs.filter(s => s.deptDTO.deptDetail == deptName); // 부서에 해당하는 사원 필터링
 		currentDept = DeptStaff.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 현재 부서 설정
 		renderStaff(currentDept);
@@ -219,7 +244,6 @@ function renderStaff(list) {
 		li.className = 'list-group-item d-flex align-items-center'
 		li.innerHTML = `<input type="checkbox" class="me-2" value="${staff.staffCode}">
 		      <span>${staff.staffName}(${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}</span>`;
-		
 		// 사원목록에 추가
 		staffList.appendChild(li);
 	})

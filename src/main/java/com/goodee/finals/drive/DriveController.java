@@ -59,17 +59,17 @@ public class DriveController {
     
 	@GetMapping({ "", "{driveNum}" })
 	public String getDrive(@PathVariable(required = false) Long driveNum, DrivePager drivePager, Model model, 
-		@PageableDefault(size = 10, sort = "docDate", direction = Sort.Direction.DESC) Pageable pageable) {
-
+		@PageableDefault(size = 15, sort = "docDate", direction = Sort.Direction.DESC) Pageable pageable) {
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		DriveDTO driveDTO;
 	    if (driveNum == null) { // 최초 진입시 기본 드라이브
-	        StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	        driveDTO = driveService.getDefaultDrive(staffDTO);
 	    } else { 				// 특정 드라이브 진입
 	        driveDTO = driveService.getDrive(driveNum);
 	    }
 	    
-		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, pageable);
+		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
 		
 	    model.addAttribute("docList", docList);
 	    model.addAttribute("driveDTO", driveDTO);
@@ -78,7 +78,6 @@ public class DriveController {
 
 	    return "drive/detail";
 	}
-
 	
 	@GetMapping("create")
 	public String create(@ModelAttribute DriveDTO driveDTO, Model model) {
@@ -90,6 +89,7 @@ public class DriveController {
 	@PostMapping("create")
 	public String createDrive(@Valid DriveDTO driveDTO,BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
+			model.addAttribute("deptList", driveService.getDeptList());
 	        return "drive/create";
 	    }
 		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -98,15 +98,17 @@ public class DriveController {
 		
 		String resultMsg = "드라이브 등록 실패";
 		String resultIcon = "error";
+		String resultUrl = "/drive/create";
 		
 		if(driveDTO != null) {
 			resultMsg = "드라이브 등록 완료";
 			resultIcon = "success";
-			String resultUrl = "/drive";
-			model.addAttribute("resultUrl", resultUrl);
+			resultUrl = "/drive";
 		} 
+		model.addAttribute("resultUrl", resultUrl);
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
+		
 		
 		return "common/result";
 	}

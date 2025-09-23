@@ -49,10 +49,6 @@ uploadFrm.addEventListener("submit", (e) => {
 		return;
 	}
 	
-	// TODO 나중에 지울것
-	const jobCode = document.getElementById("jobCode").value;
-	console.log("업로드 파일:", fileInput.files[0].name);
-	console.log("권한:", jobCode);
 	uploadFrm.submit();
 });
 
@@ -105,7 +101,6 @@ function deleteFile(driveNum) {
 		}
 		const checkedFiles = Array.from(checkBoxes).filter(cb => cb.checked);
 		const attachNums = checkedFiles.map(checkedFile => checkedFile.value);
-		console.log(attachNums);
 
 		let params = new URLSearchParams();
 		params.append("attachNums", attachNums)
@@ -155,15 +150,3 @@ function downloadFile(driveNum) {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-

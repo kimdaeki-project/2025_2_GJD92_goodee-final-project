@@ -34,7 +34,7 @@ public class DriveDTO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long driveNum;
 	@NotBlank(message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
-	private String driveName;
+	private String driveName; // 사용하지 않고 있음
 	private Long driveDefaultNum;
 	private Boolean isPersonal;
 	private Boolean driveEnabled;
@@ -46,9 +46,11 @@ public class DriveDTO {
 	@JsonIgnore
 	private StaffDTO staffDTO;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "driveDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<DriveShareDTO> driveShareDTOs;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "driveDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DocumentDTO> documentDTOs;
 	

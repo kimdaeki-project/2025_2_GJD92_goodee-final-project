@@ -42,15 +42,15 @@
 					<div class="col-12 col-lg-5 h-100">
 						<div class="border rounded p-3 h-100 d-flex flex-column">
 							<input type="text" id="searchInput" class="form-control mb-2" placeholder="이름, 직책 입력">
+							<button type="button" class="form-control mb-2" id="btnAddAllDeptStaff">전체 추가</button>
 							<ul id="staffList" class="list-group flex-grow-1 overflow-auto">
 							
-							<!-- 사원 리스트 출력 -->
-							<!-- 사원 리스트 출력 -->
 							<!-- 사원 리스트 출력 -->
 							
 							</ul>
 						</div>
 					</div>
+					
 
 					<!-- 가운데: 추가 버튼(정중앙) -->
 					<div class="col-12 col-lg-1 h-100 d-flex align-items-center justify-content-center">
@@ -62,8 +62,6 @@
 						<div class="border rounded p-3 h-100 d-flex flex-column">
 							<ul id="selectedList" class="list-group flex-grow-1 overflow-auto">
 							
-							<!-- 추가된 사용자 여기에 출력 -->
-							<!-- 추가된 사용자 여기에 출력 -->
 							<!-- 추가된 사용자 여기에 출력 -->
 							
 							</ul>

@@ -85,7 +85,7 @@
 						  <c:choose>
 						    <c:when test="${ not empty docList.content }">
 						      <c:forEach items="${ docList.content }" var="doc" >
-							      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode and doc.docStatus eq 'ACTIVE'}">
+							      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode }">
 							        <tr>
 							          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
 							          <td>${ doc.attachmentDTO.originName }</td>
@@ -94,7 +94,7 @@
 							          <td class="text-center">${ doc.docContentType }</td>
 							          <td class="text-center">${ doc.staffDTO.staffName }</td>
 							        </tr>
-							        </c:if>
+							      </c:if>
 						      </c:forEach>
 						    </c:when>
 						    <c:otherwise>
@@ -111,6 +111,10 @@
 						  </c:choose>
 						</tbody>
 					  </table>
+					  
+					  <div class="mt-2 d-flex justify-content-end me-4">
+					  	<span>총 ${ docList.content.size() }개</span>
+					  </div>
 					  
 					  <c:if test="${ docList.content.size() gt 0 }">
 						  <nav class="mt-4">
