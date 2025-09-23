@@ -144,7 +144,10 @@ public class MessengerService {
 		Integer staffCode = staffDTO.get().getStaffCode();
 		
 		List<MessengerTestDTO> dto = messengerRepository.getLatest(chatRoomNum, staffCode);
-		Long chatBodyNum = dto.getFirst().getChatBodyNum();
+		Long chatBodyNum = 0L;
+		if (dto != null && dto.size() > 0) {			
+			chatBodyNum = dto.getFirst().getChatBodyNum();
+		}
 		
 		int result = messengerRepository.unread(chatRoomNum, staffCode, chatBodyNum);
 	}

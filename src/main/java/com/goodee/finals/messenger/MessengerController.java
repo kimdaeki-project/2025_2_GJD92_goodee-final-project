@@ -116,19 +116,15 @@ public class MessengerController {
 	
 	@PostMapping("exit")
 	public void unread(Long chatRoomNum) {
-		System.out.println("나간 방: " + chatRoomNum);
 		messengerService.unread(chatRoomNum);
 	}
 	
-	@PostMapping("unread/count")
+	@PostMapping("unread/count") @ResponseBody
 	public Map<Long, Integer> getUnreadCounts(@RequestBody List<Long> rooms) {
 		Map<Long, Integer> result = new HashMap<>();
 		for (Long r : rooms) {
-			// 이거 임시임 나중에 해제좀 조건문
-			if (r == 9) {
-				int count = messengerService.getUnreadCounts(r);
-				result.put(r, count);
-			}
+			int count = messengerService.getUnreadCounts(r);
+			result.put(r, count);
 		}
 		return result;
 	}

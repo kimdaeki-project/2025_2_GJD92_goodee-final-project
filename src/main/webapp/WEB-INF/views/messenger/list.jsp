@@ -13,7 +13,7 @@
 	<c:forEach items="${ room }" var="r">
 		<form action="/msg/chat" method="post">
 			<input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
-			<button>${ r.chatRoomName }입장</button>
+			<button>${ r.chatRoomName }입장</button><span id="unread-count-${ r.chatRoomNum }" style="color: red;"></span>
 		</form>
 	</c:forEach>
 	<hr>
@@ -37,16 +37,15 @@
 	        })
 	        .then(res => res.json())
 	        .then(data => {
-	            // data = { 101: 3, 102: 0, 103: 5 }
-/* 	            for (const roomId in data) {
-	                const badge = document.querySelector(`#unread-count-${roomId}`);
-	                if (badge) {
-	                    badge.innerText = data[roomId];
-	                }
-	            } */
-	            console.log(data);
+	        	if (data != null) {
+	        		for (const chatRoomNum in data) {
+	        			let selector = '#unread-count-' + chatRoomNum;
+						let badge = document.querySelector(selector);
+						badge.innerText = data[chatRoomNum];	        			
+	        		}
+	        	}
 	        });
-	    }, 5000);
+	    }, 500);
 </script>
 </body>
 </html>
