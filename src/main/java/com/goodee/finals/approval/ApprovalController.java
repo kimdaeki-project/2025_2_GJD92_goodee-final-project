@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -46,22 +45,50 @@ public class ApprovalController {
 	}
 	
 	@GetMapping("request")
-	public String getApprovalRequestList() {
+	public String getApprovalRequestList(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalListDTO> approvalList = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
 		return "approval/list";
 	}
 	
 	@GetMapping("ready")
-	public String getApprovalReadyList() {
+	public String getApprovalReadyList(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalListDTO> approvalList = approvalService.getApprovalReadyList(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
 		return "approval/list";
 	}
 	
 	@GetMapping("mine")
-	public String getApprovalMineList() {
+	public String getApprovalMineList(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalResultDTO> approvalList = approvalService.getApprovalMineList(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
 		return "approval/list";
 	}
 	
 	@GetMapping("finish")
-	public String getApprovalFinishList() {
+	public String getApprovalFinishList(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalResultDTO> approvalList = approvalService.getApprovalFinishList(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
 		return "approval/list";
 	}
 	

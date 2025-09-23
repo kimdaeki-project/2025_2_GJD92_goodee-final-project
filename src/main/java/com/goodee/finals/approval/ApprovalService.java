@@ -67,6 +67,22 @@ public class ApprovalService {
 	public Page<ApprovalListDTO> getApprovalList(Integer staffCode, String search, Pageable pageable) {
 		return approvalRepository.findAllApproval(staffCode, search, pageable);
 	}
+	
+	public Page<ApprovalListDTO> getApprovalRequestList(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllApprovalRequest(staffCode, search, pageable);
+	}
+
+	public Page<ApprovalListDTO> getApprovalReadyList(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllApprovalReady(staffCode, search, pageable);
+	}
+
+	public Page<ApprovalResultDTO> getApprovalMineList(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllApprovalMine(staffCode, search, pageable);
+	}
+
+	public Page<ApprovalResultDTO> getApprovalFinishList(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllApprovalFinish(staffCode, search, pageable);
+	}
 
 	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach) throws IOException {
 		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, NORMAL);
