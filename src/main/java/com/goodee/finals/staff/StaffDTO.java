@@ -18,7 +18,7 @@ import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.notice.NoticeDTO;
 import com.goodee.finals.product.ProductDTO;
-import com.goodee.finals.product.ProductManageDTO;
+import com.goodee.finals.productManage.ProductManageDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

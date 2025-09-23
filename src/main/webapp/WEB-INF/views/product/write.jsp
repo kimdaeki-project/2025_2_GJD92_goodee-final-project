@@ -71,7 +71,7 @@
 
 <body class="g-sidenav-show bg-gray-100">
 	<c:import url="/WEB-INF/views/common/sidebar.jsp"></c:import>
-  
+
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     
@@ -88,7 +88,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/product/manage">
+			        <a class="nav-link text-dark" href="/productManage">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
 			          <span class="nav-link-text ms-1 text-sm">물품관리대장</span>
 			        </a>
@@ -99,11 +99,11 @@
     	</aside>
     
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
-    
+
     <div class="form-box">
       <h2>${empty productDTO.productCode ? "물품 등록" : "물품 수정" }</h2>
       <form method="post" enctype="multipart/form-data">
-        
+
         <img id="preview" width="300" height="300" style="object-fit: cover;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
         <div class="form-group">
         <br>
@@ -118,21 +118,21 @@
 				${productType.productTypeName }</option>
 				</c:forEach>
 			</select>
-        
+
           <label for="itemName">물품명</label>
           <input type="text" name="productName" value="${productDTO.productName }" required>
         </div>
-        
+
         <div class="form-group">
           <label for="file">사진첨부</label>
           <input type="file" id="attach" name="attach">
         </div>
-	        
+
         <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty productDTO.productCode ? "등록" : "수정" }</button>
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">취소</button>
       </form>
     </div>
-    
+
     </section>
     </div>
   </main>
@@ -144,5 +144,3 @@
 		document.querySelector("#navTitle").textContent = "물품 리스트"
 	</script>
 </body>
-
-</html>

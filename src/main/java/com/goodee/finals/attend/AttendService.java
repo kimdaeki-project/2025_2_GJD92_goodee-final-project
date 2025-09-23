@@ -66,13 +66,19 @@ public class AttendService {
                 .orElse(null); // 있으면 AttendDTO, 없으면 null
 	}
 	
-	public long getLateCount(int staffCode) {
-        return attendRepository.countLateByStaffCode(staffCode, LocalTime.of(9, 0));
-    }
+	public long getLateCount(int staffCode, int year, int month) {
+	    LocalDate startDate = LocalDate.of(year, month, 1);
+	    LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+	    LocalTime standardTime = LocalTime.of(9, 0); // 예: 9시 이후면 지각
+	    return attendRepository.countLateByStaffCodeInMonth(staffCode, standardTime, startDate, endDate);
+	}
 
-    public long getEarlyLeaveCount(int staffCode) {
-        return attendRepository.countEarlyLeaveByStaffCode(staffCode, LocalTime.of(18, 0));
-    }
+	public long getEarlyLeaveCount(int staffCode, int year, int month) {
+	    LocalDate startDate = LocalDate.of(year, month, 1);
+	    LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+	    LocalTime standardTime = LocalTime.of(18, 0); // 예: 18시 이전 퇴근은 조퇴
+	    return attendRepository.countEarlyLeaveByStaffCodeInMonth(staffCode, standardTime, startDate, endDate);
+	}
 	
 	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, Pageable pageable) {
         return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable);

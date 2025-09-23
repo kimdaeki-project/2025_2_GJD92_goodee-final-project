@@ -35,7 +35,7 @@ aside.sidenav {
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/product/manage">
+			        <a class="nav-link text-dark" href="/productManage">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
 			          <span class="nav-link-text ms-1 text-sm">물품관리대장</span>
 			        </a>
@@ -117,7 +117,7 @@ aside.sidenav {
 						</nav>
 			    </div>
 				
-			    <button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/product/manageWrite'">입출고등록</button>
+			    <button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/productManage/write'">입출고등록</button>
 	    </section>
     </div>
   </main>

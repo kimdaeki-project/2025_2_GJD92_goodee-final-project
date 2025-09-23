@@ -1,6 +1,7 @@
 package com.goodee.finals.product;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,9 @@ import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.ProductAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
+import com.goodee.finals.productManage.ProductManageRepository;
 import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.staff.StaffRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +30,15 @@ public class ProductService {
 	@Autowired
 	private FileService fileService;
 	@Autowired
+	private StaffRepository staffRepository;
+	@Autowired
 	private AttachmentRepository attachmentRepository;
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
 	private ProductTypeRepository productTypeRepository;
+	@Autowired
+	private ProductManageRepository productManageRepository;
 	
 	public Page<ProductDTO> getProductSearchList(String search, Pageable pageable) {
 		return productRepository.findAllBySearch(search, pageable);
@@ -93,16 +100,13 @@ public class ProductService {
 	}
 	
 	private ProductDTO setProductDefault(ProductDTO productDTO) {
-		log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
 		Integer productTypeCode = productDTO.getProductTypeDTO().getProductTypeCode();
 		Integer lastProductCode = productRepository.findTopProductCodeByProductType(productTypeCode);
+		
 		if(lastProductCode == null) {
 			productDTO.setProductCode((productTypeCode * 10000) + 1);
-			log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
-			log.info("null인지");
 		} else {
 			productDTO.setProductCode(lastProductCode + 1);
-			log.info("null이 아닌지");
 		}
 		
 		return productDTO;

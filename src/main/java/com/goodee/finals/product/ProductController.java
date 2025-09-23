@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.productManage.ProductManageDTO;
+
 @Controller
 @RequestMapping("/product/**")
 @Slf4j
@@ -38,11 +40,6 @@ public class ProductController {
 		model.addAttribute("totalProduct", totalProduct);
 		
 		return "product/list";
-	}
-	
-	@GetMapping("manage")
-	public String getProductManageList(@PageableDefault(size = 10, sort = "pm_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
-		return "product/manageList";
 	}
 	
 	@GetMapping("{productCode}")
@@ -83,18 +80,6 @@ public class ProductController {
 		
 		return "common/result";
 		
-	}
-	
-	@GetMapping("manageWrite")
-	public String manageWrite() {
-		return "product/manageWrite";
-	}
-	
-	@PostMapping("manageWrite")
-	public String manageWrite(Model model) {
-		
-		
-		return "product/manageWrite";
 	}
 	
 	@GetMapping("{productCode}/update")

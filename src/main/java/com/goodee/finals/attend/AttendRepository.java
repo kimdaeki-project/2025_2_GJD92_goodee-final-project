@@ -18,12 +18,23 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 	Optional<AttendDTO> findByStaffDTOStaffCodeAndAttendDate(Integer staffCode, LocalDate attendDate);
 	boolean existsByStaffDTOStaffCodeAndAttendDate(Integer staffCode, LocalDate attendDate);
 	
-	@Query("SELECT COUNT(a) FROM AttendDTO a WHERE a.attendIn > :time AND a.staffDTO.staffCode = :staffCode")
-	long countLateByStaffCode(@Param("staffCode") int staffCode, @Param("time") LocalTime time);
+	@Query("SELECT COUNT(a) FROM AttendDTO a " +
+		       "WHERE a.attendIn > :time " +
+		       "AND a.staffDTO.staffCode = :staffCode " +
+		       "AND a.attendDate BETWEEN :startDate AND :endDate")
+		long countLateByStaffCodeInMonth(@Param("staffCode") int staffCode,
+		                                 @Param("time") LocalTime time,
+		                                 @Param("startDate") LocalDate startDate,
+		                                 @Param("endDate") LocalDate endDate);
 
-	@Query("SELECT COUNT(a) FROM AttendDTO a WHERE a.attendOut < :time AND a.staffDTO.staffCode = :staffCode")
-	long countEarlyLeaveByStaffCode(@Param("staffCode") int staffCode, @Param("time") LocalTime time);
-	
+		@Query("SELECT COUNT(a) FROM AttendDTO a " +
+		       "WHERE a.attendOut < :time " +
+		       "AND a.staffDTO.staffCode = :staffCode " +
+		       "AND a.attendDate BETWEEN :startDate AND :endDate")
+		long countEarlyLeaveByStaffCodeInMonth(@Param("staffCode") int staffCode,
+		                                       @Param("time") LocalTime time,
+		                                       @Param("startDate") LocalDate startDate,
+		                                       @Param("endDate") LocalDate endDate);
 	@Query("SELECT a FROM AttendDTO a " +
 	           "WHERE FUNCTION('YEAR', a.attendDate) = :year " +
 	           "AND FUNCTION('MONTH', a.attendDate) = :month " +

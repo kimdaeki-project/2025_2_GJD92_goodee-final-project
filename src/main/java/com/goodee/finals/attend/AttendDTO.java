@@ -57,7 +57,7 @@ public class AttendDTO {
     
     public String getWorkTime() {
         if (attendIn == null || attendOut == null) {
-            return "--:--:--";
+        	return "--h --m";
         }
 
         Duration duration = Duration.between(attendIn, attendOut);

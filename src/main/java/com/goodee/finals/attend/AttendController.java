@@ -105,8 +105,8 @@ public class AttendController {
 	    int targetMonth = (month == null) ? now.getMonthValue() : month;
 		
 	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, pageable);
-	    long lateCount = attendService.getLateCount(staffCode);
-	    long earlyLeaveCount = attendService.getEarlyLeaveCount(staffCode);
+	    long lateCount = attendService.getLateCount(staffCode, targetYear, targetMonth);
+	    long earlyLeaveCount = attendService.getEarlyLeaveCount(staffCode, targetYear, targetMonth);
 	    
 	    model.addAttribute("staffDTO", staffDTO);
 	    model.addAttribute("attendances", attendances);

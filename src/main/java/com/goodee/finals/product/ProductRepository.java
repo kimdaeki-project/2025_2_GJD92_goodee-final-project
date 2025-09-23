@@ -14,25 +14,26 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
 			  value = "SELECT * FROM product p " +
 			          "INNER JOIN staff s USING(staff_code) " +
 			          "INNER JOIN product_type pt USING(product_type_code) " +
-			          "WHERE p.product_name LIKE %:search% " +
-			          "OR pt.product_type_name LIKE %:search% " +
+			          "WHERE (p.product_name LIKE %:search% " +
+			          "OR pt.product_type_name LIKE %:search%) " +
 			          "AND p.product_delete = false",
 			  countQuery = "SELECT COUNT(*) FROM product p " +
 			               "INNER JOIN staff s USING(staff_code) " +
 			               "INNER JOIN product_type pt USING(product_type_code) " +
-			               "WHERE p.product_name LIKE %:search% " +
-			               "OR pt.product_type_name LIKE %:search% " +
+			               "WHERE (p.product_name LIKE %:search% " +
+			               "OR pt.product_type_name LIKE %:search%) " +
 			               "AND p.product_delete = false",
 			  nativeQuery = true
 			)
 	Page<ProductDTO> findAllBySearch(String search, Pageable pageable);
 	
 	
-	@Query("SELECT p.productCode " +
-		       "FROM ProductDTO p " +
-		       "WHERE p.productTypeDTO.productTypeCode = :productTypeCode " +
-		       "ORDER BY p.productCode DESC")
-		Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
+	@Query(value = "SELECT p.product_code " +
+            "FROM product p " +
+            "WHERE p.product_type_code = :productTypeCode " +
+            "ORDER BY p.product_code DESC LIMIT 1",
+    nativeQuery = true)
+Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
 	
 	long countByProductDeleteFalse();
 }

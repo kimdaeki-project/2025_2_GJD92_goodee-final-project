@@ -1,7 +1,8 @@
-package com.goodee.finals.product;
+package com.goodee.finals.productManage;
 
 import java.time.LocalDate;
 
+import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;
@@ -27,7 +28,7 @@ public class ProductManageDTO {
 	private Long pmNum;
 	private Integer pmType;
 	private Integer pmAmount;
-	private LocalDate pmDate;
+	private LocalDate pmDate = LocalDate.now();
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")

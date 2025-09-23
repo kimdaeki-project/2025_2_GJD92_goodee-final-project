@@ -3,6 +3,7 @@ package com.goodee.finals.product;
 import java.time.LocalDate;
 
 import com.goodee.finals.common.attachment.ProductAttachmentDTO;
+import com.goodee.finals.productManage.ProductManageDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.CascadeType;

@@ -49,7 +49,7 @@
         <!-- 근로시간 현황 -->
         <div class="card">
           <div class="card-header">근로시간 현황 <span class="float-end"><i class="material-symbols-rounded me-2 text-lg">date_range</i>
-                  <small>23 - 30 March 2020</small>
+                  <small>9/22 - 9/28</small>
                 </span></div>
           <div class="card-body">
             <p>주 근로시간 : 40h 00m</p>

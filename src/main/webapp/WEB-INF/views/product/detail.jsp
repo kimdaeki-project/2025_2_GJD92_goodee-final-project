@@ -63,7 +63,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/product/manage">
+			        <a class="nav-link text-dark" href="/productManage">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
 			          <span class="nav-link-text ms-1 text-sm">물품관리대장</span>
 			        </a>
