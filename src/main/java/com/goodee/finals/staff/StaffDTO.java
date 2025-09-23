@@ -71,9 +71,9 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private ApprovalDTO approvalDTO;
+	private List<ApprovalDTO> approvalDTOs;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<ApproverDTO> approverDTOs;

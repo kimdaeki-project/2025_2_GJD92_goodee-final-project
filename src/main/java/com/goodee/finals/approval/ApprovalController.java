@@ -98,6 +98,9 @@ public class ApprovalController {
 		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
 		model.addAttribute("approval", approvalDTO);
 		
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		model.addAttribute("deptList", deptList);
+		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		model.addAttribute("isMyTurn", "N");

@@ -118,7 +118,7 @@
 		    				</div>
 		    			</div>
 		    			
-		    			<button type="button" onclick="sendApproval()" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100">결재</button>
+		    			<button type="button" onclick="sendApproval()" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100">기안</button>
 		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">불러오기</button>
 		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">임시저장</button>
 				    </div>
