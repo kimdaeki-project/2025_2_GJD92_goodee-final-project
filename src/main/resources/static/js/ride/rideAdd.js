@@ -89,12 +89,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	        } else {
 						// 3. 최종 확인
 				    Swal.fire({
-				      text: mode === "add" ? "어트랙션을 등록하시겠습니까?" : "어트랙션을 수정하시겠습니까?",
+				      text: "어트랙션을 등록하시겠습니까?",
 				      icon: "question",
 				      showCancelButton: true,
 				      confirmButtonColor: "#3085d6",
 				      cancelButtonColor: "#d33",
-				      confirmButtonText: mode === "add" ? "등록" : "수정",
+				      confirmButtonText: "등록",
 				      cancelButtonText: "취소"
 				    }).then((result) => {
 				      if (result.isConfirmed) {
@@ -114,7 +114,21 @@ document.addEventListener("DOMContentLoaded", () => {
 				
         return;
       }
-    }
+    } else if (mode === "edit") {
+			Swal.fire({
+	      text: "어트랙션을 수정하시겠습니까?",
+	      icon: "question",
+	      showCancelButton: true,
+	      confirmButtonColor: "#3085d6",
+	      cancelButtonColor: "#d33",
+	      confirmButtonText: "수정",
+	      cancelButtonText: "취소"
+	    }).then((result) => {
+	      if (result.isConfirmed) {
+	        form.submit();
+	      }
+	    });
+		}
 
     
   });
