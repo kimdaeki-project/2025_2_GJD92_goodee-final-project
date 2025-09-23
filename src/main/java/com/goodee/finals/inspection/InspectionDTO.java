@@ -59,19 +59,19 @@ public class InspectionDTO {
 	@Column(columnDefinition = "boolean default false")
 	private boolean isptDelete;  // 점검 기록 삭제 여부
 	
-	// 점검 당 어트랙션 하나
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "rideCode")
+	// 하나의 어트랙션에 여러 inspection(점검) 가능
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rideCode", nullable = false)
 	private RideDTO rideDTO;  // 어트랙션 번호
 	
 	// 사원이 여러개의 어트랙션 담당 가능
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "staffCode")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "staffCode", nullable = false)
 	private StaffDTO staffDTO;  // 사원번호
 	
 	// 점검기록 하나에 첨부파일 하나
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "inspectionDTO", cascade = CascadeType.ALL)
-	private InspectionAttachmentDTO inspectionAttachmentDTOs;
+	private InspectionAttachmentDTO inspectionAttachmentDTO;
 	
 	
 

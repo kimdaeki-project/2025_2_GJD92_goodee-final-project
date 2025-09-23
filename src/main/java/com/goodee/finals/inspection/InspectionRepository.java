@@ -1,6 +1,5 @@
 package com.goodee.finals.inspection;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,25 +16,45 @@ import org.springframework.stereotype.Repository;
 //JpaRepository<Entity, PK>를 상속받으면 기본 CRUD 메서드 자동 제공
 //별도 구현체를 작성하지 않아도 됨 (Spring이 프록시 객체 자동 생성)
 
-
-
 //JpaRepository에서 기본 제공하는 메서드
 //save(entity) → 등록/수정
 //findAll() → 전체 조회
 //findById(id) → 단일 조회
 //deleteById(id) → 삭제
 @Repository
-public interface InspectionRepository extends JpaRepository<InspectionDTO, Long> {
+public interface InspectionRepository extends JpaRepository<InspectionDTO, Integer> {
 
-	@Query("SELECT i FROM InspectionDTO i " +
-		       "WHERE i.isptDelete = false AND (" +
-		       " i.rideDTO.rideCode LIKE CONCAT('%', :keyword, '%') OR " +
-		       " CAST(:keyword AS int) = i.isptType OR " +
-		       " CAST(:keyword AS int) = i.isptResult OR " +
-		       " CAST(:keyword AS int) = i.staffDTO.staffCode )")
-		Page<InspectionDTO> list(@Param("keyword") String keyword, Pageable pageable);
+	/*
+	 * @Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false AND ("
+	 * + " i.rideDTO.rideCode LIKE CONCAT('%', :keyword, '%') OR " +
+	 * " CAST(:keyword AS int) = i.isptType OR " +
+	 * " CAST(:keyword AS int) = i.isptResult OR " +
+	 * " CAST(:keyword AS int) = i.staffDTO.staffCode )") Page<InspectionDTO>
+	 * list(@Param("keyword") String keyword, Pageable pageable);
+	 */
 
+	// 기본 전체 조회
+	@Query("SELECT i FROM InspectionDTO i WHERE i.isptDelete = false")
+	Page<InspectionDTO> findAllByIsptDeleteFalse(Pageable pageable);
 
-
+	// 어트랙션 검색
+	@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+			+ "AND i.rideDTO.rideName LIKE CONCAT('%', :keyword, '%')")
+	Page<InspectionDTO> findByRide(@Param("keyword") String keyword, Pageable pageable);
 	
+	// 점검유형 검색
+	@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+			+ "AND i.isptType = :typeCode")
+	Page<InspectionDTO> findByType(@Param("typeCode") Integer typeCode, Pageable pageable);
+	
+	// 점검결과 검색
+		@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+				+ "AND i.isptResult = :resultCode")
+		Page<InspectionDTO> findByResult(@Param("resultCode") Integer resultCode, Pageable pageable);
+
+	// 담당자 검색
+	@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+			+ "AND i.staffDTO.staffName LIKE CONCAT('%', :keyword, '%')")
+	Page<InspectionDTO> findByStaff(@Param("keyword") String keyword, Pageable pageable);
+
 }

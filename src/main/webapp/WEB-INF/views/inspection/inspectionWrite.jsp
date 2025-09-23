@@ -22,37 +22,7 @@
 			    <ul class="navbar-nav">
 			    
 			      <!-- 메뉴 개수만큼 추가 -->
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/ride">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 목록">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 목록</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="삭제된 어트랙션 목록">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">삭제된 어트랙션 목록</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/inspection">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 점검">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 점검</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고 목록">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고 목록</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고</span>
-			        </a>
-			      </li>
-			      
+			    	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
 			      
 			      
 			    </ul>
@@ -136,18 +106,18 @@
 	<div class="form-group row mb-3">
 	  <form:label path="" class="col-sm-4 col-form-label text-start">첨부파일</form:label>
 	  <div class="col-sm-5">
-	    <c:if test="${not empty inspectionDTO.inspectionAttachmentDTOs}">
+	    <c:if test="${not empty inspectionDTO.inspectionAttachmentDTO}">
 	      <!-- 기존 파일 존재 여부 -->
 	      <input type="hidden" id="hasExistingFile" value="true"/>
 	    </c:if>
-	    <c:if test="${empty inspectionDTO.inspectionAttachmentDTOs}">
+	    <c:if test="${empty inspectionDTO.inspectionAttachmentDTO}">
 	      <input type="hidden" id="hasExistingFile" value="false"/>
 	    </c:if>
 	
 	    <img id="preview"
 	         style="object-fit: cover; width:200px; height:200px; !important;"
 	         <c:if test="${ not empty inspectionDTO.isptNum }">
-	           src="/file/inspection/${ inspectionDTO.inspectionAttachmentDTOs.attachmentDTO.savedName }"
+	           src="/file/inspection/${ inspectionDTO.inspectionAttachmentDTO.attachmentDTO.savedName }"
 	         </c:if>
 	         class="border border-1 border-dark p-1"/>
 	    <label for="attach">
@@ -182,6 +152,7 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/inspection/inspectionWrite.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='어트랙션 점검']").parentElement.classList.add("bg-gradient-dark", "text-white")

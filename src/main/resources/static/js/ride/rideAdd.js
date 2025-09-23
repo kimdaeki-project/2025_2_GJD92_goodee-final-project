@@ -20,7 +20,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const rideCodeInput = document.querySelector("input[name='rideCode']");
-  const mode = form.getAttribute("data-mode"); // add or edit
+  const mode = form.getAttribute("data-mode"); 
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();

@@ -22,36 +22,7 @@
 			    <ul class="navbar-nav">
 			    
 			      <!-- 메뉴 개수만큼 추가 -->
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/ride">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 목록">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 목록</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="삭제된 어트랙션 목록">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">삭제된 어트랙션 목록</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/inspection">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 점검">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 점검</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고 목록">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고 목록</span>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 고장 신고">diversity_3</i>
-			          <span class="nav-link-text ms-1 text-sm">어트랙션 고장 신고</span>
-			        </a>
-			      </li>
+			    	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
 			      
 			      
 			      
@@ -219,6 +190,7 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/ride/rideAdd.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='어트랙션 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")

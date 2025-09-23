@@ -15,3 +15,68 @@ document.querySelector("#attach").addEventListener("change", (event) => {
 			document.querySelector("#preview").src = "";
 		}
 })
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("form");
+  const mode = form.getAttribute("data-mode"); 
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // 1. 입력값 확인
+    const requiredInputs = form.querySelectorAll("input, select");
+    let emptyField = false;
+
+    requiredInputs.forEach((el) => {
+      const type = el.getAttribute("type");
+
+      if (type === "file") {
+        const hasExistingFile = document.querySelector("#hasExistingFile")?.value === "true";
+        const isFileEmpty = !el.value.trim();
+
+        if (mode === "add" && isFileEmpty) {
+          // 등록 시: 파일 필수
+          emptyField = true;
+        }
+
+        if (mode === "edit") {
+          // 수정 시: 기존 파일 없고, 새 파일도 업로드 안 하면 오류
+          if (!hasExistingFile && isFileEmpty) {
+            emptyField = true;
+          }
+        }
+      } else {
+        if (!el.value.trim()) {
+          emptyField = true;
+        }
+      }
+    });
+
+    if (emptyField) {
+      Swal.fire({
+        text: "입력하지 않은 정보가 있습니다.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인"
+      });
+      return;
+    }
+
+    // 3. 최종 확인
+    Swal.fire({
+      text: mode === "add" ? "어트랙션 점검 기록을 등록하시겠습니까?" : "어트랙션 점검 기록을 수정하시겠습니까?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: mode === "add" ? "등록" : "수정",
+      cancelButtonText: "취소"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  });
+});
