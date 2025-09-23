@@ -107,7 +107,7 @@
 			    						<i class="material-symbols-rounded fs-5 me-1">contact_page</i>
 											<span>${ aprv.aprvCrnt } / ${ aprv.aprvTotal }</span>
 			    					</td>
-			    					<td><a href="/staff/${ aprv.aprvCode }" style="color: #737373;">${ aprv.aprvTitle }</a></td>
+			    					<td><a href="/approval/${ aprv.aprvCode }" style="color: #737373;">${ aprv.aprvTitle }</a></td>
 			    					<td>${ aprv.staffName }</td>
 			    					<td>${ aprv.deptDetail }</td>
 			    					<td>${ aprv.aprvDate }</td>

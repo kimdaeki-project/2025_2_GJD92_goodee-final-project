@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +45,7 @@ public class ApprovalDTO {
 	private StaffDTO staffDTO;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "approvalDTO", cascade = CascadeType.ALL)
+	@OrderBy("apvrSeq DESC")
 	private List<ApproverDTO> approverDTOs;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "approvalDTO", cascade = CascadeType.ALL)
 	private List<ApprovalAttachmentDTO> approvalAttachmentDTOs;

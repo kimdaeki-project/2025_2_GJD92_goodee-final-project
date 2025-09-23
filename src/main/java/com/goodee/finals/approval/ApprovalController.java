@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -90,6 +91,25 @@ public class ApprovalController {
 		model.addAttribute("approvalList", approvalList);
 		
 		return "approval/list";
+	}
+	
+	@GetMapping("{aprvCode}")
+	public String getApprovalDetail(@PathVariable Integer aprvCode, Model model) {
+		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
+		model.addAttribute("approval", approvalDTO);
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		model.addAttribute("isMyTurn", "N");
+		if (approvalDTO.getApproverDTOs() != null && approvalDTO.getAprvState() == 701) {
+			for (ApproverDTO approver : approvalDTO.getApproverDTOs()) {
+				if (approver.getStaffDTO().getStaffCode().equals(staffDTO.getStaffCode()) && approver.getApvrState() == 721) {
+					model.addAttribute("isMyTurn", "Y");
+				}
+			}			
+		}
+		
+		return "approval/detail";
 	}
 	
 	@GetMapping("staff")

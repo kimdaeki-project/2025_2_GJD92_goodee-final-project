@@ -83,6 +83,10 @@ public class ApprovalService {
 	public Page<ApprovalResultDTO> getApprovalFinishList(Integer staffCode, String search, Pageable pageable) {
 		return approvalRepository.findAllApprovalFinish(staffCode, search, pageable);
 	}
+	
+	public ApprovalDTO getApprovalDetail(Integer aprvCode) {
+		return approvalRepository.findById(aprvCode).orElseThrow();
+	}
 
 	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach) throws IOException {
 		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, NORMAL);
@@ -148,6 +152,7 @@ public class ApprovalService {
 			approverDTO.setApprovalDTO(draft);
 			approverDTO.setStaffDTO(staffDTO);
 			approverDTO.setApvrType(RECEIVER);
+			approverDTO.setApvrSeq(0);
 			
 			draft.getApproverDTOs().add(approverDTO);
 		}
@@ -161,6 +166,7 @@ public class ApprovalService {
 			approverDTO.setApprovalDTO(draft);
 			approverDTO.setStaffDTO(staffDTO);
 			approverDTO.setApvrType(AGREER);
+			approverDTO.setApvrSeq(0);
 			
 			draft.getApproverDTOs().add(approverDTO);
 		}
