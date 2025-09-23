@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,12 +41,13 @@ public class DriveController {
     public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	
-		List<DriveDTO> myDriveList = driveService.myDrive(staffDTO);
-		List<DriveShareDTO> shareDriveList = driveService.shareDrive(staffDTO);
+		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO);
+		List<DriveShareDTO> shareDriveList = driveService.getShareDriveByStaffCode(staffDTO);
 		
+		model.addAttribute("staffDTO", staffDTO);
 		model.addAttribute("myDriveList", myDriveList);
 		model.addAttribute("shareDriveList", shareDriveList);
-		model.addAttribute("staffDTO", staffDTO);
+
     }
 	
 	@GetMapping("staffList")
@@ -52,28 +57,28 @@ public class DriveController {
 		return list;
 	}
     
-	@GetMapping
-	public String getDefaultDrive(@ModelAttribute DocumentDTO documentDTO, Model model) {
-		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		DriveDTO driveDTO = driveService.getDefaultDrive(staffDTO);
+	@GetMapping({ "", "{driveNum}" })
+	public String getDrive(@PathVariable(required = false) Long driveNum, DrivePager drivePager, Model model, 
+		@PageableDefault(size = 10, sort = "docDate", direction = Sort.Direction.DESC) Pageable pageable) {
+
+		DriveDTO driveDTO;
+	    if (driveNum == null) { // 최초 진입시 기본 드라이브
+	        StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	        driveDTO = driveService.getDefaultDrive(staffDTO);
+	    } else { 				// 특정 드라이브 진입
+	        driveDTO = driveService.getDrive(driveNum);
+	    }
+	    
+		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, pageable);
 		
-		model.addAttribute("docList", driveService.getDocListByDriveNum(driveDTO));
-		model.addAttribute("jobList", driveService.getJobList());
-		model.addAttribute("driveDTO", driveDTO);
-		
-		return "drive/detail";
+	    model.addAttribute("docList", docList);
+	    model.addAttribute("driveDTO", driveDTO);
+	    model.addAttribute("pager", drivePager);
+	    model.addAttribute("jobList", driveService.getJobList());
+
+	    return "drive/detail";
 	}
-	
-	@GetMapping("{driveNum}")
-	public String selectedDrive(@PathVariable Long driveNum, @ModelAttribute DocumentDTO documentDTO, Model model) {
-		DriveDTO driveDTO = driveService.getDrive(driveNum);
-		
-		model.addAttribute("docList", driveService.getDocListByDriveNum(driveDTO));
-		model.addAttribute("jobList", driveService.getJobList());
-		model.addAttribute("driveDTO", driveDTO);
-		
-		return "drive/detail";
-	}
+
 	
 	@GetMapping("create")
 	public String create(@ModelAttribute DriveDTO driveDTO, Model model) {
@@ -145,7 +150,6 @@ public class DriveController {
 	public DriveDTO deleteDrive(Long driveNum) {
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
-		// 논리적 삭제
 		driveDTO = driveService.deleteDrive(driveDTO); 
 		
 		if(driveDTO == null) {

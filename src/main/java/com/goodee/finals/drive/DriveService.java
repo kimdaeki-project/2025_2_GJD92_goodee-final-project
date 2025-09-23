@@ -1,6 +1,5 @@
 package com.goodee.finals.drive;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -8,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,19 +59,6 @@ public class DriveService {
         this.homeController = homeController;
     }
 	
-	
-	public List<DriveDTO> myDrive(StaffDTO staffDTO) {
-		return driveRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 내 드라이브
-	}
-	
-	public List<DriveShareDTO> shareDrive(StaffDTO staffDTO) {
-		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공용 드라이브
-	}
-	
-	public List<StaffResponseDTO> staffList() {
-		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
-	}
-	
 	public List<DeptDTO> getDeptList() {
 		return deptRepository.findAll();
 	}
@@ -79,8 +67,27 @@ public class DriveService {
 		return jobRepository.findAll();
 	}
 	
-	public List<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO) {
-		return documentRepository.findAllByDriveDTO_DriveNum(driveDTO.getDriveNum());
+	public List<DriveDTO> getAllMyDrive(StaffDTO staffDTO) {
+		return driveRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 내 드라이브
+	}
+	
+	public List<DriveShareDTO> getShareDriveByStaffCode(StaffDTO staffDTO) {
+		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공유 드라이브
+	}
+	
+	public List<StaffResponseDTO> staffList() { // 순환참조 방지를 위해 응답 DTO 만듬
+		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
+	}
+	
+	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, Pageable pageable) {
+		Long driveNum = driveDTO.getDriveNum();
+		String keyword = drivePager.getKeyword();
+		if(keyword == null) keyword = "";
+		
+		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, pageable);
+		drivePager.calc(result);
+		
+		return result;
 	}
 	
 	public DriveDTO getDefaultDrive(StaffDTO staffDTO) {
@@ -112,7 +119,7 @@ public class DriveService {
 			return driveDTO;
 		}
 
-		// 2. 공용 드라이브
+		// 2. 공유 드라이브
 		for (DriveShareDTO driveShare : driveDTO.getDriveShareDTOs()) {
 			StaffDTO staffDTO = staffRepository.findById(driveShare.getStaffDTO().getStaffCode()).orElseThrow();
 			driveShare.setStaffDTO(staffDTO);
@@ -185,6 +192,7 @@ public class DriveService {
 	
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
+		
 		if(attach != null && attach.getSize() != 0) {
 			try {
 				String path = FileService.DRIVE + "/" + driveNum;
@@ -199,10 +207,12 @@ public class DriveService {
 			}
 		}
 		LocalDate currentDate = LocalDate.now();
+		String contentType = attach.getOriginalFilename();
+		String newContentType = contentType.substring(contentType.lastIndexOf(".") + 1).toUpperCase();
 		
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
-		
+
 		DocumentDTO documentDTO = new DocumentDTO();
 		documentDTO.setJobDTO(jobDTO);
 		documentDTO.setStaffDTO(staffDTO);
@@ -210,7 +220,7 @@ public class DriveService {
 		documentDTO.setDocStatus("ACTIVE");
 		documentDTO.setDocDate(currentDate);
 		documentDTO.setDocExpire(currentDate.plusDays(6));
-		documentDTO.setDocContentType(attach.getContentType());
+		documentDTO.setDocContentType(newContentType);
 		documentDTO.setAttachmentDTO(attachmentDTO);
 		
 		return documentRepository.save(documentDTO);

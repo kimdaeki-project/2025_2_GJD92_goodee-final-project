@@ -16,9 +16,9 @@ public class DrivePager {
 	int endPage;
 	String keyword;
 	
-	public void cacl(Page<DocumentDTO> result) {
-		this.currentPage = result.getNumber();
-		this.totalPages = result.getTotalPages();
+	public void calc(Page<DocumentDTO> docList) {
+		this.currentPage = docList.getNumber();
+		this.totalPages = docList.getTotalPages();
 		this.startPage = (currentPage / blockSize) * blockSize;
 		this.endPage = startPage + blockSize - 1;
 		if (endPage >= totalPages) endPage = totalPages - 1;

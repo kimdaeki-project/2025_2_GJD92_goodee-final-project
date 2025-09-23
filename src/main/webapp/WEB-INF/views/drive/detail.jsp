@@ -57,23 +57,16 @@
 				  </button>
 				  
 				  <!-- 검색 -->
-				  <div class="ms-auto d-flex align-items-center">
-					  <!-- 드롭다운 -->
-					  <select class="form-select form-select-sm me-1" id="searchType" style="width: 100px;">
-					    <option value="title">파일명</option>
-					    <option value="staff">등록자</option>
-					    <option value="content">등록일</option>
-					  </select>
-					
-					  <!-- 입력창 -->
+				  <form action="/drive/${ driveDTO.driveNum }" class="ms-auto d-flex align-items-center gap-2">
+				    <div class="ms-auto d-flex align-items-center">
 					  <input type="text" id="searchInput" class="form-control form-control-sm me-1"
-					         placeholder="검색" style="width: 200px;">
+					         name="keyword" value="${ pager.keyword }" placeholder="파일명, 등록자 입력" style="width: 200px;">
 					
-					  <!-- 버튼 -->
-					  <button type="button" class="btn btn-dark btn-sm mb-0" id="btnSearch">
+					  <button type="submit" class="btn btn-dark btn-sm mb-0" id="btnSearch">
 					    <span class="material-symbols-rounded">search</span>
 					  </button>
-					</div>
+				    </div>
+			      </form>
 				</div>
 					
 					<div class="table-responsive">
@@ -84,14 +77,14 @@
 					        <th>파일명</th>
 					        <th style="width:180px;" class="text-center">등록일</th>
 					        <th style="width:120px;" class="text-center">용량</th>
-					        <th style="width:120px;" class="text-center">종류</th>
+					        <th style="width:120px;" class="text-center">확장자</th>
 					        <th style="width:140px;" class="text-center">등록자</th>
 					      </tr>
 					    </thead>
 					    <tbody>
 						  <c:choose>
-						    <c:when test="${ not empty docList }">
-						      <c:forEach items="${ docList }" var="doc" >
+						    <c:when test="${ not empty docList.content }">
+						      <c:forEach items="${ docList.content }" var="doc" >
 							      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode and doc.docStatus eq 'ACTIVE'}">
 							        <tr>
 							          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
@@ -109,6 +102,7 @@
 						      <tr>
 						        <td colspan="6" class="border-0">
 						          <div class="d-flex justify-content-center align-items-center text-secondary" style="height:60vh;">
+						          	<i class="material-symbols-rounded opacity-5 fs-5">news</i>
 						            등록된 파일이 없습니다.
 						          </div>
 						        </td>
@@ -117,6 +111,33 @@
 						  </c:choose>
 						</tbody>
 					  </table>
+					  
+					  <c:if test="${ docList.content.size() gt 0 }">
+						  <nav class="mt-4">
+						    <ul class="pagination justify-content-center">
+						      <c:if test="${ docList.hasPrevious() and pager.startPage gt 1 }">
+						        <li class="page-item">
+						          <a class="page-link border border-secondary rounded-0" 
+						             href="?page=${ pager.startPage - 1 }&keyword=${ pager.keyword }">&lt;</a>
+						        </li>
+						      </c:if>
+						
+						      <c:forEach var="i" begin="${ pager.startPage }" end="${ pager.endPage }">
+						        <li class="page-item ${ i == docList.number ? 'active' : '' }">
+						          <a class="page-link border border-secondary ${ i == docList.number ? 'bg-dark text-white border-dark' : '' }" 
+						             href="?page=${i}&keyword=${ pager.keyword }" style="border-radius: 7px !important">${i + 1}</a>
+						        </li>
+						      </c:forEach>
+						
+						      <c:if test="${ docList.hasNext() and pager.endPage + 1 ne docList.totalPages }">
+						        <li class="page-item">
+						          <a class="page-link border border-secondary rounded-0" 
+						             href="?page=${ pager.endPage + 1 }&keyword=${ pager.keyword }">&gt;</a>
+						        </li>
+						      </c:if>
+						    </ul>
+						  </nav>
+			 		  </c:if>
 					</div>
 					
 			</section>

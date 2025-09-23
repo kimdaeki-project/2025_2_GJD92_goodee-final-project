@@ -11,7 +11,7 @@
 					<div class="d-flex align-items-center">
 						<a class="material-symbols-rounded opacity-5 fs-5" data-bs-toggle="collapse" href="#collapseMyDrive"
 						   role="button" aria-expanded="false" aria-controls="collapseMyDrive">keyboard_arrow_down</a> 
-						<span class="sub-nav-link-text ms-1 text-sm">내드라이브</span>
+						<span class="sub-nav-link-text ms-1 text-sm">내 드라이브</span>
 					</div>
 					<div class="d-flex text-center">
 						<a class="nav-link text-dark d-flex align-items-center" href="/drive/create"> 
@@ -22,7 +22,6 @@
 				<div class="collapse show" id="collapseMyDrive">
 					<div class="d-flex">
 						<ul class="navbar-nav" id="drive-my">
-							<!-- 내 드라이브-->
 							<c:forEach items="${ myDriveList }" var="myDrive">
 								<c:if test="${ myDrive.driveEnabled }">
 									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
@@ -45,24 +44,23 @@
 				</div>
 			</li>
 			<!-- 내 드라이브 끝 -->
-			
-			<hr class="my-1 bg-dark">
-			
+			<li>
+				<hr class="my-1 bg-dark">
+			</li>
 			<!-- 공유 드라이브 시작 -->
 			<li>
 				<div class="nav-link text-dark d-flex align-items-center">
 					<a class="material-symbols-rounded opacity-5 fs-5" data-bs-toggle="collapse" href="#collapseShareDrive"
 						   role="button" aria-expanded="false" aria-controls="collapseShareDrive">keyboard_arrow_down</a> 
-					<span class="nav-link-text ms-1 text-sm">공용드라이브</span>
+					<span class="nav-link-text ms-1 text-sm">공유 드라이브</span>
 				</div>
 				<div class="collapse show" id="collapseShareDrive">
 					<ul class="navbar-nav" id="drive-share">
-						<!-- 반복문 -->
 						<c:forEach items="${ shareDriveList }" var="shareDrive">
 							<c:if test="${ shareDrive.driveDTO.driveEnabled }">
 								<li class="nav-item">
 									<a class="nav-link text-dark" href="/drive/${ shareDrive.driveDTO.driveNum }">
-										<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ shareDrive.driveDTO.driveName }">folder_shared</i>
+										<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ shareDrive.driveDTO.driveName }">folder_open</i>
 										<span class="nav-link-text ms-1 text-sm text-truncate" title="${ shareDrive.driveDTO.driveName }" style="max-width: 180px;">${ shareDrive.driveDTO.driveName }</span>
 									</a>
 								</li>
