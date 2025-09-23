@@ -69,7 +69,7 @@ btn.addEventListener('click', () => {
 
 cancelBtn.addEventListener('click', () => {
 	Swal.fire({
-		text: "게게시글을 임시저장하시겠습니까?",
+		text: "게시글을 임시저장하시겠습니까?",
 		icon: "warning",
 		showCancelButton: true,
 		confirmButtonColor: "#3085d6",

@@ -83,6 +83,11 @@ public class NoticeService {
 		return result;
 	}
 	
+	public List<NoticeDTO> list() {
+		List<NoticeDTO> result = noticeRepository.findAll();
+		return result;
+	}
+	
 	public NoticeDTO detail(NoticeDTO noticeDTO) {
 		Long upOneHit = noticeDTO.getNoticeHits() + 1L;
 		noticeDTO.setNoticeHits(upOneHit);
@@ -153,5 +158,7 @@ public class NoticeService {
 		return result.get();
 	}
 
-
+	public List<NoticeDTO> getRecentNoticesForDashboard() {
+        return noticeRepository.findTop5ByNoticePinnedFalseOrderByNoticeDateDescNoticeNumDesc();
+    }
 }

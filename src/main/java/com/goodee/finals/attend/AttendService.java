@@ -1,0 +1,87 @@
+package com.goodee.finals.attend;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.staff.StaffRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class AttendService {
+
+	@Autowired
+	AttendRepository attendRepository;
+	
+	@Autowired
+	StaffRepository staffRepository;
+
+	public AttendDTO attendIn(AttendDTO attendDTO) {
+		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        LocalDate today = LocalDate.now();
+
+        // 오늘 이미 출근했는지 확인
+        if (attendRepository.existsByStaffDTOStaffCodeAndAttendDate(staffCode, today)) {
+            throw new IllegalStateException("오늘은 이미 출근 기록이 있습니다.");
+        }
+
+        StaffDTO staff = staffRepository.findById(staffCode)
+                .orElseThrow(() -> new IllegalStateException("직원 정보를 찾을 수 없습니다."));
+
+        attendDTO.setStaffDTO(staff);
+        attendDTO.setAttendDate(today);
+        attendDTO.setAttendIn(LocalTime.now());
+
+        return attendRepository.save(attendDTO);
+	}
+	
+	public AttendDTO attendOut(AttendDTO attendDTO) {
+		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        LocalDate today = LocalDate.now();
+
+        AttendDTO attend = attendRepository.findByStaffDTOStaffCodeAndAttendDate(staffCode, today)
+                .orElseThrow(() -> new IllegalStateException("출근 기록이 없습니다."));
+
+        if (attend.getAttendOut() != null) {
+            throw new IllegalStateException("이미 퇴근 기록이 있습니다. 인사 담당자에게 문의하세요.");
+        }
+
+        attend.setAttendOut(LocalTime.now());
+        return attendRepository.save(attend);
+		
+	}
+	
+	public AttendDTO findAttend() {
+		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        LocalDate today = LocalDate.now();
+
+        return attendRepository.findByStaffDTOStaffCodeAndAttendDate(staffCode, today)
+                .orElse(null); // 있으면 AttendDTO, 없으면 null
+	}
+	
+	public long getLateCount(int staffCode, int year, int month) {
+	    LocalDate startDate = LocalDate.of(year, month, 1);
+	    LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+	    LocalTime standardTime = LocalTime.of(9, 0); // 예: 9시 이후면 지각
+	    return attendRepository.countLateByStaffCodeInMonth(staffCode, standardTime, startDate, endDate);
+	}
+
+	public long getEarlyLeaveCount(int staffCode, int year, int month) {
+	    LocalDate startDate = LocalDate.of(year, month, 1);
+	    LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+	    LocalTime standardTime = LocalTime.of(18, 0); // 예: 18시 이전 퇴근은 조퇴
+	    return attendRepository.countEarlyLeaveByStaffCodeInMonth(staffCode, standardTime, startDate, endDate);
+	}
+	
+	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, Pageable pageable) {
+        return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable);
+    }
+	
+}
