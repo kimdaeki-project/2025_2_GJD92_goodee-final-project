@@ -40,9 +40,15 @@
 			<div class="form-group row mb-3">
 			  <form:label path="rideDTO.rideCode" class="col-sm-4 col-form-label text-start">어트랙션 코드</form:label>
 			  <div class="col-sm-5">
-			    <form:input path="rideDTO.rideCode" cssClass="form-control" placeholder="어트랙션 코드를 입력하세요."/>
+			    <form:select path="rideDTO.rideCode" cssClass="form-select">
+			      <form:option value="">-- 어트랙션 코드를 선택하세요 --</form:option>
+			      <c:forEach var="ride" items="${rideList}">
+			        <form:option value="${ride.rideCode}">${ride.rideName} (${ride.rideCode})</form:option>
+			      </c:forEach>
+			    </form:select>
 			  </div>
 			</div>
+
 			  
 			<!-- 어트랙션 점검유형 -->
 			<div class="form-group row mb-3">
@@ -71,12 +77,20 @@
 			</div>
 			  
 			<!-- 담당자 -->
-			<div class="form-group row mb-3">
+	     	<div class="form-group row mb-3">
 			  <form:label path="staffDTO.staffCode" class="col-sm-4 col-form-label text-start">담당자</form:label>
 			  <div class="col-sm-5">
-			    <form:input path="staffDTO.staffCode" cssClass="form-control" placeholder="담당자를 입력하세요."/>
+			    <form:select path="staffDTO.staffCode" cssClass="form-select">
+			      <form:option value="">-- 담당자를 선택하세요 --</form:option>
+			      <c:forEach var="staff" items="${staffList}">
+			        <form:option value="${staff.staffCode}">
+			          ${staff.staffName} (${staff.staffCode})
+			        </form:option>
+			      </c:forEach>
+		        </form:select>
 			  </div>
-			</div>
+		    </div>
+
 			  
 			<!-- 점검 시작일 -->
 			<div class="form-group row mb-3">

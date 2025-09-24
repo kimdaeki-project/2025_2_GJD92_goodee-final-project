@@ -16,6 +16,7 @@ import com.goodee.finals.common.attachment.InspectionAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.ride.RideDTO;
 import com.goodee.finals.ride.RideRepository;
+import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 
 import jakarta.transaction.Transactional;
@@ -177,17 +178,16 @@ public class InspectionService {
 	}
 	
 	
-	
-	// 어트랙션 점검 기록 어트랙션 코드 존재 여부 검사
-	public boolean isValidRideCode(@RequestParam String rideCode) throws Exception {
-		return rideRepository.existsById(rideCode);
-	}
-	
-	
-	// 어트랙션 점검 기록 담당자 코드 존재 여부 확인
-	public boolean isValidStaffCode(@RequestParam Integer staffCode) throws Exception {
-		return staffRepository.existsById(staffCode);
-	}
+	// 어트랙션 전체 목록 가져오기
+    public List<RideDTO> getAllRides() {
+        return rideRepository.findByRideDeletedFalse(); // 삭제되지 않은 것만
+    }
+
+    // 시설팀 직원 목록 가져오기 (dept_code = 1003)
+    public List<StaffDTO> getFaStaffList() {
+        return staffRepository.findByDeptDTO_DeptCode(1003);
+    }
+
 	
 	
 
