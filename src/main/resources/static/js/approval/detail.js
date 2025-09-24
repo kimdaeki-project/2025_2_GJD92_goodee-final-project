@@ -1,4 +1,5 @@
 let staffs = []
+let staffArr = []
 let currentDept = null
 let currentUser = null
 
@@ -8,6 +9,11 @@ const supportedList = document.getElementById("supportedList")
 const saveBtn = document.getElementById('saveStaffBtn')
 const deptBtn = document.querySelectorAll('.dept-btn')
 const searchInput = document.getElementById('searchInput')
+
+const postApprover = document.querySelectorAll('.post-apvr')
+const postReceiver = document.querySelectorAll('.post-recp')
+const postAgreer = document.querySelectorAll('.post-agre')
+
 
 new Sortable(selectedList, {
 	animation: 150,
@@ -24,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			.then(data => data.json())
 			.then(data => {
 				staffs = data
+				staffArr = data
 				staffs.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode)
 				currentUser = staffs.find(staff => staff.staffCode == loginStaffCode)
 				staffs = staffs.filter(staff => staff.staffCode != loginStaffCode)
@@ -32,6 +39,35 @@ document.addEventListener('DOMContentLoaded', function () {
 			})
 			.catch(error => console.log('Fetch Error!', error))
 		}
+		
+		postApprover.forEach((data) => {
+			const staffCode = data.value
+			const approved = data.getAttribute("data-approved")
+			
+			staffArr.forEach((staff) => {
+				if (staff.staffCode == staffCode) {
+					const text = `${staff.staffName}(${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}`
+					
+					const newLi = document.createElement('li')
+					newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+					newLi.innerHTML = `<span data-staff-code="${value}" data-approved="${approved}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+
+					newLi.querySelector(`.remove-btn`).addEventListener('click', (event) => {
+						const isApproved = event.target.getAttribute("data-approved")
+						
+						if (isApproved == "Y") {
+							Swal.fire({ text : "결재 완료된 사원은 제외할 수 없습니다.", icon : "warning" })
+						} else if (isApproved == "N") {
+							newLi.remove()							
+						}
+					})
+					
+					selectedList.appendChild(newLi)
+				}
+			})
+			
+			
+		})
 		
 	})
 })
@@ -246,22 +282,4 @@ function renderStaff(list) {
 		
 		staffList.appendChild(li);
 	})
-}
-
-function sendApproval() {
-	const form = document.querySelector("#approvalForm")
-	
-	Swal.fire({
-	  text: "기안을 등록 하시겠습니까?",
-	  icon: "question",
-	  showCancelButton: true,
-	  confirmButtonColor: "#3085d6",
-	  cancelButtonColor: "#d33",
-	  confirmButtonText: "확인",
-		cancelButtonText: "취소"
-	}).then((result) => {
-	  if (result.isConfirmed) {
-	    form.submit();
-	  }
-	});
 }
