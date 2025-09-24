@@ -12,6 +12,7 @@
 
 <body>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<c:import url="/WEB-INF/views/common/heartBeat.jsp"/>
 	<script>
 		Swal.fire({
 		  text: "${ resultMsg }",
@@ -23,6 +24,11 @@
 			const url = "${ resultUrl }"
 			
 		  if (url != null && url != "") {
+			  let beat = "${ beat }"
+			  if (beat != null & beat != "") {
+				  let wsMsg = "${ wsMsg }"
+				  stompClient.send("/pub/notify/" + beat, {}, wsMsg);
+			  }
 			  location.href = url
 		  } else {
 			  history.back()
