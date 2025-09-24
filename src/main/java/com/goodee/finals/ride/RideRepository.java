@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.goodee.finals.staff.StaffDTO;
+
 
 // JPA에서 DB와 직접 통신하는 계층
 // 엔티티(RideDTO)를 DB에 CRUD 기능 담당
@@ -31,5 +33,6 @@ public interface RideRepository extends JpaRepository<RideDTO, String> {
 
     // 삭제 안 된 + 타입별
     List<RideDTO> findByRideTypeAndRideDeletedFalse(String rideType);
+
 
 }

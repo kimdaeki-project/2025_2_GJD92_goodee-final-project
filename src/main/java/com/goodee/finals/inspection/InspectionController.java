@@ -1,5 +1,7 @@
 package com.goodee.finals.inspection;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
+import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.validation.Valid;
 
@@ -47,6 +51,15 @@ public class InspectionController {
 	@GetMapping("write")
 	public String writeInspection(Model model) throws Exception {
 		model.addAttribute("inspectionDTO", new InspectionDTO());
+		
+		// 어트랙션 목록
+		List<RideDTO> rideList = inspectionService.getAllRides(); 
+	    model.addAttribute("rideList", rideList);
+
+	    // 시설팀 직원 목록 (dept_code=1003)
+	    List<StaffDTO> staffList = inspectionService.getFaStaffList();
+	    model.addAttribute("staffList", staffList);
+		
 		model.addAttribute("mode", "add");
 		
 		return "inspection/inspectionWrite";
@@ -102,6 +115,14 @@ public class InspectionController {
 		if (inspectionDTO.getInspectionAttachmentDTO() != null) {
 			model.addAttribute("attachmentDTO", inspectionDTO.getInspectionAttachmentDTO().getAttachmentDTO());
 		}
+		
+		// 어트랙션 목록
+		List<RideDTO> rideList = inspectionService.getAllRides(); 
+	    model.addAttribute("rideList", rideList);
+
+	    // 시설팀 직원 목록 (dept_code=1003)
+	    List<StaffDTO> staffList = inspectionService.getFaStaffList();
+	    model.addAttribute("staffList", staffList);
 		
 		// 등록/수정 모든 구분값 내려주기
 		model.addAttribute("mode", "edit");
@@ -168,21 +189,6 @@ public class InspectionController {
 		return "fileDownView";
 	}
 	
-	
-	// 어트랙션 점검 기록 어트랙션 코드 존재 여부 검사 (AJAX로 요청)
-	@GetMapping("/checkRideCode")
-	@ResponseBody
-	public boolean checkRideCode(@RequestParam("rideCode") String rideCode) throws Exception {
-		return inspectionService.isValidRideCode(rideCode);
-	}
-	
-	
-	// 어트랙션 점검 기록 담당자 코드 존재 여부 확인
-	@GetMapping("/checkStaffCode")
-	@ResponseBody
-	public boolean checkStaffCode(@RequestParam("staffCode") Integer staffCode) throws Exception {
-		return inspectionService.isValidStaffCode(staffCode);
-	}
 	
 	
 	

@@ -11,6 +11,7 @@ import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.StaffController;
+import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 import jakarta.transaction.Transactional;
 
@@ -37,7 +38,6 @@ public class RideService {
         this.fileService = fileService;
         this.attachmentRepository = attachmentRepository;
         this.staffRepository = staffRepository;
-        this.staffController = staffController;
     }
 	
 	// 어트랙션 전체 조회(리스트)
@@ -151,5 +151,13 @@ public class RideService {
     public boolean isDuplicateRideCode(String rideCode) throws Exception {
     	return rideRepository.existsById(rideCode);  // JPA에서 기본 제공 existsById
     }
+    
+    // 시설팀 직원 목록
+    public List<StaffDTO> getStaffList() {
+        // 시설팀 dept_code = 1003
+        return staffRepository.findByDeptDTO_DeptCode(1003);
+    }
+    
+    
 
 }

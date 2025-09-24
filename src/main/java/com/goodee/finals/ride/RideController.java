@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.staff.StaffDTO;
+
 import jakarta.validation.Valid;
 
 @RequestMapping("/ride/**")
@@ -53,7 +55,11 @@ public class RideController {
 		model.addAttribute("rideDTO", new RideDTO());  // JSP에서 사용할 rideDTO 객체
 		model.addAttribute("mode", "add");  // 등록 모드
 		
-		return "ride/rideAdd";  //jsp 파일명
+		// 시설팀 직원 목록(dept_code = 1003 을 조회)
+		List<StaffDTO> staffList = rideService.getStaffList();
+		model.addAttribute("staffList", staffList);
+		
+		return "ride/rideAdd";
 	}
 	
 
@@ -108,6 +114,10 @@ public class RideController {
 	    if (rideDTO.getRideAttachmentDTO() != null) {
 	        model.addAttribute("attachmentDTO", rideDTO.getRideAttachmentDTO().getAttachmentDTO());
 	    }
+	    
+	    // 시설팀 직원 목록(dept_code = 1003 을 조회)
+ 		List<StaffDTO> staffList = rideService.getStaffList();
+ 		model.addAttribute("staffList", staffList);
 
 	    // 등록/수정 모드 구분값 내려주기
 	    model.addAttribute("mode", "edit");
@@ -170,6 +180,8 @@ public class RideController {
 	public boolean checkRideCode(@RequestParam String rideCode) throws Exception {
 		return rideService.isDuplicateRideCode(rideCode);
 	}
+	
+	
 	
 
 	

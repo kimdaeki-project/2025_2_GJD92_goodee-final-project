@@ -19,9 +19,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
 // ==============================
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
-
   const rideCodeInput = document.querySelector("input[name='rideCode']");
-  const staffCodeInput = document.querySelector("input[name='staffCode']");
   const mode = form.getAttribute("data-mode"); // add / edit
 
   form.addEventListener("submit", function (e) {
@@ -65,63 +63,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==============================
-    // 2. 타입 검사 (staffCode는 정수형이어야 함)
+    // 2. 등록(add)일 때만 rideCode 중복 검사
     // ==============================
     const rideCode = rideCodeInput.value.trim();
-    const staffCode = staffCodeInput.value.trim();
 
-    if (!/^\d+$/.test(staffCode)) {
-      Swal.fire({
-        text: "올바른 형식이 아닙니다.",
-        icon: "error",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "확인"
-      });
-      return;
-    }
-
-    // ==============================
-    // 3. 등록(add)일 때만 rideCode 중복 검사
-    // ==============================
     if (mode === "add") {
-      try {
-        fetch("/ride/checkCode?rideCode=" + rideCode)
-          .then((data) => data.json())
-          .then((isDuplicate) => {
-            if (isDuplicate) {
-              Swal.fire({
-                text: "이미 있는 어트랙션 코드 입니다.",
-                icon: "error",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "확인"
-              });
-              return;
-            } else {
-              // 최종 확인 모달
-              Swal.fire({
-                text: "어트랙션을 등록하시겠습니까?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "등록",
-                cancelButtonText: "취소"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  form.submit();
-                }
-              });
+      fetch("/ride/checkCode?rideCode=" + rideCode)
+        .then((data) => data.json())
+        .then((isDuplicate) => {
+          if (isDuplicate) {
+            Swal.fire({
+              text: "이미 있는 어트랙션 코드 입니다.",
+              icon: "error",
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "확인"
+            });
+            return; // 중복이면 여기서 끝냄
+          }
+
+          // 최종 확인 모달
+          Swal.fire({
+            text: "어트랙션을 등록하시겠습니까?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "등록",
+            cancelButtonText: "취소"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              form.submit();
             }
           });
-      } catch (err) {
-        Swal.fire({
-          text: "중복 검사 중 오류가 발생했습니다.",
-          icon: "error",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "확인"
+        })
+        .catch((err) => {
+          Swal.fire({
+            text: "중복 검사 중 오류가 발생했습니다.",
+            icon: "error",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "확인"
+          });
+          console.error(err);
         });
-        return;
-      }
     } else if (mode === "edit") {
       Swal.fire({
         text: "어트랙션을 수정하시겠습니까?",
