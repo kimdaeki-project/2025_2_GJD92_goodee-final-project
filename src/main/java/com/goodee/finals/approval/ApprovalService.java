@@ -86,6 +86,10 @@ public class ApprovalService {
 		return approvalRepository.findAllApprovalFinish(staffCode, search, pageable);
 	}
 	
+	public Page<ApprovalResultDTO> getApprovalRecept(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllReceive(staffCode, search, pageable);
+	}
+	
 	public ApprovalDTO getApprovalDetail(Integer aprvCode) {
 		return approvalRepository.findById(aprvCode).orElseThrow();
 	}

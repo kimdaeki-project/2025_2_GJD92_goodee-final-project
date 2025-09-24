@@ -165,6 +165,7 @@ public class ApprovalController {
 		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "common");
 		
 		return "approval/draft";
 	}
@@ -189,4 +190,15 @@ public class ApprovalController {
 		return "common/result";
 	}
 	
+	@GetMapping("recept")
+	public String getApprovalRecept(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalResultDTO> approvalList = approvalService.getApprovalRecept(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
+		return "approval/receive";
+	}
 }
