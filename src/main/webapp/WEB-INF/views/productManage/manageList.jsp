@@ -60,23 +60,27 @@ aside.sidenav {
 			    			<thead>
 			    				<tr>
 			    					<th class="col-1">번호</th>
-			    					<th class="col-2">등록일자</th>
-			    					<th class="col-2">물품번호</th>
+			    					<th class="col-1">등록일자</th>
+			    					<th class="col-1">물품번호</th>
 			    					<th class="col-2">물품타입</th>
 			    					<th class="col-2">물품명</th>
 			    					<th class="col-1">수량</th>
 			    					<th class="col-1">재고</th>
-			    					<th class="col-2">작성자</th>
+			    					<th class="col-1">작성자</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
 			    				
-			    				<c:forEach var="product" items="${ productList.content }">
+			    				<c:forEach var="pm" items="${ productManageList.content }">
 			    					<tr>
-				    					<td>${ product.productCode }</td>
-				    					<td><a href="/product/${ product.productCode }" style="color: #737373;">${ product.lostName }</a></td>
-				    					<td>${ product.staffDTO.productName }</td>
-				    					<td>${ product.productAmount }</td>
+				    					<td>${ pm.pmNum }</td>
+				    					<td>${ pm.pmDate }</td>
+				    					<td><a href="/productManage/${ pm.productDTO.productCode }" style="color: #737373;">${ pm.productDTO.productCode }</a></td>
+				    					<td>${ pm.productDTO.productTypeDTO.productTypeName }</td>
+				    					<td>${ pm.productDTO.productName }</td>
+				    					<td>${ pm.pmAmount }</td>
+				    					<td>${ pm.productDTO.productAmount }</td>
+				    					<td>${ pm.staffDTO.staffName }</td>
 			    					</tr>
 			    				</c:forEach>
 			    				
@@ -85,30 +89,30 @@ aside.sidenav {
 			    	</div>
 			    </div>
 			    
-			    <c:if test="${ totalProduct eq 0 }">
+			    <c:if test="${ totalProductManage eq 0 }">
 					<div>검색된 결과가 없습니다.</div>
 				</c:if>
 			    
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
 						  <ul class="pagination">
-						    <c:if test="${ productList.number - 2 ge 0 }">
+						    <c:if test="${ productManageList.number - 2 ge 0 }">
 							    <li class="page-item">
-							      <a class="page-link" onclick="movePage('${ productList.number - 2 }')" aria-label="Previous">
+							      <a class="page-link" onclick="movePage('${ productManageList.number - 2 }')" aria-label="Previous">
 							        <span aria-hidden="true">&laquo;</span>
 							      </a>
 							    </li>
 						    </c:if>
-						    <c:if test="${ productList.hasPrevious() }">
-							    <li class="page-item"><a class="page-link" onclick="movePage('${ productList.number - 1 }')">${ productList.number }</a></li>
+						    <c:if test="${ productManageList.hasPrevious() }">
+							    <li class="page-item"><a class="page-link" onclick="movePage('${ productManageList.number - 1 }')">${ productManageList.number }</a></li>
 						    </c:if>
-						    <li class="page-item"><a class="page-link active" onclick="movePage('${ productList.number }')">${ productList.number + 1 }</a></li>
-						    <c:if test="${ productList.hasNext() }">
-							    <li class="page-item"><a class="page-link" onclick="movePage('${ productList.number + 1 }')">${ productList.number + 2 }</a></li>
+						    <li class="page-item"><a class="page-link active" onclick="movePage('${ productManageList.number }')">${ productManageList.number + 1 }</a></li>
+						    <c:if test="${ productManageList.hasNext() }">
+							    <li class="page-item"><a class="page-link" onclick="movePage('${ productManageList.number + 1 }')">${ productManageList.number + 2 }</a></li>
 						    </c:if>
-						    <c:if test="${ productList.number + 2 le productList.totalPages - 1 }">
+						    <c:if test="${ productManageList.number + 2 le productManageList.totalPages - 1 }">
 							    <li class="page-item">
-							      <a class="page-link" onclick="movePage('${ productList.number + 2 }')" aria-label="Next">
+							      <a class="page-link" onclick="movePage('${ productManageList.number + 2 }')" aria-label="Next">
 							        <span aria-hidden="true">&raquo;</span>
 							      </a>
 							    </li>

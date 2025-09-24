@@ -27,7 +27,7 @@ public class ProductManageDTO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pmNum;
 	private Integer pmType;
-	private Integer pmAmount;
+	private Long pmAmount;
 	private LocalDate pmDate = LocalDate.now();
 	
 	@ManyToOne

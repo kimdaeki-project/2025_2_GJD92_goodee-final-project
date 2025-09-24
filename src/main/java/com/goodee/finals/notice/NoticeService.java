@@ -159,6 +159,6 @@ public class NoticeService {
 	}
 
 	public List<NoticeDTO> getRecentNoticesForDashboard() {
-        return noticeRepository.findTop5ByNoticePinnedFalseOrderByNoticeDateDescNoticeNumDesc();
+        return noticeRepository.findTop5ByNoticePinnedFalseAndNoticeDeleteFalseOrderByNoticeDateDescNoticeNumDesc();
     }
 }

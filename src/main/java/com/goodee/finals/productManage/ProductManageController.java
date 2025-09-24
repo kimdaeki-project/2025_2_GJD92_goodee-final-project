@@ -31,6 +31,16 @@ public class ProductManageController {
 	
 	@GetMapping("")
 	public String getProductManageList(@PageableDefault(size = 10, sort = "pm_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<ProductManageDTO> productManageList = productManageService.getProductManageSearchList(search, pageable);
+		
+		model.addAttribute("productManageList", productManageList);
+		model.addAttribute("search", search);
+		
+		long totalProductManage = productManageService.getTotalProduct();
+		model.addAttribute("totalProductManage", totalProductManage);
+		
 		return "productManage/manageList";
 	}
 	
@@ -51,11 +61,11 @@ public class ProductManageController {
 	public String manageWrite(ProductDTO productDTO, ProductManageDTO productManageDTO, Model model) {
 		ProductManageDTO result = productManageService.manageWrite(productManageDTO, productDTO);
 		
-		String resultMsg = "입출고 내역 등록 중 오류가 발생했습니다.";
+		String resultMsg = "입출고 등록 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
 		
 		if (result != null) {
-			resultMsg = "입출고 내역을 성공적으로 등록했습니다.";
+			resultMsg = "입출고를 성공적으로 등록했습니다.";
 			resultIcon = "success";
 			String resultUrl = "/productManage";
 			model.addAttribute("resultUrl", resultUrl);
