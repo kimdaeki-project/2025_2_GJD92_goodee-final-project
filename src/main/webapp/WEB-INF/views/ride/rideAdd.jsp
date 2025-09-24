@@ -32,17 +32,11 @@
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    
 		    <!-- 여기에 코드 작성 -->
-			<h1 class="text-center mb-5">
-	  <c:choose>
-	    <c:when test="${mode eq 'edit'}">어트랙션 수정</c:when>
-	    <c:otherwise>어트랙션 등록</c:otherwise>
-	  </c:choose>
-	</h1>
-
 	<form:form method="post" 
 	           modelAttribute="rideDTO" 
 	           enctype="multipart/form-data" 
 	           class="container col-8"
+	           style="margin-top:100px"
 	           data-mode="${mode}">
 	
 	  <!-- 어트랙션 이름 -->
@@ -62,10 +56,17 @@
 	  </div>
 	
 	  <!-- 담당자 -->
-	  <div class="form-group row mb-3">
+      <div class="form-group row mb-3">
 	    <form:label path="staffDTO.staffCode" class="col-sm-4 col-form-label text-start">담당자</form:label>
 	    <div class="col-sm-5">
-	      <form:input path="staffDTO.staffCode" cssClass="form-control" placeholder="담당자를 입력하세요."/>
+	      <form:select path="staffDTO.staffCode" cssClass="form-select">
+	        <form:option value="">-- 담당자를 선택하세요 --</form:option>
+	        <c:forEach var="staff" items="${staffList}">
+	          <form:option value="${staff.staffCode}">
+	            ${staff.staffName} (${staff.staffCode})
+	          </form:option>
+	        </c:forEach>
+	      </form:select>
 	    </div>
 	  </div>
 	
@@ -96,7 +97,7 @@
 	  <div class="form-group row mb-3">
 	    <form:label path="rideDuration" class="col-sm-4 col-form-label text-start">운행시간</form:label>
 	    <div class="col-sm-5">
-	      <form:input path="rideDuration" cssClass="form-control" placeholder="운행시간을 입력하세요."/>
+	      <form:input path="rideDuration" cssClass="form-control" placeholder="운행시간을 입력하세요.   ex) 약 1분 30초"/>
 	    </div>
 	  </div>
 	
@@ -104,7 +105,7 @@
 	  <div class="form-group row mb-3">
 	    <form:label path="rideRule" class="col-sm-4 col-form-label text-start">이용정보</form:label>
 	    <div class="col-sm-5">
-	      <form:input path="rideRule" cssClass="form-control" placeholder="이용정보를 입력하세요."/>
+	      <form:input path="rideRule" cssClass="form-control" placeholder="이용정보를 입력하세요.    ex) 140cm 이상"/>
 	    </div>
 	  </div>
 	
@@ -112,7 +113,7 @@
 	  <div class="form-group row mb-3">
 	    <form:label path="rideInfo" class="col-sm-4 col-form-label text-start">어트랙션 설명</form:label>
 	    <div class="col-sm-5">
-	      <form:input path="rideInfo" cssClass="form-control" placeholder="어트랙션 설명을 입력하세요."/>
+	      <form:input path="rideInfo" cssClass="form-control" placeholder="어트랙션 설명을 입력하세요.   ex) 어린이만 탑승 가능"/>
 	    </div>
 	  </div>
 	
@@ -193,8 +194,8 @@
 	<script src="/js/ride/rideAdd.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='어트랙션 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "어트랙션 목록"
+		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "어트랙션"
 	</script>
 </body>
 
