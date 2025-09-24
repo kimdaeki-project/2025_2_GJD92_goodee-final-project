@@ -2,6 +2,7 @@ package com.goodee.finals.approval;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +102,62 @@ public class ApprovalService {
 		if (result != null) return true;
 		else return false;
 	}
+	
+	public boolean checkApprovalTrue(Integer aprvCode, String apvrComment) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ApprovalDTO approval = approvalRepository.findById(aprvCode).orElseThrow();
+		
+		int nextSeq = 0;
+		for (ApproverDTO approver : approval.getApproverDTOs()) {
+			if (approver.getStaffDTO().getStaffCode().equals(staffDTO.getStaffCode())) {
+				if (approver.getApvrType().equals(AGREER)) {
+					approver.setApvrResult(true);
+					approver.setApvrState(DONE);
+					approver.setApvrDtm(LocalDateTime.now());
+					approver.setApvrComment(apvrComment);
+					
+					ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+					
+					if (result != null) return true;
+					else return false;
+					
+				} else if (approver.getApvrType().equals(CONFIRMER)) {
+					approver.setApvrResult(true);
+					approver.setApvrState(DONE);
+					approver.setApvrDtm(LocalDateTime.now());
+					approver.setApvrComment(apvrComment);
+					
+					approval.setAprvState(FINISH);
+					ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+					
+					if (result != null) return true;
+					else return false;
+					
+				} else {
+					approver.setApvrResult(true);
+					approver.setApvrState(DONE);
+					approver.setApvrDtm(LocalDateTime.now());
+					approver.setApvrComment(apvrComment);
+					
+					nextSeq = approver.getApvrSeq() + 1;
+					for (ApproverDTO nextApprover : approval.getApproverDTOs()) {
+						if (nextApprover.getApvrSeq() == nextSeq) {
+							nextApprover.setApvrState(READY);
+						}
+					}
+					
+					approval.setAprvCrnt(approval.getAprvCrnt() + 1);
+					ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+					
+					if (result != null) return true;
+					else return false;
+					
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType) {
 		ApprovalDTO approvalDTO = new ApprovalDTO();
@@ -167,6 +224,7 @@ public class ApprovalService {
 			approverDTO.setStaffDTO(staffDTO);
 			approverDTO.setApvrType(AGREER);
 			approverDTO.setApvrSeq(0);
+			approverDTO.setApvrState(READY);
 			
 			draft.getApproverDTOs().add(approverDTO);
 		}

@@ -115,6 +115,32 @@ public class ApprovalController {
 		return "approval/detail";
 	}
 	
+	@PostMapping("{aprvCode}/check")
+	public String postApprovalCheck(@PathVariable Integer aprvCode, String apvrResult, String apvrComment, Model model) {
+		boolean result = false;
+		
+		if (apvrResult.equals("true")) {
+			result = approvalService.checkApprovalTrue(aprvCode, apvrComment);
+		} else {
+			// result = approvalService.checkApprovalFalse(aprvCode, apvrComment);
+		}
+		
+		String resultMsg = "결재 처리 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "결재가 처리되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval/" + aprvCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
 	@GetMapping("staff")
 	@ResponseBody
 	public List<StaffDTO> getApprovalStaffList() {
