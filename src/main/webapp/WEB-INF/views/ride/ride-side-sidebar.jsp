@@ -5,6 +5,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/ride">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션">diversity_3</i>
+          <i class="material-symbols-rounded opacity-5 fs-5" data-content="어트랙션 목록">diversity_3</i>
           <span class="nav-link-text ms-1 text-sm">어트랙션</span>
         </a>
       </li>
