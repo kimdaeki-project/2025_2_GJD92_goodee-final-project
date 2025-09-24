@@ -28,6 +28,7 @@
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    
 		    <!-- 여기에 코드 작성 -->
+		    
 			<form:form method="post" 
 			           modelAttribute="inspectionDTO" 
 			           enctype="multipart/form-data" 

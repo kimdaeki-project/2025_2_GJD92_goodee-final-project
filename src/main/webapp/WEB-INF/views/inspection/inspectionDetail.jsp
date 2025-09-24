@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 
@@ -20,10 +21,8 @@
     	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
-			    
-			     	<c:import url="/WEB-INF/views/inspection/inspection-template-side.jsp"></c:import>
-			      
-			      
+			    	<!-- 메뉴 개수만큼 추가 -->
+			     	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
 			    </ul>
 			  </div>
     	</aside>
@@ -63,11 +62,27 @@
 				        </tr>
 				        <tr>
 				          <th>점검유형</th>
-				          <td>${inspection.isptType}</td>
+				          	<c:if test="${ inspection.isptType eq 401 }">
+							<td>긴급점검(${inspection.isptType })</td>
+							</c:if>
+							<c:if test="${ inspection.isptType eq 501 }">
+								<td>일일점검(${inspection.isptType })</td>
+							</c:if>
+							<c:if test="${ inspection.isptType eq 502 }">
+								<td>정기점검(${inspection.isptType })</td>
+							</c:if>
 				        </tr>
 				        <tr>
 				          <th>점검결과</th>
-				          <td>${inspection.isptResult}</td>
+				          	<c:if test="${ inspection.isptResult eq 201 }">
+							<td>정상(${ inspection.isptResult })</td>
+							</c:if>
+							<c:if test="${ inspection.isptResult eq 202 }">
+								<td>특이사항 있음(${ inspection.isptResult })</td>
+							</c:if>
+							<c:if test="${ inspection.isptResult eq 203 }">
+								<td>운영불가(${ inspection.isptResult })</td>
+							</c:if>
 				        </tr>
 				        <tr>
 				          <th>담당자</th>
@@ -88,7 +103,7 @@
 			</div>
 			
 			<!-- 버튼 --><!-- 로그인 사용자 정보 꺼내기 -->
-<%-- 			<sec:authorize access="isAuthenticated()">
+ 			<sec:authorize access="isAuthenticated()">
 			<sec:authentication property="principal" var="staff" />
 			
 			<!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
@@ -96,7 +111,7 @@
 			    <div class="form-group row mt-4 text-end">
 			      <div class="col-sm-12">
 			      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
-			      	<form action="${pageContext.request.contextPath }/ride/${ride.rideCode}/update"
+			      	<form action="${pageContext.request.contextPath }/inspection/${inspection.isptNum}/update"
 			      			method="get" style="display: inline;">
 				        <button type="submit" 
 				        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
@@ -106,11 +121,11 @@
 			        <button type="button" 
 			                class="btn btn-sm btn-outline-secondary" 
 			                style="width: 100px;"
-			                onclick="ridedelete('${ ride.rideCode }')">삭제</button>
+			                onclick="deleteInspection('${ inspection.isptNum }')">삭제</button>
 			      </div>
 			    </div>
 		    </c:if>
-		    </sec:authorize> --%>
+		    </sec:authorize>
 			
 			
 		  </div>
@@ -121,6 +136,7 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/inspection/inspectionDetail.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='어트랙션 점검']").parentElement.classList.add("bg-gradient-dark", "text-white")

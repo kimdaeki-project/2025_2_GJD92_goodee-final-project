@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.InspectionAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
+import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.ride.RideRepository;
 import com.goodee.finals.staff.StaffRepository;
 
 import jakarta.transaction.Transactional;
@@ -26,6 +29,12 @@ public class InspectionService {
 	
 	@Autowired
 	private AttachmentRepository attachmentRepository;
+	
+	@Autowired
+    private StaffRepository staffRepository;
+	
+	@Autowired
+    private RideRepository rideRepository;
 	
 	@Autowired
     private FileService fileService;
@@ -98,18 +107,67 @@ public class InspectionService {
 	}
 	
 	
+	// 어트랙션 점검 기록 수정
+	public boolean updateInspection(InspectionDTO inspectionDTO, MultipartFile attach) throws Exception {
+		InspectionDTO origin = inspectionRepository.findById(inspectionDTO.getIsptNum())
+				.orElseThrow();
+		
+		// 기본 필드 업데이트
+		origin.setRideDTO(inspectionDTO.getRideDTO());
+		origin.setIsptType(inspectionDTO.getIsptType());
+		origin.setStaffDTO(inspectionDTO.getStaffDTO());
+		origin.setIsptResult(inspectionDTO.getIsptResult());
+		origin.setIsptStart(inspectionDTO.getIsptStart());
+		origin.setIsptEnd(inspectionDTO.getIsptEnd());
+		
+		if (attach != null && attach.getSize() > 0) {
+			InspectionDTO before = inspectionRepository.findById(inspectionDTO.getIsptNum()).orElseThrow();
+			AttachmentDTO beforeAttach = before.getInspectionAttachmentDTO().getAttachmentDTO();
+			attachmentRepository.deleteById(beforeAttach.getAttachNum());
+			
+			AttachmentDTO attachmentDTO = new AttachmentDTO();
+			
+			try {
+				String fileName = fileService.saveFile(FileService.INSPECTION, attach);
+				
+				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setOriginName(attach.getOriginalFilename());
+				attachmentDTO.setSavedName(fileName);
+				
+				attachmentRepository.save(attachmentDTO);
+				
+				InspectionAttachmentDTO inspectionAttachmentDTO = new InspectionAttachmentDTO();
+				inspectionAttachmentDTO.setInspectionDTO(inspectionDTO);
+				inspectionAttachmentDTO.setAttachmentDTO(attachmentDTO);
+				
+				inspectionDTO.setInspectionAttachmentDTO(inspectionAttachmentDTO);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		InspectionDTO result = inspectionRepository.saveAndFlush(inspectionDTO);
+		
+		if (result != null) return true;
+		else return false;
+		
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// 어트랙션 점검 기록 삭제 (논리적 삭제)
+	@Transactional
+	public InspectionDTO deleteInspection(Integer isptNum) throws Exception {
+		// DB에서 엔터티 조회
+		InspectionDTO ispt = inspectionRepository.findById(isptNum)
+				.orElseThrow(() -> new IllegalArgumentException("해당 어트랙션 점검 기록이 존재하지 않습니다."));
+		
+		
+		// 논리적 삭제 처리
+		ispt.setIsptDelete(true);
+		
+		// save() 호출에서 업데이트 반영
+		return inspectionRepository.save(ispt);
+	}
 	
 	
 	// 체크리스트 파일 다운로드
@@ -118,6 +176,18 @@ public class InspectionService {
 		return result.get();
 	}
 	
+	
+	
+	// 어트랙션 점검 기록 어트랙션 코드 존재 여부 검사
+	public boolean isValidRideCode(@RequestParam String rideCode) throws Exception {
+		return rideRepository.existsById(rideCode);
+	}
+	
+	
+	// 어트랙션 점검 기록 담당자 코드 존재 여부 확인
+	public boolean isValidStaffCode(@RequestParam Integer staffCode) throws Exception {
+		return staffRepository.existsById(staffCode);
+	}
 	
 	
 

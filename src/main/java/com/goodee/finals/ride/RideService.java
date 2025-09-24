@@ -102,7 +102,6 @@ public class RideService {
         if (attach != null && attach.getSize() > 0) {
 			RideDTO before = rideRepository.findById(rideDTO.getRideCode()).orElseThrow();
 			AttachmentDTO beforeAttach = before.getRideAttachmentDTO().getAttachmentDTO();
-			System.out.println(beforeAttach.getAttachNum());
 			attachmentRepository.deleteById(beforeAttach.getAttachNum());
 			
 			AttachmentDTO attachmentDTO = new AttachmentDTO();
