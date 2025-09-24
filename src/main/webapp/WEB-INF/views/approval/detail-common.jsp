@@ -87,8 +87,14 @@
 	
 	<tr>
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>첨</span><span>부</span><span>파</span><span>일</span></p></td>
-		<td colspan="4">
-			
+		<td colspan="4" style="text-align: left;">
+			<ul class="list-unstyled">
+				
+				<c:forEach var="attach" items="${ approval.approvalAttachmentDTOs }">
+					<li><a href="/approval/${ attach.attachmentDTO.attachNum }/download">${ attach.attachmentDTO.originName }</a></li>
+				</c:forEach>
+				
+			</ul>
 		</td>
 	</tr>
 </table>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffService;
@@ -200,5 +201,14 @@ public class ApprovalController {
 		model.addAttribute("approvalList", approvalList);
 		
 		return "approval/receive";
+	}
+	
+	@GetMapping("{attachNum}/download")
+	public String download(@PathVariable String attachNum, Model model) {
+		AttachmentDTO result = approvalService.getAttach(Long.valueOf(attachNum));
+		model.addAttribute("file", result);
+		model.addAttribute("type", "approval");
+		
+		return "fileDownView";
 	}
 }

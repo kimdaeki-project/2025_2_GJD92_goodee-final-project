@@ -93,6 +93,10 @@ public class ApprovalService {
 	public ApprovalDTO getApprovalDetail(Integer aprvCode) {
 		return approvalRepository.findById(aprvCode).orElseThrow();
 	}
+	
+	public AttachmentDTO getAttach(Long attachNum) {
+		return attachmentRepository.findById(attachNum).orElseThrow();
+	}
 
 	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach) throws IOException {
 		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, NORMAL);
