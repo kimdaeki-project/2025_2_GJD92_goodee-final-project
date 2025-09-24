@@ -264,7 +264,6 @@
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<c:import url="/WEB-INF/views/common/heartBeat.jsp"/>
 	<script>
 		document.querySelector("i[data-content='대시보드']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	</script>
