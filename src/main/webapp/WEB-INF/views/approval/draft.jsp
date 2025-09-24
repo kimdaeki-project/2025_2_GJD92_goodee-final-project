@@ -174,7 +174,7 @@
 				    		</tr>
 				    		
 				    		<tr style="border: 2px solid #686868;">
-				    			<td colspan="5">
+				    			<td colspan="5" style="text-align: left;">
 				    				<textarea id="summernote" name="aprvContent"></textarea>
 				    			</td>
 				    		</tr>

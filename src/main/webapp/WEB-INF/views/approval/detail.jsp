@@ -85,7 +85,7 @@
 			    					<c:if test="${ not empty approver.apvrComment }">
 			    						
 			    						<li>
-												<div class="d-flex justify-content-end align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+												<div class="d-flex justify-content-start align-items-center mt-2" style="width: 80%; margin: 0 auto;">
 													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
 													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
 												</div>
@@ -197,7 +197,7 @@
 			    		</tr>
 			    		
 			    		<tr style="border: 2px solid #686868;">
-			    			<td colspan="5" style="height: 700px;">${ approval.aprvContent }</td>
+			    			<td colspan="5" style="height: 700px; text-align: left; vertical-align: top; padding: 5px;">${ approval.aprvContent }</td>
 			    		</tr>
 			    		
 			    		<tr>

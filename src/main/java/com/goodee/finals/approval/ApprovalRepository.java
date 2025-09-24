@@ -43,7 +43,7 @@ public interface ApprovalRepository extends JpaRepository<ApprovalDTO, Integer> 
 	
 	@Query("SELECT new com.goodee.finals.approval.ApprovalResultDTO(al.aprvCode, al.aprvTitle, al.aprvTotal, al.aprvCrnt, st.staffName, dp.deptDetail, al.aprvState, al.aprvDate) "
 			+ "	FROM ApprovalDTO al JOIN al.approverDTOs ar JOIN al.staffDTO st JOIN st.deptDTO dp"
-			+ " WHERE (st.staffCode = :staffCode OR ar.staffDTO.staffCode = :staffCode) AND al.aprvState IN (701, 702, 703) AND ar.apvrState = 722"
+			+ " WHERE (st.staffCode = :staffCode OR ar.staffDTO.staffCode = :staffCode) AND al.aprvState IN (701, 702, 703) AND ar.apvrState IN (722, 723)"
 			+ " AND (al.aprvTitle LIKE %:search%)"
 			+ " ORDER BY ar.apvrState DESC, al.aprvCode ASC")
 	Page<ApprovalResultDTO> findAllApprovalFinish(Integer staffCode, String search, Pageable pageable);

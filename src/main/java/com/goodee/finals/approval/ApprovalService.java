@@ -45,6 +45,7 @@ public class ApprovalService {
 	private static final Integer WAIT = 720; // 처리대기
 	private static final Integer READY = 721; // 처리요청
 	private static final Integer DONE = 722; // 처리완료
+	private static final Integer DISABLED = 723; // 처리불능
 	
 	@Autowired
 	private DeptRepository deptRepository;
@@ -157,6 +158,28 @@ public class ApprovalService {
 		}
 		
 		return false;
+	}
+	
+	public boolean checkApprovalFalse(Integer aprvCode, String apvrComment) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ApprovalDTO approval = approvalRepository.findById(aprvCode).orElseThrow();
+		
+		for (ApproverDTO approver : approval.getApproverDTOs()) {
+			if (approver.getStaffDTO().getStaffCode().equals(staffDTO.getStaffCode())) {
+				approver.setApvrResult(false);
+				approver.setApvrState(DONE);
+				approver.setApvrDtm(LocalDateTime.now());
+				approver.setApvrComment(apvrComment);
+			} else if (approver.getApvrState().equals(WAIT) || approver.getApvrState().equals(READY)) {
+				approver.setApvrState(DISABLED);
+			}
+		}
+		
+		approval.setAprvState(DENY);
+		ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+		
+		if (result != null) return true;
+		else return false;
 	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType) {

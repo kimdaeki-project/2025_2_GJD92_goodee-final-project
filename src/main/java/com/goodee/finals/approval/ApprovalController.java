@@ -122,7 +122,7 @@ public class ApprovalController {
 		if (apvrResult.equals("true")) {
 			result = approvalService.checkApprovalTrue(aprvCode, apvrComment);
 		} else {
-			// result = approvalService.checkApprovalFalse(aprvCode, apvrComment);
+			result = approvalService.checkApprovalFalse(aprvCode, apvrComment);
 		}
 		
 		String resultMsg = "결재 처리 중 오류가 발생했습니다.";
