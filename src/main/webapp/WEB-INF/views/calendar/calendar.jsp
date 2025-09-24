@@ -8,6 +8,7 @@
 	<title>캘린더</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	<link rel="stylesheet" href="/css/calendar/calendar-lux.css" />
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -16,24 +17,12 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
-    		<div class="w-100">
-			    <ul class="navbar-nav">
-			    
-			    	<!-- 메뉴 개수만큼 추가 -->
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="메뉴이름">dashboard</i>
-			          <span class="nav-link-text ms-1 text-sm">메뉴이름</span>
-			        </a>
-			      </li>
-			      <!-- 메뉴 개수만큼 추가 -->
-			      
-			    </ul>
-			  </div>
-    	</aside>
-	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
-	    
+		<c:import url="/WEB-INF/views/calendar/calendar-sidebar.jsp"></c:import>
+	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden;">
+	    	<div class="d-flex justify-content-end mt-3 me-3">
+	    		<div>이쪽은 검색란</div>	    	
+	    	</div>
+	    	<div id='calendar' class="mt-3"></div>
 		    <!-- 여기에 코드 작성 -->
 		    <!-- 여기에 코드 작성 -->
 		    <!-- 여기에 코드 작성 -->
@@ -43,10 +32,13 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
 	<script>
 		document.querySelector("i[data-content='일정']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "일정";
 	</script>
+	<script src="/js/calendar/calendar.js"></script>
+	
 </body>
 
 </html>

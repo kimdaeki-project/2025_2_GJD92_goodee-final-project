@@ -14,11 +14,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
+import com.goodee.finals.calendar.CalendarDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
-import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
+import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
@@ -128,6 +129,9 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DocumentDTO> documentDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<CalendarDTO> calendarDTOs;
 	
 	@Override
 	public String getUsername() {

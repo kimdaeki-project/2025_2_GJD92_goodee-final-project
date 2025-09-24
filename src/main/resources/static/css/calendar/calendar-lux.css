@@ -1,0 +1,32 @@
+/* FullCalendar 툴바 버튼 Lux 스타일 */
+.fc .btn-primary {
+  color: #fff;
+  background-color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+.fc .btn-primary:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
+.fc .btn-outline-primary {
+  color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+.fc .btn-outline-primary:hover {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.fc .fc-toolbar-title {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.fc-today-button fc-button fc-button-primary {
+	margin-top : 15px !important;
+}
