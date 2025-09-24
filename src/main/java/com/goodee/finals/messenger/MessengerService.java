@@ -35,7 +35,7 @@ public class MessengerService {
 	}
 
 	public ChatRoomDTO createRoom(List<Integer> addedStaff, ChatRoomDTO chatRoomDTO) {
-		if (addedStaff.size() > 1) {
+		if (addedStaff.size() > 2) {
 			chatRoomDTO.setChatRoomGroup(true);
 			if (chatRoomDTO.getChatRoomName() == null || chatRoomDTO.getChatRoomName().equals("")) {
 				chatRoomDTO.setChatRoomName("GROUP_NONAME");

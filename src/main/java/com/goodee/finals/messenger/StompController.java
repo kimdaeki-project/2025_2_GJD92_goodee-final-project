@@ -25,5 +25,10 @@ public class StompController {
 		messengerService.saveChat(message);
 		simpMessagingTemplate.convertAndSend("/sub/chat" + chatRoomNum, message);
 	}
+	
+	@MessageMapping("/notify/{staffCode}")
+	public void notify(@DestinationVariable("staffCode") Integer staffCode, String message) throws Exception {
+		simpMessagingTemplate.convertAndSend("/sub/notify/" + staffCode, message);
+	}
 
 }

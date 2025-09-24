@@ -127,9 +127,6 @@
         font-size: 12px;
         color: #666;
     }
-    .hidden {
-    	display: none;
-    }
 </style>
 </head>
 <body>
@@ -160,14 +157,21 @@
 	            <form action="/msg/chat" method="post" class="chat-room">
 	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
 	                <div class="chat-room-info">
-	                	<sec:authorize access="isAuthenticated()">
-							<sec:authentication property="principal" var="staff" />
-		                	<c:forEach items="${ r.chatUserDTOs }" var="s">
-		                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
-			                    	<div class="chat-room-name">${ s.staffDTO.staffName }</div>
-			                    </c:if>               	
-		                	</c:forEach>
-	                	</sec:authorize>
+	                	<c:if test="${ r.chatRoomName eq 'DM_NONAME' }">
+		                	<sec:authorize access="isAuthenticated()">
+								<sec:authentication property="principal" var="staff" />
+			                	<c:forEach items="${ r.chatUserDTOs }" var="s">
+			                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
+				                    	<div class="chat-room-name">${ s.staffDTO.staffName }</div>
+				                    </c:if>               	
+			                	</c:forEach>
+		                	</sec:authorize>
+	                	</c:if>
+	                	<c:if test="${ r.chatRoomName ne 'DM_NONAME' }">
+	                		<div class="chat-room-name">
+	                			${ r.chatRoomName }
+	                		</div>
+	                	</c:if>
 	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
 	                </div>
 	                <div class="chat-room-right">
@@ -180,16 +184,23 @@
 	            <form action="/msg/chat" method="post" class="chat-room">
 	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
 	                <div class="chat-room-info">
-		                <sec:authorize access="isAuthenticated()">
-		                	<sec:authentication property="principal" var="staff" />
-		                    <div class="chat-room-name">
-			                	<c:forEach items="${ r.chatUserDTOs }" var="s" varStatus="status">
-			                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
-			                			<span>${ s.staffDTO.staffName }</span>
-			                		</c:if>
-			                	</c:forEach>
-		                	</div>
-		                </sec:authorize>
+	                	<c:if test="${ r.chatRoomName eq 'GROUP_NONAME' }">
+			                <sec:authorize access="isAuthenticated()">
+			                	<sec:authentication property="principal" var="staff" />
+			                    <div class="chat-room-name">
+				                	<c:forEach items="${ r.chatUserDTOs }" var="s" varStatus="status">
+				                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
+				                			<span>${ s.staffDTO.staffName }</span>
+				                		</c:if>
+				                	</c:forEach>
+			                	</div>
+			                </sec:authorize>
+	                	</c:if>
+	                	<c:if test="${ r.chatRoomName ne 'GROUP_NONAME' }">
+	                		<div class="chat-room-name">
+	                			${ r.chatRoomName }
+	                		</div>
+	                	</c:if>
 	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
 	                </div>
 	                <div class="chat-room-right">
