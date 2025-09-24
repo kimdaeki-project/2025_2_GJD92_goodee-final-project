@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const mode = form.getAttribute("data-mode"); 
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     // 1. 입력값 확인
@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const type = el.getAttribute("type");
 
       if (type === "file") {
-        const hasExistingFile = document.querySelector("#hasExistingFile")?.value === "true";
+				const existingFile = document.querySelector("#hasExistingFile");
+				const hasExistingFile = existingFile && existingFile.value === "true";
         const isFileEmpty = !el.value.trim();
 
         if (mode === "add" && isFileEmpty) {
