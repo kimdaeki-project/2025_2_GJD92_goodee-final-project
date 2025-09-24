@@ -127,6 +127,9 @@
         font-size: 12px;
         color: #666;
     }
+    .hidden {
+    	display: none;
+    }
 </style>
 </head>
 <body>
@@ -146,9 +149,9 @@
 
         <!-- 탭 메뉴 -->
         <div class="tabs">
-            <div class="tab active">전체</div>
-            <div class="tab">1:1</div>
-            <div class="tab">그룹</div>
+            <div class="tab tab-all active">전체</div>
+            <div class="tab tab-dm">1:1</div>
+            <div class="tab tab-group">그룹</div>
         </div>
 
         <!-- 채팅방 리스트 -->
@@ -168,7 +171,7 @@
 	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
 	                </div>
 	                <div class="chat-room-right">
-	                    <span class="time" id="time-${ r.chatRoomNum }">어제</span>
+	                    <span class="time" id="time-${ r.chatRoomNum }"></span>
 	                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
 	                </div>
 	            </form>
@@ -177,15 +180,23 @@
 	            <form action="/msg/chat" method="post" class="chat-room">
 	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
 	                <div class="chat-room-info">
-	                    <div class="chat-room-name">${ r.chatRoomName }</div>
+		                <sec:authorize access="isAuthenticated()">
+		                	<sec:authentication property="principal" var="staff" />
+		                    <div class="chat-room-name">
+			                	<c:forEach items="${ r.chatUserDTOs }" var="s" varStatus="status">
+			                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
+			                			<span>${ s.staffDTO.staffName }</span>
+			                		</c:if>
+			                	</c:forEach>
+		                	</div>
+		                </sec:authorize>
 	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
 	                </div>
 	                <div class="chat-room-right">
-	                    <span class="time" id="time-${ r.chatRoomNum }">어제</span>
+	                    <span class="time" id="time-${ r.chatRoomNum }"></span>
 	                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
 	                </div>
 	            </form>
-            
             </c:if>
         </c:forEach>
     </div>

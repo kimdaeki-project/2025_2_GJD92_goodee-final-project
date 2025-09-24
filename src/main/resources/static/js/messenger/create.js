@@ -32,7 +32,6 @@ createRoomBtn.addEventListener('click', () => {
 		room.push(logged.value);
 		let addedStaff = document.querySelector('#addedStaff');
 		addedStaff.value = room.join(",");
-		console.log(addedStaff.value)
 		form.submit();
 	}
 });
