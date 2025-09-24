@@ -22,4 +22,7 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	Page<StaffDTO> findAllQuitBySearch(String search, Pageable pageable);
 	
 	List<StaffDTO> findByStaffCodeNot(Integer loggedStaff);
+	
+	// deptDTO.deptCode 시설부서의 코드 꺼내옴
+    List<StaffDTO> findByDeptDTO_DeptCode(Integer deptCode);
 }

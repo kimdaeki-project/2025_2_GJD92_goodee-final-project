@@ -1,5 +1,7 @@
 package com.goodee.finals.inspection;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
+import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.validation.Valid;
 
@@ -46,6 +51,16 @@ public class InspectionController {
 	@GetMapping("write")
 	public String writeInspection(Model model) throws Exception {
 		model.addAttribute("inspectionDTO", new InspectionDTO());
+		
+		// 어트랙션 목록
+		List<RideDTO> rideList = inspectionService.getAllRides(); 
+	    model.addAttribute("rideList", rideList);
+
+	    // 시설팀 직원 목록 (dept_code=1003)
+	    List<StaffDTO> staffList = inspectionService.getFaStaffList();
+	    model.addAttribute("staffList", staffList);
+		
+		model.addAttribute("mode", "add");
 		
 		return "inspection/inspectionWrite";
 	}
@@ -86,18 +101,82 @@ public class InspectionController {
 	
 	
 	
+	// 어트랙션 점검 기록 수정
+	// 어트랙션 점검 기록 수정 폼으로 이동(기존 입력된 데이터를 가지고 감)
+	// GET/update : 기존 정보 + 첨부파일 attachmentDTO 모델에 넣어줌
+	@GetMapping("{isptNum}/update")
+	public String getIsptUpdate(@PathVariable("isptNum") Integer isptNum, Model model) throws Exception {
+		// 기존 데이터 조회
+		InspectionDTO inspectionDTO = inspectionService.getIsptByNum(isptNum);
+		model.addAttribute("inspectionDTO", inspectionDTO);
+		model.addAttribute("mode", "edit");  // 수정 모드
+		
+		// 첨부파일이 있으면 JSP에 따로 전달
+		if (inspectionDTO.getInspectionAttachmentDTO() != null) {
+			model.addAttribute("attachmentDTO", inspectionDTO.getInspectionAttachmentDTO().getAttachmentDTO());
+		}
+		
+		// 어트랙션 목록
+		List<RideDTO> rideList = inspectionService.getAllRides(); 
+	    model.addAttribute("rideList", rideList);
+
+	    // 시설팀 직원 목록 (dept_code=1003)
+	    List<StaffDTO> staffList = inspectionService.getFaStaffList();
+	    model.addAttribute("staffList", staffList);
+		
+		// 등록/수정 모든 구분값 내려주기
+		model.addAttribute("mode", "edit");
+		return "inspection/inspectionWrite";
+	}
 	
 	
 	
+	// 어트랙션 수정
+	// POST/update : MultipartFile attach  같이 받음
+	@PostMapping("{isptNum}/update")
+	public String postIsptUpdate(@Valid InspectionDTO inspectionDTO, BindingResult bindingResult, MultipartFile attach, Model model) throws Exception {
+		boolean result = inspectionService.updateInspection(inspectionDTO, attach);
+		
+		String resultMsg = "어트랙션 점검 기록 수정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "어트랙션 점검 기록을 수정했습니다.";
+			resultIcon = "success";
+			
+			String resultUrl = "/inspection/" + inspectionDTO.getIsptNum();
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
+	// 어트랙션 점검 기록 삭제
+	@PostMapping("{isptNum}/delete")
+	public String deleteInspection(@PathVariable("isptNum") Integer isptNum, Model model) throws Exception {
+		InspectionDTO result = inspectionService.deleteInspection(isptNum);
+		
+		String resultMsg = "어트랙션 점검 기록 삭제 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result != null) {
+			resultMsg = "어트랙션 점검 기록을 삭제하였습니다.";
+			resultIcon = "success";
+			
+			// 삭제 완료 후 목록 페이지로 이동
+			String resultUrl = "/inspection/";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
 	
 	
 	// 체크리스트 파일 다운로드
@@ -106,9 +185,11 @@ public class InspectionController {
 		AttachmentDTO result = inspectionService.download(attachmentDTO);
 		model.addAttribute("file", result);
 		model.addAttribute("type", "inspection");
-		return "fileDownView";
 		
+		return "fileDownView";
 	}
+	
+	
 	
 	
 	
