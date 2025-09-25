@@ -108,6 +108,10 @@ public class ApprovalController {
 			model.addAttribute("overtimeEnd", approvalDTO.getOvertimeDTO().getOverEnd().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 		}
 		
+		if (approvalDTO.getEarlyDTO() != null) {
+			model.addAttribute("earlyTime", approvalDTO.getEarlyDTO().getEarlyDtm().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+		}
+		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		model.addAttribute("isMyTurn", "N");
@@ -304,6 +308,26 @@ public class ApprovalController {
 		model.addAttribute("draftForm", "early");
 		
 		return "approval/draft";
+	}
+	
+	@PostMapping("draft/early")
+	public String postApprovalDraftEarly(InputApprovalDTO inputApprovalDTO, EarlyDTO earlyDTO, Model model) {
+		boolean result = approvalService.sendEarlyDraft(inputApprovalDTO, earlyDTO);
+		
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 	@GetMapping("recept")

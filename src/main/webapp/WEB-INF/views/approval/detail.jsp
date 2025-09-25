@@ -125,7 +125,7 @@
 		    		</c:if>
 		    		
 		    		<c:if test="${ approval.aprvType eq 903 }">
-		    			<c:import url="/WEB-INF/views/approval/detail-common.jsp"></c:import>
+		    			<c:import url="/WEB-INF/views/approval/detail-early.jsp"></c:import>
 		    		</c:if>
 		    		
 		    		<c:if test="${ approval.aprvType eq 999 }">
