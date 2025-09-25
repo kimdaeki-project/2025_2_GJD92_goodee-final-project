@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -342,6 +344,27 @@ public class ApprovalController {
 		return "approval/receive";
 	}
 	
+	@GetMapping("sign")
+	public String getApprovalSign() {
+		return "approval/sign";
+	}
+	
+	@PostMapping("sign")
+	@ResponseBody
+	public boolean postApprovalSign(MultipartFile attach) throws IOException {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		boolean result = approvalService.setApprovalSign(staffDTO, attach);
+		
+		if (result) {
+			staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(staffDTO, authentication.getCredentials(), authentication.getAuthorities()));
+		}
+		
+		return result;
+	}
+	
 	@GetMapping("{attachNum}/download")
 	public String download(@PathVariable String attachNum, Model model) {
 		AttachmentDTO result = approvalService.getAttach(Long.valueOf(attachNum));
@@ -350,4 +373,5 @@ public class ApprovalController {
 		
 		return "fileDownView";
 	}
+	
 }

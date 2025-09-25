@@ -65,7 +65,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/approval/sign">
+			        <a class="nav-link text-dark" onclick="openApprovalSign()">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="서명 등록">fact_check</i>
 			          <span class="nav-link-text ms-1 text-sm">서명 등록</span>
 			        </a>

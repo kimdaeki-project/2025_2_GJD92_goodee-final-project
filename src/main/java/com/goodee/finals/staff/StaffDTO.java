@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.common.attachment.StaffSignDTO;
 import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
@@ -85,6 +86,9 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
+	
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private StaffSignDTO staffSignDTO;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore

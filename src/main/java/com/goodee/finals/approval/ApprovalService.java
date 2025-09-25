@@ -16,10 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.goodee.finals.common.attachment.ApprovalAttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
+import com.goodee.finals.common.attachment.StaffSignDTO;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.staff.StaffRepository;
 import com.goodee.finals.staff.StaffService;
 
 import jakarta.transaction.Transactional;
@@ -53,6 +55,8 @@ public class ApprovalService {
 	private ApprovalRepository approvalRepository;
 	@Autowired
 	private StaffService staffService;
+	@Autowired
+	private StaffRepository staffRepository;
 	@Autowired
 	private FileService fileService;
 	@Autowired
@@ -242,6 +246,37 @@ public class ApprovalService {
 		
 		if (result != null) return true;
 		else return false;
+	}
+	
+	public boolean setApprovalSign(StaffDTO staffDTO, MultipartFile attach) throws IOException {
+		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+		
+		if (attach != null && attach.getSize() > 0) {
+			fileService.fileDelete(FileService.SIGN, staffDTO.getStaffSignDTO().getAttachmentDTO().getSavedName());
+			attachmentRepository.deleteById(staffDTO.getStaffSignDTO().getAttachmentDTO().getAttachNum());
+			
+			String fileName = fileService.saveFile(FileService.SIGN, attach);
+			
+			AttachmentDTO attachmentDTO = new AttachmentDTO();
+			attachmentDTO.setOriginName(attach.getOriginalFilename());
+			attachmentDTO.setSavedName(fileName);
+			attachmentDTO.setAttachSize(attach.getSize());
+			
+			attachmentRepository.save(attachmentDTO);
+			
+			StaffSignDTO staffSignDTO = new StaffSignDTO();
+			staffSignDTO.setAttachmentDTO(attachmentDTO);
+			staffSignDTO.setStaffDTO(staffDTO);
+			
+			staffDTO.setStaffSignDTO(staffSignDTO);
+			
+			StaffDTO result = staffRepository.saveAndFlush(staffDTO);
+			
+			if (result != null) return true;
+			else return false;
+		} else {
+			return false;
+		}
 	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType) {

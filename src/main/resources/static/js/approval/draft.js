@@ -264,3 +264,7 @@ function sendApproval() {
 	  }
 	});
 }
+
+function openApprovalSign() {
+	window.open("/approval/sign", "_blank", "width=300, height=400, top=250, left=400, menubar=no, toolbar=no, location=no, status=no")
+}

@@ -42,7 +42,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/approval/sign">
+			        <a class="nav-link text-dark" onclick="openApprovalSign()">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="서명 등록">fact_check</i>
 			          <span class="nav-link-text ms-1 text-sm">서명 등록</span>
 			        </a>
@@ -132,6 +132,10 @@
 		document.querySelector("i[data-content='전자결재']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='내 수신함']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "내 수신함"
+		
+		function openApprovalSign() {
+			window.open("/approval/sign", "_blank", "width=300, height=400, top=250, left=400, menubar=no, toolbar=no, location=no, status=no")
+		}
 	</script>
 </body>
 
