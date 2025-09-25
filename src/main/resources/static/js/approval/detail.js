@@ -5,6 +5,11 @@ function checkApproval(result) {
 		apvrComment = apvrComment.value
 	}
 	
+	if (!hasSign) {
+		Swal.fire({ text: "먼저 서명을 등록해주세요.", icon: "warning" })
+		return
+	}
+	
 	if (result) {
 		Swal.fire({
 		  text: "결재하시겠습니까?",

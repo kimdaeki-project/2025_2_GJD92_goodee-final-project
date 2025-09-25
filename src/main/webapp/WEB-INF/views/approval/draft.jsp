@@ -198,6 +198,7 @@
 		})
 		
 		const loginStaffCode = ${ staff.staffCode }
+		const hasSign = ${ not empty staff.staffSignDTO ? true : false }
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script src="/js/approval/draft.js"></script>

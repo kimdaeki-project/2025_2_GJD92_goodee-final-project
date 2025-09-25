@@ -115,6 +115,7 @@
 			    </div>
 			    
 			    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
+			    	<sec:authentication property="principal" var="staff"/>
 			    
 			    	<c:if test="${ approval.aprvType eq 901 }">
 		    			<c:import url="/WEB-INF/views/approval/detail-vacation.jsp"></c:import>
@@ -237,6 +238,8 @@
 		document.querySelector("i[data-content='전자결재']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='내 결재함']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "전자 문서 조회"
+		
+		const hasSign = ${ not empty staff.staffSignDTO ? true : false }
 	</script>
 	<script src="/js/approval/detail.js"></script>
 </body>
