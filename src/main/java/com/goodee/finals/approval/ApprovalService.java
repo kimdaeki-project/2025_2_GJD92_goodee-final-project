@@ -2,6 +2,7 @@ package com.goodee.finals.approval;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.goodee.finals.common.attachment.ApprovalAttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
+import com.goodee.finals.common.attachment.StaffSignDTO;
 import com.goodee.finals.common.file.FileService;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.StaffDTO;
+import com.goodee.finals.staff.StaffRepository;
 import com.goodee.finals.staff.StaffService;
 
 import jakarta.transaction.Transactional;
@@ -44,6 +47,7 @@ public class ApprovalService {
 	private static final Integer WAIT = 720; // 처리대기
 	private static final Integer READY = 721; // 처리요청
 	private static final Integer DONE = 722; // 처리완료
+	private static final Integer DISABLED = 723; // 처리불능
 	
 	@Autowired
 	private DeptRepository deptRepository;
@@ -51,6 +55,8 @@ public class ApprovalService {
 	private ApprovalRepository approvalRepository;
 	@Autowired
 	private StaffService staffService;
+	@Autowired
+	private StaffRepository staffRepository;
 	@Autowired
 	private FileService fileService;
 	@Autowired
@@ -84,8 +90,16 @@ public class ApprovalService {
 		return approvalRepository.findAllApprovalFinish(staffCode, search, pageable);
 	}
 	
+	public Page<ApprovalResultDTO> getApprovalRecept(Integer staffCode, String search, Pageable pageable) {
+		return approvalRepository.findAllReceive(staffCode, search, pageable);
+	}
+	
 	public ApprovalDTO getApprovalDetail(Integer aprvCode) {
 		return approvalRepository.findById(aprvCode).orElseThrow();
+	}
+	
+	public AttachmentDTO getAttach(Long attachNum) {
+		return attachmentRepository.findById(attachNum).orElseThrow();
 	}
 
 	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach) throws IOException {
@@ -100,6 +114,171 @@ public class ApprovalService {
 		
 		if (result != null) return true;
 		else return false;
+	}
+	
+	public boolean sendVacationDraft(InputApprovalDTO inputApprovalDTO, VacationDTO vacationDTO) {
+		inputApprovalDTO.setAprvContent("상기의 사유로 휴가를 신청합니다.");
+		inputApprovalDTO.setAprvExe(vacationDTO.getVacStart());
+		
+		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, VACATION);
+		setApprover(draft, inputApprovalDTO.getApprover());
+		
+		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
+		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
+		
+		draft.setVacationDTO(vacationDTO);
+		vacationDTO.setApprovalDTO(draft);
+		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
+	public boolean sendOvertimeDraft(InputApprovalDTO inputApprovalDTO, OvertimeDTO overtimeDTO) {
+		inputApprovalDTO.setAprvContent("상기의 사유로 연장 근무를 신청합니다.");
+		inputApprovalDTO.setAprvExe(overtimeDTO.getOverStart().toLocalDate());
+		
+		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, OVERTIME);
+		setApprover(draft, inputApprovalDTO.getApprover());
+		
+		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
+		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
+		
+		draft.setOvertimeDTO(overtimeDTO);
+		overtimeDTO.setApprovalDTO(draft);
+		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
+	public boolean sendEarlyDraft(InputApprovalDTO inputApprovalDTO, EarlyDTO earlyDTO) {
+		inputApprovalDTO.setAprvContent("상기의 사유로 조퇴를 신청합니다.");
+		inputApprovalDTO.setAprvExe(earlyDTO.getEarlyDtm().toLocalDate());
+		
+		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, EARLY);
+		setApprover(draft, inputApprovalDTO.getApprover());
+		
+		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
+		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
+		
+		draft.setEarlyDTO(earlyDTO);
+		earlyDTO.setApprovalDTO(draft);
+		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
+		
+		if (result != null) return true;
+		else return false;
+	}
+
+	public boolean checkApprovalTrue(Integer aprvCode, String apvrComment) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ApprovalDTO approval = approvalRepository.findById(aprvCode).orElseThrow();
+		
+		int nextSeq = 0;
+		for (ApproverDTO approver : approval.getApproverDTOs()) {
+			if (approver.getStaffDTO().getStaffCode().equals(staffDTO.getStaffCode())) {
+				if (approver.getApvrType().equals(AGREER)) {
+					approver.setApvrResult(true);
+					approver.setApvrState(DONE);
+					approver.setApvrDtm(LocalDateTime.now());
+					approver.setApvrComment(apvrComment);
+					
+					ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+					
+					if (result != null) return true;
+					else return false;
+					
+				} else if (approver.getApvrType().equals(CONFIRMER)) {
+					approver.setApvrResult(true);
+					approver.setApvrState(DONE);
+					approver.setApvrDtm(LocalDateTime.now());
+					approver.setApvrComment(apvrComment);
+					
+					approval.setAprvState(FINISH);
+					ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+					
+					if (result != null) return true;
+					else return false;
+					
+				} else {
+					approver.setApvrResult(true);
+					approver.setApvrState(DONE);
+					approver.setApvrDtm(LocalDateTime.now());
+					approver.setApvrComment(apvrComment);
+					
+					nextSeq = approver.getApvrSeq() + 1;
+					for (ApproverDTO nextApprover : approval.getApproverDTOs()) {
+						if (nextApprover.getApvrSeq() == nextSeq) {
+							nextApprover.setApvrState(READY);
+						}
+					}
+					
+					approval.setAprvCrnt(approval.getAprvCrnt() + 1);
+					ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+					
+					if (result != null) return true;
+					else return false;
+					
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkApprovalFalse(Integer aprvCode, String apvrComment) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ApprovalDTO approval = approvalRepository.findById(aprvCode).orElseThrow();
+		
+		for (ApproverDTO approver : approval.getApproverDTOs()) {
+			if (approver.getStaffDTO().getStaffCode().equals(staffDTO.getStaffCode())) {
+				approver.setApvrResult(false);
+				approver.setApvrState(DONE);
+				approver.setApvrDtm(LocalDateTime.now());
+				approver.setApvrComment(apvrComment);
+			} else if (approver.getApvrState().equals(WAIT) || approver.getApvrState().equals(READY)) {
+				approver.setApvrState(DISABLED);
+			}
+		}
+		
+		approval.setAprvState(DENY);
+		ApprovalDTO result = approvalRepository.saveAndFlush(approval);
+		
+		if (result != null) return true;
+		else return false;
+	}
+	
+	public boolean setApprovalSign(StaffDTO staffDTO, MultipartFile attach) throws IOException {
+		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+		
+		if (attach != null && attach.getSize() > 0) {
+			if (staffDTO.getStaffSignDTO() != null) {
+				fileService.fileDelete(FileService.SIGN, staffDTO.getStaffSignDTO().getAttachmentDTO().getSavedName());
+				attachmentRepository.deleteById(staffDTO.getStaffSignDTO().getAttachmentDTO().getAttachNum());				
+			}
+			
+			String fileName = fileService.saveFile(FileService.SIGN, attach);
+			
+			AttachmentDTO attachmentDTO = new AttachmentDTO();
+			attachmentDTO.setOriginName(attach.getOriginalFilename());
+			attachmentDTO.setSavedName(fileName);
+			attachmentDTO.setAttachSize(attach.getSize());
+			
+			attachmentRepository.save(attachmentDTO);
+			
+			StaffSignDTO staffSignDTO = new StaffSignDTO();
+			staffSignDTO.setAttachmentDTO(attachmentDTO);
+			staffSignDTO.setStaffDTO(staffDTO);
+			
+			staffDTO.setStaffSignDTO(staffSignDTO);
+			
+			StaffDTO result = staffRepository.saveAndFlush(staffDTO);
+			
+			if (result != null) return true;
+			else return false;
+		} else {
+			return false;
+		}
 	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType) {
@@ -167,6 +346,7 @@ public class ApprovalService {
 			approverDTO.setStaffDTO(staffDTO);
 			approverDTO.setApvrType(AGREER);
 			approverDTO.setApvrSeq(0);
+			approverDTO.setApvrState(READY);
 			
 			draft.getApproverDTOs().add(approverDTO);
 		}
@@ -196,5 +376,5 @@ public class ApprovalService {
 		
 		if (attachList.size() != 0) draft.setApprovalAttachmentDTOs(attachList);
 	}
-
+	
 }

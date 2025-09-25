@@ -2,12 +2,15 @@ package com.goodee.finals.approval;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffService;
@@ -98,8 +102,17 @@ public class ApprovalController {
 		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
 		model.addAttribute("approval", approvalDTO);
 		
-		List<DeptDTO> deptList = approvalService.getDeptList();
-		model.addAttribute("deptList", deptList);
+		// List<DeptDTO> deptList = approvalService.getDeptList();
+		// model.addAttribute("deptList", deptList);
+		
+		if (approvalDTO.getOvertimeDTO() != null) {
+			model.addAttribute("overtimeStart", approvalDTO.getOvertimeDTO().getOverStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+			model.addAttribute("overtimeEnd", approvalDTO.getOvertimeDTO().getOverEnd().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+		}
+		
+		if (approvalDTO.getEarlyDTO() != null) {
+			model.addAttribute("earlyTime", approvalDTO.getEarlyDTO().getEarlyDtm().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+		}
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -113,6 +126,32 @@ public class ApprovalController {
 		}
 		
 		return "approval/detail";
+	}
+	
+	@PostMapping("{aprvCode}/check")
+	public String postApprovalCheck(@PathVariable Integer aprvCode, String apvrResult, String apvrComment, Model model) {
+		boolean result = false;
+		
+		if (apvrResult.equals("true")) {
+			result = approvalService.checkApprovalTrue(aprvCode, apvrComment);
+		} else {
+			result = approvalService.checkApprovalFalse(aprvCode, apvrComment);
+		}
+		
+		String resultMsg = "결재 처리 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "결재가 처리되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval/" + aprvCode;
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 	@GetMapping("staff")
@@ -139,6 +178,7 @@ public class ApprovalController {
 		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "common");
 		
 		return "approval/draft";
 	}
@@ -161,6 +201,177 @@ public class ApprovalController {
 		model.addAttribute("resultIcon", resultIcon);
 		
 		return "common/result";
+	}
+	
+	@GetMapping("draft/vacation")
+	public String getApprovalDraftVacation(Model model) {
+		LocalDate nowDate = LocalDate.now();
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "vacation");
+		
+		return "approval/draft";
+	}
+	
+	@PostMapping("draft/vacation")
+	public String postApprovalDraftVacation(InputApprovalDTO inputApprovalDTO, VacationDTO vacationDTO, Model model) {
+		boolean result = approvalService.sendVacationDraft(inputApprovalDTO, vacationDTO);
+		
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("draft/overtime")
+	public String getApprovalDraftOvertime(Model model) {
+		LocalDate nowDate = LocalDate.now();
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "overtime");
+		
+		return "approval/draft";
+	}
+	
+	@PostMapping("draft/overtime")
+	public String postApprovalDraftOvertime(InputApprovalDTO inputApprovalDTO, OvertimeDTO overtimeDTO, Model model) {
+		boolean result = approvalService.sendOvertimeDraft(inputApprovalDTO, overtimeDTO);
+		
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("draft/early")
+	public String getApprovalDraftEarly(Model model) {
+		LocalDate nowDate = LocalDate.now();
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "early");
+		
+		return "approval/draft";
+	}
+	
+	@PostMapping("draft/early")
+	public String postApprovalDraftEarly(InputApprovalDTO inputApprovalDTO, EarlyDTO earlyDTO, Model model) {
+		boolean result = approvalService.sendEarlyDraft(inputApprovalDTO, earlyDTO);
+		
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("recept")
+	public String getApprovalRecept(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<ApprovalResultDTO> approvalList = approvalService.getApprovalRecept(staffDTO.getStaffCode(), search, pageable);
+		model.addAttribute("approvalList", approvalList);
+		
+		return "approval/receive";
+	}
+	
+	@GetMapping("sign")
+	public String getApprovalSign() {
+		return "approval/sign";
+	}
+	
+	@PostMapping("sign")
+	@ResponseBody
+	public boolean postApprovalSign(MultipartFile attach) throws IOException {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		boolean result = approvalService.setApprovalSign(staffDTO, attach);
+		
+		if (result) {
+			staffDTO = staffService.getStaff(staffDTO.getStaffCode());
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(staffDTO, authentication.getCredentials(), authentication.getAuthorities()));
+		}
+		
+		return result;
+	}
+	
+	@GetMapping("{attachNum}/download")
+	public String download(@PathVariable String attachNum, Model model) {
+		AttachmentDTO result = approvalService.getAttach(Long.valueOf(attachNum));
+		model.addAttribute("file", result);
+		model.addAttribute("type", "approval");
+		
+		return "fileDownView";
 	}
 	
 }
