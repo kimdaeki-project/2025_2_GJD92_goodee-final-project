@@ -3,9 +3,12 @@ package com.goodee.finals.calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,11 +29,6 @@ public class CalendarController {
 		return "calendar/calendar";
 	}
 	
-	@GetMapping("list")
-	public String list() {
-		return "calendar/list";
-	}
-	
 	@GetMapping("eventList")
 	@ResponseBody
 	public List<CalendarDTO> getEventList() {
@@ -42,5 +40,16 @@ public class CalendarController {
 		}
 		return list;
 	}
+	
+	@PostMapping("add")
+	@ResponseBody
+	public CalendarDTO addEvent(@RequestBody CalendarDTO calendarDTO, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
+		
+		calendarDTO = calendarService.addEvent(staffDTO, calendarDTO);
+		
+		return calendarDTO;
+	}
+	
 	
 }

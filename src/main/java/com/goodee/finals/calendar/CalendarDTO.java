@@ -1,6 +1,6 @@
 package com.goodee.finals.calendar;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.DeptDTO;
@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -34,10 +33,11 @@ public class CalendarDTO {
 	private String calPlace;
 	private String calContent;
 	private Boolean calEnabled;
+	private Boolean calIsAllDay;
 	@NotBlank
-	private LocalDate calStart;
+	private LocalDateTime calStart;
 	@NotBlank
-	private LocalDate calEnd;
+	private LocalDateTime calEnd;
 	
 	@JsonIgnore
 	@ManyToOne

@@ -8,7 +8,6 @@
 	<title>캘린더</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
-	<link rel="stylesheet" href="/css/calendar/calendar-lux.css" />
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -32,7 +31,9 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<c:import url="/WEB-INF/views/calendar/calendar-add.jsp"></c:import>
 	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 	<script>
 		document.querySelector("i[data-content='일정']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "일정";

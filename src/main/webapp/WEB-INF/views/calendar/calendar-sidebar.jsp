@@ -6,11 +6,11 @@
 	<div class="w-100">
 		<!-- 일정 목록 ,쓰기 버튼 시작 -->
 		<ul class="navbar-nav">
+<!-- 			<li class="nav-item"> -->
+<!-- 				<a href="/calendar/list" class="btn btn-dark w-100 mt-2 mb-3">일정 목록</a> -->
+<!-- 			</li> -->
 			<li class="nav-item">
-				<a href="/calendar/list" class="btn btn-dark w-100 mt-2 mb-3">일정 목록</a>
-			</li>
-			<li class="nav-item">
-				<button type="button" class="btn btn-dark w-100 mb-2">일정 쓰기</button>
+				<button type="button" class="btn btn-dark w-100 mb-2" data-bs-toggle="modal" data-bs-target="#addEventModal">일정 쓰기</button>
 			</li>
 		</ul>
 		<!-- 일정 목록 ,쓰기 버튼 끝-->
