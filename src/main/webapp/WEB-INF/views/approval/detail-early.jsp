@@ -33,7 +33,15 @@
  						</div>
  						
  						<div class="d-flex justify-content-center align-items-center" style="height: 70px;">
- 							${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }
+ 							<c:choose>
+ 								<c:when test="${ approver.apvrState eq 722 and approver.apvrResult }">
+ 									<img width="70" height="70" src="/file/sign/${ approver.staffDTO.staffSignDTO.attachmentDTO.savedName }" />
+ 								</c:when>
+ 								
+ 								<c:otherwise>
+		 							${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }							
+ 								</c:otherwise>
+ 							</c:choose>
  						</div>
  					</div>
 						
@@ -46,7 +54,7 @@
 					</div>
 					
 					<div class="d-flex justify-content-center align-items-center" style="height: 70px;">
-						${ approval.staffDTO.jobDTO.jobDetail } ${ approval.staffDTO.staffName }
+						<img width="70" height="70" src="/file/sign/${ approval.staffDTO.staffSignDTO.attachmentDTO.savedName }" />
 					</div>
 				</div>
 				

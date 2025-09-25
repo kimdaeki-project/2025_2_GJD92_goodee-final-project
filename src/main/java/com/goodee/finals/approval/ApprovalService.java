@@ -252,8 +252,10 @@ public class ApprovalService {
 		staffDTO = staffService.getStaff(staffDTO.getStaffCode());
 		
 		if (attach != null && attach.getSize() > 0) {
-			fileService.fileDelete(FileService.SIGN, staffDTO.getStaffSignDTO().getAttachmentDTO().getSavedName());
-			attachmentRepository.deleteById(staffDTO.getStaffSignDTO().getAttachmentDTO().getAttachNum());
+			if (staffDTO.getStaffSignDTO() != null) {
+				fileService.fileDelete(FileService.SIGN, staffDTO.getStaffSignDTO().getAttachmentDTO().getSavedName());
+				attachmentRepository.deleteById(staffDTO.getStaffSignDTO().getAttachmentDTO().getAttachNum());				
+			}
 			
 			String fileName = fileService.saveFile(FileService.SIGN, attach);
 			
