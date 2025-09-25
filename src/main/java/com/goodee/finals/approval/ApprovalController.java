@@ -3,6 +3,7 @@ package com.goodee.finals.approval;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
@@ -243,7 +246,18 @@ public class ApprovalController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
-		return "common/result";
+		// 알림
+		List<String> wsSub = new ArrayList<>();
+		for (String sub : inputApprovalDTO.getApprover()) wsSub.add(sub);
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+			model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.");
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		return "common/notifyResult";
 	}
 	
 	@GetMapping("draft/overtime")

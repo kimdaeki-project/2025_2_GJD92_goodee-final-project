@@ -23,10 +23,10 @@ function connectWebSocket(staffCode) {
 function showNotification(msg, destination) {
     const notyf = new Notyf();
     notyf.success('새로운 알림이 도착했습니다!');
-	fetch('/alert/save', {
+	fetch('/alert/new', {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ alertMsg: msg, staffCodeToDb: destination.split("/").pop() })    
+		body: JSON.stringify({ staffCodeToDb: destination.split("/").pop() })    
 	})
 	.then(response => response.json())
 	.then(response => {

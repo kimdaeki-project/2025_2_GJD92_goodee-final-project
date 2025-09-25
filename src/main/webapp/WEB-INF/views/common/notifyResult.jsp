@@ -24,9 +24,20 @@
 			const url = "${ resultUrl }"
 			
 		  if (url != null && url != "") {
-			  const wsSub = "${ wsSub }";
-			  const wsMsg = "${ wsMsg }"
-			  stompClient.send("/pub/notify/" + wsSub, {}, wsMsg);
+			  const wsSub = ${ wsSub }
+			  const wsMsg = "${ wsMsg }";
+			  wsSub.forEach(sub => {
+				fetch('/alert/save', {
+					method: 'post',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ alertMsg: wsMsg, staffCodeToDb: sub })    
+				})
+				.then(response => response.json())
+				.then(response => console.log(response));
+				stompClient.send("/pub/notify/" + sub, {}, wsMsg);
+			  });
+/* 			  wsSub.forEach(sub => {
+			  }); */
 			  location.href = url
 		  } else {
 			  history.back()

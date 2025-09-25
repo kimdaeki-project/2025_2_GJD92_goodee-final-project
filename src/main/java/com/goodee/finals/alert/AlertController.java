@@ -35,4 +35,11 @@ public class AlertController {
 		else return false;
 	}
 	
+	@PostMapping("new") @ResponseBody
+	public AlertDTO getNewAlert(@RequestBody AlertDTO alertDTO) {
+		AlertDTO result = alertService.getNewAlert(alertDTO);
+		if (result != null) return result;
+		else return null;
+	}	
+	
 }

@@ -10,4 +10,6 @@ public interface AlertRepository extends JpaRepository<AlertDTO, Long> {
 
 	List<AlertDTO> findAllByStaffDTOStaffCodeOrderByAlertNumAsc(Integer staffCode);
 
+	AlertDTO findFirstByStaffDTOStaffCodeOrderByAlertNumDesc(Integer staffCode);
+
 }

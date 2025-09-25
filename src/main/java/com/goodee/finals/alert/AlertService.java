@@ -36,5 +36,10 @@ public class AlertService {
 		AlertDTO result = alertRepository.save(alertFromDb.get());
 		return result;
 	}
+
+	public AlertDTO getNewAlert(AlertDTO alertDTO) {
+		AlertDTO result = alertRepository.findFirstByStaffDTOStaffCodeOrderByAlertNumDesc(alertDTO.getStaffCodeToDb());
+		return result;
+	}
 	
 }
