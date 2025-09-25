@@ -250,6 +250,11 @@ function renderStaff(list) {
 function sendApproval() {
 	const form = document.querySelector("#approvalForm")
 	
+	if (!hasSign) {
+		Swal.fire({ text: "먼저 서명을 등록해주세요.", icon: "warning" })
+		return
+	}
+	
 	Swal.fire({
 	  text: "기안을 등록 하시겠습니까?",
 	  icon: "question",
@@ -263,4 +268,8 @@ function sendApproval() {
 	    form.submit();
 	  }
 	});
+}
+
+function openApprovalSign() {
+	window.open("/approval/sign", "_blank", "width=300, height=400, top=250, left=400, menubar=no, toolbar=no, location=no, status=no")
 }
