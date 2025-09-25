@@ -117,7 +117,7 @@
 			    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
 			    
 			    	<c:if test="${ approval.aprvType eq 901 }">
-		    			<c:import url="/WEB-INF/views/approval/detail-common.jsp"></c:import>
+		    			<c:import url="/WEB-INF/views/approval/detail-vacation.jsp"></c:import>
 		    		</c:if>
 		    		
 		    		<c:if test="${ approval.aprvType eq 902 }">

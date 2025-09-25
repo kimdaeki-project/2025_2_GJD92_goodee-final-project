@@ -191,6 +191,95 @@ public class ApprovalController {
 		return "common/result";
 	}
 	
+	@GetMapping("draft/vacation")
+	public String getApprovalDraftVacation(Model model) {
+		LocalDate nowDate = LocalDate.now();
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "vacation");
+		
+		return "approval/draft";
+	}
+	
+	@PostMapping("draft/vacation")
+	public String postApprovalDraftVacation(InputApprovalDTO inputApprovalDTO, VacationDTO vacationDTO, Model model) {
+		boolean result = approvalService.sendVacationDraft(inputApprovalDTO, vacationDTO);
+		
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
+	@GetMapping("draft/overtime")
+	public String getApprovalDraftOvertime(Model model) {
+		LocalDate nowDate = LocalDate.now();
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "overtime");
+		
+		return "approval/draft";
+	}
+	
+	@GetMapping("draft/early")
+	public String getApprovalDraftEarly(Model model) {
+		LocalDate nowDate = LocalDate.now();
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		
+		int year = LocalDate.now().getYear();
+		Integer lastStaffCode = approvalService.findLastAprvCode();
+		
+		Integer aprvCode = null;
+		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+			aprvCode = (year * 1000000) + 1;
+		} else {
+			aprvCode = lastStaffCode + 1;
+		}
+		
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("aprvCode", aprvCode);
+		model.addAttribute("draftForm", "early");
+		
+		return "approval/draft";
+	}
+	
 	@GetMapping("recept")
 	public String getApprovalRecept(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";

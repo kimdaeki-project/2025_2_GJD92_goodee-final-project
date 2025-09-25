@@ -102,19 +102,19 @@
 				    <div class="col-auto" style="width: 180px;">
 				    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
 		    				<div class="mt-4">
-			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">기안서</a>
+			    				<a href="/approval/draft" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">기안서</a>
 		    				</div>
 		    				
 		    				<div class="mt-3">
-			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">휴가 신청서</a>
+			    				<a href="/approval/draft/vacation" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">휴가 신청서</a>
 		    				</div>
 		    				
 		    				<div class="mt-3">
-			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">연장 근무 신청서</a>
+			    				<a href="/approval/draft/overtime" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">연장 근무 신청서</a>
 		    				</div>
 		    				
 		    				<div class="mt-3">
-			    				<a href="#" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">조기 퇴근 신청서</a>
+			    				<a href="/approval/draft/early" class="text-start text-decoration-underline" style="color: #686868; font-weight: 500; ">조기 퇴근 신청서</a>
 		    				</div>
 		    			</div>
 		    			
@@ -124,10 +124,10 @@
 				    </div>
 				    
 				    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
-			    		<sec:authentication property="principal" var="staff"/>
+				    	<sec:authentication property="principal" var="staff"/>
 			    		
 			    		<c:if test="${ draftForm eq 'vacation' }">
-			    			<c:import url="/WEB-INF/views/approval/draft-common.jsp"></c:import>
+			    			<c:import url="/WEB-INF/views/approval/draft-vacation.jsp"></c:import>
 			    		</c:if>
 			    		
 			    		<c:if test="${ draftForm eq 'overtime' }">
