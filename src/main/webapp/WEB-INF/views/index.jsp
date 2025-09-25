@@ -260,12 +260,20 @@
 	        </div>
 
       	</section>
+      	
+      	<button id="webSocket-connection-test">웹소켓 테스트</button>
     
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 		document.querySelector("i[data-content='대시보드']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	</script>
+	<script type="text/javascript">
+		const wct = document.querySelector('#webSocket-connection-test');
+		wct.addEventListener('click', () => {
+			stompClient.send("/pub/notify/" + 20250001, {}, "알림 발생");
+		});
 	</script>
 </body>
 
