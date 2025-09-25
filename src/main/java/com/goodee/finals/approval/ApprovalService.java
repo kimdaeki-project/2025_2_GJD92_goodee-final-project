@@ -129,6 +129,24 @@ public class ApprovalService {
 		if (result != null) return true;
 		else return false;
 	}
+	
+	public boolean sendOvertimeDraft(InputApprovalDTO inputApprovalDTO, OvertimeDTO overtimeDTO) {
+		inputApprovalDTO.setAprvContent("상기의 사유로 연장 근무를 신청합니다.");
+		inputApprovalDTO.setAprvExe(overtimeDTO.getOverStart().toLocalDate());
+		
+		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, OVERTIME);
+		setApprover(draft, inputApprovalDTO.getApprover());
+		
+		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
+		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
+		
+		draft.setOvertimeDTO(overtimeDTO);
+		overtimeDTO.setApprovalDTO(draft);
+		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
+		
+		if (result != null) return true;
+		else return false;
+	}
 
 	public boolean checkApprovalTrue(Integer aprvCode, String apvrComment) {
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

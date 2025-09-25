@@ -2,6 +2,7 @@ package com.goodee.finals.approval;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,8 +100,13 @@ public class ApprovalController {
 		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
 		model.addAttribute("approval", approvalDTO);
 		
-		List<DeptDTO> deptList = approvalService.getDeptList();
-		model.addAttribute("deptList", deptList);
+		// List<DeptDTO> deptList = approvalService.getDeptList();
+		// model.addAttribute("deptList", deptList);
+		
+		if (approvalDTO.getOvertimeDTO() != null) {
+			model.addAttribute("overtimeStart", approvalDTO.getOvertimeDTO().getOverStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+			model.addAttribute("overtimeEnd", approvalDTO.getOvertimeDTO().getOverEnd().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+		}
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -255,6 +261,26 @@ public class ApprovalController {
 		model.addAttribute("draftForm", "overtime");
 		
 		return "approval/draft";
+	}
+	
+	@PostMapping("draft/overtime")
+	public String postApprovalDraftOvertime(InputApprovalDTO inputApprovalDTO, OvertimeDTO overtimeDTO, Model model) {
+		boolean result = approvalService.sendOvertimeDraft(inputApprovalDTO, overtimeDTO);
+		
+		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "기안을 등록했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 	@GetMapping("draft/early")

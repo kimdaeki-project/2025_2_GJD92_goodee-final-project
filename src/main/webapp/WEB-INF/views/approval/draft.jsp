@@ -131,7 +131,7 @@
 			    		</c:if>
 			    		
 			    		<c:if test="${ draftForm eq 'overtime' }">
-			    			<c:import url="/WEB-INF/views/approval/draft-common.jsp"></c:import>
+			    			<c:import url="/WEB-INF/views/approval/draft-overtime.jsp"></c:import>
 			    		</c:if>
 			    		
 			    		<c:if test="${ draftForm eq 'early' }">
