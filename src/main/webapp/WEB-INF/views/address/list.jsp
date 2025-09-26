@@ -26,32 +26,13 @@ aside.sidenav {
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    <aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="width: 200px; height: 92vh;">
-    		<div class="w-100">
-			    <ul class="navbar-nav">
-
-			    	<li class="nav-item">
-			        <a class="nav-link text-dark" href="/product">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품 리스트">remove_shopping_cart</i>
-			          <span class="nav-link-text ms-1 text-sm">물품 리스트</span>
-			        </a>
-			      </li>
-
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/productManage">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
-			          <span class="nav-link-text ms-1 text-sm">물품관리대장</span>
-			        </a>
-			      </li>
-
-			    </ul>
-			  </div>
-    	</aside>
+    <c:import url="/WEB-INF/views/address/address-sidebar.jsp"></c:import>
 
 	    <section class="flex-grow-1 border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh ; overflow: auto;">
 
 	    <div class="d-flex justify-content-end align-items-end">
 			<div class="input-group">
+				<span>총 건</span>
 				<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
 				<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
 			</div>
@@ -62,10 +43,12 @@ aside.sidenav {
 			    		<table class="table text-center">
 			    			<thead>
 			    				<tr>
-			    					<th class="col-2">물품번호</th>
-			    					<th class="col-2">물품타입</th>
-			    					<th class="col-3">물품명</th>
-			    					<th class="col-1">수량</th>
+			    					<th class="col-2">사원번호</th>
+			    					<th class="col-2">이름</th>
+			    					<th class="col-3">부서</th>
+			    					<th class="col-1">직위</th>
+			    					<th class="col-1">연락처</th>
+			    					<th class="col-1">이메일</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -75,6 +58,8 @@ aside.sidenav {
 				    					<td>${ product.productCode }</td>
 				    					<td>${ product.productTypeDTO.productTypeName}</td>
 				    					<td><a href="/product/${ product.productCode }" style="color: #737373;">${ product.productName }</a></td>
+				    					<td>${ product.productAmount }</td>
+				    					<td>${ product.productAmount }</td>
 				    					<td>${ product.productAmount }</td>
 			    					</tr>
 			    				</c:forEach>
@@ -116,14 +101,13 @@ aside.sidenav {
 						</nav>
 			    </div>
 
-			    <button onclick="location.href='/product/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
 	    </section>
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script src="/js/product/list.js"></script>
 	<script>
-		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("i[data-content='주소록']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='물품 리스트']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "재고"
 	</script>

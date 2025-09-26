@@ -24,5 +24,5 @@ public interface NoticeRepository extends JpaRepository<NoticeDTO, Long> {
 			"(n.noticeTitle LIKE %:keyword% OR n.staffDTO.staffName LIKE %:keyword%)")
 	List<NoticeDTO> pinned(@Param("keyword") String keyword);
 
-	List<NoticeDTO> findTop5ByNoticePinnedFalseOrderByNoticeDateDescNoticeNumDesc();
+	List<NoticeDTO> findTop5ByNoticePinnedFalseAndNoticeDeleteFalseOrderByNoticeDateDescNoticeNumDesc();
 }

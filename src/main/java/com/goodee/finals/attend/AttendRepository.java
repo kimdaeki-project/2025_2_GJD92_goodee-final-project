@@ -38,9 +38,13 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 	@Query("SELECT a FROM AttendDTO a " +
 	           "WHERE FUNCTION('YEAR', a.attendDate) = :year " +
 	           "AND FUNCTION('MONTH', a.attendDate) = :month " +
+	           "AND FUNCTION('DAY', a.attendDate) NOT IN :holiday " +
 	           "AND a.staffDTO.staffCode = :staffCode")
 	Page<AttendDTO> findMonthlyAttendances(@Param("year") int year,
                                            @Param("month") int month,
                                            @Param("staffCode") Integer staffCode,
-                                           Pageable pageable);
+                                           Pageable pageable, List<Integer> holiday);
+	
+	@Query("SELECT h FROM HolidayDTO h WHERE to_char(h.date, 'yyyymm') = :monthStr")
+	List<HolidayDTO> findByMonth(String monthStr);
 }
