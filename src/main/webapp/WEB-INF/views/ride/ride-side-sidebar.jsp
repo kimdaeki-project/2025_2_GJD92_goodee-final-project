@@ -9,7 +9,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/delete">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="삭제된 어트랙션">attractions</i>
           <span class="nav-link-text ms-1 text-sm">삭제된 어트랙션</span>
         </a>
@@ -21,13 +21,13 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/fault">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="고장 신고 목록">attractions</i>
           <span class="nav-link-text ms-1 text-sm">고장 신고 목록</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
+        <a class="nav-link text-dark" href="/fault/write">
           <i class="material-symbols-rounded opacity-5 fs-5" data-content="고장 신고">attractions</i>
           <span class="nav-link-text ms-1 text-sm">고장 신고</span>
         </a>
