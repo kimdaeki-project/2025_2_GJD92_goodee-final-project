@@ -144,7 +144,10 @@
 						<td>${ i.isptEnd }</td>
 						<!--  체크리스트 -->
 						<td>
-							<a href="/inspection/${ i.inspectionAttachmentDTO.attachmentDTO.attachNum }/download">다운로드</a>
+						  <a href="/inspection/${ i.inspectionAttachmentDTO.attachmentDTO.attachNum }/download"
+						     style="color:#1900F8; text-decoration:none;">
+						     다운로드
+						  </a>
 						</td>
 					</tr>
 				</c:forEach>

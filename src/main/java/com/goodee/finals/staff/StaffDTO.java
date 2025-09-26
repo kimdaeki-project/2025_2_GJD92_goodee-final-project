@@ -14,12 +14,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
-import com.goodee.finals.calendar.CalendarDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
+import com.goodee.finals.common.attachment.StaffSignDTO;
+import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
-import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
@@ -76,7 +76,8 @@ public class StaffDTO implements UserDetails {
 	private Integer staffUsedLeave;
 	private Integer staffRemainLeave;
 	
-	@OneToMany(mappedBy = "staffDTO")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<NoticeDTO> notices;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
@@ -85,22 +86,48 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private StaffAttachmentDTO staffAttachmentDTO;
+	
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private StaffSignDTO staffSignDTO;
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<ApprovalDTO> approvalDTOs;
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<ApproverDTO> approverDTOs;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<LostDTO> LostDTOs;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<ProductDTO> ProductDTOs;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<ProductManageDTO> ProductManageDTOs;
 	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<RideDTO> rideDTOs;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<InspectionDTO> inspectionDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<DriveDTO> driveDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<DriveShareDTO> driveShareDTOs;
+	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<DocumentDTO> documentDTOs;
 	
 	@Column(insertable = false)
 	@ColumnDefault("1")
@@ -108,30 +135,12 @@ public class StaffDTO implements UserDetails {
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffEnabled;
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
-	private List<RideDTO> rideDTOs;
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
-	private List<InspectionDTO> inspectionDTOs;
 	
 	// For Input
 	@Transient
 	private Integer inputDeptCode;
 	@Transient
 	private Integer inputJobCode;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<DriveDTO> driveDTOs;
-	
-	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<DriveShareDTO> driveShareDTOs;
-	
-	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<DocumentDTO> documentDTOs;
-	
-	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<CalendarDTO> calendarDTOs;
 	
 	@Override
 	public String getUsername() {

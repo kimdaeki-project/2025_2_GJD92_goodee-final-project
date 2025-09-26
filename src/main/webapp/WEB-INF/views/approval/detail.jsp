@@ -58,14 +58,14 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/approval/recept">
+			        <a class="nav-link text-dark" href="/approval/recept?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="내 수신함">fact_check</i>
 			          <span class="nav-link-text ms-1 text-sm">내 수신함</span>
 			        </a>
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/approval/sign">
+			        <a class="nav-link text-dark" onclick="openApprovalSign()">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="서명 등록">fact_check</i>
 			          <span class="nav-link-text ms-1 text-sm">서명 등록</span>
 			        </a>
@@ -75,125 +75,77 @@
 			  </div>
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
-	    	<sec:authentication property="principal" var="staff"/>
 	    	
 	    	<div class="mt-5 row d-flex justify-content-between" style="width: 95%; margin: 0 auto;">
 			    <div class="col-auto" style="width: 180px;">
 			    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
-	    				
+			    		<div class="mt-1">
+		    				<ul class="list-unstyled">
+			    				<c:forEach var="approver" items="${ approval.approverDTOs }">
+			    					<c:if test="${ not empty approver.apvrComment }">
+			    						
+			    						<li>
+												<div class="d-flex justify-content-start align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+												</div>
+				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+													<span> ${ approver.apvrComment }</span>
+												</div>
+				    					</li>
+			    						
+			    					</c:if>
+			    				</c:forEach>		    				
+		    				</ul>
+		    			</div>
 	    			</div>
 	    			
-	    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-5 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재</button>
-	    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-2 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>반려</button>
+	    			<c:if test="${ approval.aprvState ne 702 and approval.aprvState ne 703 }">
+		    			<div class="mt-3">
+		    				<div class="text-center mb-1">결재 의견</div>
+		    				<form id="apvrContentForm" method="POST" action="/approval/${ approval.aprvCode }/check">
+		    					<input type="hidden" id="apvrResult" name="apvrResult" value="" />
+			    				<textarea id="apvrComment" name="apvrComment" style="width: 100%; height: 100px; resize: none;"></textarea>
+		    				</form>
+		    			</div>
+	    			
+		    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-4 w-100" onclick="checkApproval(true)" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재</button>
+		    			<button type="button" class="btn btn-outline-secondary bg-gradient-dark text-white mt-2 w-100" onclick="checkApproval(false)" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>반려</button>
+	    			</c:if>
 			    </div>
 			    
 			    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
-		    		<table class="mt-5 mb-5 text-center" style="width: 100%">
-			    		<tr class="hard-line" style="height: 100px;">
-			    			<td colspan="2" class="hard-line"><p class="d-flex justify-content-between" style="width: 200px; margin: 0 auto;"><span style="font-size: 48px; font-weight: 700;">기</span><span style="font-size: 48px; font-weight: 700;">안</span><span style="font-size: 48px; font-weight: 700;">서</span></p></td>
-			    			<td colspan="3" class="p-0">
-			    				<div class="d-flex justify-content-start flex-row-reverse" style="height: 100px;">
-			    					
-			    					<c:forEach var="approver" items="${ approval.approverDTOs }">
-				    					<c:if test="${ approver.apvrSeq ne 0 }">
-				    						
-					    					<div style="width: 100px; height: 100px; border-left: 2px solid #686868;">
-					    						<div style="height: 30px; border-bottom: 2px solid #686868;">
-					    							<p class="d-flex justify-content-between" style="width: 50px; margin: 0 auto; padding: 0;">
-					    								<c:if test="${ approver.apvrType eq 712 }">
-						    								<span>승</span><span>인</span>
-					    								</c:if>
-					    								
-					    								<c:if test="${ approver.apvrType eq 711 }">
-						    								<span>검</span><span>토</span>
-					    								</c:if>
-					    							</p>
-					    						</div>
-					    						
-					    						<div class="d-flex justify-content-center align-items-center" style="height: 70px;">
-					    							${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }
-					    						</div>
-					    					</div>
-				    						
-				    					</c:if>
-			    					</c:forEach>
-			    				
-			    					<div style="width: 100px; height: 100px; border-left: 2px solid #686868;">
-			    						<div style="height: 30px; border-bottom: 2px solid #686868;">
-			    							<p class="d-flex justify-content-between" style="width: 50px; margin: 0 auto; padding: 0;"><span>기</span><span>안</span></p>
-			    						</div>
-			    						
-			    						<div class="d-flex justify-content-center align-items-center" style="height: 70px;">
-			    							${ approval.staffDTO.jobDTO.jobDetail } ${ approval.staffDTO.staffName }
-			    						</div>
-			    					</div>
-			    					
-			    				</div>
-			    				
-			    				
-			    			</td>
-			    		</tr>
-			    		
-			    		<tr class="hard-line">
-			    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>문</span><span>서</span><span>번</span><span>호</span></p></td>
-			    			<td colspan="4">${ approval.aprvCode }</td>
-			    		</tr>
-			    		
-			    		<tr class="hard-line">
-			    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>기</span><span>안</span><span>일</span><span>자</span></p></td>
-			    			<td colspan="4">${ approval.aprvDate }</td>
-			    		</tr>
-			    		
-			    		<tr class="hard-line">
-			    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>시</span><span>행</span><span>일</span></p></td>
-			    			<td colspan="4">${ approval.aprvExe }</td>
-			    		</tr>
-			    		
-			    		<tr>
-			    			<td rowspan="2" class="hard-line" style="width: 200px;"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>기</span><span>안</span><span>자</span></p></td>
-			    			<td class="hard-side-line" style="width: 100px;"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>사</span><span>원</span><span>번</span><span>호</span></p></td>
-			    			<td style="width: 200px;">${ approval.staffDTO.staffCode }</td>
-			    			<td class="hard-side-line" style="width: 100px;"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>부</span><span>서</span></p></td>
-			    			<td style="width: 200px;">${ approval.staffDTO.deptDTO.deptDetail }</td>
-			    		</tr>
-			    		
-			    		<tr>
-			    			<td class="hard-side-line"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>직</span><span>급</span></p></td>
-			    			<td>${ approval.staffDTO.jobDTO.jobDetail }</td>
-			    			<td class="hard-side-line"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>성</span><span>명</span></p></td>
-			    			<td>${ approval.staffDTO.staffName }</td>
-			    		</tr>
-			    		
-			    		<tr class="hard-line">
-			    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>제</span><span>목</span></p></td>
-			    			<td colspan="4">${ approval.aprvTitle }</td>
-			    		</tr>
-			    		
-			    		<tr style="border: 2px solid #686868;">
-			    			<td colspan="5" style="height: 700px;">${ approval.aprvContent }</td>
-			    		</tr>
-			    		
-			    		<tr>
-			    			<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>첨</span><span>부</span><span>파</span><span>일</span></p></td>
-			    			<td colspan="4">
-			    				
-			    			</td>
-			    		</tr>
-			    	</table>
+			    	<sec:authentication property="principal" var="staff"/>
+			    
+			    	<c:if test="${ approval.aprvType eq 901 }">
+		    			<c:import url="/WEB-INF/views/approval/detail-vacation.jsp"></c:import>
+		    		</c:if>
+		    		
+		    		<c:if test="${ approval.aprvType eq 902 }">
+		    			<c:import url="/WEB-INF/views/approval/detail-overtime.jsp"></c:import>
+		    		</c:if>
+		    		
+		    		<c:if test="${ approval.aprvType eq 903 }">
+		    			<c:import url="/WEB-INF/views/approval/detail-early.jsp"></c:import>
+		    		</c:if>
+		    		
+		    		<c:if test="${ approval.aprvType eq 999 }">
+		    			<c:import url="/WEB-INF/views/approval/detail-common.jsp"></c:import>
+		    		</c:if>
 
 			    </div>
 			    
 			    <div class="col-auto" style="width: 180px;">
 			    	<div class="rounded text-center w-100" style="border: 1px solid #686868; min-height: 500px; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
 			    		<div class="mt-1">
-		    				<ul id="approverList" class="list-unstyled">
+		    				<ul class="list-unstyled">
 		    					<c:forEach var="approver" items="${ approval.approverDTOs }">
 		    						<c:if test="${ approver.apvrSeq ne 0 }">
 		    						
 		    							<li>
 		    								<input type="hidden" class="post-apvr" name="approver" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
 												<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">
+													<div class="rounded m-0 px-1 py-0 <c:if test="${ not empty approver.apvrResult }">bg-gradient-dark text-white</c:if>" style="border: 1px solid black; color: black; font-size: 14px;">
 														<c:if test="${ approver.apvrType eq 712 }">승인</c:if>
 				    								<c:if test="${ approver.apvrType eq 711 }">검토</c:if>
 													</div>
@@ -211,7 +163,7 @@
 		    					
 		    					<li>
 		    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-											<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">기안</div>
+											<div class="rounded m-0 px-1 py-0 bg-gradient-dark text-white" style="border: 1px solid black; color: black; font-size: 14px;">기안</div>
 											<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
 										</div>
 										<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
@@ -232,11 +184,11 @@
 		    								<input type="hidden" class="post-recp" name="receiver" value="${ approver.staffDTO.staffCode }">
 				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
 													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">수신</div>
-													<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
+													<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
 												</div>
 												<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
 													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
-													<span>${ approval.staffDTO.jobDTO.jobDetail } ${ approval.staffDTO.staffName }</span>
+													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
 												</div>
 				    					</li>
 		    						
@@ -255,12 +207,12 @@
 		    							<li>
 		    								<input type="hidden" class="post-agre" name="agreer" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
 				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">합의</div>
-													<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
+													<div class="rounded m-0 px-1 py-0 <c:if test="${ not empty approver.apvrResult }">bg-gradient-dark text-white</c:if>" style="border: 1px solid black; color: black; font-size: 14px;">합의</div>
+													<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
 												</div>
 												<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
 													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
-													<span>${ approval.staffDTO.jobDTO.jobDetail } ${ approval.staffDTO.staffName }</span>
+													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
 												</div>
 				    					</li>
 		    						
@@ -271,25 +223,24 @@
 	    				</div>
 	    			</div>
 	    			
-	    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" data-bs-toggle="modal" data-bs-target="#shareModal" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재선 재지정</button>
-	    			<button type="button" class="btn btn-outline-secondary mt-2 w-100" <c:if test="${ approval.aprvState ne 702 }">disabled</c:if>>문서 출력</button>
+	    			<c:if test="${ approval.aprvState ne 702 and approval.aprvState ne 703 }">
+		    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재선 재지정</button>
+	    			</c:if>
+	    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" <c:if test="${ approval.aprvState ne 702 }">disabled</c:if>>문서 출력</button>
 			    </div>
 	    	</div>
 	    </section>
     </div>
   </main>
   
-  <c:import url="/WEB-INF/views/approval/draft-modal.jsp"></c:import>
-
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 		document.querySelector("i[data-content='전자결재']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='내 결재함']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "전자 문서 조회"
 		
-		const loginStaffCode = ${ staff.staffCode }
+		const hasSign = ${ not empty staff.staffSignDTO ? true : false }
 	</script>
-	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script src="/js/approval/detail.js"></script>
 </body>
 
