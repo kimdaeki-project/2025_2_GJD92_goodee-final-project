@@ -139,4 +139,10 @@ public class MessengerController {
 		return result;
 	}
 	
+	@GetMapping("footer") @ResponseBody
+	public List<ChatRoomDTO> footer() {
+		List<ChatRoomDTO> result = messengerService.list();
+		return result;
+	} 
+	
 }
