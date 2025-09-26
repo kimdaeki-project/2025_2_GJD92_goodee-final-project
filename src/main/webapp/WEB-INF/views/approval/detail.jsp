@@ -30,6 +30,24 @@
 			border-right: 2px solid #686868;
 			border-collapse: collapse;
 		}
+		
+		@media print {
+	    body * {
+	      visibility: hidden;
+	    }
+	    
+	    #printableArea,
+	    #printableArea * {
+	      visibility: visible;
+	    }
+	    
+	    #printableArea {
+        position: fixed;
+        left: 0%;
+        right: 0%;
+        top: 0;
+	    }
+		}
 	</style>
 </head>
 
@@ -114,7 +132,7 @@
 	    			</c:if>
 			    </div>
 			    
-			    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
+			    <div id="printableArea" class="col-auto" style="width: 800px; overflow: hidden auto;">
 			    	<sec:authentication property="principal" var="staff"/>
 			    
 			    	<c:if test="${ approval.aprvType eq 901 }">
@@ -226,7 +244,7 @@
 	    			<c:if test="${ approval.aprvState ne 702 and approval.aprvState ne 703 }">
 		    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재선 재지정</button>
 	    			</c:if>
-	    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" <c:if test="${ approval.aprvState ne 702 }">disabled</c:if>>문서 출력</button>
+	    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" onclick="printApproval()" <c:if test="${ approval.aprvState ne 702 }">disabled</c:if>>문서 출력</button>
 			    </div>
 	    	</div>
 	    </section>
@@ -240,6 +258,10 @@
 		document.querySelector("#navTitle").textContent = "전자 문서 조회"
 		
 		const hasSign = ${ not empty staff.staffSignDTO ? true : false }
+		
+		function printApproval() {
+			window.print();
+		}
 	</script>
 	<script src="/js/approval/detail.js"></script>
 </body>
