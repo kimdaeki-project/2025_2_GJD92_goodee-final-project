@@ -3,6 +3,7 @@ package com.goodee.finals.staff;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.goodee.finals.calendar.CalendarDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,5 +27,9 @@ public class DeptDTO {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "deptDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<StaffDTO> staffDTOs;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "deptDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CalendarDTO> calendarDTOs;
 	
 }

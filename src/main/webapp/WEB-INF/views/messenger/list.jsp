@@ -146,9 +146,9 @@
 
         <!-- 탭 메뉴 -->
         <div class="tabs">
-            <div class="tab active">전체</div>
-            <div class="tab">1:1</div>
-            <div class="tab">그룹</div>
+            <div class="tab tab-all active">전체</div>
+            <div class="tab tab-dm">1:1</div>
+            <div class="tab tab-group">그룹</div>
         </div>
 
         <!-- 채팅방 리스트 -->
@@ -157,18 +157,25 @@
 	            <form action="/msg/chat" method="post" class="chat-room">
 	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
 	                <div class="chat-room-info">
-	                	<sec:authorize access="isAuthenticated()">
-							<sec:authentication property="principal" var="staff" />
-		                	<c:forEach items="${ r.chatUserDTOs }" var="s">
-		                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
-			                    	<div class="chat-room-name">${ s.staffDTO.staffName }</div>
-			                    </c:if>               	
-		                	</c:forEach>
-	                	</sec:authorize>
+	                	<c:if test="${ r.chatRoomName eq 'DM_NONAME' }">
+		                	<sec:authorize access="isAuthenticated()">
+								<sec:authentication property="principal" var="staff" />
+			                	<c:forEach items="${ r.chatUserDTOs }" var="s">
+			                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
+				                    	<div class="chat-room-name">${ s.staffDTO.staffName }</div>
+				                    </c:if>               	
+			                	</c:forEach>
+		                	</sec:authorize>
+	                	</c:if>
+	                	<c:if test="${ r.chatRoomName ne 'DM_NONAME' }">
+	                		<div class="chat-room-name">
+	                			${ r.chatRoomName }
+	                		</div>
+	                	</c:if>
 	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
 	                </div>
 	                <div class="chat-room-right">
-	                    <span class="time" id="time-${ r.chatRoomNum }">어제</span>
+	                    <span class="time" id="time-${ r.chatRoomNum }"></span>
 	                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
 	                </div>
 	            </form>
@@ -177,15 +184,30 @@
 	            <form action="/msg/chat" method="post" class="chat-room">
 	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
 	                <div class="chat-room-info">
-	                    <div class="chat-room-name">${ r.chatRoomName }</div>
+	                	<c:if test="${ r.chatRoomName eq 'GROUP_NONAME' }">
+			                <sec:authorize access="isAuthenticated()">
+			                	<sec:authentication property="principal" var="staff" />
+			                    <div class="chat-room-name">
+				                	<c:forEach items="${ r.chatUserDTOs }" var="s" varStatus="status">
+				                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
+				                			<span>${ s.staffDTO.staffName }</span>
+				                		</c:if>
+				                	</c:forEach>
+			                	</div>
+			                </sec:authorize>
+	                	</c:if>
+	                	<c:if test="${ r.chatRoomName ne 'GROUP_NONAME' }">
+	                		<div class="chat-room-name">
+	                			${ r.chatRoomName }
+	                		</div>
+	                	</c:if>
 	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
 	                </div>
 	                <div class="chat-room-right">
-	                    <span class="time" id="time-${ r.chatRoomNum }">어제</span>
+	                    <span class="time" id="time-${ r.chatRoomNum }"></span>
 	                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
 	                </div>
 	            </form>
-            
             </c:if>
         </c:forEach>
     </div>

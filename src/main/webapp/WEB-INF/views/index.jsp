@@ -260,7 +260,7 @@
 	        </div>
 
       	</section>
-    
+
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
