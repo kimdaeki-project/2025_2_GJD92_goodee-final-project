@@ -130,7 +130,6 @@ public class InspectionController {
 	}
 	
 	
-	
 	// 어트랙션 수정
 	// POST/update : MultipartFile attach  같이 받음
 	@PostMapping("{isptNum}/update")

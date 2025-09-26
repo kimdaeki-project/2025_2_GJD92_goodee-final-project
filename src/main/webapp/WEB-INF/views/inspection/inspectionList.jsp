@@ -51,9 +51,8 @@
     	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
-			    
+			   		 <!-- 메뉴 개수만큼 추가 -->
 			    	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
-			      
 			    </ul>
 			  </div>
     	</aside>
