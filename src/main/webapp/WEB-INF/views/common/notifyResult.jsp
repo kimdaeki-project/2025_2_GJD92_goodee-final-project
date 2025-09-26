@@ -2,48 +2,42 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
-
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
-
 <body>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<c:import url="/WEB-INF/views/common/heartBeat.jsp"/>
-	<script>
+	<script type="text/javascript">
 		Swal.fire({
-		  text: "${ resultMsg }",
-		  icon: "${ resultIcon }",
-		  showCancelButton: false,
-		  confirmButtonColor: "#3085d6",
-		  confirmButtonText: "확인"
+		    text: "${ resultMsg }",
+		    icon: "${ resultIcon }",
+		    showCancelButton: false,
+		    confirmButtonColor: "#3085d6",
+		    confirmButtonText: "확인"
 		}).then((result) => {
-			const url = "${ resultUrl }"
-			
-		  if (url != null && url != "") {
-			  const wsSub = ${ wsSub }
-			  const wsMsg = "${ wsMsg }";
-			  wsSub.forEach(sub => {
-				fetch('/alert/save', {
-					method: 'post',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ alertMsg: wsMsg, staffCodeToDb: sub })    
-				})
-				.then(response => response.json())
-				.then(response => console.log(response));
-				stompClient.send("/pub/notify/" + sub, {}, wsMsg);
-			  });
-/* 			  wsSub.forEach(sub => {
-			  }); */
-			  location.href = url
-		  } else {
-			  history.back()
-		  }
+		    const url = "${ resultUrl }"
+		    
+		    if (url != null && url != "") {
+		        const wsSub = ${ wsSub }
+		        const wsMsg = "${ wsMsg }";
+		        wsSub.forEach(sub => {
+		            fetch('/alert/save', {
+		                method: 'post',
+		                headers: { 'Content-Type': 'application/json' },
+		                body: JSON.stringify({ alertMsg: wsMsg, staffCodeToDb: sub })
+		            })
+                	.then(response => response.json())
+	                .then(response => console.log(response));
+		            stompClient.send("/pub/notify/" + sub, {}, wsMsg);
+		        });
+		        location.href = url;
+		    } else {
+		        history.back();
+		    }
 		});
 	</script>
 </body>
-
 </html>

@@ -57,12 +57,14 @@ function renderAlerts(staffCodeForAlert) {
 }
 
 function htmlTagBuilder(msg, alertNum) {
+	let type;
+	if (msg.includes('내 앞으로 새로운 결재가 등록되었습니다.')) type = 'aprv';
 	let list = document.createElement('li');
 	let listClassForDelete = 'list-' + alertNum;
 	list.classList.add('mb-2', listClassForDelete);
 	let anchor = document.createElement('a');
 	anchor.classList.add('dropdown-item', 'border-radius-md');
-	anchor.setAttribute('href', 'javascript:;');
+	if (type = 'aprv') anchor.setAttribute('href', '/approval/' + msg.split(',')[1]);
 	let div = document.createElement('div');
 	div.classList.add('d-flex', 'py-1', 'justify-content-between', 'align-items-center');
 	let divLeft = document.createElement('div');
@@ -75,14 +77,14 @@ function htmlTagBuilder(msg, alertNum) {
 	divTop.classList.add('.my-auto');
 	let img = document.createElement('img');
 	img.classList.add('avatar', 'avatar-sm', 'me-3');
-	img.setAttribute('src', '/images/heartBeat/fix.png');
+	if (type = 'aprv') img.setAttribute('src', '/images/heartBeat/aprv.png');
 	let divBot = document.createElement('div');
 	divBot.classList.add('d-flex', 'flex-column', 'justify-content-center');
 	let h6 = document.createElement('h6');
 	h6.classList.add('text-sm', 'font-weight-normal', 'mb-1');
 	let span = document.createElement('span');
 	span.classList.add('font-weight-bold');
-	span.innerText = msg;
+	if (type = 'aprv') span.innerText = msg.split(',')[0];
 
 	h6.appendChild(span);
 	divBot.appendChild(h6);
@@ -111,6 +113,25 @@ function htmlTagBuilder(msg, alertNum) {
 				alertCountDecider(alertCountFromDelete);
 			}
 		});
+	});
+	anchor.addEventListener('click', function(e) {
+		e.preventDefault(); e.stopPropagation();
+		let alertNumForAnchor = this.querySelector('button').value; 
+		fetch('/alert/delete', {
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ alertNumToDelete: alertNumForAnchor})
+		})
+		.then(response => response.json())
+		.then(response => {
+			if (response) {
+				let toDeleteEl = document.querySelector('.list-' + alertNum);
+				dm.removeChild(toDeleteEl);
+				let alertCountFromDelete = parseInt(alertBadge.innerText) - 1;
+				alertCountDecider(alertCountFromDelete);
+				window.location.href = this.href;			
+			}
+		})
 	});
 }
 
