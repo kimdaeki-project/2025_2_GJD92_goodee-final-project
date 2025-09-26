@@ -1,13 +1,17 @@
 console.log("calendar.js 연결됨")
 
-const allDayCheckBox = document.getElementById("allDayCheckBox");
-const btnAddCalendar = document.getElementById("btnAddCalendar");
-const calendarEl     = document.getElementById('calendar');
-const selectMinHour  = document.querySelectorAll(".select-min-hour");
+const allDayCheckBox  = document.getElementById("allDayCheckBox");
+const btnAddCalendar  = document.getElementById("btnAddCalendar");
+const btnModalWrite   = document.getElementById("btnModalWrite");
+const calendarEl      = document.getElementById('calendar');
+const selectMinHour   = document.querySelectorAll(".select-min-hour");
 
-document.addEventListener("hidden.bs.modal", () => {
-	const modalForm = document.getElementById("eventForm");
-	modalForm.reset();
+const modalAddEvent   = new bootstrap.Modal(document.getElementById('addEventModal'));
+const modalDetail     = new bootstrap.Modal(document.getElementById("eventDetailModal"));
+
+document.addEventListener("hidden.bs.modal", (e) => {
+	const modalForm = e.target.querySelector("#eventForm");
+	if (modalForm) modalForm.reset();
 })
 
 const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -33,7 +37,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		return arg.dayNumberText.replace('일', '');
 	},
 	headerToolbar: { // 툴바 위치 변경 스페이스 바로 사이 공간 띄울 수 있음
-		  left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+		  left: 'dayGridMonth,timeGridWeek,listDay',
 		center: 'title',
 		 right: 'prev,today,next'
 	},
@@ -45,31 +49,36 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		 today: '오늘'
 	},
 	eventClick: function(eventInfo) {
-		const modalEl = document.getElementById("eventDetailModal");
-		const modal = new bootstrap.Modal(modalEl);
-		modal.show();
+		
+		calTitle    = eventInfo.event._def.extendedProps.calTitle;
+		calStart    = eventInfo.event.startStr;
+		calTypeName = eventInfo.event._def.extendedProps.calTypeName;
+		calType     = eventInfo.event._def.extendedProps.calType;
+		calContent  = eventInfo.event._def.extendedProps.calContent;
+		staffName  = eventInfo.event._def.extendedProps.staffName;
+		
+		document.getElementById("detailModalTitle").textContent = calTitle
+		document.getElementById("detailModalDate").textContent = calStart
+		document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
+		document.getElementById("detailCircle").style.backgroundColor = eventBgColor(calType);
+		document.getElementById("detailModalContent").textContent = calContent;
+		document.getElementById("detailModalWriter").textContent = staffName;
+		
+		
+		modalDetail.show();
 		
 		console.log(eventInfo)
-		
 	},
 	dateClick: function(dateInfo) { // 날짜 빈공간 클릭
-		const modalEl = document.getElementById('addEventModal');
-		const modal = new bootstrap.Modal(modalEl);
-		modal.show();
-		
-		document.getElementById("calStartDate").value = dateInfo.dateStr;
-		document.getElementById("calEndDate").value = dateInfo.dateStr;
-		
-		console.log(dateInfo)
+		showWriteModal(dateInfo.dateStr);
 	},
-	
 	events: function(fetchInfo, successCallback, failureCallback) { // 일정 불러오기
 		fetch("/calendar/eventList", { method: 'GET' })
 		.then(r => r.json())
 		.then(r => {
-			console.log("서버 응답:", r);
+//			console.log("서버 응답:", r);
 			const events = r.map(event => addToCalendar(event));
-			console.log(events);
+//			console.log(events);
 			successCallback(events); // 달력에 이벤트 반영
 		})
 		.catch(e => {
@@ -95,6 +104,11 @@ allDayCheckBox.addEventListener("change", (e) => {
 	} 
 })
 
+btnModalWrite.addEventListener("click", () => {
+	const today   = dayjs().format("YYYY-MM-DD");
+	showWriteModal(today);
+})
+
 function addCalendarEvent() {
 	const calStartDate = document.getElementById("calStartDate").value;
 	const calStartHour = document.getElementById("calStartHour").value;
@@ -103,18 +117,18 @@ function addCalendarEvent() {
 	const calEndHour   = document.getElementById("calEndHour").value;
 	const calEndMin    = document.getElementById("calEndMin").value;
 	const calType      = document.getElementById("calType").value;
-	const calTitle     = document.getElementById("calTitle").value
+	const calTitle     = document.getElementById("calTitle").value;
 	
 	if(!calType) {
 		alert("타입을 선택하세요!");
 		return;
 	}
 	if(calStartDate == null || calStartDate == "") {
-		alert("시작값을 넣어주세요");
+		alert("시작일을 넣어주세요");
 		return;
 	}
 	if(calEndDate == null || calEndDate == "") {
-		alert("종료값을 넣어주세요");
+		alert("종료일을 넣어주세요");
 		return;
 	}
 	if(!calTitle) {
@@ -146,12 +160,10 @@ function addCalendarEvent() {
 	})
 	.then(r => r.json())
 	.then(addedEvent => {
-		// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent({}) 사용해서 랜더링
+		// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent() 사용해서 랜더링
 		console.log(addedEvent)
 		calendar.addEvent(addToCalendar(addedEvent))
-		const modalEl = document.getElementById('addEventModal');
-		const modal = bootstrap.Modal.getInstance(modalEl);
-		if(modal) modal.hide();
+		if(modalAddEvent) modalAddEvent.hide();
 	})
 }
 
@@ -167,12 +179,15 @@ function addToCalendar(event) {
 		classNames: ['my-event'],
 		editable : true,
 		extendedProps: {
+			calType: event.calType,
+			calPlace: event.calPlace,
+			calTitle: event.calTitle,
+			calContent: event.calContent,
 			staffCode: event.staffDTO.staffCode,
-			content: event.calContent,
-			place: event.calPlace,
-			type: event.calType,
+			staffName: event.staffDTO.staffName,
 			deptCode: event.staffDTO.deptDTO.deptCode,
-			deptDetail: event.staffDTO.deptDTO.deptDetail 
+			deptDetail: event.staffDTO.deptDTO.deptDetail,
+			calTypeName: event.calTypeName
 		}
 	}
 }
@@ -186,4 +201,8 @@ function eventBgColor(calType) {
 	}	
 }
 
-
+function showWriteModal(date) {
+	modalAddEvent.show();
+	document.getElementById("calStartDate").value = date;
+	document.getElementById("calEndDate").value = date;
+}

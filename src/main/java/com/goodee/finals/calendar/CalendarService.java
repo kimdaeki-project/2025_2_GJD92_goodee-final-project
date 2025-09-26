@@ -38,6 +38,7 @@ public class CalendarService {
 		}
 		calendarDTO.setCalEnabled(true);
 		calendarDTO.setStaffDTO(staffDTO);
+		System.out.println("service : " + calendarDTO.getCalEnd());
 		
 		calendarDTO = calendarRepository.save(calendarDTO);
 		

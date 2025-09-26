@@ -5,33 +5,31 @@
   <!-- 가운데 정렬 + 내부 스크롤 -->
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content rounded-4">
-      <!-- 헤더 -->
       <div class="modal-header border-0">
-        <h5 class="modal-title fw-semibold" id="viewEventTitle">월간 팀장 회의</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      	<!-- 제목 -->
+        <h5 class="modal-title fw-semibold" id="detailModalTitle"></h5>
+        <button type="button" class="btn-close btn-close-white bg-black" data-bs-dismiss="modal" aria-label="닫기"></button>
       </div>
 
-      <!-- 바디 -->
       <div class="modal-body pt-0">
         <!-- 날짜 -->
         <div class="mb-3">
-          <div class="text-secondary" id="viewEventDate">2025-09-11 (목)</div>
+          <div class="text-secondary" id="detailModalDate"></div>
         </div>
 
         <!-- 타입 -->
         <div class="d-flex align-items-center gap-2 mb-3">
-          <!-- 타입 점: Bootstrap 배경색 유틸로 표시 -->
-          <span class="d-inline-block rounded-circle bg-primary" style="width:12px;height:12px;" aria-hidden="true"></span>
-          <span class="text-secondary" id="viewEventTypeText">사내 일정</span>
+          <span class="d-inline-block rounded-circle" id="detailCircle" style="width:12px;height:12px;" aria-hidden="true"></span>
+          <span class="text-secondary" id="detailModalDept"></span>
         </div>
 
         <!-- 내용 -->
         <div class="mb-4">
           <div class="text-secondary mb-2">내용</div>
           <!-- 회색 느낌: Bootstrap 배경 유틸 + 비활성 폼 -->
-          <textarea id="viewEventContent"
+          <textarea id="detailModalContent"
                     class="form-control bg-body-tertiary border-0 text-body"
-                    rows="4" style="resize: none;" readonly>월간 팀장 회의</textarea>
+                    rows="4" style="resize: none;" readonly></textarea>
         </div>
 
         <!-- 등록자/일시 -->
@@ -39,7 +37,7 @@
           <div class="d-flex align-items-center gap-2">
             <span class="text-secondary">등록자</span>
             <span class="material-symbols-rounded align-middle">person</span>
-            <span id="viewEventWriter">박요한</span>
+            <span id="detailModalWriter">박요한</span>
           </div>
           <div class="text-secondary" id="viewEventCreatedAt">2025-08-31 12:28</div>
         </div>

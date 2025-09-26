@@ -10,7 +10,7 @@
 <!-- 				<a href="/calendar/list" class="btn btn-dark w-100 mt-2 mb-3">일정 목록</a> -->
 <!-- 			</li> -->
 			<li class="nav-item">
-				<button type="button" class="btn btn-dark w-100 mb-2" data-bs-toggle="modal" data-bs-target="#addEventModal">일정 쓰기</button>
+				<button type="button" class="btn btn-dark w-100 mb-2" id="btnModalWrite">일정 쓰기</button>
 			</li>
 		</ul>
 		<!-- 일정 목록 ,쓰기 버튼 끝-->
@@ -34,7 +34,7 @@
 			</li>
 			<li class="nav-item">
 				<input type="checkbox"> 
-				<span>우리 팀 일정</span>
+				<span>ㅁㅁ 팀 일정</span>
 			</li>
 		</ul>
 		<!-- 일정 분류 체크 박스 -->

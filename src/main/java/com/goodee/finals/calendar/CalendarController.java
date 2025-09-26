@@ -46,6 +46,8 @@ public class CalendarController {
 	public CalendarDTO addEvent(@RequestBody CalendarDTO calendarDTO, Authentication authentication) {
 		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
 		
+		System.out.println("캘린더 종료일 : " + calendarDTO.getCalEnd());
+		
 		calendarDTO = calendarService.addEvent(staffDTO, calendarDTO);
 		
 		return calendarDTO;

@@ -33,15 +33,15 @@
               </div>
               <div class="col-12 col-sm-9 input-col">
                 <div class="d-flex inline-inputs flex-wrap">
-                  <input type="date" id="calStartDate" class="form-control" style="max-width: 180px;">
-                  <select class="form-select select-min-hour" id="calStartHour" style="max-width: 90px;">
+                  <input type="date" id="calStartDate" class="form-control" style="max-width: 180px; height: 33px;">
+                  <select class="form-select select-min-hour ms-1" id="calStartHour" style="max-width: 90px; height: 33px;">
                   	<c:forEach var="h" begin="0" end="23">
                   		<option value="${ h lt 10 ? '0' : '' }${ h }">
                   		   ${ h lt 10 ? '0' : '' }${ h }  		
                   		</option>
                   	</c:forEach>
                   </select>
-                  <select class="form-select select-min-hour" id="calStartMin" style="max-width: 90px;">
+                  <select class="form-select select-min-hour ms-1" id="calStartMin" style="max-width: 90px; height: 33px;">
                   	<c:forEach var="m" begin="0" end="59">
                   		<option value="${ m lt 10 ? '0' : '' }${ m }">
                   		${ m lt 10 ? '0' : '' }${ m }
@@ -59,15 +59,15 @@
               </div>
               <div class="col-12 col-sm-9 input-col">
                 <div class="d-flex inline-inputs flex-wrap">
-                  <input type="date" id="calEndDate" class="form-control" style="max-width: 180px;">
-                  <select id="calEndHour" class="form-select select-min-hour" style="max-width: 90px;">
+                  <input type="date" id="calEndDate" class="form-control" style="max-width: 180px; height: 33px;">
+                  <select class="form-select select-min-hour ms-1" id="calEndHour" style="max-width: 90px; height: 33px;">
                   	<c:forEach var="h" begin="0" end="23">
                   	  <option value="${ h lt 10 ? '0' : '' }${ h }">
                		    ${ h lt 10 ? '0' : '' }${ h }  		
                		  </option>
                   	</c:forEach>
                   </select>
-                  <select id="calEndMin" class="form-select select-min-hour" style="max-width: 90px;">
+                  <select class="form-select select-min-hour ms-1" id="calEndMin" style="max-width: 90px; height: 33px;">
                   	<c:forEach var="m" begin="0" end="59">
                   	  <option value="${ m lt 10 ? '0' : '' }${ m }">
                   		${ m lt 10 ? '0' : '' }${ m }
