@@ -14,13 +14,16 @@ public interface ProductManageRepository extends JpaRepository<ProductManageDTO,
 			  value = "SELECT pm.* FROM product_manage pm " +
 			          "INNER JOIN staff s USING(staff_code) " +
 			          "INNER JOIN product p USING(product_code) " +
-			          "WHERE s.staff_name LIKE %:search% ",
+			          "WHERE s.staff_name LIKE %:search% " +
+			          "AND pm.pm_delete = false" ,
 			  countQuery = "SELECT COUNT(*) FROM product_manage pm " +
 						  "INNER JOIN staff s USING(staff_code) " +
 						  "INNER JOIN product p USING(product_code) " +
-				          "WHERE s.staff_name LIKE %:search% " ,
+				          "WHERE s.staff_name LIKE %:search% " +
+						  "AND pm.pm_delete = false" ,
 			  nativeQuery = true
 			)
 	Page<ProductManageDTO> findAllBySearch(@Param("search") String search, Pageable pageable);
 	
+	long countByPmDeleteFalse();
 }

@@ -61,11 +61,11 @@ aside.sidenav {
 			    				<tr>
 			    					<th class="col-1">번호</th>
 			    					<th class="col-1">등록일자</th>
-			    					<th class="col-1">물품번호</th>
-			    					<th class="col-2">물품타입</th>
+<!-- 			    					<th class="col-1">물품타입</th> -->
 			    					<th class="col-2">물품명</th>
-			    					<th class="col-1">수량</th>
-			    					<th class="col-1">재고</th>
+			    					<th class="col-1">구분</th>
+			    					<th class="col-1">등록수량</th>
+			    					<th class="col-1">잔여수량</th>
 			    					<th class="col-1">작성자</th>
 			    				</tr>
 			    			</thead>
@@ -75,11 +75,11 @@ aside.sidenav {
 			    					<tr>
 				    					<td>${ pm.pmNum }</td>
 				    					<td>${ pm.pmDate }</td>
-				    					<td><a href="/productManage/${ pm.productDTO.productCode }" style="color: #737373;">${ pm.productDTO.productCode }</a></td>
-				    					<td>${ pm.productDTO.productTypeDTO.productTypeName }</td>
-				    					<td>${ pm.productDTO.productName }</td>
+<%-- 				    					<td>${ pm.productDTO.productTypeDTO.productTypeName }</td> --%>
+				    					<td><a href="/productManage/${ pm.pmNum }" style="color: #737373;">${ pm.productDTO.productName }</a></td>
+				    					<td>${ pm.pmType eq 90 ? "출고" : "입고" }</td>
 				    					<td>${ pm.pmAmount }</td>
-				    					<td>${ pm.productDTO.productAmount }</td>
+				    					<td>${ pm.pmRemainAmount }</td>
 				    					<td>${ pm.staffDTO.staffName }</td>
 			    					</tr>
 			    				</c:forEach>
