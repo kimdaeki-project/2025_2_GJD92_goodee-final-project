@@ -31,7 +31,8 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<c:import url="/WEB-INF/views/calendar/calendar-add.jsp"></c:import>
+	<c:import url="/WEB-INF/views/calendar/calendar-modal-add.jsp"></c:import>
+	<c:import url="/WEB-INF/views/calendar/calendar-modal-detail.jsp"></c:import>
 	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 	<script>

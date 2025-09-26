@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +25,6 @@ public class CalendarDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long calNum;
-	@NotBlank(message = "제목은 필수 입니다")
 	private Integer calType;
 	private String calTypeName;
 	private String calTitle;
@@ -34,9 +32,7 @@ public class CalendarDTO {
 	private String calContent;
 	private Boolean calEnabled;
 	private Boolean calIsAllDay;
-	@NotBlank
 	private LocalDateTime calStart;
-	@NotBlank
 	private LocalDateTime calEnd;
 	
 	@ManyToOne

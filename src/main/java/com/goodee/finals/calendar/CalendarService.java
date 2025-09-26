@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CalendarService {
 	public static final String INSPECTION = "점검";
 	public static final String COMPANY = "사내";
@@ -36,7 +39,7 @@ public class CalendarService {
 		calendarDTO.setCalEnabled(true);
 		calendarDTO.setStaffDTO(staffDTO);
 		
-//		calendarDTO = calendarRepository.save(calendarDTO);
+		calendarDTO = calendarRepository.save(calendarDTO);
 		
 		return calendarDTO;
 	}

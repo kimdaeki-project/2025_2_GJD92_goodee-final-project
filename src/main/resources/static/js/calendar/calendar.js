@@ -1,9 +1,9 @@
 console.log("calendar.js 연결됨")
 
 const allDayCheckBox = document.getElementById("allDayCheckBox");
-const selectMinHour = document.querySelectorAll(".select-min-hour");
 const btnAddCalendar = document.getElementById("btnAddCalendar");
-const calendarEl = document.getElementById('calendar')
+const calendarEl     = document.getElementById('calendar');
+const selectMinHour  = document.querySelectorAll(".select-min-hour");
 
 document.addEventListener("hidden.bs.modal", () => {
 	const modalForm = document.getElementById("eventForm");
@@ -11,21 +11,21 @@ document.addEventListener("hidden.bs.modal", () => {
 })
 
 const calendar = new FullCalendar.Calendar(calendarEl, {
-	initialView: 'dayGridMonth',
-	locale: 'ko',
-	timezone: 'local',
+	 initialView: 'dayGridMonth',
+	      locale: 'ko',
+	    timezone: 'local',
 	dayMaxEvents: true,
-	editable: true, // 드래그드롭, 잡아서 늘리기 가능 
-	expandRows: true, // 화면 높이에 맞게
-	height: '95%',
-	slotMinTime: "00:00:00",
-	slotMaxTime: "24:00:00",
+        editable: true, // 드래그드롭, 잡아서 늘리기 가능 
+	  expandRows: true, // 화면 높이에 맞게
+	      height: '95%',
+	 slotMinTime: "00:00:00",
+	 slotMaxTime: "24:00:00",
 	slotDuration: "01:00:00",
-	scrollTime: "00:00:00",
+	  scrollTime: "00:00:00",
 	nowIndicator: true, // 현재시간을 빨간 선으로 표시
-	selectable: true, // 날짜 범위를 드래그하여 새로운 일정 구간을 선택 - 사용 할지 미정
-	titleFormat: function(date) {
-		const y = date.date.year;
+      selectable: true, // 날짜 범위를 드래그하여 새로운 일정 구간을 선택 - 사용 할지 미정
+	 titleFormat: function(date) {
+        const y = date.date.year;
 		const m = String(date.date.month + 1).padStart(2, '0');
 		return `${y}-${m}`;
 	},
@@ -33,16 +33,24 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		return arg.dayNumberText.replace('일', '');
 	},
 	headerToolbar: { // 툴바 위치 변경 스페이스 바로 사이 공간 띄울 수 있음
-		left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+		  left: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
 		center: 'title',
-		right: 'prev,today,next'
+		 right: 'prev,today,next'
 	},
 	buttonText: { // 툴바 버튼 이름
-		today: '오늘',
-		month: '월간',
-		week: '주간',
-		day: '일간',
-		list: '목록'
+		   day: '일간',
+		  list: '목록',
+		  week: '주간',
+	 	 month: '월간',
+		 today: '오늘'
+	},
+	eventClick: function(eventInfo) {
+		const modalEl = document.getElementById("eventDetailModal");
+		const modal = new bootstrap.Modal(modalEl);
+		modal.show();
+		
+		console.log(eventInfo)
+		
 	},
 	dateClick: function(dateInfo) { // 날짜 빈공간 클릭
 		const modalEl = document.getElementById('addEventModal');
@@ -54,13 +62,14 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		
 		console.log(dateInfo)
 	},
+	
 	events: function(fetchInfo, successCallback, failureCallback) { // 일정 불러오기
 		fetch("/calendar/eventList", { method: 'GET' })
 		.then(r => r.json())
 		.then(r => {
 			console.log("서버 응답:", r);
 			const events = r.map(event => addToCalendar(event));
-//			console.log(events);
+			console.log(events);
 			successCallback(events); // 달력에 이벤트 반영
 		})
 		.catch(e => {
@@ -87,15 +96,19 @@ allDayCheckBox.addEventListener("change", (e) => {
 })
 
 function addCalendarEvent() {
-	calStartDate = document.getElementById("calStartDate").value,
-	calStartHour = document.getElementById("calStartHour").value
-	calStartMin  = document.getElementById("calStartMin").value
-	calEndDate   = document.getElementById("calEndDate").value,
-	calEndHour   = document.getElementById("calEndHour").value
-	calEndMin    = document.getElementById("calEndMin").value
+	const calStartDate = document.getElementById("calStartDate").value;
+	const calStartHour = document.getElementById("calStartHour").value;
+	const calStartMin  = document.getElementById("calStartMin").value;
+	const calEndDate   = document.getElementById("calEndDate").value;
+	const calEndHour   = document.getElementById("calEndHour").value;
+	const calEndMin    = document.getElementById("calEndMin").value;
+	const calType      = document.getElementById("calType").value;
+	const calTitle     = document.getElementById("calTitle").value
 	
-	const title = document.getElementById("calTitle").value
-	
+	if(!calType) {
+		alert("타입을 선택하세요!");
+		return;
+	}
 	if(calStartDate == null || calStartDate == "") {
 		alert("시작값을 넣어주세요");
 		return;
@@ -104,7 +117,7 @@ function addCalendarEvent() {
 		alert("종료값을 넣어주세요");
 		return;
 	}
-	if(!title) {
+	if(!calTitle) {
 		alert("제목 비어있음!");
 		return;
 	}
@@ -117,10 +130,10 @@ function addCalendarEvent() {
                   .format("YYYY-MM-DDTHH:mm:ss");
 	
 	const calEvent = {
-		calTitle:    title,
 		calStart:    start,
 		calEnd:      end,
-		calType:     document.getElementById("calType").value,
+		calType:     calType,
+		calTitle:    calTitle,
 		calIsAllDay: document.getElementById("allDayCheckBox").checked,
 		calPlace:    document.getElementById("calPlace").value,
 		calContent:  document.getElementById("calContent").value,
@@ -154,11 +167,12 @@ function addToCalendar(event) {
 		classNames: ['my-event'],
 		editable : true,
 		extendedProps: {
-			staffCode: event.calStaffCode,
+			staffCode: event.staffDTO.staffCode,
 			content: event.calContent,
 			place: event.calPlace,
 			type: event.calType,
-			dept: event.deptCode
+			deptCode: event.staffDTO.deptDTO.deptCode,
+			deptDetail: event.staffDTO.deptDTO.deptDetail 
 		}
 	}
 }
