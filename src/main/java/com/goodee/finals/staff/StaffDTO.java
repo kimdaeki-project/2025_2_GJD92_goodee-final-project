@@ -19,6 +19,7 @@ import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
+import com.goodee.finals.fault.FaultDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
@@ -112,6 +113,9 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	private List<InspectionDTO> inspectionDTOs;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<FaultDTO> faultDTOs;
 	
 	// For Input
 	@Transient
