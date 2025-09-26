@@ -7,7 +7,7 @@ const dm = document.querySelector('.dropdown-menu');
 const alertBadge = document.querySelector('.badge.bg-danger.rounded-pill');
 
 function connectWebSocket(staffCode) {
-	const socket = new SockJS('http://192.168.1.35/ws-stomp');
+	const socket = new SockJS('http://localhost/ws-stomp');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function(frame) {
 		console.log("Connected: " + frame);

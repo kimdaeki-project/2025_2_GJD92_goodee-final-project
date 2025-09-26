@@ -3,7 +3,7 @@
  * 채팅, 화면에 메시지 출력, 메시지 DB에 저장, 무한 스크롤 로직 스크립트
  */
 const chatRoomNum = document.querySelector('#chatRoomNum').value;
-const socket = new SockJS('http://192.168.1.35/ws-stomp');
+const socket = new SockJS('http://localhost/ws-stomp');
 const stompClient = Stomp.over(socket);
 stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame); // 커넥션 콘솔에 표시
