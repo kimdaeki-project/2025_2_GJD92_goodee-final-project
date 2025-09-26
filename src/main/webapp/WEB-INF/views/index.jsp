@@ -202,8 +202,10 @@
 	          <h2>어트랙션 운휴 현황</h2>
 	          <table>
 	            <tr><td>어트랙션</td><td>상태</td></tr>
-	            <tr><td>후룸라이드</td><td>운휴</td></tr>
-	            <tr><td>롤링 엑스 트레인</td><td>고장</td></tr>
+	          	<c:forEach items="${rides }" var="ride">
+		            <tr><td>${ride.rideName }</td>
+		            <td>${ride.rideState eq 300 ? "운휴" : ride.rideState eq 400 ? "고장" : "점검"}</td></tr>
+	          	</c:forEach>
 	          </table>
 	        </div>
 	

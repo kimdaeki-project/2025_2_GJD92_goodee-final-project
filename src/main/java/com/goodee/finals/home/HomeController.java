@@ -15,6 +15,8 @@ import com.goodee.finals.attend.AttendDTO;
 import com.goodee.finals.attend.AttendService;
 import com.goodee.finals.notice.NoticeDTO;
 import com.goodee.finals.notice.NoticeService;
+import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.ride.RideService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +30,12 @@ public class HomeController {
 	@Autowired
 	private NoticeService noticeService;
 	
+	@Autowired
+	private RideService rideService;
+	
+	
 	@GetMapping("/")
-	public String getHome(Model model) {
+	public String getHome(Model model) throws Exception {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         // 로그인 안 된 경우, 대시보드 접근
@@ -51,8 +57,9 @@ public class HomeController {
 		
 		// 결재현황
 		
-		// 어트랙션 운용현황
-		
+		// 어트랙션 운휴 현황
+		List<RideDTO> rides = rideService.homeList();
+		model.addAttribute("rides", rides);
 		// 날씨
 		
 		return "index";

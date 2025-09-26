@@ -141,9 +141,10 @@ aside.sidenav {
 							<label>유형</label>
 							<div class="radio-group">
 								<label>
-									<input type="radio" name="pmType" value="80" 
-										<c:if test="${productManageDTO.pmType == 80}">checked</c:if>> 입고
-									</label> 
+									<label>
+							            <input type="radio" name="pmType" value="80"
+							                <c:if test="${empty productManageDTO or productManageDTO.pmType == 80}">checked</c:if>> 입고
+							        </label> 
 								<label>
 									<input type="radio"	name="pmType" value="90"
 										<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고

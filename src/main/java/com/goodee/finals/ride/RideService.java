@@ -1,5 +1,6 @@
 package com.goodee.finals.ride;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.attachment.RideAttachmentDTO;
 import com.goodee.finals.common.file.FileService;
-import com.goodee.finals.staff.StaffController;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 import jakarta.transaction.Transactional;
@@ -18,9 +18,6 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class RideService {
-
-	@Autowired
-    private StaffController staffController;
 
 	@Autowired
     private StaffRepository staffRepository;
@@ -34,12 +31,6 @@ public class RideService {
 	@Autowired
 	private RideRepository rideRepository;
 
-    RideService(FileService fileService, AttachmentRepository attachmentRepository, StaffRepository staffRepository, StaffController staffController) {
-        this.fileService = fileService;
-        this.attachmentRepository = attachmentRepository;
-        this.staffRepository = staffRepository;
-    }
-	
 	// 어트랙션 전체 조회(리스트)
 	public List<RideDTO> getAllRides() throws Exception {
 		return rideRepository.findByRideDeletedFalse();
@@ -50,7 +41,15 @@ public class RideService {
     public RideDTO getRideById(String rideCode) throws Exception {
         return rideRepository.findById(rideCode).orElse(null);
     }
+    
+    // 어트랙션 대시보드 운휴현황 조회
+    public List<RideDTO> homeList() throws Exception {
+    	List<RideDTO> rides = rideRepository.findByRideDeletedFalseAndRideStateInOrderByRideStateAsc(Arrays.asList(300, 400, 500));
+    	return rides;
+    }
 	
+    
+    
 	// 어트랙션 등록
  	public boolean registRide(RideDTO rideDTO, MultipartFile attach) throws Exception {	
  		String fileName = null;
