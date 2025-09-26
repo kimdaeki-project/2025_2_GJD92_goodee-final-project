@@ -39,7 +39,6 @@ public class CalendarDTO {
 	@NotBlank
 	private LocalDateTime calEnd;
 	
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;
