@@ -133,4 +133,10 @@ public class MessengerController {
 		return result;
 	}
 	
+	@PostMapping("new") @ResponseBody
+	public MessengerTestDTO newChat(@RequestBody MessengerTestDTO messengerTestDTO) {
+		MessengerTestDTO result = messengerService.newChat(messengerTestDTO);
+		return result;
+	}
+	
 }

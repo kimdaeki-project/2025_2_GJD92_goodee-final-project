@@ -49,7 +49,5 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 
 	@Query("SELECT cb FROM MessengerTestDTO cb WHERE cb.chatRoomNum = :r ORDER BY cb.chatBodyNum DESC LIMIT 1")
 	MessengerTestDTO getTrueLatest(Long r);
-
-	
 	
 }

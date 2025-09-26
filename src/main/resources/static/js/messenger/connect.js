@@ -8,7 +8,7 @@ const stompClient = Stomp.over(socket);
 stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame); // 커넥션 콘솔에 표시
     
-    stompClient.subscribe('/sub/chat' + chatRoomNum, function (message) { // 구독 경로
+    stompClient.subscribe('/sub/chat/' + chatRoomNum, function (message) { // 구독 경로
         const receivedMessage = JSON.parse(message.body); // 메시지 파싱
         displayMessage(receivedMessage); // 화면에 메시지 표시
     });
@@ -26,7 +26,7 @@ stompClient.connect({}, function (frame) {
 			staffName: senderName
 			// 날짜, 삭제 여부는 컨트롤러에서 세팅
         };
-        stompClient.send("/pub/chat" + chatRoomNum, {}, JSON.stringify(message)); // 메세지 전송 경로
+        stompClient.send("/pub/chat/" + chatRoomNum, {}, JSON.stringify(message)); // 메세지 전송 경로
         document.getElementById('messageInput').value = '';
     });
 });

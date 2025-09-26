@@ -180,5 +180,10 @@ public class MessengerService {
 		}
 		return result;
 	}
+
+	public MessengerTestDTO newChat(MessengerTestDTO messengerTestDTO) {
+		MessengerTestDTO result = messengerRepository.getTrueLatest(messengerTestDTO.getChatRoomNum());
+		return result;
+	}
 	
 }
