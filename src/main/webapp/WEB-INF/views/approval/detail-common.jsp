@@ -90,7 +90,7 @@
 	</tr>
 	
 	<tr style="border: 2px solid #686868;">
-		<td colspan="5" style="height: 700px; text-align: left; vertical-align: top; padding: 5px;">${ approval.aprvContent }</td>
+		<td colspan="5" style="height: 600px; text-align: left; vertical-align: top; padding: 5px;">${ approval.aprvContent }</td>
 	</tr>
 	
 	<tr>
