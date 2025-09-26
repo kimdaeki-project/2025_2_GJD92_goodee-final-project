@@ -25,9 +25,11 @@ import com.goodee.finals.staff.StaffRepository;
 import com.goodee.finals.staff.StaffService;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class ApprovalService {
 	private static final Integer NORMAL = 999; // 기안
 	private static final Integer VACATION = 901; // 휴가
@@ -280,6 +282,61 @@ public class ApprovalService {
 			return false;
 		}
 	}
+	
+	public boolean changeApprovalLine(InputApprovalDTO inputApprovalDTO) {
+		ApprovalDTO draft = approvalRepository.findById(Integer.parseInt(inputApprovalDTO.getAprvCode())).orElseThrow();
+		List<ApproverDTO> beforeApproverDTOs = new ArrayList<>(draft.getApproverDTOs());
+		
+		draft.getApproverDTOs().clear();
+		approvalRepository.saveAndFlush(draft);
+		
+		int doneCount = 1;
+		setApprover(draft, inputApprovalDTO.getApprover());
+		
+		log.info("{}", draft.getApproverDTOs().toArray());
+		
+		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
+		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
+		
+		for (ApproverDTO approver : draft.getApproverDTOs()) {
+			for (ApproverDTO beforeApprover : beforeApproverDTOs) {
+				if (approver.getStaffDTO().getStaffCode().equals(beforeApprover.getStaffDTO().getStaffCode())) {
+					
+					if (approver.getApvrType().equals(AGREER) && approver.getApvrType().equals(beforeApprover.getApvrType()) && beforeApprover.getApvrResult() != null) {
+						approver.setApvrState(beforeApprover.getApvrState());
+						approver.setApvrResult(beforeApprover.getApvrResult());
+						approver.setApvrComment(beforeApprover.getApvrComment());
+						approver.setApvrDtm(beforeApprover.getApvrDtm());
+					}
+					
+					if (approver.getApvrType().equals(CHECKER) && approver.getApvrType().equals(beforeApprover.getApvrType()) && beforeApprover.getApvrResult() != null) {
+						if (!approver.getApvrSeq().equals(beforeApprover.getApvrSeq())) {
+							return false;
+						} else {
+							approver.setApvrState(beforeApprover.getApvrState());
+							approver.setApvrResult(beforeApprover.getApvrResult());
+							approver.setApvrComment(beforeApprover.getApvrComment());
+							approver.setApvrDtm(beforeApprover.getApvrDtm());
+							
+							doneCount++;
+						}
+					}
+				}
+			}
+		}
+		
+		for (ApproverDTO approver : draft.getApproverDTOs()) {
+			if ((approver.getApvrType().equals(CHECKER) || approver.getApvrType().equals(CONFIRMER)) && approver.getApvrSeq() == doneCount) {
+				approver.setApvrState(READY);
+			}
+		}
+		
+		draft.setAprvCrnt(doneCount + 1);
+		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
+		
+		if (result != null) return true;
+		else return false;
+	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType) {
 		ApprovalDTO approvalDTO = new ApprovalDTO();
@@ -300,7 +357,12 @@ public class ApprovalService {
 	}
 	
 	private void setApprover(ApprovalDTO draft, List<String> approver) {
-		List<ApproverDTO> approverDTOs = new ArrayList<>();
+		List<ApproverDTO> approverDTOs = null;
+		if (draft.getApproverDTOs() != null) {
+			approverDTOs = draft.getApproverDTOs();
+		} else {
+			approverDTOs = new ArrayList<>();
+		}
 		
 		for (int i = 0; i < approver.size(); i++) {
 			StaffDTO staffDTO = staffService.getStaff(Integer.valueOf(approver.get(i)));
@@ -320,7 +382,10 @@ public class ApprovalService {
 			approverDTOs.add(approverDTO);
 		}
 		
-		draft.setApproverDTOs(approverDTOs);
+		if (draft.getApproverDTOs() == null) {
+			draft.setApproverDTOs(approverDTOs);			
+		}
+		
 	}
 	
 	private void setReceiver(ApprovalDTO draft, List<String> receiver) {
