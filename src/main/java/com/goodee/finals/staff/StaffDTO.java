@@ -127,6 +127,7 @@ public class StaffDTO implements UserDetails {
 	private List<DriveDTO> driveDTOs;
 	
 	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<DriveShareDTO> driveShareDTOs;
 	
 	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
