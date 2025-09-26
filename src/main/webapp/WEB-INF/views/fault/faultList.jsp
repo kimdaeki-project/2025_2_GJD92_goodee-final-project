@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset="UTF-8">
-	<title>어트랙션 점검</title>
+	<title>어트랙션 고장 신고 목록</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 	
@@ -68,28 +67,21 @@
 		            <!-- 선택했던 옵션이 검색 후에도 유지되도록 selected 속성 -->
 		            <select class="form-select" name="searchType" id="searchType" style="max-width:100px; height:40px;">
 		                <option value="ride" ${searchType == 'ride' ? 'selected' : '' }>어트랙션</option>
-		                <option value="type" ${searchType == 'type' ? 'selected' : '' }>점검유형</option>
-		                <option value="result" ${searchType == 'result' ? 'selected' : '' }>점검결과</option>
+		                <option value="title" ${searchType == 'title' ? 'selected' : '' }>신고 제목</option>
 		                <option value="staff" ${searchType == 'staff' ? 'selected' : '' }>담당자</option>
+		                <option value="state" ${searchType == 'state' ? 'selected' : '' }>신고 상태</option>
 		            </select>
 		
 		            <!-- 검색어 입력 -->
 		            <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="keyword" id="keywordInput" value="${pager.keyword}">
 		            
-		            <!-- 점검유형 옵션 -->
-		            <select class="form-select d-none" name="keywordType" id="typeSelect" style="height:40px;">
-		            	<option value="">-- 점검유형 --</option>
-		            	<option value="401" ${pager.keyword == '401' ? 'selected' : '' }>긴급점검</option>
-		            	<option value="501" ${pager.keyword == '501' ? 'selected' : '' }>일일점검</option>
-		            	<option value="502" ${pager.keyword == '502' ? 'selected' : '' }>정기점검</option>
-		            </select>
-		            
-		            <!-- 점검결과 옵션 -->
-		            <select class="form-select d-none" name="keywordResult" id="resultSelect" style="height:40px;">
+		            <!-- 신고 상태 옵션 -->
+		            <select class="form-select d-none" name="keywordState" id="stateSelect" style="height:40px;">
 	            		<option value="">-- 점검결과 --</option>
-		            	<option value="201" ${pager.keyword == '201' ? 'selected' : '' }>정상</option>
-		            	<option value="202" ${pager.keyword == '202' ? 'selected' : '' }>특이사항 있음</option>
-		            	<option value="203" ${pager.keyword == '203' ? 'selected' : '' }>운영불가</option>
+		            	<option value="410" ${pager.keyword == '410' ? 'selected' : '' }>신고접수</option>
+		            	<option value="411" ${pager.keyword == '411' ? 'selected' : '' }>담당자 배정</option>
+		            	<option value="412" ${pager.keyword == '412' ? 'selected' : '' }>수리중</option>
+		            	<option value="420" ${pager.keyword == '420' ? 'selected' : '' }>수리완료</option>
 		            </select>
 		
 		            <!-- 검색 버튼 -->
@@ -98,56 +90,37 @@
 		    </div>
 		</form>
 	    
-	    <c:if test="${ totalInspection gt 0 }">
+	    <c:if test="${ totalFault gt 0 }">
 		<table class="table table-hover align-middle text-center">
 			<thead>
 				<tr>
-					<th scope="col">점검번호</th>
+					<th scope="col">번호</th>
 					<th scope="col">어트랙션</th>
-					<th scope="col">점검유형</th>
-					<th scope="col">점검결과</th>
+					<th scope="col">신고 제목</th>
+					<th scope="col">신고 날짜</th>
 					<th scope="col">담당자</th>
-					<th scope="col">점검 시작일</th>
-					<th scope="col">점검 종료일</th>
-					<th scope="col">체크리스트</th>
+					<th scope="col">신고 상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${ inspection.content }" var="i">
+				<c:forEach items="${ fault.content }" var="f">
 					<tr>
-						<td><a href="${pageContext.request.contextPath }/inspection/${ i.isptNum }">${ i.isptNum }</a></td>
-						<td scope="row">${ i.rideDTO.rideName }</td>
-						<!-- 점검유형 -->						
-						<c:if test="${ i.isptType eq 401 }">
-							<td>긴급점검</td>
-						</c:if>
-						<c:if test="${ i.isptType eq 501 }">
-							<td>일일점검</td>
-						</c:if>
-						<c:if test="${ i.isptType eq 502 }">
-							<td>정기점검</td>
-						</c:if>
-						<!-- 점검결과 -->
-						<c:if test="${ i.isptResult eq 201 }">
-							<td>정상</td>
-						</c:if>
-						<c:if test="${ i.isptResult eq 202 }">
-							<td>특이사항 있음</td>
-						</c:if>
-						<c:if test="${ i.isptResult eq 203 }">
-							<td>운영불가</td>
-						</c:if>
-						<td>${ i.staffDTO.staffName }</td>
+						<td scope="row">${ f.faultNum }</td>
+						<td scope="row">${ f.rideDTO.rideName }</td>
+						<td><a href="${pageContext.request.contextPath }/fault/${ f.faultTitle }">${ f.faultTitle }</a></td>
+						<td scope="row">${ f.faultDate }</td>
+						<td scope="row">${ f.staffDTO.staffName }</td>
 						
-						<td>${ i.isptStart }</td>
-						<td>${ i.isptEnd }</td>
-						<!--  체크리스트 -->
-						<td>
-						  <a href="/inspection/${ i.inspectionAttachmentDTO.attachmentDTO.attachNum }/download"
-						     style="color:#1900F8; text-decoration:none;">
-						     다운로드
-						  </a>
-						</td>
+						<!-- 신고 상태 -->		
+						<c:choose>
+						    <c:when test="${ f.faultState eq 410 }"><td>신고접수</td></c:when>
+						    <c:when test="${ f.faultState eq 411 }"><td>담당자 배정</td></c:when>
+						    <c:when test="${ f.faultState eq 412 }"><td>수리중</td></c:when>
+						    <c:when test="${ f.faultState eq 420 }"><td>수리완료</td></c:when>
+						    <c:otherwise><td>-</td></c:otherwise>
+						</c:choose>
+
+
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -170,31 +143,16 @@
     	</c:if>
 
 		
-    	<!-- 어트랙션 점검 기록 등록 -->
-    	<!-- 로그인 사용자 정보 꺼내기 -->
-    	<sec:authorize access="isAuthenticated()">
-     	  <sec:authentication property="principal" var="staff" />
-		  
-		  <!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
-	      <c:if test="${staff.deptDTO.deptCode eq 1003}">
-	        <div class="text-end mt-4 me-4">
-	          <a href="${pageContext.request.contextPath}/inspection/write "
-	             class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-	             style="width: 100px;">등록</a>
-	        </div>
-	      </c:if>
-	      
-	  </sec:authorize>
+
 	    
 	    </section>
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/inspection/inspectionList.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='어트랙션 점검']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "어트랙션 점검"
+		document.querySelector("i[data-content='고장 신고 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "고장 신고 목록"
 	</script>
 </body>
 

@@ -7,8 +7,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>어트랙션 점검 기록 등록</title>
-	
+	<title>어트랙션 고장 신고 목록</title>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -21,21 +20,21 @@
     	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
-			    	<!-- 메뉴 개수만큼 추가 -->
-			     	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
+			   		 <!-- 메뉴 개수만큼 추가 -->
+			    	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
 			    </ul>
 			  </div>
     	</aside>
+    	
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
-	    
-		    <!-- 여기에 코드 작성 -->
-			<div class="row">
+	    <!-- 여기에 코드 작성 -->
+    	<div class="row">
 	        <div class="col-10">
 			  <!-- 레일형 / 고속형 어트랙션 -->
 	          <div class="card my-4 mt-8 m-8">
 				  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 				    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-4">
-				      <h3 class="text-white text-capitalize ps-5 mt-3"> ${inspection.rideDTO.rideName } </h3>
+				      <h3 class="text-white text-capitalize ps-5 mt-3"> ${ fault.rideDTO.rideName } 고장 신고 기록 </h3>
 				    </div>
 				  </div>
 			  
@@ -45,56 +44,40 @@
 					    <!-- 왼쪽: 어트랙션 점검 기록 이미지 -->
 					    <div class="col-md-6 text-center">
 					      <img alt="" 
-					           src="/file/inspection/${ inspection.inspectionAttachmentDTO.attachmentDTO.savedName }" 
+					           src="/file/fault/${ fault.faultAttachmentDTO.attachmentDTO.savedName }" 
 					           style="width:400px; height:400px; object-fit:cover;">
 					    </div>
 					
 					    <!-- 오른쪽: 상세 정보 -->
-					    <div class="col-md-6 inspection-info">
+					    <div class="col-md-6 fault-info">
 					      <table class="table">
 					        <tr>
 					          <th>어트랙션 코드</th>
-					          <td>${inspection.rideDTO.rideCode}</td>
+					          <td>${ fault.rideDTO.rideCode }</td>
 					        </tr>
 					        <tr>
 					          <th>어트랙션 기종</th>
-					          <td>${inspection.rideDTO.rideType}</td>
+					          <td>${ fault.rideDTO.rideType }</td>
 					        </tr>
 					        <tr>
-					          <th>점검유형</th>
-					          	<c:if test="${ inspection.isptType eq 401 }">
-								<td>긴급점검(${inspection.isptType })</td>
-								</c:if>
-								<c:if test="${ inspection.isptType eq 501 }">
-									<td>일일점검(${inspection.isptType })</td>
-								</c:if>
-								<c:if test="${ inspection.isptType eq 502 }">
-									<td>정기점검(${inspection.isptType })</td>
-								</c:if>
+					         	<th>신고 제목</th>
+					        	<td>${ fault.faultTitle }</td>
 					        </tr>
 					        <tr>
-					          <th>점검결과</th>
-					          	<c:if test="${ inspection.isptResult eq 201 }">
-								<td>정상(${ inspection.isptResult })</td>
-								</c:if>
-								<c:if test="${ inspection.isptResult eq 202 }">
-									<td>특이사항 있음(${ inspection.isptResult })</td>
-								</c:if>
-								<c:if test="${ inspection.isptResult eq 203 }">
-									<td>운영불가(${ inspection.isptResult })</td>
-								</c:if>
+					         	<th>신고 내용</th>
+					        	<td>${ fault.faultContent }</td>
 					        </tr>
 					        <tr>
 					          <th>담당자</th>
-					          <td>${inspection.staffDTO.staffName} (${inspection.staffDTO.staffCode})</td>
+					          <td>${ fault.staffDTO.staffName } (${ fault.staffDTO.staffCode })</td>
 					        </tr>
 							<tr>
-					          <th>점검 시작일</th>
-					          <td>${inspection.isptStart}</td>
+					          <th>고장 신고 날짜</th>
+					          <td>${ fault.faultDate }</td>
 					        </tr>
 					        <tr>
-					          <th>점검 종료일</th>
-					          <td>${inspection.isptEnd}</td>
+					          <th>신고 상태</th>
+					          <td>${ fault.faultState }</td>
 					        </tr>
 					      </table>
 					    </div>
@@ -131,16 +114,16 @@
 			  </div>
 	        </div>
 	  		</div>  
-	
+
+	    
 	    </section>
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/inspection/inspectionDetail.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='어트랙션 점검']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "어트랙션 점검"
+		document.querySelector("i[data-content='고장 신고 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "고장 신고 목록"
 	</script>
 </body>
 
