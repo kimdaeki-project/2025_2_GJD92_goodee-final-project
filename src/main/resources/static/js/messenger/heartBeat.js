@@ -12,7 +12,12 @@ function connectWebSocket(staffCode) {
 	stompClient.connect({}, function(frame) {
 		console.log("Connected: " + frame);
 		stompClient.subscribe("/sub/notify/" + staffCode, (msg) => {
-			showNotification(msg.body, msg.headers.destination);
+			let payload = JSON.parse(msg.body);
+			if (payload.type == 'APPROVAL') {
+				showNotificationApproval(payload.msg, msg.headers.destination);				
+			} else if (payload.type == 'CHATCOUNT') {
+				plusOneChatCount();
+			}
 		})
 	}, (err) => {
 		console.error("Disconnected. Reconnecting in 5s...");
@@ -20,7 +25,7 @@ function connectWebSocket(staffCode) {
 	});
 }
 
-function showNotification(msg, destination) {
+function showNotificationApproval(msg, destination) {
     const notyf = new Notyf();
     notyf.success('새로운 알림이 도착했습니다!');
 	fetch('/alert/new', {

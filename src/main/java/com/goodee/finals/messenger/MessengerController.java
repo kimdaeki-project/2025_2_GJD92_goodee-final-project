@@ -145,4 +145,10 @@ public class MessengerController {
 		return result;
 	} 
 	
+	@PostMapping("notify") @ResponseBody
+	public List<ChatUserDTO> notify(@RequestBody ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> result = messengerService.getNotify(chatRoomDTO);
+		return result;
+	}
+	
 }

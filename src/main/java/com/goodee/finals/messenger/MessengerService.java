@@ -185,5 +185,10 @@ public class MessengerService {
 		MessengerTestDTO result = messengerRepository.getTrueLatest(messengerTestDTO.getChatRoomNum());
 		return result;
 	}
+
+	public List<ChatUserDTO> getNotify(ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> result = messengerRepository.getNotify(chatRoomDTO.getChatRoomNum());
+		return result;
+	}
 	
 }

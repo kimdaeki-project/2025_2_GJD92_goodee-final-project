@@ -63,7 +63,12 @@
 	        		unreadTotal += res.unread[room];
 	        	});
 	        	let bdg = document.querySelector('.badge-footer-display');
-	        	bdg.innerText = unreadTotal;
+	        	let count = unreadTotal;
+	        	if (count > 9) {
+	        		bdg.innerText = '9+';
+	        	} else {
+	        		bdg.innerText = count;
+	        	}
 	        })
 	    });
 	</sec:authorize>

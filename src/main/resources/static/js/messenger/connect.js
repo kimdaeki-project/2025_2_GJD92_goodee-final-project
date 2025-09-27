@@ -26,7 +26,24 @@ stompClient.connect({}, function (frame) {
 			staffName: senderName
 			// 날짜, 삭제 여부는 컨트롤러에서 세팅
         };
-        stompClient.send("/pub/chat/" + chatRoomNum, {}, JSON.stringify(message)); // 메세지 전송 경로
+        stompClient.send("/pub/chat/" + chatRoomNum, {}, JSON.stringify(message));
+		fetch('/msg/notify', {
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ chatRoomNum: chatRoomNum })
+		})
+		.then(response => response.json())
+		.then(response => {
+			response.forEach(el => {
+				if (el.staffDTO.staffCode != sender) {
+					let notification = {
+						type: 'CHATCOUNT',
+						msg: 'plus'
+					}
+			        stompClient.send("/pub/notify/" + el.staffDTO.staffCode, {}, JSON.stringify(notification));					
+				}
+			});
+		});
         document.getElementById('messageInput').value = '';
     });
 });
