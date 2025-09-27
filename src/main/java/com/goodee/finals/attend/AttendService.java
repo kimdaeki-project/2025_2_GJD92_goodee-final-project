@@ -2,6 +2,8 @@ package com.goodee.finals.attend;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,7 +83,23 @@ public class AttendService {
 	}
 	
 	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, Pageable pageable) {
-        return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable);
+		
+		String monthStr = "" + month;
+		
+		if (month < 10) {
+			monthStr = "0" + month;
+		}
+		monthStr = year + monthStr;
+		
+		List<HolidayDTO> holidayList = attendRepository.findByMonth(monthStr);
+		
+		List<Integer> holiday = new ArrayList<>();
+		
+		for (HolidayDTO holidayDTO : holidayList) {
+			holiday.add(holidayDTO.getDate().getDayOfMonth());
+		}
+		
+        return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable, holiday);
     }
 	
 }

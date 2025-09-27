@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,8 +28,11 @@ public class ProductManageDTO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pmNum;
 	private Integer pmType;
-	private Integer pmAmount;
+	private Long pmAmount;
+	private Long pmRemainAmount;
 	private LocalDate pmDate = LocalDate.now();
+	@Column(columnDefinition = "boolean default false")
+	private boolean pmDelete;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")

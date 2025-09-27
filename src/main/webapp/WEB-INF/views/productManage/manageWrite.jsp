@@ -66,6 +66,12 @@ aside.sidenav {
 	min-width: 200px !important;
 	max-width: 200px !important;
 }
+.btn-close {
+  background-color: red !important; /* 테스트용 - 보이는지 확인 */
+  border: 1px solid black;
+  width: 1.5rem;
+  height: 1.5rem;
+}
 </style>
 <c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -92,7 +98,7 @@ aside.sidenav {
 						</a></li>
 
 						<li class="nav-item"><a class="nav-link text-dark"
-							href="/productManage/write"> <i
+							href="/productManage"> <i
 								class="material-symbols-rounded opacity-5 fs-5"
 								data-content="물품관리대장">remove_shopping_cart</i> <span
 								class="nav-link-text ms-1 text-sm">물품관리대장</span>
@@ -119,24 +125,29 @@ aside.sidenav {
 								name="productCode"
 								value="${productManageDTO.productDTO.productCode }" required>
 								
-							<input type="hidden" name="productTypeCode" value="${productManageDTO.productDTO.ProductTypeDTO.productTypeCode }"/>
+							<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
 							
 							<label for="itemName">물품타입</label> <input type="text"
-								name="productTypeName"
-								value="${productManageDTO.productDTO.ProductTypeDTO.productTypeName }"
+								name="productTypeDTO.productTypeName"
+								value="${productManageDTO.productDTO.productTypeDTO.productTypeName }"
 								required>
 								 
 							<label for="itemName">물품명</label> <input
 								type="text" name="productName"
-								value="${productDTO.productDTO.productName }" required>
+								value="${productManageDTO.productDTO.productName }" required>
 						</div>
 
 						<div class="form-group">
 							<label>유형</label>
 							<div class="radio-group">
-								<label><input type="radio" name="pmType" value="80"
-									checked> 입고</label> <label><input type="radio"
-									name="pmType" value="90"> 출고</label>
+								<label>
+									<input type="radio" name="pmType" value="80" 
+										<c:if test="${productManageDTO.pmType == 80}">checked</c:if>> 입고
+									</label> 
+								<label>
+									<input type="radio"	name="pmType" value="90"
+										<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고
+								</label>
 							</div>
 						</div>
 
@@ -147,7 +158,7 @@ aside.sidenav {
 
 						<button type="submit"
 							class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-							style="width: 100px;">${ empty productDTO.productCode ? "등록" : "수정" }</button>
+							style="width: 100px;">${ empty productManageDTO.pmNum ? "등록" : "수정" }</button>
 						<button type="button" class="btn btn-sm btn-outline-secondary"
 							onclick="history.back();" style="width: 100px;">취소</button>
 					</form>
@@ -160,6 +171,12 @@ aside.sidenav {
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title">물품 목록</h5>
+								<div class="d-flex justify-content-end align-items-end">
+									<div class="input-group">
+										<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
+										<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+									</div>
+								</div>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="닫기"></button>
 							</div>
@@ -220,8 +237,8 @@ aside.sidenav {
 
         // 부모 form input에 넣기
         document.querySelector("input[name='productCode']").value = code;
-        document.querySelector("input[name='productTypeCode']").value = typeCode;
-        document.querySelector("input[name='productTypeName']").value = typeName;
+        document.querySelector("input[name='productTypeDTO.productTypeCode']").value = typeCode;
+        document.querySelector("input[name='productTypeDTO.productTypeName']").value = typeName;
         document.querySelector("input[name='productName']").value = name;
 
         // 모달 닫기
