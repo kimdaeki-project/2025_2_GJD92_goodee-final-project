@@ -17,6 +17,8 @@ function connectWebSocket(staffCode) {
 				showNotificationApproval(payload.msg, msg.headers.destination);				
 			} else if (payload.type == 'CHATCOUNT') {
 				plusOneChatCount();
+			} else if (payload.type == 'SYNCCHATCOUNT') {
+				synchronize(payload.msg);
 			}
 		})
 	}, (err) => {

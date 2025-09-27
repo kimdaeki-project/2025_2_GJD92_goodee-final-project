@@ -3,6 +3,8 @@
  * 채팅, 화면에 메시지 출력, 메시지 DB에 저장, 무한 스크롤 로직 스크립트
  */
 const chatRoomNum = document.querySelector('#chatRoomNum').value;
+const sender = document.querySelector('#messageSender').value;
+const senderName = document.querySelector('#messageSenderName').value;
 const socket = new SockJS('http://localhost/ws-stomp');
 const stompClient = Stomp.over(socket);
 stompClient.connect({}, function (frame) {
@@ -12,11 +14,12 @@ stompClient.connect({}, function (frame) {
         const receivedMessage = JSON.parse(message.body); // 메시지 파싱
         displayMessage(receivedMessage); // 화면에 메시지 표시
     });
+	
+	// 채팅방에 들어왔을 때 읽은 메시지의 개수를 푸터의 읽지않은 메시지 개수에서 빼주는 로직의 함수
+	syncUnreadCount();
 
     document.getElementById('sendButton').addEventListener('click', function () {
         const contents = document.querySelector('#messageInput').value;
-        const sender = document.querySelector('#messageSender').value;
-        const senderName = document.querySelector('#messageSenderName').value;
         const message = {
             type: "SEND", // 고정된 type
             contents: contents,
@@ -96,3 +99,7 @@ window.addEventListener("beforeunload", function() {
 	formData.append("chatRoomNum", chatRoomNum);
 	navigator.sendBeacon("/msg/exit", formData);
 });
+// 안읽은 메시지 제거
+function syncUnreadCount() {
+	stompClient.send("/pub/notify/" + sender, {}, JSON.stringify({msg: chatRoomNum, type: 'SYNCCHATCOUNT'}));
+}
