@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.goodee.finals.productManage.ProductManageDTO;
-
 @Controller
 @RequestMapping("/product/**")
 @Slf4j
@@ -28,7 +26,7 @@ public class ProductController {
 	private ProductService productService;
 	
 	@GetMapping("")
-	public String getProductList(@PageableDefault(size = 10, sort = "product_code", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+	public String getProductList(@PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";
 		
 		Page<ProductDTO> productList = productService.getProductSearchList(search,pageable);
