@@ -53,22 +53,22 @@
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>휴</span><span>가</span><span>기</span><span>간</span></p></td>
 		<td class="hard-side-line" style="width: 100px;"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>시</span><span>작</span><span>일</span></p></td>
-		<td style="width: 200px;"><input type="date" name="vacStart"></td>
+		<td style="width: 200px;"><input type="date" name="vacStart" value=${ approval.vacationDTO.vacStart }></td>
 		<td class="hard-side-line" style="width: 100px;"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>종</span><span>료</span><span>일</span></p></td>
-		<td style="width: 200px;"><input type="date" name="vacEnd"></td>
+		<td style="width: 200px;"><input type="date" name="vacEnd" value=${ approval.vacationDTO.vacEnd }></td>
 	</tr>
 	
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>유</span><span>형</span></p></td>
 		<td colspan="4">
 			<div class="d-flex justify-content-center align-items-center">
-				<input type="radio" id="vacType" name="vacType" value="9010">
-				<label for="9010" class="mb-0 ms-2">연차</label>
+				<input type="radio" id="vacType" name="vacType" value="9010" <c:if test="${ approval.vacationDTO.vacType eq 9010 }">checked</c:if>>
+				<label for="9010" class="mb-0 ms-2" >연차</label>
 				
-				<input type="radio" class="ms-5" id="vacType" name="vacType" value="9011">
+				<input type="radio" class="ms-5" id="vacType" name="vacType" value="9011" <c:if test="${ approval.vacationDTO.vacType eq 9011 }">checked</c:if>>
 				<label for="9010" class="mb-0 ms-2">공가</label>
 				
-				<input type="radio" class="ms-5" id="vacType" name="vacType" value="9012">
+				<input type="radio" class="ms-5" id="vacType" name="vacType" value="9012" <c:if test="${ approval.vacationDTO.vacType eq 9012 }">checked</c:if>>
 				<label for="9010" class="mb-0 ms-2">병가</label>
 			</div>
 		</td>
@@ -77,7 +77,7 @@
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>사</span><span>유</span></p></td>
 		<td colspan="4">
-			<input type="text" class="form-control" name="vacReason" />
+			<input type="text" class="form-control" name="vacReason" value="${ approval.vacationDTO.vacReason }" />
 		</td>
 	</tr>
 	
