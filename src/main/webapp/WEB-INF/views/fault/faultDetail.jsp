@@ -30,7 +30,7 @@
 	    <!-- 여기에 코드 작성 -->
     	<div class="row">
 	        <div class="col-10">
-			  <!-- 레일형 / 고속형 어트랙션 -->
+			  <!--  -->
 	          <div class="card my-4 mt-8 m-8">
 				  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 				    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-4">
@@ -41,12 +41,21 @@
 				  <div class="card-body mt-4">
 					  <div class="row inspection-content">
 					    
-					    <!-- 왼쪽: 어트랙션 점검 기록 이미지 -->
-					    <div class="col-md-6 text-center">
-					      <img alt="" 
-					           src="/file/fault/${ fault.faultAttachmentDTO.attachmentDTO.savedName }" 
-					           style="width:400px; height:400px; object-fit:cover;">
-					    </div>
+					    <!-- 왼쪽: 어트랙션 고장 신고 이미지 -->
+						<div class="col-md-6 text-center" 
+						     style="width:400px; height:400px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center;">
+						  <c:choose>
+						    <c:when test="${not empty fault.faultAttachmentDTO}">
+						      <img alt="고장 신고 이미지"
+						           src="/file/fault/${fault.faultAttachmentDTO.attachmentDTO.savedName}"
+						           style="width:100%; height:100%; object-fit:cover;">
+						    </c:when>
+						    <c:otherwise>
+						      <span class="text-muted">등록된 이미지가 없습니다</span>
+						    </c:otherwise>
+						  </c:choose>
+						</div>
+
 					
 					    <!-- 오른쪽: 상세 정보 -->
 					    <div class="col-md-6 fault-info">
@@ -77,7 +86,18 @@
 					        </tr>
 					        <tr>
 					          <th>신고 상태</th>
-					          <td>${ fault.faultState }</td>
+					          <c:if test="${ fault.faultState eq 410 }"> 
+					          	<td>신고접수</td>
+					          </c:if> 
+ 					          <c:if test="${ fault.faultState eq 411 }">
+					          	<td>담당자 배정</td>
+					          </c:if>
+					          <c:if test="${ fault.faultState eq 412 }">
+					          	<td>수리중</td>
+					          </c:if>
+					          <c:if test="${ fault.faultState eq 420 }">
+					          	<td>수리완료</td>
+					          </c:if> 
 					        </tr>
 					      </table>
 					    </div>
@@ -94,7 +114,7 @@
 				    <div class="form-group row mt-4 text-end">
 				      <div class="col-sm-12">
 				      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
-				      	<form action="${pageContext.request.contextPath }/inspection/${inspection.isptNum}/update"
+				      	<form action="${pageContext.request.contextPath }/fault/${ fault.faultNum }/update"
 				      			method="get" style="display: inline;">
 					        <button type="submit" 
 					        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
@@ -104,7 +124,7 @@
 				        <button type="button" 
 				                class="btn btn-sm btn-outline-secondary" 
 				                style="width: 100px;"
-				                onclick="deleteInspection('${ inspection.isptNum }')">삭제</button>
+				                onclick="deleteFault('${ fault.faultNum }')">삭제</button>
 				      </div>
 				    </div>
 			    </c:if>
@@ -120,6 +140,7 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/fault/faultDetail.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='고장 신고 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")

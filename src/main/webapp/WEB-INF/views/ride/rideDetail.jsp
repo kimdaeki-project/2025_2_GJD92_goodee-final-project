@@ -8,7 +8,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>어트랙션</title>
-	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -21,18 +20,15 @@
     	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
-			    
 			      <!-- 메뉴 개수만큼 추가 -->
 			    	<c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
-			      
-			      
 			    </ul>
 			  </div>
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    
-		    <!-- 여기에 코드 작성 -->
-		    <div class="row">
+	    <!-- 여기에 코드 작성 -->
+	    <div class="row">
         <div class="col-10">
 		  <!-- 레일형 / 고속형 어트랙션 -->
           <div class="card my-4 mt-8 m-8">
@@ -133,7 +129,8 @@
 	<script src="/js/ride/rideDetail.js"></script>
 	<script>
 		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "어트랙션"
+		document.querySelector("i[data-content='어트랙션 목록']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "어트랙션 목록"
 	</script>
 </body>
 

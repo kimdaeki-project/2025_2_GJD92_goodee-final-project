@@ -52,7 +52,15 @@ public class AttachmentDTO {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<NoticeAttachmentDTO> noticeAttachmentDTOs;
-
+	
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private InspectionAttachmentDTO inspectionAttachmentDTO;
+	
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private FaultAttachmentDTO faultAttachmentDTO;
+	
 	@OneToOne(mappedBy = "attachmentDTO")
 	@JsonIgnore
 	private DocumentDTO documentDTO;
