@@ -55,7 +55,6 @@ public class MessengerController {
 	
 	@PostMapping("create")
 	public String create(@RequestParam(required = false) List<Integer> addedStaff, ChatRoomDTO chatRoomDTO, Model model) {
-		System.out.println(addedStaff.size());
 		ChatRoomDTO result = messengerService.createRoom(addedStaff, chatRoomDTO);
 		model.addAttribute("resultMsg", "채팅방이 생성되었습니다.");
 		model.addAttribute("resultIcon", "success");
