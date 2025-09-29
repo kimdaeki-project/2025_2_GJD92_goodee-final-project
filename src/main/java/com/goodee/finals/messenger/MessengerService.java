@@ -114,8 +114,7 @@ public class MessengerService {
 		
 		if (flag) {
 			ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
-			Optional<StaffDTO> staffDTOSend = staffRepository.findById(sendStaffCode);
-			chatRoomDTO.setChatRoomName(staffDTOSend.get().getStaffName() + " " + staffDTOLogged.get().getStaffName());
+			chatRoomDTO.setChatRoomName("DM_NONAME");
 			ChatRoomDTO savedRoom = messengerRepository.save(chatRoomDTO);
 			List<Integer> addedStaff = new ArrayList<>();
 			addedStaff.add(loggedStaffCode);
