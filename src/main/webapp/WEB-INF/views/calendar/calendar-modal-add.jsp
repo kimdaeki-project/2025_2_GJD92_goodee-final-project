@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
   <!-- 일정 쓰기 모달 -->
-  <div class="modal fade" id="addEventModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="addCalendarModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:600px;">
       <div class="modal-content border-0 rounded-3 shadow">
         <div class="modal-header">
@@ -124,7 +124,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-dark" id="btnAddCalendar" onclick="addCalendarEvent()">등록</button>
+          <button type="button" class="btn btn-dark" id="btnAddCalendar" onclick="addCalendar()">등록</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
         </div>
       </div>

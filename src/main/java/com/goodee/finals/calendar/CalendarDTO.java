@@ -33,9 +33,11 @@ public class CalendarDTO {
 	private String calContent;
 	private Boolean calEnabled;
 	private Boolean calIsAllDay;
+	@Column(columnDefinition = "datetime(6)")
 	private LocalDateTime calStart;
 	@Column(columnDefinition = "datetime(6)")
 	private LocalDateTime calEnd;
+	private LocalDateTime calReg;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")

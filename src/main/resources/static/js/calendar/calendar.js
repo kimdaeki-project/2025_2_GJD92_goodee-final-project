@@ -1,13 +1,34 @@
 console.log("calendar.js 연결됨")
 
-const allDayCheckBox  = document.getElementById("allDayCheckBox");
-const btnAddCalendar  = document.getElementById("btnAddCalendar");
-const btnModalWrite   = document.getElementById("btnModalWrite");
-const calendarEl      = document.getElementById('calendar');
-const selectMinHour   = document.querySelectorAll(".select-min-hour");
+const calendarEl      = document.getElementById("calendar");
+const inputCalNum     = document.getElementById("calNum");
 
-const modalAddEvent   = new bootstrap.Modal(document.getElementById('addEventModal'));
-const modalDetail     = new bootstrap.Modal(document.getElementById("eventDetailModal"));
+// 모달
+const modalAddCalendar   = new bootstrap.Modal(document.getElementById('addCalendarModal'));
+const modalCalendarDetail     = new bootstrap.Modal(document.getElementById("calendarDetailModal"));
+
+// 등록 수정 모달
+const btnModalWrite     = document.getElementById("btnModalWrite");
+const btnAddCalendar    = document.getElementById("btnAddCalendar");
+const selectMinHour     = document.querySelectorAll(".select-min-hour");
+
+const inputCalType      = document.getElementById("calType");
+const inputCalTitle     = document.getElementById("calTitle");
+const inputCalPlace     = document.getElementById("calPlace")
+const inputCalContent   = document.getElementById("calContent")
+const inputCalIsAllDay  = document.getElementById("allDayCheckBox")
+const inputCalEndMin    = document.getElementById("calEndMin");
+const inputCalEndHour   = document.getElementById("calEndHour");
+const inputCalEndDate   = document.getElementById("calEndDate");
+const inputCalStartMin  = document.getElementById("calStartMin");
+const inputCalStartHour = document.getElementById("calStartHour");
+const inputCalStartDate = document.getElementById("calStartDate");
+const allDayCheckBox    = document.getElementById("allDayCheckBox");
+
+// 상세 모달
+const btnUpdateCalendar  = document.getElementById("btnUpdateCalendar");
+const btnDeleteCalendar  = document.getElementById("btnDeleteCalendar");
+const btnUpAndDel      = document.querySelectorAll(".btn-update-delete");
 
 document.addEventListener("hidden.bs.modal", (e) => {
 	const modalForm = e.target.querySelector("#eventForm");
@@ -49,25 +70,42 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		 today: '오늘'
 	},
 	eventClick: function(eventInfo) {
+		let calStart    = eventInfo.event.startStr;
+		let calReg      = eventInfo.event._def.extendedProps.calReg;
+		calReg = dayjs(calReg).format("YYYY-MM-DD HH:mm");		
+		calStart = eventInfo.event.allDay ? dayjs(calStart).format("YYYY-MM-DD") : dayjs(calStart).format("YYYY-MM-DD HH:mm");				
+
+		const calNum      = eventInfo.event._def.extendedProps.calNum;
+		const calType     = eventInfo.event._def.extendedProps.calType;
+		const calTitle    = eventInfo.event._def.extendedProps.calTitle;
+		const calPlace    = eventInfo.event._def.extendedProps.calPlace;
+		const staffName   = eventInfo.event._def.extendedProps.staffName;
+		const staffCode   = eventInfo.event._def.extendedProps.staffCode;
+		const calContent  = eventInfo.event._def.extendedProps.calContent;
+		const calTypeName = eventInfo.event._def.extendedProps.calTypeName;
 		
-		calTitle    = eventInfo.event._def.extendedProps.calTitle;
-		calStart    = eventInfo.event.startStr;
-		calTypeName = eventInfo.event._def.extendedProps.calTypeName;
-		calType     = eventInfo.event._def.extendedProps.calType;
-		calContent  = eventInfo.event._def.extendedProps.calContent;
-		staffName  = eventInfo.event._def.extendedProps.staffName;
-		
+		document.getElementById("detailModalReg").textContent = calReg;
+		document.getElementById("detailModalDate").textContent = calStart;
 		document.getElementById("detailModalTitle").textContent = calTitle
-		document.getElementById("detailModalDate").textContent = calStart
-		document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
-		document.getElementById("detailCircle").style.backgroundColor = eventBgColor(calType);
-		document.getElementById("detailModalContent").textContent = calContent;
+		document.getElementById("detailModalPlace").textContent = calPlace;
 		document.getElementById("detailModalWriter").textContent = staffName;
+		document.getElementById("detailModalContent").textContent = calContent;
+		document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
+		document.getElementById("detailDeptCircle").style.backgroundColor = eventBgColor(calType);
 		
+		inputCalNum.value = calNum;  
 		
-		modalDetail.show();
-		
-		console.log(eventInfo)
+		// 공휴일, 작성자 본인이 아닌경우 수정,삭제 버튼 숨김처리
+		if(calType == 2000 || loginStaffCode != staffCode) {
+			btnUpAndDel.forEach(function(el) {
+				el.classList.add("d-none");
+			})
+		} else {
+			btnUpAndDel.forEach(function(el) {
+				el.classList.remove("d-none");
+			})
+		}
+		modalCalendarDetail.show();
 	},
 	dateClick: function(dateInfo) { // 날짜 빈공간 클릭
 		showWriteModal(dateInfo.dateStr);
@@ -92,16 +130,7 @@ calendar.render(); // 랜더링
 // 종일 체크박스 체크시 시작 시,분 안보임 처리
 allDayCheckBox.addEventListener("change", (e) => {
 	const check = e.target.checked;
-	
-	if(check) {
-		selectMinHour.forEach(function (select) {
-			select.classList.add("d-none");
-		})
-	} else {
-		selectMinHour.forEach(function (select) {
-			select.classList.remove("d-none");
-		})
-	} 
+	showHideInput(check);
 })
 
 btnModalWrite.addEventListener("click", () => {
@@ -109,43 +138,153 @@ btnModalWrite.addEventListener("click", () => {
 	showWriteModal(today);
 })
 
-function addCalendarEvent() {
-	const calStartDate = document.getElementById("calStartDate").value;
-	const calStartHour = document.getElementById("calStartHour").value;
-	const calStartMin  = document.getElementById("calStartMin").value;
-	const calEndDate   = document.getElementById("calEndDate").value;
-	const calEndHour   = document.getElementById("calEndHour").value;
-	const calEndMin    = document.getElementById("calEndMin").value;
-	const calType      = document.getElementById("calType").value;
-	const calTitle     = document.getElementById("calTitle").value;
+
+btnUpdateCalendar.addEventListener("click", () => {
+	btnAddCalendar.dataset.request = "update";
+	const calNum = inputCalNum.value;
+	
+	fetch(`/calendar/${calNum}`, { method: "GET" })
+	.then(r => r.json())
+	.then(cal => {
+		if(cal != null) {
+			inputCalEndMin.value     = dayjs(cal.calEnd).format("mm");
+			inputCalEndHour.value    = dayjs(cal.calEnd).format("HH");
+			inputCalEndDate.value    = dayjs(cal.calEnd).format("YYYY-MM-DD");
+			inputCalStartMin.value   = dayjs(cal.calStart).format("mm");
+			inputCalStartHour.value  = dayjs(cal.calStart).format("HH");
+			inputCalStartDate.value  = dayjs(cal.calStart).format("YYYY-MM-DD");
+			                         
+			inputCalType.value       = cal.calType;
+			inputCalPlace.value      = cal.calPlace;
+			inputCalTitle.value      = cal.calTitle;
+			inputCalContent.value    = cal.calContent;
+			inputCalIsAllDay.checked = cal.calIsAllDay;
+						
+			showHideInput(cal.calIsAllDay);
+			
+			if(modalCalendarDetail) modalCalendarDetail.hide();
+			modalAddCalendar.show();
+		}
+	})
+	.catch(e => {
+		console.log("캘린더 Detail 불러오기 실패", e)
+	});
+})
+
+btnDeleteCalendar.addEventListener("click", () => {
+	
+	Swal.fire({
+	   title: "일정 삭제",
+	   text: '일정을 삭제하시겠습니까?.',
+	   icon: "error",
+	   showCancelButton: true,
+	   confirmButtonColor: "#191919",
+	   cancelButtonColor: "#FFFFFF",
+	   confirmButtonText: "삭제",
+	   cancelButtonText: "취소",
+	   customClass: {
+	       cancelButton: 'my-cancel-btn'
+	     }
+	}).then(result => {
+		if(!result.isConfirmed) {
+			return
+		}
+		const calNum = inputCalNum.value;
+		const param = new URLSearchParams();
+		param.append("calNum", calNum);
+		
+		fetch("/calendar/delete", {
+			method: "POST",
+			body: param
+		})
+		.then(r => r.json())
+		.then(r => {
+			if(r) {
+				const event = calendar.getEventById(calNum)
+				if(event) {
+					event.remove();
+				}
+			} else {
+				Swal.fire({
+			        text: "작성자 본인만 삭제 가능",
+			        icon: "error",
+			        confirmButtonColor: "#191919",
+			        confirmButtonText: "확인"
+		  	    });
+			}
+			if (modalCalendarDetail) modalCalendarDetail.hide();
+		})
+		.catch(e => {
+			console.log("삭제하는데 에러 발생", e)	
+		})
+	})
+})
+
+function addCalendar() {
+	const calType      = inputCalType.value;
+	const calTitle     = inputCalTitle.value;
+	const calEndMin    = inputCalEndMin.value;
+	const calEndHour   = inputCalEndHour.value;
+	const calEndDate   = inputCalEndDate.value;
+	const calStartMin  = inputCalStartMin.value;
+	const calStartHour = inputCalStartHour.value;
+	const calStartDate = inputCalStartDate.value;
 	
 	if(!calType) {
-		alert("타입을 선택하세요!");
+		Swal.fire({
+	        text: "타입을 선택하세요!",
+	        icon: "error",
+	        confirmButtonColor: "#191919",
+	        confirmButtonText: "확인"
+  	    });
 		return;
 	}
 	if(calStartDate == null || calStartDate == "") {
-		alert("시작일을 넣어주세요");
+		Swal.fire({
+	        text: "시작날짜 설정 필수!",
+	        icon: "error",
+	        confirmButtonColor: "#191919",
+	        confirmButtonText: "확인"
+  	    });
 		return;
 	}
 	if(calEndDate == null || calEndDate == "") {
-		alert("종료일을 넣어주세요");
+		Swal.fire({
+	        text: "종료날짜 설정 필수!",
+	        icon: "error",
+	        confirmButtonColor: "#191919",
+	        confirmButtonText: "확인"
+  	    });
 		return;
 	}
 	if(!calTitle) {
-		alert("제목 비어있음!");
+		Swal.fire({
+	        text: "제목 작성 필수!",
+	        icon: "error",
+	        confirmButtonColor: "#191919",
+	        confirmButtonText: "확인"
+  	    });
 		return;
 	}
 	
 	// 시간 포멧팅 해주는 라이브러리 사용
 	// <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 	const start = dayjs(`${calStartDate} ${calStartHour}:${calStartMin}`, "YYYY-MM-DD HH:mm")
-                  .format("YYYY-MM-DDTHH:mm:ss");
 	const end   = dayjs(`${calEndDate} ${calEndHour}:${calEndMin}`, "YYYY-MM-DD HH:mm")
-                  .format("YYYY-MM-DDTHH:mm:ss");
+	
+	if(end.isBefore(start)) {
+		Swal.fire({
+	        text: "종료일을 시작일보다 빠르게 설정할 수 없습니다.",
+	        icon: "error",
+	        confirmButtonColor: "#191919",
+	        confirmButtonText: "확인"
+  	    });
+		return;
+	}
 	
 	const calEvent = {
-		calStart:    start,
-		calEnd:      end,
+		calStart:    start.format("YYYY-MM-DDTHH:mm:ss"),
+		calEnd:      end.format("YYYY-MM-DDTHH:mm:ss"),
 		calType:     calType,
 		calTitle:    calTitle,
 		calIsAllDay: document.getElementById("allDayCheckBox").checked,
@@ -153,18 +292,36 @@ function addCalendarEvent() {
 		calContent:  document.getElementById("calContent").value,
 	};
 	// fetch로 DB에 등록
-	fetch("calendar/add", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(calEvent)
-	})
-	.then(r => r.json())
-	.then(addedEvent => {
-		// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent() 사용해서 랜더링
-		console.log(addedEvent)
-		calendar.addEvent(addToCalendar(addedEvent))
-		if(modalAddEvent) modalAddEvent.hide();
-	})
+	// 1. 일정쓰기
+	if(btnAddCalendar.dataset.request == "add") {
+		fetch("calendar/add", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(calEvent)
+		})
+		.then(r => r.json())
+		.then(addedCalendar => {
+			// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent() 사용해서 랜더링
+			console.log(addedCalendar)
+			calendar.addEvent(addToCalendar(addedCalendar))
+			if(modalAddCalendar) modalAddCalendar.hide();
+		})
+	} else if(btnAddCalendar.dataset.request == "update") {
+		// Update일때는 객체에 calNum 추가
+		calEvent.calNum = inputCalNum.value;
+		
+		fetch("calendar/update", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(calEvent)
+		})
+		.then(r => r.json())
+		.then(UpdatedCalendar => {
+			console.log(UpdatedCalendar)
+			updateCalendarEvent(UpdatedCalendar);
+		})
+	}
+	if(modalAddCalendar) modalAddCalendar.hide();
 }
 
 function addToCalendar(event) {
@@ -179,18 +336,41 @@ function addToCalendar(event) {
 		classNames: ['my-event'],
 		editable : true,
 		extendedProps: {
-			calType: event.calType,
-			calPlace: event.calPlace,
-			calTitle: event.calTitle,
-			calContent: event.calContent,
-			staffCode: event.staffDTO.staffCode,
-			staffName: event.staffDTO.staffName,
-			deptCode: event.staffDTO.deptDTO.deptCode,
-			deptDetail: event.staffDTO.deptDTO.deptDetail,
-			calTypeName: event.calTypeName
+			calNum      : event.calNum,
+			calReg      : event.calReg,
+			calType     : event.calType,
+			calPlace    : event.calPlace,
+			calTitle    : event.calTitle,
+			calContent  : event.calContent,
+			calTypeName : event.calTypeName,
+			staffCode   : event.staffDTO.staffCode,
+			staffName   : event.staffDTO.staffName,
+			deptCode    : event.staffDTO.deptDTO.deptCode,
+			deptDetail  : event.staffDTO.deptDTO.deptDetail
 		}
 	}
 }
+
+// 기존 등록된 캘린더를 수정
+function updateCalendarEvent(updatedCalendar) {
+	const event = calendar.getEventById(updatedCalendar.calNum);
+	if (event) {
+	  event.setProp("title", updatedCalendar.calTitle);
+	  event.setStart(updatedCalendar.calStart);
+	  event.setEnd(updatedCalendar.calEnd);
+	  event.setAllDay(updatedCalendar.calIsAllDay);
+	  event.setProp("backgroundColor", eventBgColor(updatedCalendar.calType));
+
+	  event.setExtendedProp("calType", updatedCalendar.calType);
+	  event.setExtendedProp("calTitle", updatedCalendar.calTitle);
+	  event.setExtendedProp("calPlace", updatedCalendar.calPlace);
+	  event.setExtendedProp("calContent", updatedCalendar.calContent);
+	  event.setExtendedProp("calTypeName", updatedCalendar.calTypeName);
+	  event.setExtendedProp("deptCode", updatedCalendar.staffDTO.deptDTO? deptDTO.deptCode : null);
+	  event.setExtendedProp("deptCode", updatedCalendar.staffDTO.deptDTO? deptDTO.deptDetail : null);
+	}
+}
+
 
 function eventBgColor(calType) {
 	switch (calType) {
@@ -202,7 +382,24 @@ function eventBgColor(calType) {
 }
 
 function showWriteModal(date) {
-	modalAddEvent.show();
+	btnAddCalendar.dataset.request = "add";
+	
 	document.getElementById("calStartDate").value = date;
 	document.getElementById("calEndDate").value = date;
+	
+	modalAddCalendar.show();
 }
+
+function showHideInput(checked) {
+	if(checked) {
+		selectMinHour.forEach(function (select) {
+			select.classList.add("d-none");
+		})
+	} else {
+		selectMinHour.forEach(function (select) {
+			select.classList.remove("d-none");
+		})
+	} 
+}
+
+

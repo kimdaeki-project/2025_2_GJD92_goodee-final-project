@@ -9,19 +9,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CalendarRepository extends JpaRepository<CalendarDTO, Long>{
-
-//	@Query("SELECT c FROM CalendarDTO c " +
-//	       " WHERE c.calType IN (2000, 2001, 2002) " +
-//	       "    OR (c.calType = 2003 AND c.deptDTO.deptCode = :deptCode) ")
-//	List<CalendarDTO> getEventList(@Param("deptCode") Integer deptCode);
-	
 	@Query("""
 	SELECT c
 	  FROM CalendarDTO c
 	  JOIN FETCH c.staffDTO s
 	  LEFT JOIN FETCH c.deptDTO d
-	 WHERE c.calType IN (2000, 2001, 2002)
-	    OR (c.calType = 2003 AND d.deptCode = :deptCode)""")
-	List<CalendarDTO> getEventList(@Param("deptCode") Integer deptCode);
+	 WHERE c.calEnabled = true 
+	   AND (
+			c.calType IN (2000, 2001, 2002)
+	    OR (c.calType = 2003 AND d.deptCode = :deptCode)
+			)""")
+	List<CalendarDTO> getCalendarList(@Param("deptCode") Integer deptCode);
 	
 }

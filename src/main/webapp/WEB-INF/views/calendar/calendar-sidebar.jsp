@@ -19,24 +19,26 @@
 
 		<!-- 일정 분류 체크 박스 -->
 		<!-- TODO 반복문으로 바꿀예정 -->
-		<ul class="navbar-nav">
-			<li class="nav-item">
-				<input type="checkbox">
-				<span>공휴일</span>
-			</li>
-			<li class="nav-item">
-				<input type="checkbox"> 
-				<span>점검 일정</span>
-			</li>
-			<li class="nav-item">
-				<input type="checkbox"> 
-				<span>사내 일정</span>
-			</li>
-			<li class="nav-item">
-				<input type="checkbox"> 
-				<span>ㅁㅁ 팀 일정</span>
-			</li>
-		</ul>
+		<div class="ps-4 mt-3">
+			<ul class="navbar-nav my-1">
+				<li class="nav-item mt-2">
+					<input type="checkbox">
+					<span>공휴일</span>
+				</li>
+				<li class="nav-item mt-2">
+					<input type="checkbox"> 
+					<span>점검 일정</span>
+				</li>
+				<li class="nav-item mt-2">
+					<input type="checkbox"> 
+					<span>사내 일정</span>
+				</li>
+				<li class="nav-item mt-2">
+					<input type="checkbox"> 
+					<span>시설 일정</span>
+				</li>
+			</ul>
+		</div>
 		<!-- 일정 분류 체크 박스 -->
 
 	</div>
