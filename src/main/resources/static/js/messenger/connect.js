@@ -1,3 +1,4 @@
+
 /**
  * chat.jsp 랑 연동
  * 채팅, 화면에 메시지 출력, 메시지 DB에 저장, 무한 스크롤 로직 스크립트
@@ -17,6 +18,8 @@ stompClient.connect({}, function (frame) {
 	
 	// 채팅방에 들어왔을 때 읽은 메시지의 개수를 푸터의 읽지않은 메시지 개수에서 빼주는 로직의 함수
 	syncUnreadCount();
+	// 채팅방에 들어왔을 때는 읽지 않은 메시지의 개수를 증가시키지 않도록 하는 로직의 함수
+	noUnreadCount();
 
     document.getElementById('sendButton').addEventListener('click', function () {
         const contents = document.querySelector('#messageInput').value;
@@ -39,11 +42,7 @@ stompClient.connect({}, function (frame) {
 		.then(response => {
 			response.forEach(el => {
 				if (el.staffDTO.staffCode != sender) {
-					let notification = {
-						type: 'CHATCOUNT',
-						msg: 'plus'
-					}
-			        stompClient.send("/pub/notify/" + el.staffDTO.staffCode, {}, JSON.stringify(notification));					
+			        stompClient.send("/pub/notify/" + el.staffDTO.staffCode, {}, JSON.stringify({ msg: chatRoomNum, type: 'CHATCOUNT' }));					
 				}
 			});
 		});
@@ -97,9 +96,14 @@ function loadMessages() {
 window.addEventListener("beforeunload", function() {
 	const formData = new FormData();
 	formData.append("chatRoomNum", chatRoomNum);
+	formData.append("staffCode", sender);
 	navigator.sendBeacon("/msg/exit", formData);
 });
 // 안읽은 메시지 제거
 function syncUnreadCount() {
 	stompClient.send("/pub/notify/" + sender, {}, JSON.stringify({msg: chatRoomNum, type: 'SYNCCHATCOUNT'}));
+}
+// 안읽은 메시지 count X
+function noUnreadCount() {
+	stompClient.send("/pub/notify/" + sender, {}, JSON.stringify({msg: chatRoomNum, type: 'NOUNREADCOUNT'}));
 }

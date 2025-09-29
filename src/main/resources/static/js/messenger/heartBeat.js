@@ -3,6 +3,7 @@
  * const staffCode = '<sec:authentication property="principal.username"/>';
  */
 let stompClient = null;
+let currentChatRoomChecker = null;
 const dm = document.querySelector('.dropdown-menu');
 const alertBadge = document.querySelector('.badge.bg-danger.rounded-pill');
 
@@ -16,9 +17,11 @@ function connectWebSocket(staffCode) {
 			if (payload.type == 'APPROVAL') {
 				showNotificationApproval(payload.msg, msg.headers.destination);				
 			} else if (payload.type == 'CHATCOUNT') {
-				plusOneChatCount();
+				plusOneChatCount(payload.msg);
 			} else if (payload.type == 'SYNCCHATCOUNT') {
 				synchronize(payload.msg);
+			} else if (payload.type == 'NOUNREADCOUNT') {
+				setChatRoomChecker(payload.msg);
 			}
 		})
 	}, (err) => {
@@ -147,5 +150,49 @@ function alertCountDecider(count) {
 		alertBadge.innerText = '9+';
 	} else {
 		alertBadge.innerText = count;
+	}
+}
+
+function plusOneChatCount(chatRoomNum) {
+	let bdg = document.querySelector('.badge-footer-display');
+	let count = parseInt(bdg.innerText);
+	if (currentChatRoomChecker == null) {
+		count = count + 1;
+	} else {
+		if (currentChatRoomChecker != chatRoomNum) {
+			count = count + 1;
+		}
+	}
+	if (count > 9) {
+		bdg.innerText = '9+';
+	} else {
+		bdg.innerText = count;
+	}
+}
+
+function synchronize(chatRoomNum) {
+	let data = [chatRoomNum];
+	fetch("/msg/unread/count", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+	.then(res => {
+		let bdg = document.querySelector('.badge-footer-display');
+		let count = parseInt(bdg.innerText) - res.unread[chatRoomNum];
+		if (count > 9) {
+			bdg.innerText = '9+';
+		} else {
+			bdg.innerText = count;
+		}
+	});
+}
+
+function setChatRoomChecker(msg) {
+	if (msg == 'DEPLETE') {
+		currentChatRoomChecker = null;		
+	} else {
+		currentChatRoomChecker = msg;
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,9 @@ public class MessengerController {
 	
 	@Autowired
 	MessengerService messengerService;
+	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
     
     @GetMapping("")
     public String home(Model model) {
@@ -113,7 +117,12 @@ public class MessengerController {
 	}
 	
 	@PostMapping("exit")
-	public void unread(Long chatRoomNum) {
+	public void unread(Long chatRoomNum, Integer staffCode) {
+		// 브라우저가 종료될 때 비동기 작업이 보장이 되지 않으므로 백에서 처리 - 이 메서드에서 직접 웹소켓 메시지를 전송
+		NotificationDTO notificationDTO = new NotificationDTO();
+		notificationDTO.setType("NOUNREADCOUNT");
+		notificationDTO.setMsg("DEPLETE");
+		simpMessagingTemplate.convertAndSend("/sub/notify/" + staffCode, notificationDTO);
 		messengerService.unread(chatRoomNum);
 	}
 	
