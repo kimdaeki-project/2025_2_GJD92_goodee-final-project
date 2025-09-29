@@ -29,6 +29,7 @@ import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -100,6 +101,33 @@ public class ApprovalController {
 		return "approval/list";
 	}
 	
+	@GetMapping("load")
+	public String getApprovalLoad(Integer savedCode) {
+		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(savedCode);
+		
+		return "redirect:/approval/draft?aprvCode=" + savedCode;
+	}
+	
+	@GetMapping("delete")
+	public String getApprovalDelete(Integer savedCode, Model model) {
+		boolean result = approvalService.deleteApproval(savedCode);
+		
+		String resultMsg = "기안 삭제 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "임시저장한 기안이 삭제되었습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval/draft";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
+	}
+	
 	@GetMapping("{aprvCode}")
 	public String getApprovalDetail(@PathVariable Integer aprvCode, Model model) {
 		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
@@ -164,57 +192,97 @@ public class ApprovalController {
 	}
 	
 	@GetMapping("draft")
-	public String getApprovalDraft(Model model) {
+	public String getApprovalDraft(Integer aprvCode, Model model) {
 		LocalDate nowDate = LocalDate.now();
 		List<DeptDTO> deptList = approvalService.getDeptList();
 		
-		int year = LocalDate.now().getYear();
-		Integer lastStaffCode = approvalService.findLastAprvCode();
-		
-		Integer aprvCode = null;
-		if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
-			aprvCode = (year * 1000000) + 1;
-		} else {
-			aprvCode = lastStaffCode + 1;
-		}
-		
 		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("deptList", deptList);
-		model.addAttribute("aprvCode", aprvCode);
-		model.addAttribute("draftForm", "common");
 		
+		if (aprvCode != null) {
+			ApprovalDTO approval = approvalService.getApprovalDetail(aprvCode);
+			model.addAttribute("approval", approval);
+			
+			for (ApproverDTO approver : approval.getApproverDTOs()) {
+				if (approver.getApvrType() == 711 || approver.getApvrType() == 712) {
+					model.addAttribute("hasApprover", true);
+					break;
+				}
+			}
+		} else {
+			int year = LocalDate.now().getYear();
+			Integer lastStaffCode = approvalService.findLastAprvCode();
+			
+			if (lastStaffCode == null || (lastStaffCode / 1000000) != year) {
+				aprvCode = (year * 1000000) + 1;
+			} else {
+				aprvCode = lastStaffCode + 1;
+			}
+		}
+		
+		model.addAttribute("aprvCode", aprvCode);			
+		model.addAttribute("draftForm", "common");
 		return "approval/draft";
 	}
 	
-	@PostMapping("draft")
-	public String postApprovalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach, Model model) throws IOException {
-		boolean result = approvalService.sendNormalDraft(inputApprovalDTO, attach);
-		
-		String resultMsg = "기안 등록 중 오류가 발생했습니다.";
-		String resultIcon = "warning";
-		
-		if (result) {
-			resultMsg = "기안을 등록했습니다.";
-			resultIcon = "success";
-			String resultUrl = "/approval";
-			model.addAttribute("resultUrl", resultUrl);
+	@PostMapping({"draft", "draft/save"})
+	public String postApprovalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach, HttpServletRequest request, Model model) throws IOException {
+		if (request.getRequestURI().endsWith("/save")) {
+			boolean result = approvalService.sendNormalDraft(inputApprovalDTO, attach, true);
+			
+			String resultMsg = "기안 임시저장 중 오류가 발생했습니다.";
+			String resultIcon = "warning";
+			
+			if (result) {
+				resultMsg = "기안을 임시저장 했습니다.";
+				resultIcon = "success";
+				String resultUrl = "/approval";
+				model.addAttribute("resultUrl", resultUrl);
+			}
+			
+			model.addAttribute("resultMsg", resultMsg);
+			model.addAttribute("resultIcon", resultIcon);
+			
+			return "common/result";
+		} else {
+			String resultMsg = "기안 등록 중 오류가 발생했습니다.";
+			String resultIcon = "warning";
+			
+			if (inputApprovalDTO.getApprover().size() == 0) {
+				resultMsg = "결재선이 지정되지 않았습니다.";
+				
+				model.addAttribute("resultMsg", resultMsg);
+				model.addAttribute("resultIcon", resultIcon);
+				
+				return "common/result";
+			} 
+			
+			boolean result = approvalService.sendNormalDraft(inputApprovalDTO, attach, false);
+			
+			if (result) {
+				resultMsg = "기안을 등록했습니다.";
+				resultIcon = "success";
+				String resultUrl = "/approval";
+				model.addAttribute("resultUrl", resultUrl);
+			}
+			
+			model.addAttribute("resultMsg", resultMsg);
+			model.addAttribute("resultIcon", resultIcon);
+			
+			// 알림
+			List<String> wsSub = new ArrayList<>();
+			for (String sub : inputApprovalDTO.getApprover()) wsSub.add(sub);
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+				model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			
+			return "common/notifyResult";
 		}
 		
-		model.addAttribute("resultMsg", resultMsg);
-		model.addAttribute("resultIcon", resultIcon);
-		
-		// 알림
-		List<String> wsSub = new ArrayList<>();
-		for (String sub : inputApprovalDTO.getApprover()) wsSub.add(sub);
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
-			model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		
-		return "common/notifyResult";
 	}
 	
 	@GetMapping("draft/vacation")
@@ -434,12 +502,26 @@ public class ApprovalController {
 	}
 	
 	@GetMapping("{attachNum}/download")
-	public String download(@PathVariable String attachNum, Model model) {
+	public String getFileDownload(@PathVariable String attachNum, Model model) {
 		AttachmentDTO result = approvalService.getAttach(Long.valueOf(attachNum));
 		model.addAttribute("file", result);
 		model.addAttribute("type", "approval");
 		
 		return "fileDownView";
+	}
+	
+	@GetMapping("{attachNum}/delete")
+	@ResponseBody
+	public boolean getFileDelete(@PathVariable String attachNum) {
+		return approvalService.deleteAttach(attachNum);
+	}
+	
+	@GetMapping("save/list")
+	@ResponseBody
+	public List<ApprovalResultDTO> getApprovalSaved() {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return approvalService.getApprovalSaved(staffDTO.getStaffCode());
 	}
 	
 }
