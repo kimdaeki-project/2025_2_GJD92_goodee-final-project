@@ -157,8 +157,4 @@ public class NoticeService {
 		Optional<AttachmentDTO> result = attachmentRepository.findById(attachmentDTO.getAttachNum());
 		return result.get();
 	}
-
-	public List<NoticeDTO> getRecentNoticesForDashboard() {
-        return noticeRepository.findTop5ByNoticePinnedFalseAndNoticeDeleteFalseOrderByNoticeDateDescNoticeNumDesc();
-    }
 }

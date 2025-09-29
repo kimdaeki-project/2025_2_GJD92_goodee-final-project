@@ -42,13 +42,6 @@ public class RideService {
         return rideRepository.findById(rideCode).orElse(null);
     }
     
-    // 어트랙션 대시보드 운휴현황 조회
-    public List<RideDTO> homeList() throws Exception {
-    	List<RideDTO> rides = rideRepository.findByRideDeletedFalseAndRideStateInOrderByRideStateAsc(Arrays.asList(300, 400, 500));
-    	return rides;
-    }
-	
-    
     
 	// 어트랙션 등록
  	public boolean registRide(RideDTO rideDTO, MultipartFile attach) throws Exception {	

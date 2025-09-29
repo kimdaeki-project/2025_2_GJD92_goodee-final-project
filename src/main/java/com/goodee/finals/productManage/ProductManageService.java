@@ -117,14 +117,20 @@ public class ProductManageService {
 		newDeletePm.setPmType(pmType); // 기존 pmDTO 유형과 같음
 		newDeletePm.setPmAmount(-pmAmount); // 기존 pmDTO 수량과 반대수량 입력
 		
-		if(newDeletePm.getPmType() == 80) {
+		productDTO = productManageDTO.getProductDTO();
+		Long remainAmountUpdated = 0L;
+		
+		if(newDeletePm.getPmType() == 80) { // 입고시
 			newDeletePm.setPmNote("번호"+pmNum+"번 - 입고 취소(재고 복원"); // 기존 pmDTO 수량과 반대수량 입력
-		} else {
+			remainAmountUpdated = productDTO.getProductAmount() + newDeletePm.getPmAmount();
+		} else if (newDeletePm.getPmType() == 90){ // 출고시
 			newDeletePm.setPmNote("번호"+pmNum+"번 - 출고 취소(재고 복원"); // 기존 pmDTO 수량과 반대수량 입력
+			remainAmountUpdated = productDTO.getProductAmount() - newDeletePm.getPmAmount();
 		}
 		
-		productDTO = productManageDTO.getProductDTO();
-		newDeletePm.setPmRemainAmount(productDTO.getProductAmount() + newDeletePm.getPmAmount()); // pmDTO 잔여수량에 pDTO수량 + 마이너스한 취소수량 더해주기
+		newDeletePm.setPmRemainAmount(remainAmountUpdated); // pmDTO 잔여수량에 pDTO수량 + 마이너스한 취소수량 더해주기
+		productDTO.setProductAmount(remainAmountUpdated);
+		
 		newDeletePm.setProductDTO(productDTO);
 		
 		ProductManageDTO result = pmRepository.save(newDeletePm);

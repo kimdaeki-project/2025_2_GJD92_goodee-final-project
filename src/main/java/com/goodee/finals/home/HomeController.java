@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.goodee.finals.attend.AttendDTO;
 import com.goodee.finals.attend.AttendService;
 import com.goodee.finals.notice.NoticeDTO;
-import com.goodee.finals.notice.NoticeService;
 import com.goodee.finals.ride.RideDTO;
-import com.goodee.finals.ride.RideService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,13 +24,8 @@ public class HomeController {
 
 	@Autowired
 	private AttendService attendService;
-	
 	@Autowired
-	private NoticeService noticeService;
-	
-	@Autowired
-	private RideService rideService;
-	
+	private HomeService homeService;
 	
 	@GetMapping("/")
 	public String getHome(Model model) throws Exception {
@@ -52,13 +45,14 @@ public class HomeController {
 		model.addAttribute("attendDTO", attendDTO);
 		
 		// 공지사항 - 목록 5개 출력
-		List<NoticeDTO> noticeList = noticeService.getRecentNoticesForDashboard();
+		List<NoticeDTO> noticeList = homeService.getRecentNoticesForDashboard();
 		model.addAttribute("noticeList", noticeList);
 		
 		// 결재현황
 		
+		
 		// 어트랙션 운휴 현황
-		List<RideDTO> rides = rideService.homeList();
+		List<RideDTO> rides = homeService.homeList();
 		model.addAttribute("rides", rides);
 		// 날씨
 		

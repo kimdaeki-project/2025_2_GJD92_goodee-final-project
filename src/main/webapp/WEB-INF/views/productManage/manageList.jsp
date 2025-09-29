@@ -62,6 +62,7 @@ aside.sidenav {
 			    					<th>번호</th>
 			    					<th>등록일자</th>
 <!-- 			    					<th class="col-1">물품타입</th> -->
+			    					<th>작성자</th>
 			    					<th>물품코드</th>
 			    					<th>물품명</th>
 <!-- 			    					<th class="col-1">구분</th> -->
@@ -69,7 +70,6 @@ aside.sidenav {
 			    					<th>입고</th>
 			    					<th>출고</th>
 			    					<th>잔여수량</th>
-			    					<th>작성자</th>
 			    					<th>비고</th>
 			    				</tr>
 			    			</thead>
@@ -80,13 +80,14 @@ aside.sidenav {
 				    					<td>${ pm.pmNum }</td>
 				    					<td>${ pm.pmDate }</td>
 <%-- 				    					<td>${ pm.productDTO.productTypeDTO.productTypeName }</td> --%>
+				    					<td>${ pm.staffDTO.staffName }</td>
 				    					<td>${ pm.productDTO.productCode }</td>
 				    					<td><a href="/productManage/${ pm.pmNum }" style="color: #737373;">${ pm.productDTO.productName }</a></td>
 				    					<td>${ pm.pmType eq 80 ? pm.pmAmount : "" }</td>
 				    					<td>${ pm.pmType eq 90 ? pm.pmAmount : "" }</td>
+<%-- 				    					<td>${ pm.pmType eq 90 ? "출고" : "입고" }</td> --%>
 <%-- 				    					<td>${ pm.pmAmount }</td> --%>
 				    					<td>${ pm.pmRemainAmount }</td>
-				    					<td>${ pm.staffDTO.staffName }</td>
 				    					<td>${ pm.pmNote }</td>
 			    					</tr>
 			    				</c:forEach>
@@ -134,7 +135,7 @@ aside.sidenav {
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/product/list.js"></script>
+	<script src="/js/productManage/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")
