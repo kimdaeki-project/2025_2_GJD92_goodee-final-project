@@ -52,5 +52,8 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 
 	@Query("SELECT cu FROM ChatUserDTO cu WHERE cu.chatRoomDTO.chatRoomNum = :chatRoomNum")
 	List<ChatUserDTO> getNotify(Long chatRoomNum);
+
+//	@Query("INSERT INTO ChatUserDTO cu")
+//	ChatUserDTO saveJoinedStaffs(Integer staffCode);
 	
 }

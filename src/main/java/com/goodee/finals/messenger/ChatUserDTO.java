@@ -19,6 +19,7 @@ import lombok.Setter;
 @IdClass(ChatUserDTO.PK.class)
 public class ChatUserDTO {
 	private Long chatBodyNum = 0L;
+	private Long chatGroupLatest = 0L;
 	@Id @ManyToOne @JoinColumn(name = "chatRoomNum")
 	private ChatRoomDTO chatRoomDTO;
 	@Id @ManyToOne @JoinColumn(name = "staffCode")

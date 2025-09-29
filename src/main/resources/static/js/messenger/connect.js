@@ -107,3 +107,106 @@ function syncUnreadCount() {
 function noUnreadCount() {
 	stompClient.send("/pub/notify/" + sender, {}, JSON.stringify({msg: chatRoomNum, type: 'NOUNREADCOUNT'}));
 }
+// 모달 및 사용자 추가
+const addMemberBtn = document.querySelector('#addMemeber');
+const modal = document.getElementById("addMemberModal");
+const closeBtn = document.getElementById("closeModal");
+const selectedMembers = document.getElementById("selectedMembers");
+let memberList = document.querySelector('#memberList');
+let staffs = [];
+
+addMemberBtn.addEventListener("click", () => {
+	renderHtmlChatAddMemeber(chatRoomNum);
+	modal.style.display = "flex";
+});
+
+closeBtn.addEventListener("click", () => {
+	let targetAll = document.querySelectorAll('.selected-member[data-staffCode]');
+	targetAll.forEach(t => {
+		t.remove();
+	});
+	let targetAllMember = document.querySelectorAll('.member-item');
+	targetAllMember.forEach(t => {
+		t.remove();
+	});
+	modal.style.display = "none";
+});
+
+function renderHtmlChatAddMemeber(chatRoomNum) {
+	fetch('/msg/room/add', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ chatRoomNum: chatRoomNum })
+	})
+	.then(response => response.json())
+	.then(response => {
+		response.forEach(el => {
+			renderHtmlInner(el)
+		});
+	});
+}
+
+function renderHtmlInner(el) {
+	let div = document.createElement('div');
+	div.classList.add('member-item');
+	let divIn = document.createElement('div')
+	divIn.classList.add('member-info');
+	let img = document.createElement('img');
+	img.setAttribute('src', '/file/staff/' + el.staffAttachmentDTO.attachmentDTO.savedName);
+	let divInIn = document.createElement('div');
+	let divName = document.createElement('div');
+	divName.classList.add('member-name');
+	divName.innerText = el.staffName;
+	let divRole = document.createElement('div');
+	divRole.classList.add('member-role');
+	divRole.innerText = el.jobDTO.jobDetail
+	let inp = document.createElement('input');
+	inp.setAttribute('type', 'checkbox');
+	inp.setAttribute('value', el.staffCode);
+	inp.addEventListener("change", function() {
+	    if (this.checked) {
+			staffs.push(this.value);
+	        let selDiv = document.createElement("div");
+	        selDiv.classList.add("selected-member"); 
+	        selDiv.setAttribute("data-staffCode", el.staffCode);
+
+	        let selImg = document.createElement("img");
+	        selImg.src = '/file/staff/' + el.staffAttachmentDTO.attachmentDTO.savedName;
+	        selImg.classList.add("selected-img");
+
+	        let selName = document.createElement("span");
+	        selName.classList.add("selected-name");
+	        selName.innerText = el.staffName;
+
+	        selDiv.appendChild(selImg);
+	        selDiv.appendChild(selName);
+	        selectedMembers.appendChild(selDiv);
+	    } else {
+	        const target = selectedMembers.querySelector(`.selected-member[data-staffCode="${el.staffCode}"]`);
+	        if (target) selectedMembers.removeChild(target);
+			if (staffs.indexOf(this.value) > -1) {
+				staffs.splice(staffs.indexOf(this.value), 1);
+			}
+	    }
+	});
+	
+	divInIn.appendChild(divName);
+	divInIn.appendChild(divRole);
+	divIn.appendChild(img);
+	divIn.appendChild(divInIn);
+	div.appendChild(divIn);
+	div.appendChild(inp);
+	memberList.appendChild(div);
+}
+
+const joinStaffBtn = document.querySelector('#addMembers');
+const form = document.querySelector('#form');
+joinStaffBtn.addEventListener('click', () => {
+	fetch('/msg/room/join', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({staffs: staffs, chatRoomNum: chatRoomNum})
+	})
+	.then(response => response.json())
+	.then(response => console.log(response));
+});

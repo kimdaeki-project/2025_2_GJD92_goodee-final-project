@@ -33,7 +33,6 @@ public class MessengerController {
     
     @GetMapping("")
     public String home(Model model) {
-    	
     	List<StaffDTO> result = messengerService.getStaff();
     	model.addAttribute("members", result);
     	return "messenger/home";
@@ -159,5 +158,20 @@ public class MessengerController {
 		List<ChatUserDTO> result = messengerService.getNotify(chatRoomDTO);
 		return result;
 	}
+	
+	@PostMapping("/room/add") @ResponseBody
+	public List<StaffDTO> memberJoin(@RequestBody ChatRoomDTO chatRoomDTO) {
+		List<StaffDTO> result = messengerService.getStaffForGroupChat(chatRoomDTO);
+		return result;
+	}
+	
+	@PostMapping("/room/join") @ResponseBody
+	public boolean memberJoin(@RequestBody Map<String, Object> data) {
+		List<String> staffs = (List<String>)data.get("staffs");
+		Long chatRoomNum = Long.parseLong(data.get("chatRoomNum") + "");
+		messengerService.joinMember(staffs, chatRoomNum);
+		return true;
+	}
+	
 	
 }

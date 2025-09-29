@@ -68,11 +68,11 @@ body {
 }
 
 /* 우측 선택 영역 */
-   .selected-list {
-       flex: 1;
-       padding: 20px;
-       overflow-y: auto;
-   }
+.selected-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
 .selected-title {
     font-size: 14px;
     font-weight: bold;
@@ -82,34 +82,34 @@ body {
     justify-content: space-between;
     color: #333;
 }
-   .selected-item {
-       display: flex;
-       align-items: center;
-       justify-content: space-between;
-       padding: 8px 0;
-   }
-   .selected-info {
-       display: flex;
-       align-items: center;
-       gap: 10px;
-   }
-   .selected-info img {
-       width: 36px;
-       height: 36px;
-       border-radius: 50%;
-       border: 1px solid #ccc;
-       object-fit: cover;
-   }
-   .remove-btn {
-       cursor: pointer;
-       color: #888;
-       transition: color 0.2s;
-   }
-   .remove-btn:hover {
-       color: #000;
-   }
+.selected-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+.selected-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.selected-info img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+.remove-btn {
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+.remove-btn:hover {
+    color: #000;
+}
 
-   /* 하단 생성 버튼 */
+/* 하단 생성 버튼 */
 .footer {
     border-top: 1px solid #eee;
     padding: 15px 20px;

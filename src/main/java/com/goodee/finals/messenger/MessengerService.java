@@ -189,5 +189,25 @@ public class MessengerService {
 		List<ChatUserDTO> result = messengerRepository.getNotify(chatRoomDTO.getChatRoomNum());
 		return result;
 	}
+
+	public List<StaffDTO> getStaffForGroupChat(ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> result = messengerRepository.getNotify(chatRoomDTO.getChatRoomNum());
+		List<Integer> currentMemeber = new ArrayList<>();
+		for (ChatUserDTO c : result) {
+			currentMemeber.add(c.getStaffDTO().getStaffCode());
+		}
+		List<StaffDTO> resultForController = staffRepository.findByStaffCodeNotIn(currentMemeber);
+		return resultForController;
+	}
+
+	public void joinMember(List<String> staffs, Long chatRoomNum) {
+		MessengerTestDTO result = messengerRepository.getTrueLatest(chatRoomNum);
+		for (String s : staffs) {
+			Integer staffCode = Integer.parseInt(s);
+			//messengerRepository.saveJoinStaffs(staffCode, chatRoomNum);
+		}
+	}
+
+	
 	
 }
