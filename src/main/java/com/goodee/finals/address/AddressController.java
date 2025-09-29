@@ -1,5 +1,7 @@
 package com.goodee.finals.address;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,8 +10,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 @Controller
@@ -24,8 +28,10 @@ public class AddressController {
 	public String list(@PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";
 		
-		Page<StaffDTO> addressList = addressService.getAddressSearchList(search, pageable);
+		List<DeptDTO> deptList = addressService.findAllDept();
+		model.addAttribute("deptList", deptList);
 		
+		Page<StaffDTO> addressList = addressService.getAddressSearchList(search, pageable);
 		model.addAttribute("addressList", addressList);
 		model.addAttribute("search", search);
 		
@@ -35,11 +41,21 @@ public class AddressController {
 		return "address/list";
 	}
 	
-//	@GetMapping()
-//	public String deptList(@PathVariable(name = "dept_code") @PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
-//		if (search == null) search = "";
-//		
-//		return "address/list";
-//	}
+	@GetMapping("{dept_code}")
+	public String deptList(@PathVariable(name = "dept_code") Integer deptCode , @PageableDefault(size = 10, sort = "staff_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		List<DeptDTO> deptList = addressService.findAllDept();
+		model.addAttribute("deptList", deptList);
+		
+		Page<StaffDTO> addressList = addressService.getAddressDeptCodeSearchList(deptCode, search, pageable);
+		model.addAttribute("addressList", addressList);
+		model.addAttribute("search", search);
+		
+		long totalAddress = addressService.getTotalAddress();
+		model.addAttribute("totalAddress", totalAddress);
+		
+		return "address/list";
+	}
 	
 }

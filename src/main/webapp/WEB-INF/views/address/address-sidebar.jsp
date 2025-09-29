@@ -17,12 +17,12 @@
 				<div class="collapse show" id="collapseMyDrive">
 					<div class="d-flex">
 						<ul class="navbar-nav" id="drive-my">
-							<c:if test="${ addressList ne null}">
-							<c:forEach items="${ addressList.content }" var="address">
+							<c:if test="${ deptList ne null}">
+							<c:forEach items="${ deptList }" var="dept">
 								<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
-									<a class="nav-link text-dark" href="/address">
-										<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ address.deptDTO.deptDetail }">folder_open</i>
-										<span class="nav-link-text ms-1 text-sm text-truncate" style="max-width: 110px;" title="${myDrive.driveName}">${ address.deptDTO.deptDetail }</span>
+									<a class="nav-link text-dark" href="/address/${dept.deptCode}">
+										<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ dept.deptDetail }">folder_open</i>
+										<span class="nav-link-text ms-1 text-sm text-truncate" style="max-width: 110px;">&nbsp;${ dept.deptDetail }</span>
 									</a>
 								</li>
 							</c:forEach>

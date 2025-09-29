@@ -32,7 +32,6 @@ aside.sidenav {
 
 	    <div class="d-flex justify-content-end align-items-end">
 			<div class="input-group">
-				<span>총 ${totalAddress } 건</span>
 				<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
 				<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
 			</div>
@@ -40,15 +39,15 @@ aside.sidenav {
 
 	    <div class="mt-3" style="min-height: 500px;">
 			    	<div class="col-10 offset-1">
-			    		<table class="table text-center">
+			    		<table class="table table-hover text-center">
 			    			<thead>
 			    				<tr>
 			    					<th class="col-1">사원번호</th>
-			    					<th class="col-2">이름</th>
-			    					<th class="col-2">부서</th>
+			    					<th class="col-1">이름</th>
+			    					<th class="col-1">부서</th>
 			    					<th class="col-1">직위</th>
-			    					<th class="col-3">연락처</th>
-			    					<th class="col-3">이메일</th>
+			    					<th class="col-2">연락처</th>
+			    					<th class="col-2">이메일</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -66,12 +65,12 @@ aside.sidenav {
 
 			    			</tbody>
 			    		</table>
+			    <c:if test="${ addressList.totalElements eq 0 }">
+				     <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+				</c:if>
+				
 			    	</div>
 			    </div>
-
-			    <c:if test="${ totalAddress eq 0 }">
-					<div>검색된 결과가 없습니다.</div>
-				</c:if>
 
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">

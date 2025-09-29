@@ -106,7 +106,6 @@ public class ProductManageController {
 	@PostMapping("{pmNum}/update")
 	public String postProductManageUpdate(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
 		
-		
 		boolean result = pmService.updateProductManage(pDTO, pmDTO);
 		
 		String resultMsg = "입출고내역 수정 중 오류가 발생했습니다.";

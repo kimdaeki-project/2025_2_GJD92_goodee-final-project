@@ -33,7 +33,7 @@ public class ProductManageService {
 	}
 	
 	public long getTotalProduct() {
-		return pmRepository.countByPmDeleteFalse();
+		return pmRepository.count();
 	}
 	
 	public ProductManageDTO getProductManage(Long pmNum) {
@@ -64,20 +64,21 @@ public class ProductManageService {
 		else return null;
 	}
 	
-	public boolean updateProductManage(ProductDTO pDTO, ProductManageDTO pmDTO) {
-		StaffDTO staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow();
+	public boolean updateProductManage(ProductDTO productDTO, ProductManageDTO productManageDTO) {
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		productManageDTO.setStaffDTO(staffDTO);
 		
-		ProductManageDTO pmDB = pmRepository.findById(pmDTO.getPmNum()).orElseThrow();
+		ProductManageDTO pmDB = pmRepository.findById(productManageDTO.getPmNum()).orElseThrow();
 
 		Long beforePmAmount = pmDB.getPmAmount();
-		Long currentPmAmount = pmDTO.getPmAmount();
+		Long currentPmAmount = productManageDTO.getPmAmount();
 		
 		ProductDTO pDB=  pmDB.getProductDTO();
 		Long pAmountDB = pDB.getProductAmount();
 		
 		// 출고 90 코드일 때, 음수로 변환
 		if (pmDB.getPmType() == 90) beforePmAmount *= (-1); 
-		else if (pmDTO.getPmType() == 90) currentPmAmount *= (-1);  
+		else if (productManageDTO.getPmType() == 90) currentPmAmount *= (-1);  
 //		else productManageDTO.setPmRemainAmount(pAmount + currentPmAmount);
 		
 		Long modCount = null;
@@ -90,12 +91,12 @@ public class ProductManageService {
 		
 		pDB.setProductAmount(modCount);
 		
-		ProductTypeDTO ptDTO = ptRepository.findById(pDTO.getProductTypeDTO().getProductTypeCode()).orElseThrow();
-		pDTO.setProductTypeDTO(ptDTO);
+		ProductTypeDTO ptDTO = ptRepository.findById(productDTO.getProductTypeDTO().getProductTypeCode()).orElseThrow();
+		productDTO.setProductTypeDTO(ptDTO);
 		
-		pmDB.setProductDTO(pDTO);
-		pmDB.setPmType(pmDTO.getPmType());
-		pmDB.setPmAmount(pmDTO.getPmAmount());
+		pmDB.setProductDTO(productDTO);
+		pmDB.setPmType(productManageDTO.getPmType());
+		pmDB.setPmAmount(productManageDTO.getPmAmount());
 		pmDB.setPmRemainAmount(modCount);
 		
 		ProductManageDTO result = pmRepository.save(pmDB);
@@ -104,17 +105,33 @@ public class ProductManageService {
 		else return false;
 	}
 	
-	public ProductManageDTO delete(ProductDTO pDTO, ProductManageDTO pmDTO) {
-		pmDTO = pmRepository.findById(pmDTO.getPmNum()).orElseThrow();
+	public ProductManageDTO delete(ProductDTO productDTO, ProductManageDTO productManageDTO) {
+		productManageDTO = pmRepository.findById(productManageDTO.getPmNum()).orElseThrow();
 
-		Long pmAmount = pmDTO.getPmAmount();
+		Long pmNum = productManageDTO.getPmNum(); // 기존 pmDTO 번호
+		Integer pmType = productManageDTO.getPmType(); // 기존 pmDTO 유형
+		Long pmAmount = productManageDTO.getPmAmount(); // 기존 pmDTO 입출고수량
 		
-		if (pmDTO.getPmType() == 90) pmDTO.getProductDTO().setProductAmount(pmDTO.getProductDTO().getProductAmount() + pmAmount);
-		else pmDTO.getProductDTO().setProductAmount(pmDTO.getProductDTO().getProductAmount() - pmAmount);
-			
-		pmDTO.setPmDelete(true);
+		ProductManageDTO newDeletePm = new ProductManageDTO(); // 취소내용 생성할 pmDTO
+		newDeletePm.setStaffDTO(productManageDTO.getStaffDTO()); // 로그인한 사용자 = 기존 pmDTO 작성자
+		newDeletePm.setPmType(pmType); // 기존 pmDTO 유형과 같음
+		newDeletePm.setPmAmount(-pmAmount); // 기존 pmDTO 수량과 반대수량 입력
 		
-		ProductManageDTO result = pmRepository.save(pmDTO);
+		if(newDeletePm.getPmType() == 80) {
+			newDeletePm.setPmNote("번호"+pmNum+"번 - 입고 취소(재고 복원"); // 기존 pmDTO 수량과 반대수량 입력
+		} else {
+			newDeletePm.setPmNote("번호"+pmNum+"번 - 출고 취소(재고 복원"); // 기존 pmDTO 수량과 반대수량 입력
+		}
+		
+		productDTO = productManageDTO.getProductDTO();
+		newDeletePm.setPmRemainAmount(productDTO.getProductAmount() + newDeletePm.getPmAmount()); // pmDTO 잔여수량에 pDTO수량 + 마이너스한 취소수량 더해주기
+		newDeletePm.setProductDTO(productDTO);
+		
+		ProductManageDTO result = pmRepository.save(newDeletePm);
+		
+		// 상품 재고수량 복원시키기
+		pRepository.save(productDTO);
+		
 		return result;
 	}
 	

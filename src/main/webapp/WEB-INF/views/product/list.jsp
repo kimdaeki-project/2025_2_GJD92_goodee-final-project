@@ -62,10 +62,10 @@ aside.sidenav {
 			    		<table class="table text-center">
 			    			<thead>
 			    				<tr>
-			    					<th class="col-2">물품번호</th>
-			    					<th class="col-2">물품타입</th>
-			    					<th class="col-3">물품명</th>
-			    					<th class="col-1">수량</th>
+			    					<th>물품번호</th>
+			    					<th>물품타입</th>
+			    					<th>물품명</th>
+			    					<th>수량</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
