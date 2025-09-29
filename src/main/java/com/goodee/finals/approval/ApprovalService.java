@@ -285,15 +285,10 @@ public class ApprovalService {
 	
 	public boolean changeApprovalLine(InputApprovalDTO inputApprovalDTO) {
 		ApprovalDTO draft = approvalRepository.findById(Integer.parseInt(inputApprovalDTO.getAprvCode())).orElseThrow();
-		List<ApproverDTO> beforeApproverDTOs = new ArrayList<>(draft.getApproverDTOs());
-		
-		draft.getApproverDTOs().clear();
-		approvalRepository.saveAndFlush(draft);
+		List<ApproverDTO> beforeApproverDTOs = draft.getApproverDTOs();
 		
 		int doneCount = 1;
 		setApprover(draft, inputApprovalDTO.getApprover());
-		
-		log.info("{}", draft.getApproverDTOs().toArray());
 		
 		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
 		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
@@ -331,7 +326,12 @@ public class ApprovalService {
 			}
 		}
 		
+		for (ApproverDTO beforeApprover : beforeApproverDTOs) {
+			approvalRepository.removeApproverByApvrNum(beforeApprover.getApvrNum());
+		}
+		
 		draft.setAprvCrnt(doneCount + 1);
+		draft.setAprvTotal(inputApprovalDTO.getApprover().size() + 1);
 		ApprovalDTO result = approvalRepository.saveAndFlush(draft);
 		
 		if (result != null) return true;
@@ -357,12 +357,7 @@ public class ApprovalService {
 	}
 	
 	private void setApprover(ApprovalDTO draft, List<String> approver) {
-		List<ApproverDTO> approverDTOs = null;
-		if (draft.getApproverDTOs() != null) {
-			approverDTOs = draft.getApproverDTOs();
-		} else {
-			approverDTOs = new ArrayList<>();
-		}
+		List<ApproverDTO> approverDTOs = new ArrayList<>();
 		
 		for (int i = 0; i < approver.size(); i++) {
 			StaffDTO staffDTO = staffService.getStaff(Integer.valueOf(approver.get(i)));
@@ -382,10 +377,7 @@ public class ApprovalService {
 			approverDTOs.add(approverDTO);
 		}
 		
-		if (draft.getApproverDTOs() == null) {
-			draft.setApproverDTOs(approverDTOs);			
-		}
-		
+		draft.setApproverDTOs(approverDTOs);			
 	}
 	
 	private void setReceiver(ApprovalDTO draft, List<String> receiver) {

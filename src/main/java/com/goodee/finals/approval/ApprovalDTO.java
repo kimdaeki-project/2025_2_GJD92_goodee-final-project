@@ -45,7 +45,7 @@ public class ApprovalDTO {
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "approvalDTO", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "approvalDTO", cascade = CascadeType.ALL)
 	@OrderBy("apvrSeq DESC")
 	private List<ApproverDTO> approverDTOs;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "approvalDTO", cascade = CascadeType.ALL)
