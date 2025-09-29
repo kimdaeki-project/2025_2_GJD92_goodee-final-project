@@ -54,4 +54,7 @@ public interface ApprovalRepository extends JpaRepository<ApprovalDTO, Integer> 
 			+ " AND (al.aprvTitle LIKE %:search%)"
 			+ " ORDER BY al.aprvCode DESC")
 	Page<ApprovalResultDTO> findAllReceive(Integer staffCode, String search, Pageable pageable);
+	
+	@NativeQuery(value = "DELETE FROM approver WHERE apvr_num = :apvrNum")
+	void removeApproverByApvrNum(Long apvrNum);
 }

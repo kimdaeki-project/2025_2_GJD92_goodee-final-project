@@ -105,8 +105,8 @@ public class ApprovalController {
 		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
 		model.addAttribute("approval", approvalDTO);
 		
-		// List<DeptDTO> deptList = approvalService.getDeptList();
-		// model.addAttribute("deptList", deptList);
+		List<DeptDTO> deptList = approvalService.getDeptList();
+		model.addAttribute("deptList", deptList);
 		
 		if (approvalDTO.getOvertimeDTO() != null) {
 			model.addAttribute("overtimeStart", approvalDTO.getOvertimeDTO().getOverStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
@@ -410,6 +410,27 @@ public class ApprovalController {
 		}
 		
 		return result;
+	}
+	
+	@PostMapping("line")
+	public String postApprovalLineChange(InputApprovalDTO inputApprovalDTO, Model model) {
+		log.info("{}", inputApprovalDTO);
+		boolean result = approvalService.changeApprovalLine(inputApprovalDTO);
+		
+		String resultMsg = "결재선 재지정 중 오류가 발생했습니다.";
+		String resultIcon = "warning";
+		
+		if (result) {
+			resultMsg = "결재선을 재지정했습니다.";
+			resultIcon = "success";
+			String resultUrl = "/approval";
+			model.addAttribute("resultUrl", resultUrl);
+		}
+		
+		model.addAttribute("resultMsg", resultMsg);
+		model.addAttribute("resultIcon", resultIcon);
+		
+		return "common/result";
 	}
 	
 	@GetMapping("{attachNum}/download")
