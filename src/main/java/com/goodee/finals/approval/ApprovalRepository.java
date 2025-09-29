@@ -74,4 +74,13 @@ public interface ApprovalRepository extends JpaRepository<ApprovalDTO, Integer> 
 
 	@NativeQuery(value = "DELETE FROM approval WHERE aprv_code = :aprvCode")
 	void deleteApproval(Integer aprvCode);
+	
+	@NativeQuery(value = "DELETE FROM vacation WHERE aprv_code = :aprvCode")
+	void deleteVacation(Integer aprvCode);
+	
+	@NativeQuery(value = "DELETE FROM overtime WHERE aprv_code = :aprvCode")
+	void deleteOvertime(Integer aprvCode);
+	
+	@NativeQuery(value = "DELETE FROM early WHERE aprv_code = :aprvCode")
+	void deleteEarly(Integer aprvCode);
 }
