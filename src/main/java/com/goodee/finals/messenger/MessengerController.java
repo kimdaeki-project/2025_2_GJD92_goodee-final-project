@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +27,12 @@ public class MessengerController {
 	
 	@Autowired
 	MessengerService messengerService;
+	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
     
     @GetMapping("")
     public String home(Model model) {
-    	
     	List<StaffDTO> result = messengerService.getStaff();
     	model.addAttribute("members", result);
     	return "messenger/home";
@@ -62,6 +65,14 @@ public class MessengerController {
 	public String chat(@PageableDefault(size = 20, sort = "chatBodyNum", direction= Sort.Direction.DESC) Pageable pageable, ChatRoomDTO chatRoomDTO, Model model) {
 		Page<MessengerTestDTO> result = messengerService.chatList(pageable, chatRoomDTO.getChatRoomNum());
 		List<MessengerTestDTO> messages = new ArrayList<>(result.getContent());
+		for (MessengerTestDTO m : messages) {
+			m.setChatDate(m.getChatBodyDtm().getMonthValue() + "월 " + m.getChatBodyDtm().getDayOfMonth() + "일");
+			if (m.getChatBodyDtm().getMinute() < 10) {
+				m.setChatTime(m.getChatBodyDtm().getHour() + ":0" + m.getChatBodyDtm().getMinute());				
+			} else {				
+				m.setChatTime(m.getChatBodyDtm().getHour() + ":" + m.getChatBodyDtm().getMinute());				
+			}
+		}
 		messages.sort(Comparator.comparing(MessengerTestDTO::getChatBodyNum));
 		model.addAttribute("chatRoomNum", chatRoomDTO.getChatRoomNum());
 		model.addAttribute("chat", messages);
@@ -113,7 +124,12 @@ public class MessengerController {
 	}
 	
 	@PostMapping("exit")
-	public void unread(Long chatRoomNum) {
+	public void unread(Long chatRoomNum, Integer staffCode) {
+		// 브라우저가 종료될 때 비동기 작업이 보장이 되지 않으므로 백에서 처리 - 이 메서드에서 직접 웹소켓 메시지를 전송
+		NotificationDTO notificationDTO = new NotificationDTO();
+		notificationDTO.setType("NOUNREADCOUNT");
+		notificationDTO.setMsg("DEPLETE");
+		simpMessagingTemplate.convertAndSend("/sub/notify/" + staffCode, notificationDTO);
 		messengerService.unread(chatRoomNum);
 	}
 	
@@ -132,5 +148,39 @@ public class MessengerController {
 		result.put("latest", latestMessageResult);
 		return result;
 	}
+	
+	@PostMapping("new") @ResponseBody
+	public MessengerTestDTO newChat(@RequestBody MessengerTestDTO messengerTestDTO) {
+		MessengerTestDTO result = messengerService.newChat(messengerTestDTO);
+		return result;
+	}
+	
+	@GetMapping("footer") @ResponseBody
+	public List<ChatRoomDTO> footer() {
+		List<ChatRoomDTO> result = messengerService.list();
+		return result;
+	} 
+	
+	@PostMapping("notify") @ResponseBody
+	public List<ChatUserDTO> notify(@RequestBody ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> result = messengerService.getNotify(chatRoomDTO);
+		return result;
+	}
+	
+	@PostMapping("/room/add") @ResponseBody
+	public List<StaffDTO> memberJoin(@RequestBody ChatRoomDTO chatRoomDTO) {
+		List<StaffDTO> result = messengerService.getStaffForGroupChat(chatRoomDTO);
+		return result;
+	}
+	
+	@PostMapping("/room/join") @ResponseBody
+	public boolean memberJoin(@RequestBody Map<String, Object> data) {
+		List<String> staffs = (List<String>)data.get("staffs");
+		Long chatRoomNum = Long.parseLong(data.get("chatRoomNum") + "");
+		int result = messengerService.joinMember(staffs, chatRoomNum);
+		if (result > 0) return true;
+		else return false;
+	}
+	
 	
 }
