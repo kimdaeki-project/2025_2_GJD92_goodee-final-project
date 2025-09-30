@@ -1,0 +1,183 @@
+@charset "UTF-8";
+body {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-room-container {
+    flex: 1;
+    display: flex;
+}
+
+/* 좌측 멤버 리스트 */
+.member-list {
+    flex: 2;
+    border-right: 1px solid #eee;
+    padding: 20px;
+    overflow-y: auto;
+}
+.section-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    color: #333;
+}
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.member-item:hover {
+    background: #f9f9f9;
+}
+.member-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.member-info img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+.member-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+}
+.member-role {
+    font-size: 13px;
+    color: #888;
+}
+
+/* 체크박스 */
+.member-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* 우측 선택 영역 */
+.selected-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+.selected-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+}
+.selected-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+.selected-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.selected-info img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+.remove-btn {
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+.remove-btn:hover {
+    color: #000;
+}
+
+/* 하단 생성 버튼 */
+.footer {
+    border-top: 1px solid #eee;
+    padding: 15px 20px;
+    text-align: right;
+}
+.footer button {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+.footer button:hover {
+    background: #333;
+}
+
+/* 채팅방 생성 폼 스타일 */
+#form {
+    margin-bottom: 20px;
+    width: 180px;
+}
+
+#form label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+#form input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#form input[type="text"]:focus {
+    border-color: #000;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+}
+
+.scroll-members {
+	height: 220px;
+	overflow-y: auto; 
+}
+/* 앵커 */
+.anchor {
+    font-size: 13px;
+    font-weight: normal;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s, text-decoration 0.2s;
+    text-decoration: none;
+}
+
+.anchor:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* 체크 박스 색상 */
+input[type="checkbox"] {
+   	accent-color: #000;
+}

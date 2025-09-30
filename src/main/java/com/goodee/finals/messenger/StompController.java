@@ -18,16 +18,15 @@ public class StompController {
         this.simpMessagingTemplate = template;
     }
     
-	@MessageMapping("/chat{chatRoomNum}")
+	@MessageMapping("/chat/{chatRoomNum}")
 	public void send(@DestinationVariable("chatRoomNum") Long chatRoomNum, MessengerTestDTO message) throws Exception {
-		// Thread.sleep(1000);
 		message.setChatRoomNum(chatRoomNum);
 		messengerService.saveChat(message);
-		simpMessagingTemplate.convertAndSend("/sub/chat" + chatRoomNum, message);
+		simpMessagingTemplate.convertAndSend("/sub/chat/" + chatRoomNum, message);
 	}
 	
 	@MessageMapping("/notify/{staffCode}")
-	public void notify(@DestinationVariable("staffCode") Integer staffCode, String message) throws Exception {
+	public void notify(@DestinationVariable("staffCode") Integer staffCode, NotificationDTO message) throws Exception {
 		simpMessagingTemplate.convertAndSend("/sub/notify/" + staffCode, message);
 	}
 
