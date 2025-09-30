@@ -24,7 +24,7 @@ stompClient.connect({}, function (frame) {
     document.getElementById('sendButton').addEventListener('click', function () {
         const contents = document.querySelector('#messageInput').value;
         const message = {
-            type: "SEND", // 고정된 type
+            chatBodyType: "SEND", // 고정된 type
             contents: contents,
             chatRoomNum: chatRoomNum,
             staffCode: sender,
@@ -50,11 +50,46 @@ stompClient.connect({}, function (frame) {
     });
 });
 //화면에 메시지 출력하기
-function displayMessage(message) {
+function displayMessage(msg) {
     const messagesDiv = document.getElementById('messages');
-    const messageElement = document.createElement('div');
-    messageElement.textContent = message.staffName + ': ' + message.chatBodyContent;
-    messagesDiv.appendChild(messageElement);
+	if(msg.chatBodyType == 'SEND') {
+		let timeFromJava = msg.chatBodyDtm;
+		let timeToJs = new Date(timeFromJava);
+		
+		let div = document.createElement('div');
+		div.classList.add('chat-message');
+		if (msg.staffCode == sender) div.classList.add('me');
+		let divSender = document.createElement('div');
+		divSender.classList.add('chat-sender');
+		divSender.innerText = msg.staffName;
+		let divTextWrapper = document.createElement('div');
+		divTextWrapper.classList.add('chat-text-wrapper');
+		let divChatText = document.createElement('div');
+		divChatText.classList.add('chat-text');
+		divChatText.innerText = msg.chatBodyContent;
+		let divChatMeta = document.createElement('div');
+		divChatMeta.classList.add('chat-meta');
+		let divChatDate = document.createElement('div');
+		divChatDate.classList.add('chat-date-inline');
+		divChatDate.innerText = timeToJs.getMonth() + 1 + '월 ' + timeToJs.getDate() + '일';
+		let divChatTime = document.createElement('chat-time');
+		divChatTime.classList.add('chat-time');
+		if (timeToJs.getMinutes() < 10) divChatTime.innerText = timeToJs.getHours() + ':0' + timeToJs.getMinutes();
+		else divChatTime.innerText = timeToJs.getHours() + ':' + timeToJs.getMinutes();
+		
+		divChatMeta.appendChild(divChatDate);
+		divChatMeta.appendChild(divChatTime);
+		divTextWrapper.appendChild(divChatText);
+		divTextWrapper.appendChild(divChatMeta);
+		div.appendChild(divSender);
+		div.appendChild(divTextWrapper);
+		messagesDiv.appendChild(div);
+	} else if (msg.chatBodyType == 'NEW') {
+		let div = document.createElement('div');
+		div.classList.add('chat-read-divider');
+		div.textContent = msg.chatBodyContent;
+		messagesDiv.appendChild(div);	
+	}
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 // 무한 스크롤 구현하기
@@ -82,9 +117,7 @@ function loadMessages() {
 		const oldHeight = messageBox.scrollHeight;
 		
 		response.messages.forEach(msg => {
-			const div = document.createElement('div');
-			div.textContent = msg.staffName + ': ' + msg.chatBodyContent;
-			messageBox.prepend(div);
+			renderHtmlInfiniteScroll(msg);
 		});
 		
 		const newHeight = messageBox.scrollHeight;
@@ -107,6 +140,47 @@ function syncUnreadCount() {
 function noUnreadCount() {
 	stompClient.send("/pub/notify/" + sender, {}, JSON.stringify({msg: chatRoomNum, type: 'NOUNREADCOUNT'}));
 }
+//무한 스크롤 html 렌더링
+function renderHtmlInfiniteScroll(msg) {
+	if(msg.chatBodyType == 'SEND') {
+		let timeFromJava = msg.chatBodyDtm;
+		let timeToJs = new Date(timeFromJava);
+		
+		let div = document.createElement('div');
+		div.classList.add('chat-message');
+		if (msg.staffCode == sender) div.classList.add('me');
+		let divSender = document.createElement('div');
+		divSender.classList.add('chat-sender');
+		divSender.innerText = msg.staffName;
+		let divTextWrapper = document.createElement('div');
+		divTextWrapper.classList.add('chat-text-wrapper');
+		let divChatText = document.createElement('div');
+		divChatText.classList.add('chat-text');
+		divChatText.innerText = msg.chatBodyContent;
+		let divChatMeta = document.createElement('div');
+		divChatMeta.classList.add('chat-meta');
+		let divChatDate = document.createElement('div');
+		divChatDate.classList.add('chat-date-inline');
+		divChatDate.innerText = timeToJs.getMonth() + 1 + '월 ' + timeToJs.getDate() + '일';
+		let divChatTime = document.createElement('chat-time');
+		divChatTime.classList.add('chat-time');
+		if (timeToJs.getMinutes() < 10) divChatTime.innerText = timeToJs.getHours() + ':0' + timeToJs.getMinutes();
+		else divChatTime.innerText = timeToJs.getHours() + ':' + timeToJs.getMinutes();
+		
+		divChatMeta.appendChild(divChatDate);
+		divChatMeta.appendChild(divChatTime);
+		divTextWrapper.appendChild(divChatText);
+		divTextWrapper.appendChild(divChatMeta);
+		div.appendChild(divSender);
+		div.appendChild(divTextWrapper);
+		messageBox.prepend(div);
+	} else if (msg.chatBodyType == 'NEW') {
+		let div = document.createElement('div');
+		div.classList.add('chat-read-divider');
+		div.textContent = msg.chatBodyContent;
+		messageBox.prepend(div);	
+	}
+}
 // 모달 및 사용자 추가
 const addMemberBtn = document.querySelector('#addMemeber');
 const modal = document.getElementById("addMemberModal");
@@ -114,6 +188,7 @@ const closeBtn = document.getElementById("closeModal");
 const selectedMembers = document.getElementById("selectedMembers");
 let memberList = document.querySelector('#memberList');
 let staffs = [];
+let staffNames = [];
 
 addMemberBtn.addEventListener("click", () => {
 	renderHtmlChatAddMemeber(chatRoomNum);
@@ -166,6 +241,7 @@ function renderHtmlInner(el) {
 	inp.addEventListener("change", function() {
 	    if (this.checked) {
 			staffs.push(this.value);
+			staffNames.push(el.staffName);
 	        let selDiv = document.createElement("div");
 	        selDiv.classList.add("selected-member"); 
 	        selDiv.setAttribute("data-staffCode", el.staffCode);
@@ -184,9 +260,8 @@ function renderHtmlInner(el) {
 	    } else {
 	        const target = selectedMembers.querySelector(`.selected-member[data-staffCode="${el.staffCode}"]`);
 	        if (target) selectedMembers.removeChild(target);
-			if (staffs.indexOf(this.value) > -1) {
-				staffs.splice(staffs.indexOf(this.value), 1);
-			}
+			if (staffs.indexOf(this.value) > -1) staffs.splice(staffs.indexOf(this.value), 1);
+			if (staffNames.indexOf(el.staffName) > -1) staffNames.splice(staffNames.indexOf(el.staffName), 1);
 	    }
 	});
 	
@@ -202,11 +277,24 @@ function renderHtmlInner(el) {
 const joinStaffBtn = document.querySelector('#addMembers');
 const form = document.querySelector('#form');
 joinStaffBtn.addEventListener('click', () => {
+	const contents = staffNames.join("님, ") + '님이 초대되었습니다.';
+	const message = {
+	    chatBodyType: "NEW",
+	    contents: contents,
+	    chatRoomNum: chatRoomNum,
+	    staffCode: sender,
+		chatBodyContent: contents,
+		staffName: senderName
+	};
+	stompClient.send("/pub/chat/" + chatRoomNum, {}, JSON.stringify(message));
 	fetch('/msg/room/join', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({staffs: staffs, chatRoomNum: chatRoomNum})
 	})
 	.then(response => response.json())
-	.then(response => console.log(response));
+	.then(response => {
+		console.log(response);
+		modal.style.display = "none";
+	});
 });

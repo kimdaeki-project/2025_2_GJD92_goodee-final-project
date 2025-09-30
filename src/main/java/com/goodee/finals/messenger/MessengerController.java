@@ -65,6 +65,14 @@ public class MessengerController {
 	public String chat(@PageableDefault(size = 20, sort = "chatBodyNum", direction= Sort.Direction.DESC) Pageable pageable, ChatRoomDTO chatRoomDTO, Model model) {
 		Page<MessengerTestDTO> result = messengerService.chatList(pageable, chatRoomDTO.getChatRoomNum());
 		List<MessengerTestDTO> messages = new ArrayList<>(result.getContent());
+		for (MessengerTestDTO m : messages) {
+			m.setChatDate(m.getChatBodyDtm().getMonthValue() + "월 " + m.getChatBodyDtm().getDayOfMonth() + "일");
+			if (m.getChatBodyDtm().getMinute() < 10) {
+				m.setChatTime(m.getChatBodyDtm().getHour() + ":0" + m.getChatBodyDtm().getMinute());				
+			} else {				
+				m.setChatTime(m.getChatBodyDtm().getHour() + ":" + m.getChatBodyDtm().getMinute());				
+			}
+		}
 		messages.sort(Comparator.comparing(MessengerTestDTO::getChatBodyNum));
 		model.addAttribute("chatRoomNum", chatRoomDTO.getChatRoomNum());
 		model.addAttribute("chat", messages);
@@ -169,8 +177,9 @@ public class MessengerController {
 	public boolean memberJoin(@RequestBody Map<String, Object> data) {
 		List<String> staffs = (List<String>)data.get("staffs");
 		Long chatRoomNum = Long.parseLong(data.get("chatRoomNum") + "");
-		messengerService.joinMember(staffs, chatRoomNum);
-		return true;
+		int result = messengerService.joinMember(staffs, chatRoomNum);
+		if (result > 0) return true;
+		else return false;
 	}
 	
 	

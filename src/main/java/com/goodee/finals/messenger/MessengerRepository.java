@@ -20,8 +20,8 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 
 	@Query("SELECT cb " + 
 		   "FROM MessengerTestDTO cb " +
-		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyDelete = false")
-	Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum);
+		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyDelete = false AND cb.chatBodyNum >= :chatGroupLatest")
+	Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum, Long chatGroupLatest);
 
 	List<ChatRoomDTO> findByChatRoomGroupFalseAndChatUserDTOsStaffDTOStaffCode(Integer loggedStaffCode);
 
@@ -53,7 +53,9 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 	@Query("SELECT cu FROM ChatUserDTO cu WHERE cu.chatRoomDTO.chatRoomNum = :chatRoomNum")
 	List<ChatUserDTO> getNotify(Long chatRoomNum);
 
-//	@Query("INSERT INTO ChatUserDTO cu")
-//	ChatUserDTO saveJoinedStaffs(Integer staffCode);
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO chat_user (staff_code, chat_body_num, chat_room_num, chat_group_latest) VALUES (:staffCode, :chatBodyNum, :chatRoomNum, :chatBodyNum)", nativeQuery = true)
+	int saveJoinStaffs(Integer staffCode, Long chatRoomNum, Long chatBodyNum);
 	
 }

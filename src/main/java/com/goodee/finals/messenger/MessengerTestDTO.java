@@ -25,9 +25,14 @@ public class MessengerTestDTO {
 	private LocalDateTime chatBodyDtm = LocalDateTime.now();
 	@Column(columnDefinition = "boolean default false")
 	private boolean chatBodyDelete;
+	private String chatBodyType;
 	
 	@Transient
 	private MessengerType type;
 	@Transient
 	private String staffName;
+	@Transient
+	private String chatDate;
+	@Transient 
+	private String chatTime;
 }
