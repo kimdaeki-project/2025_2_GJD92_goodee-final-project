@@ -7,6 +7,11 @@
     <i class="material-symbols-rounded py-2">sms</i>
   </a>
 </div>
+<div class="fixed-plugin" onclick="openFault()">
+  <a class="fixed-plugin-button text-dark position-fixed px-3 py-2"  style="bottom: 98px !important;">
+    <i class="material-symbols-rounded py-2">build_circle</i>
+  </a>
+</div>
 
 <!-- Popper.js -->
 <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -31,4 +36,11 @@
       "width=400,height=500,resizable=no,scrollbars=yes"
     );
   }
+  function openFault() {
+	    window.open(
+	      "/fault/write",
+	      "FaultWindow",
+	      "width=400,height=500,resizable=no,scrollbars=yes"
+	    );
+	  }
 </script>

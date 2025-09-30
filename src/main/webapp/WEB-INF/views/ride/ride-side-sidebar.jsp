@@ -20,10 +20,3 @@
           <span class="nav-link-text ms-1 text-sm">고장 신고 목록</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/fault/write">
-          <i class="material-symbols-rounded opacity-5 fs-5" data-content="고장 신고">attractions</i>
-          <span class="nav-link-text ms-1 text-sm">고장 신고</span>
-        </a>
-      </li>
-      

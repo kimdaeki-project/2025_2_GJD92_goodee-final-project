@@ -98,7 +98,6 @@
 		    </div>
 		</form>
 	    
-	    <c:if test="${ totalInspection gt 0 }">
 		<table class="table table-hover align-middle text-center">
 			<thead>
 				<tr>
@@ -178,29 +177,27 @@
 		</nav>
     	</c:if>
 		
-    	</c:if>
-
-		
-    	<!-- 어트랙션 점검 기록 등록 -->
-    	<!-- 로그인 사용자 정보 꺼내기 -->
-    	<sec:authorize access="isAuthenticated()">
-     	  <sec:authentication property="principal" var="staff" />
-		  
-		  <!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
-	      <c:if test="${staff.deptDTO.deptCode eq 1003}">
-	        <div class="text-end mt-4 me-4">
-	          <a href="${pageContext.request.contextPath}/inspection/write "
-	             class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-	             style="width: 100px;">등록</a>
-	        </div>
-	      </c:if>
-	      
-	  </sec:authorize>
-	  
 	  <!-- 검색 결과 없음 -->
 	  <c:if test="${ totalInspection eq 0 }">
-		  <div class="alert alert-secondary text-center">검색된 결과가 없습니다.</div>
+		  <div class="alert alert-secondary text-center" style="color:white;">검색된 결과가 없습니다.</div>
 	  </c:if>
+		
+   	  <!-- 어트랙션 점검 기록 등록 -->
+   	  <!-- 로그인 사용자 정보 꺼내기 -->
+   	  <sec:authorize access="isAuthenticated()">
+      <sec:authentication property="principal" var="staff" />
+	  
+	  <!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
+      <c:if test="${staff.deptDTO.deptCode eq 1003}">
+        <div class="text-end mt-4 me-4">
+          <a href="${pageContext.request.contextPath}/inspection/write "
+             class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
+             style="width: 100px;">등록</a>
+        </div>
+      </c:if>
+      
+      </sec:authorize>
+	  
 	    
 	    </section>
     </div>

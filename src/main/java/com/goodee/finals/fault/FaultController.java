@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.ride.RideDTO;
@@ -79,26 +80,32 @@ public class FaultController {
 	// 어트랙션 고장 신고 등록
 	@PostMapping("write")
 	public String writeFault(@Valid @ModelAttribute("faultDTO") FaultDTO faultDTO, BindingResult bindingResult, Model model) throws Exception {
+		
 	    // 유효성 검증 실패 시 다시 폼으로
 	    if (bindingResult.hasErrors()) {
 	        model.addAttribute("rideList", faultService.getAllRides());
 	        return "fault/faultWrite";
 	    }
-
+	    
+	    
+	    // 서비스 호출
 	    boolean result = faultService.writeFault(faultDTO);
 
 	    String resultMsg = "어트랙션 고장 신고 등록에 실패했습니다.";
 	    String resultIcon = "warning";
 	    String resultUrl = "/fault/";
+	    boolean popupClose = false; // 등록 성공 후 창 닫기
 
 	    if (result) {
 	        resultMsg = "어트랙션 고장 신고 등록을 완료하였습니다.";
 	        resultIcon = "success";
+	        popupClose = true; // 성공 시 팝업 닫기
 	    }
 
 	    model.addAttribute("resultMsg", resultMsg);
 	    model.addAttribute("resultIcon", resultIcon);
 	    model.addAttribute("resultUrl", resultUrl);
+	    model.addAttribute("popupClose", popupClose);
 
 	    return "common/result";
 	}

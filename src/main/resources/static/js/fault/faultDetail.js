@@ -2,7 +2,7 @@
  * 
  */
 // 어드랙션 고장 신고 삭제
-function deleteInspection(isptNum) {
+function deleteFault(faultNum) {
 	Swal.fire({
 	  text: "어트랙션 고장 신고를 삭제하시겠습니까?",
 	  icon: "question",
