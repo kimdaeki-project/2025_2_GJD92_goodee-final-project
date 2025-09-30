@@ -1,6 +1,7 @@
 package com.goodee.finals.product;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.goodee.finals.common.attachment.ProductAttachmentDTO;
 import com.goodee.finals.productManage.ProductManageDTO;
@@ -13,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -45,9 +47,8 @@ public class ProductDTO {
 	private ProductTypeDTO productTypeDTO;
 
 	// 물품관리대장
-	@ManyToOne
-	@JoinColumn(name = "pmNum")
-	private ProductManageDTO productManageDTO;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
+	private List<ProductManageDTO> productManageDTO;
 	
 	// 물품 사진파일
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)

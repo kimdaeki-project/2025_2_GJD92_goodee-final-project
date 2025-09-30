@@ -119,8 +119,8 @@
 		    			</div>
 		    			
 		    			<button type="button" onclick="sendApproval()" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100">기안</button>
-		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">불러오기</button>
-		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100">임시저장</button>
+		    			<button type="button" class="btn btn-outline-secondary mt-2 w-100" data-bs-toggle="modal" data-bs-target="#saveModal">불러오기</button>
+		    			<button type="button" onclick="saveApproval()" class="btn btn-outline-secondary mt-2 w-100">임시저장</button>
 				    </div>
 				    
 				    <div class="col-auto" style="width: 800px; overflow: hidden auto;">
@@ -148,19 +148,84 @@
 				    	<div class="rounded text-center w-100" style="border: 1px solid #686868; min-height: 500px; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
 				    		<div class="mt-1">
 			    				<ul id="approverList" class="list-unstyled">
-			    				
+			    					<c:if test="${ hasApprover }">
+			    						<c:forEach var="approver" items="${ approval.approverDTOs }">
+				    						<c:if test="${ approver.apvrSeq ne 0 }">
+				    						
+				    							<li>
+				    								<input type="hidden" name="approver" value="${ approver.staffDTO.staffCode }" />
+														<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+															<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">
+																<c:if test="${ approver.apvrType eq 712 }">승인</c:if>
+						    								<c:if test="${ approver.apvrType eq 711 }">검토</c:if>
+															</div>
+															<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
+														</div>
+														<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+															<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+															<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+														</div>
+														<div class="text-center mt-2" style="color: black;">│</div>
+				    							</li>
+													
+				    						</c:if>
+				    					</c:forEach>
+				    					
+				    					<li>
+				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">기안</div>
+													<span> ${ staff.deptDTO.deptDetail }</span>
+												</div>
+												<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+													<span>${ staff.jobDTO.jobDetail } ${ staff.staffName }</span>
+												</div>
+				    					</li>
+			    					</c:if>
 			    				</ul>
 				    		</div>
 		    				
 		    				<div class="mt-5">
 			    				<ul id="receiptList" class="list-unstyled">
-			    				
+			    					<c:forEach var="approver" items="${ approval.approverDTOs }">
+			    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 710 }">
+			    						
+			    							<li>
+			    								<input type="hidden" name="receiver" value="${ approver.staffDTO.staffCode }">
+					    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+														<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">수신</div>
+														<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
+													</div>
+													<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+														<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+														<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+													</div>
+					    					</li>
+			    						
+			    						</c:if>
+			    					</c:forEach>
 			    				</ul>
 		    				</div>
 		    				
 		    				<div class="mt-5">
 			    				<ul id="agreeList" class="list-unstyled">
-			    				
+			    					<c:forEach var="approver" items="${ approval.approverDTOs }">
+			    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 713 }">
+			    						
+			    							<li>
+			    								<input type="hidden" name="agreer" value="${ approver.staffDTO.staffCode }" />
+					    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+														<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">합의</div>
+														<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
+													</div>
+													<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+														<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+														<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+													</div>
+					    					</li>
+			    						
+			    						</c:if>
+			    					</c:forEach>
 			    				</ul>
 		    				</div>
 		    			</div>
@@ -172,6 +237,29 @@
 	    </section>
     </div>
   </main>
+  
+  <div class="modal fade" id="saveModal" tabindex="-1">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="saveModalLabel">임시저장한 기안</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	      <div class="modal-body">
+	       	<form id="savedApprovalForm">
+	       		<select id="savedApproval" name="savedCode" class="form-select">
+	       			<option value="" selected>-- 선택 --</option>
+	       		</select>
+	       	</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" onclick="loadApproval()" class="btn btn-primary bg-gradient-dark text-white">확인</button>
+	        <button type="button" onclick="deleteApproval()" class="btn btn-primary">삭제</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
   
   <c:import url="/WEB-INF/views/approval/draft-modal.jsp"></c:import>
   

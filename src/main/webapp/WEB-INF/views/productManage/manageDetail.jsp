@@ -79,39 +79,52 @@
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
     
     <div class="form-box">
-      <h2>분실물 상세</h2>
+      <h2>입출고 상세</h2>
       
-      <img width="300" height="300" style="object-fit: cover;" src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
+      <img width="300" height="300" style="object-fit: cover;" src="/file/product/${ productManageDTO.productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
       
       <table>
       	<tbody>
       		<tr>
-      			<td>분실물번호</td>
-      			<td>${productDTO.productCode }</td>
+      			<td>입출고번호</td>
+      			<td>${productManageDTO.pmNum }</td>
       		</tr>
       		<tr>
       			<td>등록일자</td>
-      			<td>${productDTO.productDate }</td>
+      			<td>${productManageDTO.pmDate }</td>
       		</tr>
       		<tr>
-      			<td>분실물명</td>
-      			<td>${productDTO.productName }</td>
+      			<td>작성자</td>
+      			<td>${productManageDTO.staffDTO.staffName }</td>
       		</tr>
       		<tr>
-      			<td>수량</td>
-      			<td>${productDTO.productAmount }</td>
+      			<td>물품타입</td>
+      			<td>${productManageDTO.productDTO.productTypeDTO.productTypeName }</td>
+      		</tr>
+      		<tr>
+      			<td>물품명</td>
+      			<td>${productManageDTO.productDTO.productName }</td>
+      		</tr>
+      		<tr>
+      			<td>등록수량</td>
+      			<td>${productManageDTO.pmAmount }</td>
+      		</tr>
+      		<tr>
+      			<td>잔여수량</td>
+      			<td>${productManageDTO.pmRemainAmount }</td>
       		</tr>
       	</tbody>
-      </table>  
+      </table> 
+      <br> 
       
       <div class="updateDeletebtns">
-	      <button onclick="location.href='/product/${productCode}/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">수정</button>
-	      <form action="/product/${productCode }/delete" method="post">
+	      <button onclick="location.href='/productManage/${pmNum}/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">수정</button>
+	      <form action="/productManage/${pmNum }/delete" method="post">
 		      <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">삭제</button>
 		  </form>
-	 </div>
+	  </div>
         
-      <button onclick="location.href='/product'" class="btn btn-sm btn-outline-secondary">목록</button>
+      <button onclick="location.href='/productManage'" class="btn btn-sm btn-outline-secondary" >목록</button>
     </div>
     
     </section>
@@ -120,7 +133,7 @@
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='물품 리스트']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "재고"
 	</script>
 </body>

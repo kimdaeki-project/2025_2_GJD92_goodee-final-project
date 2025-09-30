@@ -155,101 +155,115 @@
 			    
 			    <div class="col-auto" style="width: 180px;">
 			    	<div class="rounded text-center w-100" style="border: 1px solid #686868; min-height: 500px; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
-			    		<div class="mt-1">
-		    				<ul class="list-unstyled">
-		    					<c:forEach var="approver" items="${ approval.approverDTOs }">
-		    						<c:if test="${ approver.apvrSeq ne 0 }">
-		    						
-		    							<li>
-		    								<input type="hidden" class="post-apvr" name="approver" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
-												<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-													<div class="rounded m-0 px-1 py-0 <c:if test="${ not empty approver.apvrResult }">bg-gradient-dark text-white</c:if>" style="border: 1px solid black; color: black; font-size: 14px;">
-														<c:if test="${ approver.apvrType eq 712 }">승인</c:if>
-				    								<c:if test="${ approver.apvrType eq 711 }">검토</c:if>
+			    		<form id="changeApprovalLineForm" method="POST" action="/approval/line">
+			    			<input type="hidden" name="aprvCode" value="${ approval.aprvCode }" />
+			    			
+				    		<div class="mt-1">
+			    				<ul id="approverList" class="list-unstyled">
+			    					<c:forEach var="approver" items="${ approval.approverDTOs }">
+			    						<c:if test="${ approver.apvrSeq ne 0 }">
+			    						
+			    							<li>
+			    								<input type="hidden" class="post-apvr" name="approver" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
+													<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+														<div class="rounded m-0 px-1 py-0 <c:if test="${ not empty approver.apvrResult }">bg-gradient-dark text-white</c:if>" style="border: 1px solid black; color: black; font-size: 14px;">
+															<c:if test="${ approver.apvrType eq 712 }">승인</c:if>
+					    								<c:if test="${ approver.apvrType eq 711 }">검토</c:if>
+														</div>
+														<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
 													</div>
-													<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
-												</div>
-												<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
-													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
-													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
-												</div>
-												<div class="text-center mt-2" style="color: black;">│</div>
-		    							</li>
-											
-		    						</c:if>
-		    					</c:forEach>
-		    					
-		    					<li>
-		    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-											<div class="rounded m-0 px-1 py-0 bg-gradient-dark text-white" style="border: 1px solid black; color: black; font-size: 14px;">기안</div>
-											<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
-										</div>
-										<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
-											<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
-											<span>${ approval.staffDTO.jobDTO.jobDetail } ${ approval.staffDTO.staffName }</span>
-										</div>
-		    					</li>
-		    				</ul>
-			    		</div>
-	    				
-	    				<div class="mt-5">
-		    				<ul id="receiptList" class="list-unstyled">
+													<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+														<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+														<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+													</div>
+													<div class="text-center mt-2" style="color: black;">│</div>
+			    							</li>
+												
+			    						</c:if>
+			    					</c:forEach>
+			    					
+			    					<li>
+			    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+												<div class="rounded m-0 px-1 py-0 bg-gradient-dark text-white" style="border: 1px solid black; color: black; font-size: 14px;">기안</div>
+												<span> ${ approval.staffDTO.deptDTO.deptDetail }</span>
+											</div>
+											<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+												<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+												<span>${ approval.staffDTO.jobDTO.jobDetail } ${ approval.staffDTO.staffName }</span>
+											</div>
+			    					</li>
+			    				</ul>
+				    		</div>
 		    				
-		    					<c:forEach var="approver" items="${ approval.approverDTOs }">
-		    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 710 }">
-		    						
-		    							<li>
-		    								<input type="hidden" class="post-recp" name="receiver" value="${ approver.staffDTO.staffCode }">
-				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-													<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">수신</div>
-													<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
-												</div>
-												<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
-													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
-													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
-												</div>
-				    					</li>
-		    						
-		    						</c:if>
-		    					</c:forEach>
+		    				<div class="mt-5">
+			    				<ul id="receiptList" class="list-unstyled">
+			    				
+			    					<c:forEach var="approver" items="${ approval.approverDTOs }">
+			    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 710 }">
+			    						
+			    							<li>
+			    								<input type="hidden" class="post-recp" name="receiver" value="${ approver.staffDTO.staffCode }">
+					    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+														<div class="rounded m-0 px-1 py-0" style="border: 1px solid black; color: black; font-size: 14px;">수신</div>
+														<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
+													</div>
+													<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+														<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+														<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+													</div>
+					    					</li>
+			    						
+			    						</c:if>
+			    					</c:forEach>
+			    				
+			    				</ul>
+		    				</div>
 		    				
-		    				</ul>
-	    				</div>
-	    				
-	    				<div class="mt-5">
-		    				<ul id="agreeList" class="list-unstyled">
-		    					
-		    					<c:forEach var="approver" items="${ approval.approverDTOs }">
-		    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 713 }">
-		    						
-		    							<li>
-		    								<input type="hidden" class="post-agre" name="agreer" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
-				    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
-													<div class="rounded m-0 px-1 py-0 <c:if test="${ not empty approver.apvrResult }">bg-gradient-dark text-white</c:if>" style="border: 1px solid black; color: black; font-size: 14px;">합의</div>
-													<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
-												</div>
-												<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
-													<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
-													<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
-												</div>
-				    					</li>
-		    						
-		    						</c:if>
-		    					</c:forEach>
-		    				
-		    				</ul>
-	    				</div>
+		    				<div class="mt-5">
+			    				<ul id="agreeList" class="list-unstyled">
+			    					
+			    					<c:forEach var="approver" items="${ approval.approverDTOs }">
+			    						<c:if test="${ approver.apvrSeq eq 0 and approver.apvrType eq 713 }">
+			    						
+			    							<li>
+			    								<input type="hidden" class="post-agre" name="agreer" value="${ approver.staffDTO.staffCode }" data-approved="${ not empty approver.apvrResult ? 'Y' : 'N' }">
+					    						<div class="d-flex justify-content-between align-items-center mt-2" style="width: 80%; margin: 0 auto;">
+														<div class="rounded m-0 px-1 py-0 <c:if test="${ not empty approver.apvrResult }">bg-gradient-dark text-white</c:if>" style="border: 1px solid black; color: black; font-size: 14px;">합의</div>
+														<span> ${ approver.staffDTO.deptDTO.deptDetail }</span>
+													</div>
+													<div class="d-flex justify-content-end align-items-center mt-1" style="width: 80%; margin: 0 auto;">
+														<i class="material-symbols-rounded fs-5 me-1" style="color: black;">contacts_product</i>
+														<span>${ approver.staffDTO.jobDTO.jobDetail } ${ approver.staffDTO.staffName }</span>
+													</div>
+					    					</li>
+			    						
+			    						</c:if>
+			    					</c:forEach>
+			    				
+			    				</ul>
+		    				</div>
+			    		</form>
 	    			</div>
 	    			
 	    			<c:if test="${ approval.aprvState ne 702 and approval.aprvState ne 703 }">
-		    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재선 재지정</button>
+		    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" data-bs-toggle="modal" data-bs-target="#shareModal" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재선 재지정</button>
 	    			</c:if>
-	    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" onclick="printApproval()" <c:if test="${ approval.aprvState ne 702 }">disabled</c:if>>문서 출력</button>
+	    			
+	    			<c:if test="${ approval.aprvState eq 702 }">
+		    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" onclick="printApproval()">문서 출력</button>
+	    			</c:if>
+	    			
+	    			<c:if test="${ approval.aprvState eq 702 and approval.staffDTO.staffCode eq staff.staffCode }">
+		    			<button type="button" class="btn btn-outline-secondary mt-5 w-100 bg-gradient-dark text-white" data-bs-toggle="modal" data-bs-target="#receiveModal">수신자 추가</button>
+	    			</c:if>
 			    </div>
 	    	</div>
 	    </section>
     </div>
   </main>
+  
+  <c:import url="/WEB-INF/views/approval/draft-modal.jsp"></c:import>
+  <c:import url="/WEB-INF/views/approval/detail-receive-modal.jsp"></c:import>
   
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
@@ -262,7 +276,11 @@
 		function printApproval() {
 			window.print();
 		}
+		
+		const draftStaffCode = ${ approval.staffDTO.staffCode }
+		const loginStaffCode = ${ staff.staffCode }
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script src="/js/approval/detail.js"></script>
 </body>
 
