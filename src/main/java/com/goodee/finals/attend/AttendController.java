@@ -97,23 +97,32 @@ public class AttendController {
 			            @RequestParam(required = false) Integer month,
 			            @PageableDefault(size = 10, sort = "attendDate", direction = Direction.DESC ) Pageable pageable,
 			            Model model) {
+		
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 		StaffDTO staffDTO = staffService.getStaff(staffCode);
-		
-		LocalDate now = LocalDate.now();
+		model.addAttribute("staffDTO", staffDTO);
+	    
+	    // 출퇴근 내역
+	    LocalDate now = LocalDate.now();
 	    int targetYear = (year == null) ? now.getYear() : year;
 	    int targetMonth = (month == null) ? now.getMonthValue() : month;
-		
-	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, pageable);
-	    long lateCount = attendService.getLateCount(staffCode, targetYear, targetMonth);
-	    long earlyLeaveCount = attendService.getEarlyLeaveCount(staffCode, targetYear, targetMonth);
-	    
-	    model.addAttribute("staffDTO", staffDTO);
-	    model.addAttribute("attendances", attendances);
 	    model.addAttribute("year", targetYear);
 	    model.addAttribute("month", targetMonth);
+	    
+	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, now, pageable);
+	    model.addAttribute("attendances", attendances);
+	    
+	    // 지각
+	    long lateCount = attendService.getLateCount(staffCode, targetYear, targetMonth);
 	    model.addAttribute("lateCount", lateCount);
+	    
+	    // 조퇴
+	    long earlyLeaveCount = attendService.getEarlyLeaveCount(staffCode, targetYear, targetMonth);
 	    model.addAttribute("earlyLeaveCount", earlyLeaveCount);
+	    
+	    // 결근
+	    long absentCount = attendService.getAbsentCount(staffCode, targetYear, targetMonth, now);
+	    model.addAttribute("absentCount", absentCount);
 		
 		return "attend/list";
 	}

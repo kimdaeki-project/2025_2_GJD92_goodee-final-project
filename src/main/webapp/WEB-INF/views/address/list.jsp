@@ -32,7 +32,6 @@ aside.sidenav {
 
 	    <div class="d-flex justify-content-end align-items-end">
 			<div class="input-group">
-				<span>총 건</span>
 				<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
 				<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
 			</div>
@@ -40,59 +39,59 @@ aside.sidenav {
 
 	    <div class="mt-3" style="min-height: 500px;">
 			    	<div class="col-10 offset-1">
-			    		<table class="table text-center">
+			    		<table class="table table-hover text-center">
 			    			<thead>
 			    				<tr>
-			    					<th class="col-2">사원번호</th>
-			    					<th class="col-2">이름</th>
-			    					<th class="col-3">부서</th>
+			    					<th class="col-1">사원번호</th>
+			    					<th class="col-1">이름</th>
+			    					<th class="col-1">부서</th>
 			    					<th class="col-1">직위</th>
-			    					<th class="col-1">연락처</th>
-			    					<th class="col-1">이메일</th>
+			    					<th class="col-2">연락처</th>
+			    					<th class="col-2">이메일</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
 
-			    				<c:forEach var="product" items="${ productList.content }">
+			    				<c:forEach var="address" items="${ addressList.content }">
 			    					<tr>
-				    					<td>${ product.productCode }</td>
-				    					<td>${ product.productTypeDTO.productTypeName}</td>
-				    					<td><a href="/product/${ product.productCode }" style="color: #737373;">${ product.productName }</a></td>
-				    					<td>${ product.productAmount }</td>
-				    					<td>${ product.productAmount }</td>
-				    					<td>${ product.productAmount }</td>
+				    					<td>${ address.staffCode }</td>
+				    					<td>${ address.staffName }</td>
+				    					<td>${ address.deptDTO.deptDetail}</td>
+				    					<td>${ address.jobDTO.jobDetail }</td>
+				    					<td>${ address.staffPhone }</td>
+				    					<td>${ address.staffEmail }</td>
 			    					</tr>
 			    				</c:forEach>
 
 			    			</tbody>
 			    		</table>
+			    <c:if test="${ addressList.totalElements eq 0 }">
+				     <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+				</c:if>
+				
 			    	</div>
 			    </div>
-
-			    <c:if test="${ totalProduct eq 0 }">
-					<div>검색된 결과가 없습니다.</div>
-				</c:if>
 
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
 						  <ul class="pagination">
-						    <c:if test="${ productList.number - 2 ge 0 }">
+						    <c:if test="${ addressList.number - 2 ge 0 }">
 							    <li class="page-item">
-							      <a class="page-link" onclick="movePage('${ productList.number - 2 }')" aria-label="Previous">
+							      <a class="page-link" onclick="movePage('${ addressList.number - 2 }')" aria-label="Previous">
 							        <span aria-hidden="true">&laquo;</span>
 							      </a>
 							    </li>
 						    </c:if>
-						    <c:if test="${ productList.hasPrevious() }">
-							    <li class="page-item"><a class="page-link" onclick="movePage('${ productList.number - 1 }')">${ productList.number }</a></li>
+						    <c:if test="${ addressList.hasPrevious() }">
+							    <li class="page-item"><a class="page-link" onclick="movePage('${ addressList.number - 1 }')">${ addressList.number }</a></li>
 						    </c:if>
-						    <li class="page-item"><a class="page-link active" onclick="movePage('${ productList.number }')">${ productList.number + 1 }</a></li>
-						    <c:if test="${ productList.hasNext() }">
-							    <li class="page-item"><a class="page-link" onclick="movePage('${ productList.number + 1 }')">${ productList.number + 2 }</a></li>
+						    <li class="page-item"><a class="page-link active" onclick="movePage('${ addressList.number }')">${ addressList.number + 1 }</a></li>
+						    <c:if test="${ addressList.hasNext() }">
+							    <li class="page-item"><a class="page-link" onclick="movePage('${ addressList.number + 1 }')">${ addressList.number + 2 }</a></li>
 						    </c:if>
-						    <c:if test="${ productList.number + 2 le productList.totalPages - 1 }">
+						    <c:if test="${ addressList.number + 2 le addressList.totalPages - 1 }">
 							    <li class="page-item">
-							      <a class="page-link" onclick="movePage('${ productList.number + 2 }')" aria-label="Next">
+							      <a class="page-link" onclick="movePage('${ addressList.number + 2 }')" aria-label="Next">
 							        <span aria-hidden="true">&raquo;</span>
 							      </a>
 							    </li>
@@ -105,10 +104,10 @@ aside.sidenav {
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/product/list.js"></script>
+	<script src="/js/address/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='주소록']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='물품 리스트']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "재고"
+		document.querySelector("i[data-content='전체']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "주소록"
 	</script>
 </body>

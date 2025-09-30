@@ -131,11 +131,6 @@
       border-bottom: 1px solid #eee;
     }
 
-    /* 어트랙션 상태 강조 */
-    .attraction-status table td:last-child {
-      color: red;
-      font-weight: bold;
-    }
 	</style>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -202,8 +197,10 @@
 	          <h2>어트랙션 운휴 현황</h2>
 	          <table>
 	            <tr><td>어트랙션</td><td>상태</td></tr>
-	            <tr><td>후룸라이드</td><td>운휴</td></tr>
-	            <tr><td>롤링 엑스 트레인</td><td>고장</td></tr>
+	          	<c:forEach items="${rides }" var="ride">
+		            <tr><td>${ride.rideName }</td>
+		            <td>${ride.rideState eq 300 ? "운휴" : ride.rideState eq 400 ? "고장" : "점검"}</td></tr>
+	          	</c:forEach>
 	          </table>
 	        </div>
 	
@@ -221,11 +218,22 @@
 	
 	        <!-- 결재 현황 -->
 	        <div class="panel approval">
-	          <h2>결재 현황</h2>
-	          <table>
-	            <tr><td>제목</td><td>기안일</td><td>상태</td></tr>
-	            <tr><td>지출결의서</td><td>2025-09-11</td><td>진행중</td></tr>
-	            <tr><td>휴가신청서</td><td>2025-09-09</td><td>완료</td></tr>
+	          <h2>결재 현황</h2><a href="/approval">더보기</a>
+	          <table class="table text-center">
+	            <tr>
+		            <td class="col-2">문서번호</td>
+		            <td class="col-2">제목</td>
+		            <td class="col-1">기안일</td>
+		            <td class="col-1">결재순서</td>
+	            </tr>
+	            <c:forEach items="${approvalList }" var="aprv">
+		            <tr>
+			            <td>${aprv.aprvCode }</td>
+			            <td><a href="/approval/${ aprv.aprvCode }" style="color: #737373;">${ aprv.aprvTitle }</a></td>
+			            <td>${aprv.aprvDate }</td>
+			            <td>${aprv.aprvCrnt } / ${aprv.aprvTotal }</td>
+		            </tr>
+	            </c:forEach>
 	          </table>
 	        </div>
 	

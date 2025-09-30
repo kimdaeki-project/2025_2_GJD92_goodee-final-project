@@ -29,11 +29,11 @@
 		    		<table class="table text-center">
 		    			<thead>
 		    				<tr>
-		    					<th class="col-2">분실물번호</th>
-		    					<th class="col-2">분실물명</th>
-		    					<th class="col-1">작성자</th>
-		    					<th class="col-2">연락처</th>
-		    					<th class="col-3">등록일자</th>
+		    					<th>분실물번호</th>
+		    					<th>분실물명</th>
+		    					<th>작성자</th>
+		    					<th>연락처</th>
+		    					<th>등록일자</th>
 		    				</tr>
 		    			</thead>
 		    			<tbody>
@@ -50,12 +50,13 @@
 		    				
 		    			</tbody>
 		    		</table>
+		    
+		     <c:if test="${ totalLost eq 0 }">
+		        <div class="alert alert-secondary text-center">검색된 결과가 없습니다.</div>
+		    </c:if>
+		    
 		    	</div>
 		    </div>
-		    
-		    <c:if test="${ totalLost eq 0 }">
-				<div>검색된 결과가 없습니다.</div>
-			</c:if>
 		    
     <div class="d-flex justify-content-center aling-items-center">
 		    	<nav aria-label="Page navigation example">

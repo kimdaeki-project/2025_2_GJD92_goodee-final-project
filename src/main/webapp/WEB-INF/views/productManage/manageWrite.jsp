@@ -116,34 +116,33 @@ aside.sidenav {
 					<form method="post" enctype="multipart/form-data">
 
 						<div class="form-group">
+						
 							<button type="button"
 								class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
 								data-bs-toggle="modal" data-bs-target="#productModal"
 								style="width: 100px;">물품검색</button>
 
-							<label for="itemName">물품번호</label> <input type="text"
-								name="productCode"
-								value="${productManageDTO.productDTO.productCode }" required>
+							<label for="itemName">물품번호</label>
+							<input type="text" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
 								
 							<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
 							
-							<label for="itemName">물품타입</label> <input type="text"
-								name="productTypeDTO.productTypeName"
-								value="${productManageDTO.productDTO.productTypeDTO.productTypeName }"
-								required>
+							<label for="itemName">물품타입</label>
+							<input type="text" name="productTypeDTO.productTypeName" value="${productManageDTO.productDTO.productTypeDTO.productTypeName }" readonly required placeholder="물품을 검색해주세요.">
 								 
-							<label for="itemName">물품명</label> <input
-								type="text" name="productName"
-								value="${productManageDTO.productDTO.productName }" required>
+							<label for="itemName">물품명</label>
+							<input type="text" name="productName" value="${productManageDTO.productDTO.productName }" readonly required placeholder="물품을 검색해주세요.">
+							
 						</div>
 
 						<div class="form-group">
 							<label>유형</label>
 							<div class="radio-group">
 								<label>
-									<input type="radio" name="pmType" value="80" 
-										<c:if test="${productManageDTO.pmType == 80}">checked</c:if>> 입고
-									</label> 
+									<label>
+							            <input type="radio" name="pmType" value="80"
+							                <c:if test="${empty productManageDTO or productManageDTO.pmType == 80}">checked</c:if>> 입고
+							        </label> 
 								<label>
 									<input type="radio"	name="pmType" value="90"
 										<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고
@@ -152,8 +151,13 @@ aside.sidenav {
 						</div>
 
 						<div class="form-group">
-							<label>수량</label> <input type="text" name="pmAmount"
-								value="${productManageDTO.pmAmount }">
+							<label>수량</label>
+							<input type="text" name="pmAmount" value="${productManageDTO.pmAmount }">
+						</div>
+						
+						<div class="form-group">
+							<label>비고</label>
+							<input type="text" name="pmNote" value="${productManageDTO.pmNote }">
 						</div>
 
 						<button type="submit"
@@ -164,7 +168,7 @@ aside.sidenav {
 					</form>
 				</div>
 
-				<!--     모달창 내용 -->
+				<!-- 모달창 내용 -->
 				<div class="modal fade" id="productModal" tabindex="-1"
 					aria-hidden="true">
 					<div class="modal-dialog modal-lg">
