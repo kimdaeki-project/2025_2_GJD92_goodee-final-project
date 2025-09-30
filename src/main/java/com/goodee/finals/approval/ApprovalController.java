@@ -614,6 +614,12 @@ public class ApprovalController {
 		return approvalService.deleteAttach(attachNum);
 	}
 	
+	@PostMapping("{apvrCode}/receive")
+	@ResponseBody
+	public boolean postApprovalAddReceiver(@PathVariable String apvrCode, String[] receiver) {
+		return approvalService.addReceiver(apvrCode, receiver);
+	}
+	
 	@GetMapping("save/list")
 	@ResponseBody
 	public List<ApprovalResultDTO> getApprovalSaved() {

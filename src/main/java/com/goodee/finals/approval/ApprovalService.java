@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -420,6 +421,27 @@ public class ApprovalService {
 		
 		return true;
 	}
+	
+	public boolean addReceiver(String apvrCode, String[] receiver) {
+		ApprovalDTO draft = approvalRepository.findById(Integer.valueOf(apvrCode)).orElseThrow();
+		List<String> receiverList = new ArrayList<>();
+		
+		Master:
+		for (String rec : receiver) {
+			for (ApproverDTO approver : draft.getApproverDTOs()) {
+				if (Integer.valueOf(rec).equals(approver.getStaffDTO().getStaffCode())) {
+					continue Master;
+				}
+			}
+			
+			receiverList.add(rec);
+		}
+		
+		setReceiver(draft, receiverList);
+		approvalRepository.saveAndFlush(draft);
+		
+		return true;
+	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType, Integer aprvState) {
 		ApprovalDTO approvalDTO = new ApprovalDTO();
@@ -521,7 +543,5 @@ public class ApprovalService {
 		
 		if (attachList.size() != 0) draft.setApprovalAttachmentDTOs(attachList);
 	}
-
-	
 	
 }

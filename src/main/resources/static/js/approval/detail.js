@@ -3,11 +3,19 @@ let currentDept = null
 let draftUser = null
 
 const addBtn = document.getElementById('addBtn')
+const receiptBtn = document.getElementById('receiptBtn')
+const agreeBtn = document.getElementById('agreeBtn')
 const selectedList = document.getElementById("selectedList")
 const supportedList = document.getElementById("supportedList")
 const saveBtn = document.getElementById('saveStaffBtn')
 const deptBtn = document.querySelectorAll('.dept-btn')
 const searchInput = document.getElementById('searchInput')
+
+const receiveList = document.getElementById("receiveList")
+const receiveBtn = document.getElementById('receiveBtn')
+const saveReceiveBtn = document.getElementById('saveReceiveBtn')
+const deptBtnReceive = document.querySelectorAll('.dept-btn-receive')
+const receiveSearchInput = document.getElementById('receiveSearchInput')
 
 new Sortable(selectedList, {
 	animation: 150,
@@ -32,6 +40,37 @@ document.addEventListener('DOMContentLoaded', function () {
 		const postApprover = document.querySelectorAll(".post-apvr")
 		const postReceiver = document.querySelectorAll(".post-recp")
 		const postAgreer = document.querySelectorAll(".post-agre")
+		
+		if (e.target.id === 'receiveModal') {
+			fetch('/approval/staff')
+			.then(data => data.json())
+			.then(data => {
+				staffs = data
+				staffs.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode)
+				currentUser = staffs.find(staff => staff.staffCode == loginStaffCode)
+				staffs = staffs.filter(staff => staff.staffCode != loginStaffCode)
+				currentDept = staffs
+				renderReceiveStaff(staffs)
+				
+				postReceiver.forEach((receiver) => {
+					const receiverStaff = staffs.find((staff) => staff.staffCode == receiver.value)
+					
+					const value = receiverStaff.staffCode
+					const text = `${receiverStaff.staffName}(${receiverStaff.jobDTO.jobDetail}) ${receiverStaff.deptDTO.deptDetail}`
+					
+					const newLi = document.createElement('li')
+					newLi.className = 'list-group-item d-flex justify-content-between align-items-center bg-gradient-dark text-white'
+					newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+
+					newLi.querySelector(`.remove-btn`).addEventListener('click', () => {
+						Swal.fire({ text: "기존 수신자는 삭제할 수 없습니다.", icon: "warning" })
+					})
+					
+					receiveList.appendChild(newLi)
+				})
+			})
+			.catch(error => console.log('Fetch Error!', error))
+		}
 		
 		if (e.target.id === 'shareModal') {
 			fetch('/approval/staff')
@@ -89,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
 					newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
 
-					newLi.querySelector(`.remove-btn`).addEventListener('click', (event) => {
+					newLi.querySelector(`.remove-btn`).addEventListener('click', () => {
 						newLi.remove()
 					})
 					
@@ -197,6 +236,29 @@ agreeBtn.addEventListener('click', () => {
 		})
 		
 		supportedList.appendChild(newLi)
+		check.checked = false
+	})
+})
+
+receiveBtn.addEventListener('click', () => {
+	const receiveStaffList = document.getElementById('receiveStaffList')
+	
+	const checkedInput = receiveStaffList.querySelectorAll('input[type="checkbox"]:checked')
+ 	
+	checkedInput.forEach((check) => {
+		const li = check.closest('li')
+		const text = li.querySelector('span').textContent
+		const value = check.value
+		
+		const newLi = document.createElement('li')
+		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+		newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+
+		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+			newLi.remove()
+		})
+		
+		receiveList.appendChild(newLi)
 		check.checked = false
 	})
 })
@@ -314,9 +376,47 @@ saveBtn.addEventListener('click', () => {
 			changeLineForm.submit()
 	  }
 	})
-	
-	
 
+})
+
+saveReceiveBtn.addEventListener('click', () => {
+	const receives = receiveList.querySelectorAll('span')
+	
+	Swal.fire({
+	  text: "수신자를 추가 하시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+			const formData = new FormData()
+			
+			receives.forEach((receive) => {
+				const staffCode = receive.getAttribute('data-staff-code')
+				formData.append("receiver", staffCode)
+			})
+			
+			fetch(location.pathname + "/receive", {
+				method : "POST",
+				body : formData
+			})
+			.then((data) => data.text())
+			.then((data) => {
+				if (data == "true") {
+					Swal.fire({ text: "수신자가 추가되었습니다.", icon: "success"})
+					.then((result) => {
+						location.href = location.pathname
+					})
+				} else {
+					Swal.fire({ text: "수신자 추가 중 오류가 발생했습니다.", icon: "warning"})
+				}
+			})
+			.catch((e) => console.log(e))
+		}
+	})
 })
 
 deptBtn.forEach(d => {
@@ -335,6 +435,34 @@ deptBtn.forEach(d => {
 		currentDept = DeptStaff.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode)
 		renderStaff(currentDept)
 	})
+})
+
+deptBtnReceive.forEach(d => {
+	d.addEventListener('click', function(e){
+		
+		receiveSearchInput.value = ''
+		const deptName = e.target.getAttribute('data-team')
+		
+		if(deptName == '전체') {
+			currentDept = staffs
+			renderReceiveStaff(staffs)
+			return
+		}
+				
+		const DeptStaff = staffs.filter(s => s.deptDTO.deptDetail == deptName)
+		currentDept = DeptStaff.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode)
+		renderReceiveStaff(currentDept)
+	})
+})
+
+receiveSearchInput.addEventListener('input', (e) => {
+	const keyword = e.target.value;
+	
+	const filteredStaff = currentDept.filter(s => 
+		s.staffName.includes(keyword) ||
+		s.jobDTO.jobDetail.includes(keyword)
+	);
+	renderReceiveStaff(filteredStaff);
 })
 
 searchInput.addEventListener('input', (e) => {
@@ -358,6 +486,20 @@ function renderStaff(list) {
 		li.innerHTML = `<input type="checkbox" class="me-2" value="${staff.staffCode}"><span>${staff.staffName}(${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}</span>`
 		
 		staffList.appendChild(li);
+	})
+}
+
+function renderReceiveStaff(list) {
+	const receiveStaffList = document.getElementById('receiveStaffList');
+	if(!receiveStaffList) return;
+	
+	receiveStaffList.innerHTML = ''
+	list.forEach(staff => {
+		const li = document.createElement('li')
+		li.className = 'list-group-item d-flex align-items-center'
+		li.innerHTML = `<input type="checkbox" class="me-2" value="${staff.staffCode}"><span>${staff.staffName}(${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}</span>`
+		
+		receiveStaffList.appendChild(li);
 	})
 }
 

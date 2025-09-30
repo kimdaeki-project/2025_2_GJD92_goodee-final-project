@@ -248,7 +248,14 @@
 	    			<c:if test="${ approval.aprvState ne 702 and approval.aprvState ne 703 }">
 		    			<button type="button" class="btn btn-primary bg-gradient-dark text-white mt-5 w-100" data-bs-toggle="modal" data-bs-target="#shareModal" <c:if test="${ isMyTurn eq 'N' }">disabled</c:if>>결재선 재지정</button>
 	    			</c:if>
-	    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" onclick="printApproval()" <c:if test="${ approval.aprvState ne 702 }">disabled</c:if>>문서 출력</button>
+	    			
+	    			<c:if test="${ approval.aprvState eq 702 }">
+		    			<button type="button" class="btn btn-outline-secondary mt-5 w-100" onclick="printApproval()">문서 출력</button>
+	    			</c:if>
+	    			
+	    			<c:if test="${ approval.aprvState eq 702 and approval.staffDTO.staffCode eq staff.staffCode }">
+		    			<button type="button" class="btn btn-outline-secondary mt-5 w-100 bg-gradient-dark text-white" data-bs-toggle="modal" data-bs-target="#receiveModal">수신자 추가</button>
+	    			</c:if>
 			    </div>
 	    	</div>
 	    </section>
@@ -256,6 +263,7 @@
   </main>
   
   <c:import url="/WEB-INF/views/approval/draft-modal.jsp"></c:import>
+  <c:import url="/WEB-INF/views/approval/detail-receive-modal.jsp"></c:import>
   
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script>
@@ -270,6 +278,7 @@
 		}
 		
 		const draftStaffCode = ${ approval.staffDTO.staffCode }
+		const loginStaffCode = ${ staff.staffCode }
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 	<script src="/js/approval/detail.js"></script>
