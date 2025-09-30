@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApprovalListDTO;
 import com.goodee.finals.approval.ApprovalService;
 import com.goodee.finals.attend.AttendDTO;
@@ -66,7 +65,7 @@ public class HomeController {
 		Page<ApprovalListDTO> result = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), "", pageable);
 		List<ApprovalListDTO> approvalList = new ArrayList<>();
 		
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < Math.min(5, result.getContent().size()); i++) {
 			approvalList.add(result.getContent().get(i));
 		}
 		

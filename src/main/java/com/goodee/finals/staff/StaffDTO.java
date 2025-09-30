@@ -103,15 +103,15 @@ public class StaffDTO implements UserDetails {
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<LostDTO> LostDTOs;
+	private List<LostDTO> lostDTOs;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<ProductDTO> ProductDTOs;
+	private List<ProductDTO> productDTOs;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<ProductManageDTO> ProductManageDTOs;
+	private List<ProductManageDTO> productManageDTOs;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "staffDTO", cascade = CascadeType.ALL) @JsonIgnore
 	private List<AlertDTO> alertDTOs;
