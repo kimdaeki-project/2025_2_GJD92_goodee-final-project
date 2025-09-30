@@ -1,6 +1,7 @@
 let staffs = []
 let currentDept = null
 let currentUser = null
+let saveModalActivated = false;
 
 const addBtn = document.getElementById('addBtn')
 const selectedList = document.getElementById("selectedList")
@@ -31,6 +32,26 @@ document.addEventListener('DOMContentLoaded', function () {
 				renderStaff(staffs)
 			})
 			.catch(error => console.log('Fetch Error!', error))
+		}
+		
+		if (e.target.id === 'saveModal') {
+			if (!saveModalActivated) {
+				fetch("/approval/save/list")
+				.then((data) => data.json())
+				.then((data) => {
+					const savedApproval = document.querySelector("#savedApproval")
+					
+					data.forEach((approval) => {
+						const aprvOption = document.createElement("option")
+						aprvOption.setAttribute("value", approval.aprvCode)
+						aprvOption.innerHTML = `[${approval.aprvCode}] ${approval.aprvTitle} (${approval.aprvDate})`
+						
+						savedApproval.appendChild(aprvOption)
+					})
+					
+					saveModalActivated = true;
+				})
+			}
 		}
 	})
 })
@@ -265,11 +286,128 @@ function sendApproval() {
 		cancelButtonText: "취소"
 	}).then((result) => {
 	  if (result.isConfirmed) {
+			form.action = location.pathname
 	    form.submit();
+	  }
+	});
+}
+
+function saveApproval() {
+	const form = document.querySelector("#approvalForm")
+	
+	if (!hasSign) {
+		Swal.fire({ text: "먼저 서명을 등록해주세요.", icon: "warning" })
+		return
+	}
+	
+	Swal.fire({
+	  text: "기안을 임시저장 하시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+			form.action = location.pathname + "/save"
+			form.submit();
 	  }
 	});
 }
 
 function openApprovalSign() {
 	window.open("/approval/sign", "_blank", "width=300, height=400, top=250, left=400, menubar=no, toolbar=no, location=no, status=no")
+}
+
+function addInputFile() {
+	const inputFileColumn = document.querySelector("#inputFileColumn")
+	const inputFileBtn = document.querySelector("#inputFileBtn")
+	
+	const fileDiv = document.createElement("div")
+	fileDiv.className = "d-flex justify-content-start align-items-center mb-2"
+	fileDiv.innerHTML = `<input type="file" class="form-control" name="attach" style="width: 400px; height: 30px;" /><button type="button" class="btn btn-outline-secondary inputFileDelete ms-3 mb-0 p-0" style="width: 25px; height: 25px;">X</button>`
+	
+	fileDiv.querySelector(".inputFileDelete").addEventListener('click', function () {
+		fileDiv.remove()
+		
+		if (inputFileColumn.childElementCount > 5) {
+			inputFileBtn.classList.add("d-none")
+		} else {
+			inputFileBtn.classList.remove("d-none")
+		}
+	})
+	
+	inputFileColumn.insertBefore(fileDiv, inputFileColumn.lastChild.previousSibling)
+	
+	if (inputFileColumn.childElementCount > 5) {
+		inputFileBtn.classList.add("d-none")
+	} else {
+		inputFileBtn.classList.remove("d-none")
+	}
+}
+
+function deleteAttach(attachNum, event) {
+	Swal.fire({
+	  text: "첨부파일을 삭제 하시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+			fetch("/approval/" + attachNum + "/delete", {
+				method : "GET"
+			})
+			.then((data) => data.text())
+			.then((data) => {
+				Swal.fire({ text: "첨부파일이 삭제되었습니다.", icon: "success" })
+				
+				event.target.closest("div").remove()
+			})
+			.catch((e) => console.log(e))
+	  }
+	});
+}
+
+function loadApproval() {
+	const form = document.querySelector("#savedApprovalForm")
+	
+	Swal.fire({
+	  text: "임시저장한 문서를 불러오시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+			form.method = "GET"
+			form.action = "/approval/load"
+			form.submit()
+	  }
+	});
+}
+
+function deleteApproval() {
+	const form = document.querySelector("#savedApprovalForm")
+	
+	Swal.fire({
+	  text: "임시저장한 문서를 삭제하시겠습니까?",
+	  icon: "question",
+	  showCancelButton: true,
+	  confirmButtonColor: "#3085d6",
+	  cancelButtonColor: "#d33",
+	  confirmButtonText: "확인",
+		cancelButtonText: "취소"
+	}).then((result) => {
+	  if (result.isConfirmed) {
+			form.method = "GET"
+			form.action = "/approval/delete"
+			form.submit()
+	  }
+	});
 }

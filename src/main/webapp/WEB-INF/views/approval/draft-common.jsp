@@ -31,7 +31,7 @@
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>시</span><span>행</span><span>일</span></p></td>
 		<td colspan="4">
-			<input type="date" name="aprvExe" />
+			<input type="date" name="aprvExe" value="${ approval.aprvExe }" />
 		</td>
 	</tr>
 	
@@ -53,20 +53,32 @@
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>제</span><span>목</span></p></td>
 		<td colspan="4">
-			<input type="text" class="form-control" name="aprvTitle" />
+			<input type="text" class="form-control" name="aprvTitle" value="${ approval.aprvTitle }" />
 		</td>
 	</tr>
 	
 	<tr style="border: 2px solid #686868;">
 		<td colspan="5" style="text-align: left;">
-			<textarea id="summernote" name="aprvContent"></textarea>
+			<textarea id="summernote" name="aprvContent">${ approval.aprvContent }</textarea>
 		</td>
 	</tr>
 	
 	<tr>
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>첨</span><span>부</span><span>파</span><span>일</span></p></td>
-		<td colspan="4">
-			<input type="file" class="form-control" name="attach" />
+		<td id="inputFileColumn" colspan="4">
+			<c:if test="${ not empty approval.approvalAttachmentDTOs }">
+				<c:forEach var="attach" items="${ approval.approvalAttachmentDTOs }">
+					<div class="d-flex justify-content-start align-items-center mb-2">
+						<i class="material-symbols-rounded fs-5 me-1">docs</i>
+						<span>${ attach.attachmentDTO.originName }</span>
+						<button type="button" onclick="deleteAttach('${ attach.attachmentDTO.attachNum }', event)" class="btn btn-outline-secondary inputFileDelete ms-3 mb-0 p-0" style="width: 25px; height: 25px;">X</button>
+					</div>
+				</c:forEach>
+			</c:if>
+		
+			<div class="d-flex justify-content-start align-items-center">
+				<button type="button" id="inputFileBtn" onclick="addInputFile()" class="btn btn-outline-secondary mb-0 p-0" style="width: 25px; height: 25px;">+</button>
+			</div>
 		</td>
 	</tr>
 </table>
