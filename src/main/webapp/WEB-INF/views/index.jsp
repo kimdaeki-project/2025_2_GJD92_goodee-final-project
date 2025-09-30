@@ -221,26 +221,19 @@
 	          <h2>결재 현황</h2><a href="/approval">더보기</a>
 	          <table class="table text-center">
 	            <tr>
-		            <td class="col-1">구분</td>
+		            <td class="col-2">문서번호</td>
 		            <td class="col-2">제목</td>
 		            <td class="col-1">기안일</td>
-		            <td class="col-1">상태</td>
+		            <td class="col-1">결재순서</td>
 	            </tr>
-	            <tr>
-		            <td class="col-1">결재요청문서</td>
-		            <td class="col-2">휴가신청서</td>
-		            <td class="col-1">2025-09-30</td>
-		            <td class="col-1">결재중</td>
-	            </tr>
-	            
-	            <tr>
-<%-- 		            <c:forEach items="${ }" var="aprv"> --%>
-<%-- 			            <td>${aprv. }</td> --%>
-<%-- 			            <td>${aprv. }</td> --%>
-<%-- 			            <td>${aprv. }</td> --%>
-<%-- 		            </c:forEach> --%>
-	            </tr>
-	            
+	            <c:forEach items="${approvalList }" var="aprv">
+		            <tr>
+			            <td>${aprv.aprvCode }</td>
+			            <td><a href="/approval/${ aprv.aprvCode }" style="color: #737373;">${ aprv.aprvTitle }</a></td>
+			            <td>${aprv.aprvDate }</td>
+			            <td>${aprv.aprvCrnt } / ${aprv.aprvTotal }</td>
+		            </tr>
+	            </c:forEach>
 	          </table>
 	        </div>
 	

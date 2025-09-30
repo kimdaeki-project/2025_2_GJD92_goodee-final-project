@@ -2,10 +2,12 @@ package com.goodee.finals.home;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -36,9 +38,12 @@ public class HomeController {
 	
 	
 	@GetMapping("/")
-	public String getHome(Model model) throws Exception {
+	public String getHome(Model model, Pageable pageable) throws Exception {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		StaffDTO staffDTO = (StaffDTO) auth.getPrincipal()
+		StaffDTO staffDTO = null;
+		if (auth.getPrincipal() instanceof StaffDTO) {
+			staffDTO = (StaffDTO) auth.getPrincipal();			
+		}
 
         // 로그인 안 된 경우, 대시보드 접근
         if (auth == null || auth.getName().equals("anonymousUser")) {
@@ -58,8 +63,12 @@ public class HomeController {
 		model.addAttribute("noticeList", noticeList);
 		
 		// 결재현황
-		Page<ApprovalListDTO> approvalList = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), "", null);
-		log.info("{}", approvalList.getContent());
+		Page<ApprovalListDTO> result = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), "", pageable);
+		List<ApprovalListDTO> approvalList = new ArrayList<>();
+		
+		for (int i = 0; i < 1; i++) {
+			approvalList.add(result.getContent().get(i));
+		}
 		
 		model.addAttribute("approvalList", approvalList);
 		
