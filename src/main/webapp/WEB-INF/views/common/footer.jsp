@@ -52,21 +52,6 @@
 
 <script src="/js/messenger/footer.js"></script>
 <script>
-  function openMessenger() {
-    window.open(
-      "/msg",
-      "MessengerWindow",
-      "width=400,height=500,resizable=no,scrollbars=yes"
-    );
-  }
-  function openFault() {
-	    window.open(
-	      "/fault/write",
-	      "FaultWindow",
-	      "width=400,height=500,resizable=no,scrollbars=yes"
-	    );
-	  }
-
 	<sec:authorize access="isAuthenticated()">
 		fetch('/msg/footer')
 	    .then(response => response.json())
