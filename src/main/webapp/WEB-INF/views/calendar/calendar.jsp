@@ -20,9 +20,9 @@
 		<c:import url="/WEB-INF/views/calendar/calendar-sidebar.jsp"></c:import>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden;">
 	    	<input type="hidden" id="calNum" value="">
-	    	<div class="d-flex justify-content-end mt-3 me-3">
-	    		<div>이쪽은 검색란</div>	    	
-	    	</div>
+<!-- 	    	<div class="d-flex justify-content-end mt-3 me-3"> -->
+<!-- 	    		<div>이쪽은 검색란</div>	    	 -->
+<!-- 	    	</div> -->
 	    	<div id='calendar' class="mt-3"></div>
 		    <!-- 여기에 코드 작성 -->
 		    <!-- 여기에 코드 작성 -->

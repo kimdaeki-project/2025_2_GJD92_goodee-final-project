@@ -33,8 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(rollbackFor = Exception.class)
 public class DriveService {
 
-    private final HomeController homeController;
-	
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
 	
@@ -55,11 +53,6 @@ public class DriveService {
 	@Autowired
 	private FileService fileService;
 
-
-    DriveService(HomeController homeController) {
-        this.homeController = homeController;
-    }
-	
 	public List<DeptDTO> getDeptList() {
 		return deptRepository.findAll();
 	}

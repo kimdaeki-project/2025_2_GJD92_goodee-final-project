@@ -1,34 +1,38 @@
 console.log("calendar.js 연결됨")
 
+// 메인
 const calendarEl      = document.getElementById("calendar");
 const inputCalNum     = document.getElementById("calNum");
 
-// 모달
-const modalAddCalendar   = new bootstrap.Modal(document.getElementById('addCalendarModal'));
-const modalCalendarDetail     = new bootstrap.Modal(document.getElementById("calendarDetailModal"));
+// 사이드바
+const calTypeCheckboxs = document.querySelectorAll(".cal-type-checkbox");
+let selectedCalType    = getSelectedTypes();
 
-// 등록 수정 모달
+// 모달
+const modalAddCalendar     = new bootstrap.Modal(document.getElementById('addCalendarModal'));
+const modalCalendarDetail  = new bootstrap.Modal(document.getElementById("calendarDetailModal"));
+
+// 등록,수정 모달
 const btnModalWrite     = document.getElementById("btnModalWrite");
 const btnAddCalendar    = document.getElementById("btnAddCalendar");
-const selectMinHour     = document.querySelectorAll(".select-min-hour");
 
 const inputCalType      = document.getElementById("calType");
 const inputCalTitle     = document.getElementById("calTitle");
 const inputCalPlace     = document.getElementById("calPlace")
 const inputCalContent   = document.getElementById("calContent")
-const inputCalIsAllDay  = document.getElementById("allDayCheckBox")
 const inputCalEndMin    = document.getElementById("calEndMin");
 const inputCalEndHour   = document.getElementById("calEndHour");
 const inputCalEndDate   = document.getElementById("calEndDate");
 const inputCalStartMin  = document.getElementById("calStartMin");
 const inputCalStartHour = document.getElementById("calStartHour");
 const inputCalStartDate = document.getElementById("calStartDate");
-const allDayCheckBox    = document.getElementById("allDayCheckBox");
+const inputCalIsAllDay  = document.getElementById("allDayCheckBox")
+const selectMinHour     = document.querySelectorAll(".select-min-hour"); // 종일 체크시 숨김처리 용도
 
-// 상세 모달
-const btnUpdateCalendar  = document.getElementById("btnUpdateCalendar");
-const btnDeleteCalendar  = document.getElementById("btnDeleteCalendar");
-const btnUpAndDel      = document.querySelectorAll(".btn-update-delete");
+// 상세모달
+const btnUpdateCalendar = document.getElementById("btnUpdateCalendar");
+const btnDeleteCalendar = document.getElementById("btnDeleteCalendar");
+const btnUpAndDel       = document.querySelectorAll(".btn-update-delete");
 
 document.addEventListener("hidden.bs.modal", (e) => {
 	const modalForm = e.target.querySelector("#eventForm");
@@ -70,9 +74,9 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		 today: '오늘'
 	},
 	eventClick: function(eventInfo) {
-		let calStart    = eventInfo.event.startStr;
-		let calReg      = eventInfo.event._def.extendedProps.calReg;
-		calReg = dayjs(calReg).format("YYYY-MM-DD HH:mm");		
+		let calStart      = eventInfo.event.startStr;
+		let calReg        = eventInfo.event._def.extendedProps.calReg;
+		calReg   = dayjs(calReg).format("YYYY-MM-DD HH:mm");		
 		calStart = eventInfo.event.allDay ? dayjs(calStart).format("YYYY-MM-DD") : dayjs(calStart).format("YYYY-MM-DD HH:mm");				
 
 		const calNum      = eventInfo.event._def.extendedProps.calNum;
@@ -111,11 +115,11 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		showWriteModal(dateInfo.dateStr);
 	},
 	events: function(fetchInfo, successCallback, failureCallback) { // 일정 불러오기
-		fetch("/calendar/eventList", { method: 'GET' })
+		fetch(`/calendar/eventList?calTypes=${ selectedCalType }`, { method: 'GET' })
 		.then(r => r.json())
 		.then(r => {
 //			console.log("서버 응답:", r);
-			const events = r.map(event => addToCalendar(event));
+			const events = r.map(event => addInCalendar(event));
 //			console.log(events);
 			successCallback(events); // 달력에 이벤트 반영
 		})
@@ -128,14 +132,21 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 calendar.render(); // 랜더링
 
 // 종일 체크박스 체크시 시작 시,분 안보임 처리
-allDayCheckBox.addEventListener("change", (e) => {
+inputCalIsAllDay.addEventListener("change", (e) => {
 	const check = e.target.checked;
 	showHideInput(check);
 })
 
 btnModalWrite.addEventListener("click", () => {
-	const today   = dayjs().format("YYYY-MM-DD");
+	const today = dayjs().format("YYYY-MM-DD");
 	showWriteModal(today);
+})
+
+calTypeCheckboxs.forEach(function (calTypeCheckbox) {
+	calTypeCheckbox.addEventListener("change", () => {
+		selectedCalType = getSelectedTypes();
+		calendar.refetchEvents();
+	})
 })
 
 
@@ -190,7 +201,7 @@ btnDeleteCalendar.addEventListener("click", () => {
 			return
 		}
 		const calNum = inputCalNum.value;
-		const param = new URLSearchParams();
+		const param  = new URLSearchParams();
 		param.append("calNum", calNum);
 		
 		fetch("/calendar/delete", {
@@ -287,9 +298,9 @@ function addCalendar() {
 		calEnd:      end.format("YYYY-MM-DDTHH:mm:ss"),
 		calType:     calType,
 		calTitle:    calTitle,
-		calIsAllDay: document.getElementById("allDayCheckBox").checked,
-		calPlace:    document.getElementById("calPlace").value,
-		calContent:  document.getElementById("calContent").value,
+		calPlace:    inputCalPlace.value,
+		calContent:  inputCalContent.value,
+		calIsAllDay: inputCalIsAllDay.checked
 	};
 	// fetch로 DB에 등록
 	// 1. 일정쓰기
@@ -303,8 +314,7 @@ function addCalendar() {
 		.then(addedCalendar => {
 			// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent() 사용해서 랜더링
 			console.log(addedCalendar)
-			calendar.addEvent(addToCalendar(addedCalendar))
-			if(modalAddCalendar) modalAddCalendar.hide();
+			calendar.addEvent(addInCalendar(addedCalendar))
 		})
 	} else if(btnAddCalendar.dataset.request == "update") {
 		// Update일때는 객체에 calNum 추가
@@ -324,7 +334,7 @@ function addCalendar() {
 	if(modalAddCalendar) modalAddCalendar.hide();
 }
 
-function addToCalendar(event) {
+function addInCalendar(event) {
 	return {
 		id: event.calNum,              
 		title: event.calTitle,         
@@ -402,4 +412,6 @@ function showHideInput(checked) {
 	} 
 }
 
-
+function getSelectedTypes() {
+	return Array.from(calTypeCheckboxs).filter(cb => cb.checked).map(cb => cb.dataset.calType);
+}

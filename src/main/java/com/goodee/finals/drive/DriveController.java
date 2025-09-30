@@ -62,7 +62,7 @@ public class DriveController {
 		@PageableDefault(size = 15, sort = "docDate", direction = Sort.Direction.DESC) Pageable pageable) {
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		DriveDTO driveDTO;
+		DriveDTO driveDTO = null;
 	    if (driveNum == null) { // 최초 진입시 기본 드라이브
 	        driveDTO = driveService.getDefaultDrive(staffDTO);
 	    } else { 				// 특정 드라이브 진입

@@ -10,7 +10,7 @@
 <!-- 				<a href="/calendar/list" class="btn btn-dark w-100 mt-2 mb-3">일정 목록</a> -->
 <!-- 			</li> -->
 			<li class="nav-item">
-				<button type="button" class="btn btn-dark w-100 mb-2" id="btnModalWrite">일정 쓰기</button>
+				<button type="button" class="btn btn-dark w-100 my-2" id="btnModalWrite">일정 쓰기</button>
 			</li>
 		</ul>
 		<!-- 일정 목록 ,쓰기 버튼 끝-->
@@ -21,22 +21,32 @@
 		<!-- TODO 반복문으로 바꿀예정 -->
 		<div class="ps-4 mt-3">
 			<ul class="navbar-nav my-1">
-				<li class="nav-item mt-2">
-					<input type="checkbox">
-					<span>공휴일</span>
-				</li>
-				<li class="nav-item mt-2">
-					<input type="checkbox"> 
-					<span>점검 일정</span>
-				</li>
-				<li class="nav-item mt-2">
-					<input type="checkbox"> 
-					<span>사내 일정</span>
-				</li>
-				<li class="nav-item mt-2">
-					<input type="checkbox"> 
-					<span>시설 일정</span>
-				</li>
+				<c:forEach items="${ calTypeList }" var="calType">
+					<li class="nav-item mt-2">
+					<c:choose>
+						<c:when test="${ calType.calType == 2000 }">
+							<input type="checkbox" class="cal-type-checkbox" data-cal-type="${calType.calType}" style="accent-color: red;" checked>
+						</c:when>
+						<c:when test="${ calType.calType == 2001 }">
+							<input type="checkbox" class="cal-type-checkbox" data-cal-type="${calType.calType}" style="accent-color: #F1C40F;" checked>
+						</c:when>
+						<c:when test="${ calType.calType == 2002 }">
+							<input type="checkbox" class="cal-type-checkbox" data-cal-type="${calType.calType}" style="accent-color: blue;" checked>
+						</c:when>
+						<c:when test="${ calType.calType == 2003 }">
+							<input type="checkbox" class="cal-type-checkbox" data-cal-type="${calType.calType}" style="accent-color: green;" checked>
+						</c:when>
+					</c:choose> 
+					<c:choose>
+						<c:when test="${ calType.calTypeName eq '공휴일' }">
+							<span>${ calType.calTypeName }</span>
+						</c:when>
+						<c:otherwise>
+							<span>${ calType.calTypeName } 일정</span>
+						</c:otherwise>
+					</c:choose>
+					</li> 
+				</c:forEach>
 			</ul>
 		</div>
 		<!-- 일정 분류 체크 박스 -->

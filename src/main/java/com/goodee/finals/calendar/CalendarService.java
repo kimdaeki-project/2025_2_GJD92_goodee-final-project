@@ -25,8 +25,12 @@ public class CalendarService {
 	@Autowired
 	private CalendarRepository calendarRepository;
 
-	public List<CalendarDTO> getCalendarList(StaffDTO staffDTO) { 
-		return calendarRepository.getCalendarList(staffDTO.getDeptDTO().getDeptCode());
+	public List<CalTypeDTO> getCalTypesByDept(StaffDTO staffDTO) {
+		return calendarRepository.getCalTypesByDept(staffDTO.getDeptDTO().getDeptCode());
+	}
+	
+	public List<CalendarDTO> getCalendarList(StaffDTO staffDTO, List<Integer> calTypes) { 
+		return calendarRepository.getCalendarList(staffDTO.getDeptDTO().getDeptCode(), calTypes);
 	}
 	
 	public CalendarDTO getCalendar(Long calNum) {

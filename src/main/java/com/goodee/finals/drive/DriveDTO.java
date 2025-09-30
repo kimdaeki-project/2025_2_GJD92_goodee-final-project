@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +36,7 @@ public class DriveDTO {
 	private Long driveNum;
 	@NotBlank(message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
 	private String driveName; // 사용하지 않고 있음
+	@Column(unique = true)
 	private Long driveDefaultNum;
 	private Boolean isPersonal;
 	private Boolean driveEnabled;
