@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.attend.AttendDTO;
 import com.goodee.finals.attend.AttendService;
 import com.goodee.finals.notice.NoticeDTO;
@@ -49,7 +50,8 @@ public class HomeController {
 		model.addAttribute("noticeList", noticeList);
 		
 		// 결재현황
-		
+		List<ApprovalDTO> approvalList = homeService.getRecentApprovalsForDashboard();
+		model.addAttribute("approvalList", approvalList);
 		
 		// 어트랙션 운휴 현황
 		List<RideDTO> rides = homeService.homeList();

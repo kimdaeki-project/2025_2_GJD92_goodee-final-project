@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.goodee.finals.approval.ApprovalDTO;
+import com.goodee.finals.approval.ApprovalRepository;
 import com.goodee.finals.notice.NoticeDTO;
 import com.goodee.finals.notice.NoticeRepository;
 import com.goodee.finals.ride.RideDTO;
@@ -18,6 +20,13 @@ public class HomeService {
 	private NoticeRepository noticeRepository;
 	@Autowired
 	private RideRepository rideRepository;
+	@Autowired
+	private ApprovalRepository approvalRepository;
+	
+	// 결재현황 최신글 5건 조회
+	public List<ApprovalDTO> getRecentApprovalsForDashboard() {
+		return approvalRepository.findAll();
+	}
 	
 	// 공지사항 최신글 5건 조회
 	public List<NoticeDTO> getRecentNoticesForDashboard() {

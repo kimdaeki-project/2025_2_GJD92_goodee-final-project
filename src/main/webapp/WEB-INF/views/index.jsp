@@ -131,11 +131,6 @@
       border-bottom: 1px solid #eee;
     }
 
-    /* 어트랙션 상태 강조 */
-    .attraction-status table td:last-child {
-      color: red;
-      font-weight: bold;
-    }
 	</style>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -223,11 +218,29 @@
 	
 	        <!-- 결재 현황 -->
 	        <div class="panel approval">
-	          <h2>결재 현황</h2>
-	          <table>
-	            <tr><td>제목</td><td>기안일</td><td>상태</td></tr>
-	            <tr><td>지출결의서</td><td>2025-09-11</td><td>진행중</td></tr>
-	            <tr><td>휴가신청서</td><td>2025-09-09</td><td>완료</td></tr>
+	          <h2>결재 현황</h2><a href="/approval">더보기</a>
+	          <table class="table text-center">
+	            <tr>
+		            <td class="col-1">구분</td>
+		            <td class="col-2">제목</td>
+		            <td class="col-1">기안일</td>
+		            <td class="col-1">상태</td>
+	            </tr>
+	            <tr>
+		            <td class="col-1">결재요청문서</td>
+		            <td class="col-2">휴가신청서</td>
+		            <td class="col-1">2025-09-30</td>
+		            <td class="col-1">결재중</td>
+	            </tr>
+	            
+	            <tr>
+<%-- 		            <c:forEach items="${ }" var="aprv"> --%>
+<%-- 			            <td>${aprv. }</td> --%>
+<%-- 			            <td>${aprv. }</td> --%>
+<%-- 			            <td>${aprv. }</td> --%>
+<%-- 		            </c:forEach> --%>
+	            </tr>
+	            
 	          </table>
 	        </div>
 	
