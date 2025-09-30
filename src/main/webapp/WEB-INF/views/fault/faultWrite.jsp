@@ -7,32 +7,31 @@
 <head>
 	<meta charset="UTF-8">
 	<title>어트랙션 고장 신고</title>
-	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<!-- Bootstrap 5.3.8 -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
+
 <body class="g-sidenav-show bg-gray-100">
-	<c:import url="/WEB-INF/views/common/sidebar.jsp"></c:import>
-  
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
-    <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
-    		<div class="w-100">
-			    <ul class="navbar-nav">
-			      <!-- 메뉴 개수만큼 추가 -->
-		    	  <c:import url="/WEB-INF/views/ride/ride-side-sidebar.jsp"></c:import>
-			    </ul>
-			  </div>
-    	</aside>
-	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
+ 		<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl bg-white ms-2 mt-2" style="height:50px;" id="navbarBlur" >
+ 			<div>
+				<h5 class="mb-0 ms-3" id="navTitle" style="font-weight:bold;">어트랙션 고장 신고</h5> 			
+ 			</div>
+ 		</nav>
+ 		
+ 		
+ 		
+	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh;">
 	    
 		    <!-- 여기에 코드 작성 -->
-			<form:form method="post"
+			<form:form id="faultForm"
+						method="post"
 						modelAttribute="faultDTO"
 						enctype="multipart/form-data"
 						action="${pageContext.request.contextPath }/fault/write">
-						
 						
 			<!-- 어트랙션 코드 -->
 			<div class="form-group row mb-3">
@@ -46,7 +45,6 @@
 			    </form:select>
 			  </div>
 			</div>
-			
 			
 			<!-- 신고 제목 -->
 			<div class="form-group row mb-3">
@@ -73,28 +71,26 @@
 			</div>
 			
 			<!-- 등록 버튼 -->
-			<button type="submit"
-			                 class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-			                 style="width: 100px;">등록</button>
-			                 
-			                 
+			<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white" 
+			        style="width: 100px; float: right;">등록	</button>
+
+
 			
 			</form:form>
-
-
-
-
-
 
 	    </section>
     </div>
   </main>
-	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script>
-		document.querySelector("i[data-content='어트랙션']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='고장 신고']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "고장 신고"
-	</script>
-</body>
+	<script src="/js/fault/faultWrite.js"></script>
+	
+
+		
+	<!-- SweetAlert2 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
+	<!-- Bootstrap 5.3.8 -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+	
+
 
 </html>

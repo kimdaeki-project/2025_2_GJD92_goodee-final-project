@@ -184,7 +184,7 @@ public class InspectionService {
     }
 
     // 시설팀 직원 목록 가져오기 (dept_code = 1003)
-    public List<StaffDTO> getFaStaffList() {
+    public List<StaffDTO> getStaffList() {
         return staffRepository.findByDeptDTO_DeptCode(1003);
     }
 

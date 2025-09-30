@@ -9,3 +9,11 @@ function openMessenger() {
         "width=400,height=500,resizable=no,scrollbars=yes"
     );
 }
+
+function openFault() {
+	    window.open(
+	      "/fault/write",
+	      "FaultWindow",
+	      "width=400,height=500,resizable=no,scrollbars=yes"
+	    );
+	  }

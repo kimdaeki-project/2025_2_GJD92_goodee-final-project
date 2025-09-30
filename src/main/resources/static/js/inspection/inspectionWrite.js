@@ -1,6 +1,8 @@
-// ==============================
+/**
+ * 
+ */
+
 // 파일 미리보기
-// ==============================
 document.querySelector("#attach").addEventListener("change", (event) => {
   if (event.target.files && event.target.files[0]) {
     const reader = new FileReader();
@@ -14,9 +16,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
 });
 
 
-// ==============================
 // 등록 / 수정 폼 검증
-// ==============================
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
 

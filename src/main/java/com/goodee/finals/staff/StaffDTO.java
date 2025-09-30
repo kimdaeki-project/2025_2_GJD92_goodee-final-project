@@ -148,6 +148,7 @@ public class StaffDTO implements UserDetails {
 	private Boolean staffEnabled;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<FaultDTO> faultDTOs;
 	
 	// For Input

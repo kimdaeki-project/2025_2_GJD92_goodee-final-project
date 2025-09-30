@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -57,7 +56,7 @@ public class InspectionController {
 	    model.addAttribute("rideList", rideList);
 
 	    // 시설팀 직원 목록 (dept_code=1003)
-	    List<StaffDTO> staffList = inspectionService.getFaStaffList();
+	    List<StaffDTO> staffList = inspectionService.getStaffList();
 	    model.addAttribute("staffList", staffList);
 		
 		model.addAttribute("mode", "add");
@@ -120,8 +119,8 @@ public class InspectionController {
 		List<RideDTO> rideList = inspectionService.getAllRides(); 
 	    model.addAttribute("rideList", rideList);
 
-	    // 시설팀 직원 목록 (dept_code=1003)
-	    List<StaffDTO> staffList = inspectionService.getFaStaffList();
+	    // 시설팀 직원 목록 (dept_code = 1003)
+	    List<StaffDTO> staffList = inspectionService.getStaffList();
 	    model.addAttribute("staffList", staffList);
 		
 		// 등록/수정 모든 구분값 내려주기
@@ -131,7 +130,7 @@ public class InspectionController {
 	
 	
 	// 어트랙션 수정
-	// POST/update : MultipartFile attach  같이 받음
+	// POST/update : MultipartFile attach 같이 받음
 	@PostMapping("{isptNum}/update")
 	public String postIsptUpdate(@Valid InspectionDTO inspectionDTO, BindingResult bindingResult, MultipartFile attach, Model model) throws Exception {
 		boolean result = inspectionService.updateInspection(inspectionDTO, attach);

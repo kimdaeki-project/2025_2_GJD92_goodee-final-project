@@ -28,7 +28,13 @@
 	    <span class="badge badge-footer-display">0</span>
 	  </a>
 	</div>
+	<div class="fixed-plugin" onclick="openFault()">
+ 	 <a class="fixed-plugin-button text-dark position-fixed px-3 py-2"  style="bottom: 98px !important;">
+   		<i class="material-symbols-rounded py-2">build_circle</i>
+ 	 </a>
+	</div>
 </sec:authorize>
+
 <!-- Popper.js -->
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 
@@ -73,3 +79,4 @@
 	    });
 	</sec:authorize>
 </script>
+

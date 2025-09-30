@@ -36,7 +36,7 @@ public interface FaultRepository extends JpaRepository<FaultDTO, Integer> {
 	// 신고 제목 검색
 	@Query("SELECT f FROM FaultDTO f WHERE f.faultDelete = false "
 			+ "AND f.faultTitle LIKE CONCAT('%', :keyword, '%')")
-	Page<FaultDTO> findByTitle(@Param("titleCode") String titleCode, Pageable pageable);
+	Page<FaultDTO> findByTitle(@Param("keyword") String keyword, Pageable pageable);
 	
 	// 담당자 검색
 	@Query("SELECT f FROM FaultDTO f WHERE f.faultDelete = false "

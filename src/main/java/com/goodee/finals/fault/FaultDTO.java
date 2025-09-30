@@ -4,9 +4,11 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.goodee.finals.common.attachment.FaultAttachmentDTO;
 import com.goodee.finals.ride.RideDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,7 +70,8 @@ public class FaultDTO {
 	
 	
 	// 어트랙션 고장 신고 하나에 첨부파일 하나
-	/* private FaultAttachmentDAO faultAttachmentDTO; */
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "faultDTO", cascade = CascadeType.ALL)
+	private FaultAttachmentDTO faultAttachmentDTO;
 	
 	
 	
