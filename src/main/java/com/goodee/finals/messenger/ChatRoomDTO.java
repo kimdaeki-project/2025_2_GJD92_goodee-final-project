@@ -2,6 +2,8 @@ package com.goodee.finals.messenger;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +25,6 @@ public class ChatRoomDTO {
 	@Column(columnDefinition = "boolean default false")
 	private boolean chatRoomGroup;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "chatRoomDTO", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "chatRoomDTO", cascade = CascadeType.ALL) @JsonIgnore
 	private List<ChatUserDTO> chatUserDTOs;
 }

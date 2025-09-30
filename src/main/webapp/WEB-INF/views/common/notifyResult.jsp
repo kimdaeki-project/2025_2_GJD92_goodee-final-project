@@ -31,7 +31,11 @@
 		            })
                 	.then(response => response.json())
 	                .then(response => console.log(response));
-		            stompClient.send("/pub/notify/" + sub, {}, wsMsg);
+		            let notification = {
+		            		type: 'APPROVAL',
+		            		msg: wsMsg
+		            }
+		            stompClient.send("/pub/notify/" + sub, {}, JSON.stringify(notification));
 		        });
 		        location.href = url;
 		    } else {

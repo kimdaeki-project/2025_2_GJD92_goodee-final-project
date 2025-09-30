@@ -74,7 +74,12 @@ public class MessengerService {
 	}
 
 	public Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum) {
-		Page<MessengerTestDTO> result = messengerRepository.chatList(pageable, chatRoomNum);
+		Optional<StaffDTO> logged = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
+		Integer loggedStaff = logged.get().getStaffCode();
+		ChatUserDTO chatUserDTO = messengerRepository.getLatestChat(chatRoomNum, loggedStaff);
+		Long chatGroupLatest = chatUserDTO.getChatGroupLatest();
+		
+		Page<MessengerTestDTO> result = messengerRepository.chatList(pageable, chatRoomNum, chatGroupLatest);
 		for (MessengerTestDTO m : result.getContent()) {
 			Optional<StaffDTO> staffDTO = staffRepository.findById(m.getStaffCode());
 			m.setStaffName(staffDTO.get().getStaffName());
@@ -114,8 +119,7 @@ public class MessengerService {
 		
 		if (flag) {
 			ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
-			Optional<StaffDTO> staffDTOSend = staffRepository.findById(sendStaffCode);
-			chatRoomDTO.setChatRoomName(staffDTOSend.get().getStaffName() + " " + staffDTOLogged.get().getStaffName());
+			chatRoomDTO.setChatRoomName("DM_NONAME");
 			ChatRoomDTO savedRoom = messengerRepository.save(chatRoomDTO);
 			List<Integer> addedStaff = new ArrayList<>();
 			addedStaff.add(loggedStaffCode);
@@ -135,7 +139,7 @@ public class MessengerService {
 				result.put("result", flagTrueResult);
 			}
 		} else {
-			Page<MessengerTestDTO> resultIfPresent = messengerRepository.chatList(pageable, roomNumIfPresent);
+			Page<MessengerTestDTO> resultIfPresent = messengerRepository.chatList(pageable, roomNumIfPresent, 0L);
 			for (MessengerTestDTO m : resultIfPresent.getContent()) {
 				Optional<StaffDTO> staffDTO = staffRepository.findById(m.getStaffCode());
 				m.setStaffName(staffDTO.get().getStaffName());
@@ -180,5 +184,38 @@ public class MessengerService {
 		}
 		return result;
 	}
+
+	public MessengerTestDTO newChat(MessengerTestDTO messengerTestDTO) {
+		MessengerTestDTO result = messengerRepository.getTrueLatest(messengerTestDTO.getChatRoomNum());
+		return result;
+	}
+
+	public List<ChatUserDTO> getNotify(ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> result = messengerRepository.getNotify(chatRoomDTO.getChatRoomNum());
+		return result;
+	}
+
+	public List<StaffDTO> getStaffForGroupChat(ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> result = messengerRepository.getNotify(chatRoomDTO.getChatRoomNum());
+		List<Integer> currentMemeber = new ArrayList<>();
+		for (ChatUserDTO c : result) {
+			currentMemeber.add(c.getStaffDTO().getStaffCode());
+		}
+		List<StaffDTO> resultForController = staffRepository.findByStaffCodeNotIn(currentMemeber);
+		return resultForController;
+	}
+
+	public int joinMember(List<String> staffs, Long chatRoomNum) {
+		MessengerTestDTO result = messengerRepository.getTrueLatest(chatRoomNum);
+		Long chatBodyNum = result.getChatBodyNum();
+		int temp = 0;
+		for (String s : staffs) {
+			Integer staffCode = Integer.parseInt(s);
+			temp = messengerRepository.saveJoinStaffs(staffCode, chatRoomNum, chatBodyNum);
+		}
+		return temp;
+	}
+
+	
 	
 }
