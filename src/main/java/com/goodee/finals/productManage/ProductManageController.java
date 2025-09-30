@@ -57,7 +57,7 @@ public class ProductManageController {
 	public String write(@PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";
 		
-		Page<ProductDTO> productPage  = pService.getProductSearchList(search,pageable);
+		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
 		List<ProductDTO> productList = productPage.getContent();
 		
 		model.addAttribute("productList", productList);
@@ -69,7 +69,7 @@ public class ProductManageController {
 	@PostMapping("write")
 	public String Write(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
 		log.info("{}", pDTO.getProductTypeDTO().getProductTypeCode());
-		ProductManageDTO result = pmService.Write(pmDTO, pDTO);
+		ProductManageDTO result = pmService.write(pDTO, pmDTO);
 		
 		String resultMsg = "입출고 등록 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
@@ -114,7 +114,7 @@ public class ProductManageController {
 		if (result) {
 			resultMsg = "입출고내역을 수정했습니다.";
 			resultIcon = "success";
-			String resultUrl = "/productManage/" + pmDTO.getPmNum();
+			String resultUrl = "/productManage";
 			model.addAttribute("resultUrl", resultUrl);
 		}
 			

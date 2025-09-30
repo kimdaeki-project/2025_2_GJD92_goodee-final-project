@@ -40,7 +40,7 @@ public class ProductManageService {
 		return pmRepository.findById(pmNum).orElseThrow();
 	}
 	
-	public ProductManageDTO Write(ProductManageDTO productManageDTO, ProductDTO productDTO) {
+	public ProductManageDTO write(ProductDTO productDTO, ProductManageDTO productManageDTO) {
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		productManageDTO.setStaffDTO(staffDTO);
 		
@@ -65,44 +65,47 @@ public class ProductManageService {
 	}
 	
 	public boolean updateProductManage(ProductDTO productDTO, ProductManageDTO productManageDTO) {
-		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		productManageDTO.setStaffDTO(staffDTO);
+		// 물품, 유형, 수량, 비고(수정되었음 표시)
+		// 1. 삭제 pm 등록
+		delete(productDTO, productManageDTO);
+		
+		// 2. 새로 입력된 pm 새로 등록 + 수정 메세지 비고란에
+		ProductManageDTO newPmDTO = new ProductManageDTO();
 		
 		ProductManageDTO pmDB = pmRepository.findById(productManageDTO.getPmNum()).orElseThrow();
-
-		Long beforePmAmount = pmDB.getPmAmount();
-		Long currentPmAmount = productManageDTO.getPmAmount();
 		
-		ProductDTO pDB=  pmDB.getProductDTO();
-		Long pAmountDB = pDB.getProductAmount();
+		newPmDTO.setStaffDTO(pmDB.getStaffDTO());
+		
+		ProductDTO productDB = pRepository.findById(productDTO.getProductCode()).orElseThrow();
+			
+		Long pmAmount = productManageDTO.getPmAmount(); // 새로입력한 수량
+		Long pAmount = productDB.getProductAmount(); // 물품 현재수량
+		
+		Long pmNum = productManageDTO.getPmNum(); // 기존 pmDTO 번호
 		
 		// 출고 90 코드일 때, 음수로 변환
-		if (pmDB.getPmType() == 90) beforePmAmount *= (-1); 
-		else if (productManageDTO.getPmType() == 90) currentPmAmount *= (-1);  
-//		else productManageDTO.setPmRemainAmount(pAmount + currentPmAmount);
-		
-		Long modCount = null;
-		// 더크면 그 차이만큼 뺴줘야 함
-		if (beforePmAmount > currentPmAmount) {
-			modCount = beforePmAmount - currentPmAmount;
-		} else { // db에서 그 차이만큼 더해줘야 함
-			modCount = currentPmAmount - beforePmAmount;
+		if (productManageDTO.getPmType() == 90) {
+			newPmDTO.setPmType(90);
+			newPmDTO.setPmAmount(pmAmount);
+			newPmDTO.setPmRemainAmount(pAmount + (-pmAmount));
+			newPmDTO.setPmNote("No."+pmNum+" - 정정");
+		}else {
+			newPmDTO.setPmType(80);
+			newPmDTO.setPmAmount(pmAmount);
+			newPmDTO.setPmRemainAmount(pAmount + pmAmount);
+			newPmDTO.setPmNote("No."+pmNum+" - 정정");
 		}
 		
-		pDB.setProductAmount(modCount);
+		// product 현재수량 저장
+		productDB.setProductAmount(newPmDTO.getPmRemainAmount());
+		newPmDTO.setProductDTO(productDB);
 		
-		ProductTypeDTO ptDTO = ptRepository.findById(productDTO.getProductTypeDTO().getProductTypeCode()).orElseThrow();
-		productDTO.setProductTypeDTO(ptDTO);
+		ProductManageDTO result1 = pmRepository.save(newPmDTO);
+		ProductDTO result2 = pRepository.save(productDB);
 		
-		pmDB.setProductDTO(productDTO);
-		pmDB.setPmType(productManageDTO.getPmType());
-		pmDB.setPmAmount(productManageDTO.getPmAmount());
-		pmDB.setPmRemainAmount(modCount);
-		
-		ProductManageDTO result = pmRepository.save(pmDB);
-		
-		if (result != null) return true;
+		if (result2 != null) return true;
 		else return false;
+		
 	}
 	
 	public ProductManageDTO delete(ProductDTO productDTO, ProductManageDTO productManageDTO) {
@@ -121,10 +124,10 @@ public class ProductManageService {
 		Long remainAmountUpdated = 0L;
 		
 		if(newDeletePm.getPmType() == 80) { // 입고시
-			newDeletePm.setPmNote("번호"+pmNum+"번 - 입고 취소(재고 복원"); // 기존 pmDTO 수량과 반대수량 입력
+			newDeletePm.setPmNote("No."+pmNum+" - 입고 취소"); // 기존 pmDTO 수량과 반대수량 입력
 			remainAmountUpdated = productDTO.getProductAmount() + newDeletePm.getPmAmount();
 		} else if (newDeletePm.getPmType() == 90){ // 출고시
-			newDeletePm.setPmNote("번호"+pmNum+"번 - 출고 취소(재고 복원"); // 기존 pmDTO 수량과 반대수량 입력
+			newDeletePm.setPmNote("No."+pmNum+" - 출고 취소"); // 기존 pmDTO 수량과 반대수량 입력
 			remainAmountUpdated = productDTO.getProductAmount() - newDeletePm.getPmAmount();
 		}
 		

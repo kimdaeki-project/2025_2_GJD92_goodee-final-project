@@ -37,8 +37,6 @@ public class ProductService {
 	private ProductRepository productRepository;
 	@Autowired
 	private ProductTypeRepository productTypeRepository;
-	@Autowired
-	private ProductManageRepository productManageRepository;
 	
 	public Page<ProductDTO> getProductSearchList(String search, Pageable pageable) {
 		return productRepository.findAllBySearch(search, pageable);

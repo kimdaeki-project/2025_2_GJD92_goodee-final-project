@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -59,18 +60,18 @@ aside.sidenav {
 			    		<table class="table text-center">
 			    			<thead>
 			    				<tr>
-			    					<th>번호</th>
+			    					<th>No.</th>
 			    					<th>등록일자</th>
 <!-- 			    					<th class="col-1">물품타입</th> -->
-			    					<th>작성자</th>
-			    					<th>물품코드</th>
+<!-- 			    					<th>물품코드</th> -->
 			    					<th>물품명</th>
-<!-- 			    					<th class="col-1">구분</th> -->
-<!-- 			    					<th class="col-1">등록수량</th> -->
-			    					<th>입고</th>
-			    					<th>출고</th>
+			    					<th class="col-1">구분</th>
+			    					<th class="col-1">등록수량</th>
+<!-- 			    					<th>입고</th> -->
+<!-- 			    					<th>출고</th> -->
 			    					<th>잔여수량</th>
 			    					<th>비고</th>
+			    					<th>작성자</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -80,15 +81,15 @@ aside.sidenav {
 				    					<td>${ pm.pmNum }</td>
 				    					<td>${ pm.pmDate }</td>
 <%-- 				    					<td>${ pm.productDTO.productTypeDTO.productTypeName }</td> --%>
-				    					<td>${ pm.staffDTO.staffName }</td>
-				    					<td>${ pm.productDTO.productCode }</td>
+<%-- 				    					<td>${ pm.productDTO.productCode }</td> --%>
 				    					<td><a href="/productManage/${ pm.pmNum }" style="color: #737373;">${ pm.productDTO.productName }</a></td>
-				    					<td>${ pm.pmType eq 80 ? pm.pmAmount : "" }</td>
-				    					<td>${ pm.pmType eq 90 ? pm.pmAmount : "" }</td>
-<%-- 				    					<td>${ pm.pmType eq 90 ? "출고" : "입고" }</td> --%>
-<%-- 				    					<td>${ pm.pmAmount }</td> --%>
-				    					<td>${ pm.pmRemainAmount }</td>
+<%-- 				    					<td>${ pm.pmType eq 80 ? pm.pmAmount : "-" }</td> --%>
+<%-- 				    					<td>${ pm.pmType eq 90 ? pm.pmAmount : "-" }</td> --%>
+				    					<td>${ pm.pmType eq 90 ? "출고" : "입고" }</td>
+				    					<td><fmt:formatNumber value="${ pm.pmAmount }" type="number" /></td>
+										<td><fmt:formatNumber value="${ pm.pmRemainAmount }" type="number" /></td>
 				    					<td>${ pm.pmNote }</td>
+				    					<td>${ pm.staffDTO.staffName }</td>
 			    					</tr>
 			    				</c:forEach>
 			    				
