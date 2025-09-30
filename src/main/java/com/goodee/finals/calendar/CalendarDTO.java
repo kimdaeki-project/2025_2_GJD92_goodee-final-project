@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,8 +33,11 @@ public class CalendarDTO {
 	private String calContent;
 	private Boolean calEnabled;
 	private Boolean calIsAllDay;
+	@Column(columnDefinition = "datetime(6)")
 	private LocalDateTime calStart;
+	@Column(columnDefinition = "datetime(6)")
 	private LocalDateTime calEnd;
+	private LocalDateTime calReg;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
