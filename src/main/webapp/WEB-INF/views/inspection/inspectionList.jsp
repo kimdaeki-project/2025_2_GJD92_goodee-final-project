@@ -66,7 +66,7 @@
 		
 		            <!-- 검색 조건 선택 -->
 		            <!-- 선택했던 옵션이 검색 후에도 유지되도록 selected 속성 -->
-		            <select class="form-select" name="searchType" id="searchType" style="max-width:100px; height:40px;">
+		            <select class="form-select" name="searchType" id="searchType" style="max-width:120px; height:40px;">
 		                <option value="ride" ${searchType == 'ride' ? 'selected' : '' }>어트랙션</option>
 		                <option value="type" ${searchType == 'type' ? 'selected' : '' }>점검유형</option>
 		                <option value="result" ${searchType == 'result' ? 'selected' : '' }>점검결과</option>
@@ -98,7 +98,6 @@
 		    </div>
 		</form>
 	    
-	    <c:if test="${ totalInspection gt 0 }">
 		<table class="table table-hover align-middle text-center">
 			<thead>
 				<tr>
@@ -152,39 +151,53 @@
 				</c:forEach>
 			</tbody>
 		</table>
-<%-- 			<c:if test="${ notice.content.size() gt 0 }">
-			<div>
-				<c:if test="${ notice.hasPrevious() }">
-		    		<a href="?page=${ notice.number - 1 }&keyword=${ pager.keyword }">이전</a>
-				</c:if>
-				<c:forEach var="i" begin="${ pager.startPage }" end="${ pager.endPage }">
-		    		<a href="?page=${i}&keyword=${ pager.keyword }" style="${ i == notice.number ? 'font-weight:bold;' : '' }">
-		        		${i + 1}
-		    		</a>
-				</c:forEach>
-				<c:if test="${ notice.hasNext() }">
-		    		<a href="?page=${ notice.number + 1 }&keyword=${ pager.keyword }">다음</a>
-				</c:if>
-	    	</div>
-	    	</c:if> --%>
-    	</c:if>
 
+		<!-- 페이지네이션 -->
+		<c:if test="${ inspection.content.size() gt 0 }">
+		<nav>
+			<ul class="pagination justify-content-center">
+				<c:if test="${ inspection.hasPrevious() and pager.startPage gt 1 }">
+					<li class="page-item">
+						<a class="page-link" href="?page=${ pager.startPage - 1 }&keyword=${ pager.keyword }">&lt;</a>
+					</li>
+				</c:if>
+				
+				<c:forEach var="i" begin="${ pager.startPage }" end="${ pager.endPage }">
+					<li class="page-item ${ i == inspection.number ? 'active' : '' }">
+						<a class="page-link" href="?page=${i}&keyword=${ pager.keyword }">${i + 1}</a>
+					</li>
+				</c:forEach>
+				
+				<c:if test="${ inspection.hasNext() and pager.endPage + 1 ne inspection.totalPages }">
+					<li class="page-item">
+						<a class="page-link" href="?page=${ pager.endPage + 1 }&keyword=${ pager.keyword }">&gt;</a>
+					</li>
+				</c:if>
+			</ul>
+		</nav>
+    	</c:if>
 		
-    	<!-- 어트랙션 점검 기록 등록 -->
-    	<!-- 로그인 사용자 정보 꺼내기 -->
-    	<sec:authorize access="isAuthenticated()">
-     	  <sec:authentication property="principal" var="staff" />
-		  
-		  <!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
-	      <c:if test="${staff.deptDTO.deptCode eq 1003}">
-	        <div class="text-end mt-4 me-4">
-	          <a href="${pageContext.request.contextPath}/inspection/write "
-	             class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-	             style="width: 100px;">등록</a>
-	        </div>
-	      </c:if>
-	      
-	  </sec:authorize>
+	  <!-- 검색 결과 없음 -->
+	  <c:if test="${ totalInspection eq 0 }">
+		  <div class="alert alert-secondary text-center" style="color:white;">검색된 결과가 없습니다.</div>
+	  </c:if>
+		
+   	  <!-- 어트랙션 점검 기록 등록 -->
+   	  <!-- 로그인 사용자 정보 꺼내기 -->
+   	  <sec:authorize access="isAuthenticated()">
+      <sec:authentication property="principal" var="staff" />
+	  
+	  <!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
+      <c:if test="${staff.deptDTO.deptCode eq 1003}">
+        <div class="text-end mt-4 me-4">
+          <a href="${pageContext.request.contextPath}/inspection/write "
+             class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
+             style="width: 100px;">등록</a>
+        </div>
+      </c:if>
+      
+      </sec:authorize>
+	  
 	    
 	    </section>
     </div>

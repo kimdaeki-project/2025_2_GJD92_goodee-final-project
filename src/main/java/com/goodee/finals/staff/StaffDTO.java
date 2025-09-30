@@ -15,12 +15,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.alert.AlertDTO;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
+import com.goodee.finals.calendar.CalendarDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.common.attachment.StaffSignDTO;
-import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
+import com.goodee.finals.inspection.InspectionDTO;
 import com.goodee.finals.fault.FaultDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
@@ -135,6 +136,10 @@ public class StaffDTO implements UserDetails {
 	@JsonIgnore
 	private List<DocumentDTO> documentDTOs;
 	
+	@OneToMany(mappedBy = "staffDTO", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<CalendarDTO> calendarDTOs;
+	
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffLocked;
@@ -143,6 +148,7 @@ public class StaffDTO implements UserDetails {
 	private Boolean staffEnabled;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<FaultDTO> faultDTOs;
 	
 	// For Input

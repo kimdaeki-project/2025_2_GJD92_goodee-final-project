@@ -63,3 +63,8 @@
 .my-cancel-btn:hover {
   background-color: #f8f9fa !important; /* hover 시 살짝 회색 */
 }
+
+.table-hover>tbody>tr:hover>* {
+	--bs-table-bg-state: white !important; /* 버튼 깜박거림 수정 */
+/* 	--bs-table-color-state: white !important; */
+}

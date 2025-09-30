@@ -21,12 +21,19 @@
 		  confirmButtonText: "확인"
 		}).then((result) => {
 			const url = "${ resultUrl }"
+			const popupClose = "${ popupClose }"
 			
-		  if (url != null && url != "") {
-			  location.href = url
-		  } else {
-			  history.back()
-		  }
+			if( popupClose != null && popupClose == "true") {
+				window.close()
+			} else {
+				
+		    if (url != null && url != "") {
+			    location.href = url
+		    } else {
+		  	    history.back()
+		    }
+			}
+			
 		});
 	</script>
 </body>
