@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,10 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.goodee.finals.approval.ApprovalDTO;
+import com.goodee.finals.approval.ApprovalListDTO;
+import com.goodee.finals.approval.ApprovalService;
 import com.goodee.finals.attend.AttendDTO;
 import com.goodee.finals.attend.AttendService;
 import com.goodee.finals.notice.NoticeDTO;
 import com.goodee.finals.ride.RideDTO;
+import com.goodee.finals.staff.StaffDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,10 +31,14 @@ public class HomeController {
 	private AttendService attendService;
 	@Autowired
 	private HomeService homeService;
+	@Autowired
+	private ApprovalService approvalService;
+	
 	
 	@GetMapping("/")
 	public String getHome(Model model) throws Exception {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		StaffDTO staffDTO = (StaffDTO) auth.getPrincipal()
 
         // 로그인 안 된 경우, 대시보드 접근
         if (auth == null || auth.getName().equals("anonymousUser")) {
@@ -50,7 +58,9 @@ public class HomeController {
 		model.addAttribute("noticeList", noticeList);
 		
 		// 결재현황
-		List<ApprovalDTO> approvalList = homeService.getRecentApprovalsForDashboard();
+		Page<ApprovalListDTO> approvalList = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), "", null);
+		log.info("{}", approvalList.getContent());
+		
 		model.addAttribute("approvalList", approvalList);
 		
 		// 어트랙션 운휴 현황

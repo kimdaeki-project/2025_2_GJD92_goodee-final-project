@@ -68,7 +68,7 @@ public interface ApprovalRepository extends JpaRepository<ApprovalDTO, Integer> 
 			+ " WHERE st.staffCode = :staffCode AND al.aprvState = 700"
 			+ " ORDER BY al.aprvCode DESC")
 	List<ApprovalResultDTO> findAllApprovalSaved(Integer staffCode);
-
+	
 	@NativeQuery(value = "DELETE FROM approver WHERE aprv_code = :aprvCode")
 	void deleteAllApprover(Integer aprvCode);
 

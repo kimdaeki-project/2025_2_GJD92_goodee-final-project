@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.file.FileService;
-import com.goodee.finals.home.HomeController;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.JobDTO;
@@ -33,8 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(rollbackFor = Exception.class)
 public class DriveService {
 
-    private final HomeController homeController;
-	
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
 	
@@ -55,11 +52,6 @@ public class DriveService {
 	@Autowired
 	private FileService fileService;
 
-
-    DriveService(HomeController homeController) {
-        this.homeController = homeController;
-    }
-	
 	public List<DeptDTO> getDeptList() {
 		return deptRepository.findAll();
 	}
