@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,10 @@ public class ApprovalService {
 		return approvalRepository.findAllReceive(staffCode, search, pageable);
 	}
 	
+	public List<ApprovalResultDTO> getApprovalSaved(Integer staffCode) {
+		return approvalRepository.findAllApprovalSaved(staffCode);
+	}
+	
 	public ApprovalDTO getApprovalDetail(Integer aprvCode) {
 		return approvalRepository.findById(aprvCode).orElseThrow();
 	}
@@ -104,10 +109,21 @@ public class ApprovalService {
 		return attachmentRepository.findById(attachNum).orElseThrow();
 	}
 
-	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach) throws IOException {
-		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, NORMAL);
-		setApprover(draft, inputApprovalDTO.getApprover());
+	public boolean sendNormalDraft(InputApprovalDTO inputApprovalDTO, MultipartFile[] attach, boolean save) throws IOException {
+		ApprovalDTO draft = approvalRepository.findById(Integer.parseInt(inputApprovalDTO.getAprvCode())).orElse(null);
+		if (draft != null && draft.getApproverDTOs() != null) {
+			for (ApproverDTO beforeApprover : draft.getApproverDTOs()) {
+				approvalRepository.removeApproverByApvrNum(beforeApprover.getApvrNum());
+			}
+		}
 		
+		if (save) {
+			draft = setDraftDefault(inputApprovalDTO, NORMAL, SAVE);
+		} else {
+			draft = setDraftDefault(inputApprovalDTO, NORMAL, RUN);			
+		}
+		
+		setApprover(draft, inputApprovalDTO.getApprover());
 		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
 		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
 		if (attach != null && attach.length != 0) setAttach(draft, attach);
@@ -118,13 +134,27 @@ public class ApprovalService {
 		else return false;
 	}
 	
-	public boolean sendVacationDraft(InputApprovalDTO inputApprovalDTO, VacationDTO vacationDTO) {
-		inputApprovalDTO.setAprvContent("상기의 사유로 휴가를 신청합니다.");
-		inputApprovalDTO.setAprvExe(vacationDTO.getVacStart());
+	public boolean sendVacationDraft(InputApprovalDTO inputApprovalDTO, VacationDTO vacationDTO, boolean save) {
+		ApprovalDTO draft = approvalRepository.findById(Integer.parseInt(inputApprovalDTO.getAprvCode())).orElse(null);
+		if (draft != null && draft.getApproverDTOs() != null) {
+			for (ApproverDTO beforeApprover : draft.getApproverDTOs()) {
+				approvalRepository.removeApproverByApvrNum(beforeApprover.getApvrNum());
+			}
+		}
 		
-		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, VACATION);
+		if (draft != null && draft.getVacationDTO() != null) approvalRepository.deleteVacation(draft.getAprvCode());
+		
+		
+		if (save) {
+			draft = setDraftDefault(inputApprovalDTO, VACATION, SAVE);
+		} else {
+			inputApprovalDTO.setAprvContent("상기의 사유로 휴가를 신청합니다.");
+			inputApprovalDTO.setAprvExe(vacationDTO.getVacStart());
+			
+			draft = setDraftDefault(inputApprovalDTO, VACATION, RUN);
+		}
+		
 		setApprover(draft, inputApprovalDTO.getApprover());
-		
 		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
 		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
 		
@@ -136,13 +166,26 @@ public class ApprovalService {
 		else return false;
 	}
 	
-	public boolean sendOvertimeDraft(InputApprovalDTO inputApprovalDTO, OvertimeDTO overtimeDTO) {
-		inputApprovalDTO.setAprvContent("상기의 사유로 연장 근무를 신청합니다.");
-		inputApprovalDTO.setAprvExe(overtimeDTO.getOverStart().toLocalDate());
+	public boolean sendOvertimeDraft(InputApprovalDTO inputApprovalDTO, OvertimeDTO overtimeDTO, boolean save) {
+		ApprovalDTO draft = approvalRepository.findById(Integer.parseInt(inputApprovalDTO.getAprvCode())).orElse(null);
+		if (draft != null && draft.getApproverDTOs() != null) {
+			for (ApproverDTO beforeApprover : draft.getApproverDTOs()) {
+				approvalRepository.removeApproverByApvrNum(beforeApprover.getApvrNum());
+			}
+		}
 		
-		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, OVERTIME);
+		if (draft != null && draft.getOvertimeDTO() != null) approvalRepository.deleteOvertime(draft.getAprvCode());
+		
+		if (save) {
+			draft = setDraftDefault(inputApprovalDTO, OVERTIME, SAVE);
+		} else {
+			inputApprovalDTO.setAprvContent("상기의 사유로 연장 근무를 신청합니다.");
+			inputApprovalDTO.setAprvExe(overtimeDTO.getOverStart().toLocalDate());
+			
+			draft = setDraftDefault(inputApprovalDTO, OVERTIME, RUN);
+		}
+		
 		setApprover(draft, inputApprovalDTO.getApprover());
-		
 		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
 		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
 		
@@ -154,13 +197,26 @@ public class ApprovalService {
 		else return false;
 	}
 	
-	public boolean sendEarlyDraft(InputApprovalDTO inputApprovalDTO, EarlyDTO earlyDTO) {
-		inputApprovalDTO.setAprvContent("상기의 사유로 조퇴를 신청합니다.");
-		inputApprovalDTO.setAprvExe(earlyDTO.getEarlyDtm().toLocalDate());
+	public boolean sendEarlyDraft(InputApprovalDTO inputApprovalDTO, EarlyDTO earlyDTO, boolean save) {
+		ApprovalDTO draft = approvalRepository.findById(Integer.parseInt(inputApprovalDTO.getAprvCode())).orElse(null);
+		if (draft != null && draft.getApproverDTOs() != null) {
+			for (ApproverDTO beforeApprover : draft.getApproverDTOs()) {
+				approvalRepository.removeApproverByApvrNum(beforeApprover.getApvrNum());
+			}
+		}
 		
-		ApprovalDTO draft = setDraftDefault(inputApprovalDTO, EARLY);
+		if (draft != null && draft.getEarlyDTO() != null) approvalRepository.deleteEarly(draft.getAprvCode());
+		
+		if (save) {
+			draft = setDraftDefault(inputApprovalDTO, EARLY, SAVE);
+		} else {
+			inputApprovalDTO.setAprvContent("상기의 사유로 조퇴를 신청합니다.");
+			inputApprovalDTO.setAprvExe(earlyDTO.getEarlyDtm().toLocalDate());
+			
+			draft = setDraftDefault(inputApprovalDTO, EARLY, RUN);
+		}
+		
 		setApprover(draft, inputApprovalDTO.getApprover());
-		
 		if (inputApprovalDTO.getReceiver() != null && inputApprovalDTO.getReceiver().size() != 0) setReceiver(draft, inputApprovalDTO.getReceiver());
 		if (inputApprovalDTO.getAgreer() != null && inputApprovalDTO.getAgreer().size() != 0) setAgreer(draft, inputApprovalDTO.getAgreer());
 		
@@ -337,8 +393,57 @@ public class ApprovalService {
 		if (result != null) return true;
 		else return false;
 	}
+	
+	public boolean deleteAttach(String attachNum) {
+		AttachmentDTO attach = attachmentRepository.findById(Long.valueOf(attachNum)).orElseThrow();
+		approvalRepository.deleteAttach(attach.getAttachNum());
+		attachmentRepository.deleteAttach(attach.getAttachNum());
+		
+		fileService.fileDelete(FileService.APPROVAL, attach.getSavedName());
+		
+		return true;
+	}
+	
+	public boolean deleteApproval(Integer savedCode) {
+		ApprovalDTO approvalDTO = approvalRepository.findById(savedCode).orElseThrow();
+		if (approvalDTO.getApprovalAttachmentDTOs() != null) {
+			for (ApprovalAttachmentDTO approvalAttachmentDTO : approvalDTO.getApprovalAttachmentDTOs()) {
+				deleteAttach(String.valueOf(approvalAttachmentDTO.getAttachmentDTO().getAttachNum()));
+			}
+		}
+		
+		if (approvalDTO.getVacationDTO() != null) approvalRepository.deleteVacation(approvalDTO.getAprvCode());
+		if (approvalDTO.getOvertimeDTO() != null) approvalRepository.deleteOvertime(approvalDTO.getAprvCode());
+		if (approvalDTO.getEarlyDTO() != null) approvalRepository.deleteEarly(approvalDTO.getAprvCode());
+		
+		approvalRepository.deleteAllApprover(approvalDTO.getAprvCode());
+		approvalRepository.deleteApproval(approvalDTO.getAprvCode());
+		
+		return true;
+	}
+	
+	public boolean addReceiver(String apvrCode, String[] receiver) {
+		ApprovalDTO draft = approvalRepository.findById(Integer.valueOf(apvrCode)).orElseThrow();
+		List<String> receiverList = new ArrayList<>();
+		
+		Master:
+		for (String rec : receiver) {
+			for (ApproverDTO approver : draft.getApproverDTOs()) {
+				if (Integer.valueOf(rec).equals(approver.getStaffDTO().getStaffCode())) {
+					continue Master;
+				}
+			}
+			
+			receiverList.add(rec);
+		}
+		
+		setReceiver(draft, receiverList);
+		approvalRepository.saveAndFlush(draft);
+		
+		return true;
+	}
 
-	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType) {
+	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType, Integer aprvState) {
 		ApprovalDTO approvalDTO = new ApprovalDTO();
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -348,10 +453,13 @@ public class ApprovalService {
 		approvalDTO.setAprvContent(inputApprovalDTO.getAprvContent());
 		approvalDTO.setAprvDate(LocalDate.now());
 		approvalDTO.setAprvExe(inputApprovalDTO.getAprvExe());
-		approvalDTO.setAprvState(RUN);
+		approvalDTO.setAprvState(aprvState);
 		approvalDTO.setStaffDTO(staffDTO);
-		approvalDTO.setAprvTotal(inputApprovalDTO.getApprover().size() + 1);
-		approvalDTO.setAprvCrnt(2);
+		
+		if (inputApprovalDTO.getApprover() != null) {
+			approvalDTO.setAprvTotal(inputApprovalDTO.getApprover().size() + 1);
+			approvalDTO.setAprvCrnt(2);			
+		}
 		
 		return approvalDTO;
 	}
@@ -359,22 +467,24 @@ public class ApprovalService {
 	private void setApprover(ApprovalDTO draft, List<String> approver) {
 		List<ApproverDTO> approverDTOs = new ArrayList<>();
 		
-		for (int i = 0; i < approver.size(); i++) {
-			StaffDTO staffDTO = staffService.getStaff(Integer.valueOf(approver.get(i)));
-			
-			ApproverDTO approverDTO = new ApproverDTO();
-			approverDTO.setApprovalDTO(draft);
-			approverDTO.setStaffDTO(staffDTO);
-			
-			if (i == 0) approverDTO.setApvrType(CONFIRMER);
-			else approverDTO.setApvrType(CHECKER);
-			
-			approverDTO.setApvrSeq(approver.size() - i);
-			
-			if (i == approver.size() - 1) approverDTO.setApvrState(READY);
-			else approverDTO.setApvrState(WAIT);
-			
-			approverDTOs.add(approverDTO);
+		if (approver != null && approver.size() > 0) {
+			for (int i = 0; i < approver.size(); i++) {
+				StaffDTO staffDTO = staffService.getStaff(Integer.valueOf(approver.get(i)));
+				
+				ApproverDTO approverDTO = new ApproverDTO();
+				approverDTO.setApprovalDTO(draft);
+				approverDTO.setStaffDTO(staffDTO);
+				
+				if (i == 0) approverDTO.setApvrType(CONFIRMER);
+				else approverDTO.setApvrType(CHECKER);
+				
+				approverDTO.setApvrSeq(approver.size() - i);
+				
+				if (i == approver.size() - 1) approverDTO.setApvrState(READY);
+				else approverDTO.setApvrState(WAIT);
+				
+				approverDTOs.add(approverDTO);
+			}
 		}
 		
 		draft.setApproverDTOs(approverDTOs);			

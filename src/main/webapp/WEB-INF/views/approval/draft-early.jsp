@@ -52,23 +52,23 @@
 
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>조</span><span>퇴</span><span>시</span><span>간</span></p></td>
-		<td colspan="4"><input type="datetime-local" name="earlyDtm" /></td>
+		<td colspan="4"><input type="datetime-local" name="earlyDtm" value="${ approval.earlyDTO.earlyDtm }" /></td>
 	</tr>
 	
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>유</span><span>형</span></p></td>
 		<td colspan="4">
 			<div class="d-flex justify-content-center align-items-center">
-				<input type="radio" id="earlyType" name="earlyType" value="9030">
+				<input type="radio" id="earlyType" name="earlyType" value="9030" <c:if test="${ approval.earlyDTO.earlyType eq 9030 }">checked</c:if>>
 				<label for="9010" class="mb-0 ms-2">질병</label>
 				
-				<input type="radio" class="ms-5" id="earlyType" name="earlyType" value="9031">
+				<input type="radio" class="ms-5" id="earlyType" name="earlyType" value="9031" <c:if test="${ approval.earlyDTO.earlyType eq 9031 }">checked</c:if>>
 				<label for="9010" class="mb-0 ms-2">경조사</label>
 				
-				<input type="radio" class="ms-5" id="earlyType" name="earlyType" value="9032">
+				<input type="radio" class="ms-5" id="earlyType" name="earlyType" value="9032" <c:if test="${ approval.earlyDTO.earlyType eq 9032 }">checked</c:if>>
 				<label for="9010" class="mb-0 ms-2">외부행사</label>
 				
-				<input type="radio" class="ms-5" id="earlyType" name="earlyType" value="9039">
+				<input type="radio" class="ms-5" id="earlyType" name="earlyType" value="9039" <c:if test="${ approval.earlyDTO.earlyType eq 9039 }">checked</c:if>>
 				<label for="9010" class="mb-0 ms-2">기타</label>
 			</div>
 		</td>
@@ -77,7 +77,7 @@
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>사</span><span>유</span></p></td>
 		<td colspan="4">
-			<input type="text" class="form-control" name="earlyReason" />
+			<input type="text" class="form-control" name="earlyReason" value="${ approval.earlyDTO.earlyReason }" />
 		</td>
 	</tr>
 	

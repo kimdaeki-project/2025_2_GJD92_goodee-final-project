@@ -55,15 +55,15 @@
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>근</span><span>무</span><span>시</span><span>간</span></p></td>
 		<td class="hard-side-line" style="width: 100px;"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>시</span><span>작</span><span>시</span><span>간</span></p></td>
-		<td style="width: 200px;"><input type="datetime-local" name="overStart"></td>
+		<td style="width: 200px;"><input type="datetime-local" name="overStart" value="${ approval.overtimeDTO.overStart }"></td>
 		<td class="hard-side-line" style="width: 100px;"><p class="d-flex justify-content-between" style="width: 70px; margin: 0 auto;"><span>종</span><span>료</span><span>시</span><span>간</span></p></td>
-		<td style="width: 200px;"><input type="datetime-local" name="overEnd"></td>
+		<td style="width: 200px;"><input type="datetime-local" name="overEnd" value="${ approval.overtimeDTO.overEnd }"></td>
 	</tr>
 	
 	<tr class="hard-line">
 		<td class="hard-line"><p class="d-flex justify-content-between" style="width: 100px; margin: 0 auto;"><span>근</span><span>무</span><span>내</span><span>용</span></p></td>
 		<td colspan="4">
-			<input type="text" class="form-control" name="overReason" />
+			<input type="text" class="form-control" name="overReason" value="${ approval.overtimeDTO.overReason }" />
 		</td>
 	</tr>
 	
