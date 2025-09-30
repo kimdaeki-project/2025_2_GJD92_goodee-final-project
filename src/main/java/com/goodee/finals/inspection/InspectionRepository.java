@@ -24,36 +24,27 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InspectionRepository extends JpaRepository<InspectionDTO, Integer> {
 
-	/*
-	 * @Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false AND ("
-	 * + " i.rideDTO.rideCode LIKE CONCAT('%', :keyword, '%') OR " +
-	 * " CAST(:keyword AS int) = i.isptType OR " +
-	 * " CAST(:keyword AS int) = i.isptResult OR " +
-	 * " CAST(:keyword AS int) = i.staffDTO.staffCode )") Page<InspectionDTO>
-	 * list(@Param("keyword") String keyword, Pageable pageable);
-	 */
-
 	// 기본 전체 조회
 	@Query("SELECT i FROM InspectionDTO i WHERE i.isptDelete = false")
 	Page<InspectionDTO> findAllByIsptDeleteFalse(Pageable pageable);
 
 	// 어트랙션 검색
-	@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+	@Query("SELECT i FROM InspectionDTO i WHERE i.isptDelete = false "
 			+ "AND i.rideDTO.rideName LIKE CONCAT('%', :keyword, '%')")
 	Page<InspectionDTO> findByRide(@Param("keyword") String keyword, Pageable pageable);
 	
 	// 점검유형 검색
-	@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+	@Query("SELECT i FROM InspectionDTO i WHERE i.isptDelete = false "
 			+ "AND i.isptType = :typeCode")
 	Page<InspectionDTO> findByType(@Param("typeCode") Integer typeCode, Pageable pageable);
 	
 	// 점검결과 검색
-		@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
-				+ "AND i.isptResult = :resultCode")
-		Page<InspectionDTO> findByResult(@Param("resultCode") Integer resultCode, Pageable pageable);
+	@Query("SELECT i FROM InspectionDTO i WHERE i.isptDelete = false "
+			+ "AND i.isptResult = :resultCode")
+	Page<InspectionDTO> findByResult(@Param("resultCode") Integer resultCode, Pageable pageable);
 
 	// 담당자 검색
-	@Query("SELECT i FROM InspectionDTO i " + "WHERE i.isptDelete = false "
+	@Query("SELECT i FROM InspectionDTO i WHERE i.isptDelete = false "
 			+ "AND i.staffDTO.staffName LIKE CONCAT('%', :keyword, '%')")
 	Page<InspectionDTO> findByStaff(@Param("keyword") String keyword, Pageable pageable);
 

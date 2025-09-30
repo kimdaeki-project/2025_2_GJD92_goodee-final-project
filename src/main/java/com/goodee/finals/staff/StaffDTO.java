@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.goodee.finals.alert.AlertDTO;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
 import com.goodee.finals.calendar.CalendarDTO;
@@ -21,6 +22,7 @@ import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
 import com.goodee.finals.inspection.InspectionDTO;
+import com.goodee.finals.fault.FaultDTO;
 import com.goodee.finals.lost.LostDTO;
 import com.goodee.finals.messenger.ChatUserDTO;
 import com.goodee.finals.notice.NoticeDTO;
@@ -111,6 +113,9 @@ public class StaffDTO implements UserDetails {
 	@JsonIgnore
 	private List<ProductManageDTO> ProductManageDTOs;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "staffDTO", cascade = CascadeType.ALL) @JsonIgnore
+	private List<AlertDTO> alertDTOs;
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<RideDTO> rideDTOs;
@@ -141,6 +146,9 @@ public class StaffDTO implements UserDetails {
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffEnabled;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	private List<FaultDTO> faultDTOs;
 	
 	// For Input
 	@Transient

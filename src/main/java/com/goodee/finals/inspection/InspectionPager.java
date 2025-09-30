@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InspectionPager {
-	int blockSize = 5;  // 5묶음씩
+	int blockSize = 10;  // 10묶음씩
 	int currentPage;  // 현재 페이지
 	int totalPages;  // 총 페이지
 	int startPage;  // 시작 페이지(1, 6, 11...)

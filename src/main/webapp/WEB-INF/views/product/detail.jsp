@@ -40,6 +40,9 @@
 	min-width: 200px !important;
 	max-width: 200px !important;
 	}
+	.updateDeletebtns {
+		display: flex;
+	}
 	</style>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -101,13 +104,14 @@
       	</tbody>
       </table>  
       
-      <button onclick="location.href='/product/${productCode}/update'">수정</button>
-      <form action="/product/${productCode }/delete" method="post">
-	      <button type="submit">삭제</button>
-	  </form>
-		<br>
+      <div class="updateDeletebtns">
+	      <button onclick="location.href='/product/${productCode}/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">수정</button>
+	      <form action="/product/${productCode }/delete" method="post">
+		      <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">삭제</button>
+		  </form>
+	 </div>
         
-      <button onclick="location.href='/product'" >목록</button>
+      <button onclick="location.href='/product'" class="btn btn-sm btn-outline-secondary">목록</button>
     </div>
     
     </section>
