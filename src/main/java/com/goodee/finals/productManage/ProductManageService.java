@@ -1,5 +1,7 @@
 package com.goodee.finals.productManage;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,10 @@ public class ProductManageService {
 
 	public Page<ProductManageDTO> getProductManageSearchList(String search, Pageable pageable) {
 		return pmRepository.findAllBySearch(search, pageable);
+	}
+	
+	public List<ProductDTO> list(){
+		return pRepository.findAll();
 	}
 	
 	public long getTotalProduct() {

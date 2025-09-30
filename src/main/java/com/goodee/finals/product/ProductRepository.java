@@ -33,7 +33,7 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
             "WHERE p.product_type_code = :productTypeCode " +
             "ORDER BY p.product_code DESC LIMIT 1",
     nativeQuery = true)
-Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
+	Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
 	
 	long countByProductDeleteFalse();
 }

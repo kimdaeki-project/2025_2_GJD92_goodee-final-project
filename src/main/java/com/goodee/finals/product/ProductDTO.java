@@ -3,6 +3,7 @@ package com.goodee.finals.product;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.common.attachment.ProductAttachmentDTO;
 import com.goodee.finals.productManage.ProductManageDTO;
 import com.goodee.finals.staff.StaffDTO;
@@ -39,6 +40,7 @@ public class ProductDTO {
 	// 물품 작성자
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
+	@JsonIgnore
 	private StaffDTO staffDTO;
 	
 	// 물품 카테고리
@@ -48,9 +50,11 @@ public class ProductDTO {
 
 	// 물품관리대장
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<ProductManageDTO> productManageDTO;
 	
 	// 물품 사진파일
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private ProductAttachmentDTO productAttachmentDTO;
 }

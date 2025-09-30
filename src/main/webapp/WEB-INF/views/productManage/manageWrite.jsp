@@ -178,7 +178,7 @@ aside.sidenav {
 								<div class="d-flex justify-content-end align-items-end">
 									<div class="input-group">
 										<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-										<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+										<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="searchProduct()" style="width: 50px; height: 30px;" >검색</button>
 									</div>
 								</div>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -194,7 +194,7 @@ aside.sidenav {
 											<th>선택</th>
 										</tr>
 									</thead>
-									<tbody>
+									<tbody id="productTable">
 										<c:forEach items="${productList}" var="p">
 											<tr>
 												<td>${p.productCode}</td>
@@ -221,7 +221,7 @@ aside.sidenav {
 		</div>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/product/write.js"></script>
+	<script src="/js/productManage/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")
@@ -248,7 +248,6 @@ aside.sidenav {
         // 모달 닫기
         const modalEl = document.getElementById('productModal');
         const modal = bootstrap.Modal.getInstance(modalEl);
-        modal.hide();
       });
     });
   });
