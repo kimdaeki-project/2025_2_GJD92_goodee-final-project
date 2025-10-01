@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,6 +78,10 @@ public class MessengerController {
 		model.addAttribute("chatRoomNum", chatRoomDTO.getChatRoomNum());
 		model.addAttribute("chat", messages);
 		model.addAttribute("next", result.hasNext());
+		
+		ChatRoomDTO chatRoomResult = messengerService.findChatRoom(chatRoomDTO);
+		model.addAttribute("chatRoom", chatRoomResult);
+		
 		return "messenger/chat";
 	}
 	
@@ -188,5 +193,13 @@ public class MessengerController {
 		return result;
 	}
 	
-	
+	@GetMapping("/room/groupMembers/{chatRoomNum}") @ResponseBody
+	public List<ChatUserDTO> getGroupMembers(@PathVariable("chatRoomNum") ChatRoomDTO chatRoomDTO) {
+		List<ChatUserDTO> response = null;
+		List<ChatUserDTO> result = messengerService.getNotify(chatRoomDTO);
+		if (result != null && result.size() > 0) {
+			response = result;
+		}
+		return response;
+	}
 }

@@ -326,3 +326,55 @@ leaveBtn.addEventListener('click', () => {
 		})
 	}
 });
+// 멤버 목록 띄우기(그룹 채팅일 때)
+const groupMembersBtn = document.querySelector('.group-member-list');
+const modalForGroupMembers = document.querySelector('#viewGroupMembers');
+const modalForGroupMembersInternal = document.querySelector('#viewGroupMembersInternal');
+groupMembersBtn.addEventListener('click', () => {
+	getGroupChatMembersAndRenderHtml();
+	modalForGroupMembers.classList.add('active');
+	modalForGroupMembersInternal.classList.add('active');
+});
+modalForGroupMembers.addEventListener("click", (e) => {
+	if (e.target === modalForGroupMembers) {
+		modalForGroupMembers.classList.remove('active');
+		modalForGroupMembersInternal.classList.remove('active');
+		let notMe = document.querySelectorAll('.not-me');
+		notMe.forEach(s => {
+			s.remove();
+		});
+	}
+});
+// 멤버 목록을 동적으로 가져오고 html을 빌드하는 스크립트
+function getGroupChatMembersAndRenderHtml() {
+	fetch('/msg/room/groupMembers/' + chatRoomNum)
+	.then(response => response.json())
+	.then(response => {
+		let list = document.querySelector('.group-member-view-list');
+		let count = document.querySelector('.group-member-count-span')
+		count.innerText = response.length;
+		response.forEach(el => {
+			if (el.staffDTO.staffCode != sender) {				
+				let div = document.createElement('div');
+				div.classList.add('group-member-card', 'not-me');
+				let img = document.createElement('img');
+				img.setAttribute('src', '/file/staff/' + el.staffDTO.staffAttachmentDTO.attachmentDTO.savedName);
+				img.classList.add('group-profile-img');
+				let divIn = document.createElement('div');
+				divIn.classList.add('group-member-info');
+				let divName = document.createElement('div');
+				divName.classList.add('group-member-name');
+				divName.innerText = el.staffDTO.staffName;
+				let divPos = document.createElement('div');
+				divPos.classList.add('group-member-position');
+				divPos.innerText = el.staffDTO.jobDTO.jobDetail;
+				
+				divIn.appendChild(divName);
+				divIn.appendChild(divPos);
+				div.appendChild(img);
+				div.appendChild(divIn);
+				list.appendChild(div);
+			}
+		});
+	});
+}

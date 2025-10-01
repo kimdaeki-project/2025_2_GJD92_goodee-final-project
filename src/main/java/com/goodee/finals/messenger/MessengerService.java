@@ -224,6 +224,12 @@ public class MessengerService {
 		else return false;
 	}
 
+	public ChatRoomDTO findChatRoom(ChatRoomDTO chatRoomDTO) {
+		ChatRoomDTO result = messengerRepository.findById(chatRoomDTO.getChatRoomNum()).get();
+		if (result != null) return result;
+		else return null;
+	}
+
 	
 	
 }

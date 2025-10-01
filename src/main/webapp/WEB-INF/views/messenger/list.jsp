@@ -8,126 +8,7 @@
 <title>메신저</title>
 <!-- 구글 머티리얼 아이콘 -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        height: 100vh;
-        display: flex;
-    }
-    /* 좌측 사이드바 */
-    .sidebar {
-        width: 60px;
-        border-right: 1px solid #eee;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px 0;
-        box-sizing: border-box;
-    }
-    .sidebar .material-icons {
-        font-size: 28px;
-        margin: 20px 0;
-        cursor: pointer;
-        color: #444;
-        transition: color 0.2s;
-    }
-    .sidebar .material-icons.active {
-        color: #000;
-    }
-    .sidebar .material-icons:hover {
-        color: #000;
-    }
-
-    /* 메인 컨텐츠 */
-    .main {
-        flex: 1;
-        padding: 20px;
-        box-sizing: border-box;
-        overflow-y: auto;
-    }
-
-    /* 헤더 */
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 15px;
-    }
-    .header h4 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .header .material-icons {
-        cursor: pointer;
-        font-size: 24px;
-        color: #444;
-    }
-
-    /* 탭 메뉴 */
-    .tabs {
-        display: flex;
-        gap: 20px;
-        font-size: 14px;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 20px;
-    }
-    .tab {
-        padding: 8px 0;
-        cursor: pointer;
-        color: #555;
-        position: relative;
-    }
-    .tab.active {
-        font-weight: bold;
-        color: #000;
-    }
-    .tab.active::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: -1px;
-        width: 100%;
-        height: 2px;
-        background: #000;
-    }
-
-    /* 채팅방 리스트 */
-	.chat-room {
-	    display: flex;
-	    align-items: center;
-	    justify-content: space-between;
-	    padding: 12px 0;
-	    border-bottom: 1px solid #f0f0f0;
-	    cursor: pointer;          /* 마우스 올리면 포인터 표시 */
-	    transition: background 0.2s;
-	}
-	.chat-room:hover {
-	    background: #f9f9f9;       /* 살짝 회색 배경 */
-	}
-    .chat-room-info {
-        display: flex;
-        flex-direction: column;
-    }
-    .chat-room-name {
-        font-size: 15px;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-    .chat-room-last {
-        font-size: 13px;
-        color: #777;
-    }
-    .chat-room-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 12px;
-        color: #666;
-    }
-</style>
+<link href="/css/messenger/list.css" rel="stylesheet">
 </head>
 <body>
     <!-- 좌측 사이드바 -->
@@ -153,62 +34,31 @@
 
         <!-- 채팅방 리스트 -->
         <c:forEach items="${ room }" var="r">
-        	<c:if test="${ r.chatRoomGroup eq false }">
-	            <form action="/msg/chat" method="post" class="chat-room">
-	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
-	                <div class="chat-room-info">
-	                	<c:if test="${ r.chatRoomName eq 'DM_NONAME' }">
-		                	<sec:authorize access="isAuthenticated()">
-								<sec:authentication property="principal" var="staff" />
-			                	<c:forEach items="${ r.chatUserDTOs }" var="s">
-			                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
-				                    	<div class="chat-room-name">${ s.staffDTO.staffName }</div>
-				                    </c:if>               	
-			                	</c:forEach>
-		                	</sec:authorize>
-	                	</c:if>
-	                	<c:if test="${ r.chatRoomName ne 'DM_NONAME' }">
-	                		<div class="chat-room-name">
-	                			${ r.chatRoomName }
-	                		</div>
-	                	</c:if>
-	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
-	                </div>
-	                <div class="chat-room-right">
-	                    <span class="time" id="time-${ r.chatRoomNum }"></span>
-	                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
-	                </div>
-	            </form>
-            </c:if>
-            <c:if test="${ r.chatRoomGroup eq true }">
-	            <form action="/msg/chat" method="post" class="chat-room">
-	                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
-	                <div class="chat-room-info">
-	                	<c:if test="${ r.chatRoomName eq 'GROUP_NONAME' }">
-			                <sec:authorize access="isAuthenticated()">
-			                	<sec:authentication property="principal" var="staff" />
-			                    <div class="chat-room-name">
-				                	<c:forEach items="${ r.chatUserDTOs }" var="s" varStatus="status">
-				                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
-				                			<span>${ s.staffDTO.staffName }</span>
-				                		</c:if>
-				                	</c:forEach>
-			                	</div>
-			                </sec:authorize>
-	                	</c:if>
-	                	<c:if test="${ r.chatRoomName ne 'GROUP_NONAME' }">
-	                		<div class="chat-room-name">
-	                			${ r.chatRoomName }
-	                		</div>
-	                	</c:if>
-	                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
-	                </div>
-	                <div class="chat-room-right">
-	                    <span class="time" id="time-${ r.chatRoomNum }"></span>
-	                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
-	                </div>
-	            </form>
-            </c:if>
+            <form action="/msg/chat" method="post" class="chat-room">
+                <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
+                <div class="chat-room-info">
+                	<c:if test="${ r.chatRoomName eq 'DM_NONAME' }">
+	                	<sec:authorize access="isAuthenticated()">
+							<sec:authentication property="principal" var="staff" />
+		                	<c:forEach items="${ r.chatUserDTOs }" var="s">
+		                		<c:if test="${ s.staffDTO.staffCode ne staff.staffCode }">
+			                    	<div class="chat-room-name">${ s.staffDTO.staffName }</div>
+			                    </c:if>               	
+		                	</c:forEach>
+	                	</sec:authorize>
+                	</c:if>
+                	<c:if test="${ r.chatRoomName ne 'DM_NONAME' }">
+                		<div class="chat-room-name">
+                			${ r.chatRoomName }
+                		</div>
+                	</c:if>
+                    <div id="chat-room-last-${ r.chatRoomNum }" class="chat-room-last"></div>
+                </div>
+                <div class="chat-room-right">
+                    <span class="time" id="time-${ r.chatRoomNum }"></span>
+                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
+                </div>
+            </form>
         </c:forEach>
     </div>
 
