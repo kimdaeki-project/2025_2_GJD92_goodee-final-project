@@ -39,7 +39,7 @@
 		  <div class="form-group row mb-3">
 		    <form:label path="rideName" class="col-sm-4 col-form-label text-start">어트랙션 이름</form:label>
 		    <div class="col-sm-5">
-		      <form:input path="rideName" cssClass="form-control" placeholder="어트랙션 이름을 입력하세요."/>
+		      <form:input path="rideName" cssClass="form-control" placeholder="ex) 롤링썬더"/>
 		    </div>
 		  </div>
 		
@@ -47,7 +47,7 @@
 		  <div class="form-group row mb-3">
 		    <form:label path="rideCode" class="col-sm-4 col-form-label text-start">어트랙션 코드</form:label>
 		    <div class="col-sm-5">
-		      <form:input path="rideCode" cssClass="form-control" placeholder="어트랙션 코드를 입력하세요."/>
+		      <form:input path="rideCode" cssClass="form-control" placeholder="ex) A001"/>
 		    </div>
 		  </div>
 		
@@ -85,7 +85,7 @@
 		  <div class="form-group row mb-3">
 		    <form:label path="rideCapacity" class="col-sm-4 col-form-label text-start">탑승인원</form:label>
 		    <div class="col-sm-5">
-		      <form:input path="rideCapacity" cssClass="form-control" placeholder="탑승인원을 입력하세요."/>
+		      <form:input path="rideCapacity" cssClass="form-control" placeholder="ex) 5명"/>
 		    </div>
 		  </div>
 		
@@ -93,7 +93,7 @@
 		  <div class="form-group row mb-3">
 		    <form:label path="rideDuration" class="col-sm-4 col-form-label text-start">운행시간</form:label>
 		    <div class="col-sm-5">
-		      <form:input path="rideDuration" cssClass="form-control" placeholder="운행시간을 입력하세요.   ex) 약 1분 30초"/>
+		      <form:input path="rideDuration" cssClass="form-control" placeholder="ex) 약 1분 30초"/>
 		    </div>
 		  </div>
 		
@@ -101,7 +101,7 @@
 		  <div class="form-group row mb-3">
 		    <form:label path="rideRule" class="col-sm-4 col-form-label text-start">이용정보</form:label>
 		    <div class="col-sm-5">
-		      <form:input path="rideRule" cssClass="form-control" placeholder="이용정보를 입력하세요.    ex) 140cm 이상"/>
+		      <form:input path="rideRule" cssClass="form-control" placeholder="ex) 140cm 이상"/>
 		    </div>
 		  </div>
 		
@@ -109,7 +109,7 @@
 		  <div class="form-group row mb-3">
 		    <form:label path="rideInfo" class="col-sm-4 col-form-label text-start">어트랙션 설명</form:label>
 		    <div class="col-sm-5">
-		      <form:input path="rideInfo" cssClass="form-control" placeholder="어트랙션 설명을 입력하세요.   ex) 어린이만 탑승 가능"/>
+		      <form:input path="rideInfo" cssClass="form-control" placeholder="ex) 어린이만 탑승 가능"/>
 		    </div>
 		  </div>
 		

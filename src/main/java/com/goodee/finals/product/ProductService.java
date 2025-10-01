@@ -1,7 +1,6 @@
 package com.goodee.finals.product;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -119,7 +118,8 @@ public class ProductService {
 			boolean deleteResult = fileService.fileDelete(FileService.PRODUCT, savedName);
 			
 			if(deleteResult) {
-				attachmentRepository.deleteById(beforeAttach.getAttachNum());
+				productRepository.deleteBeforeAttach(beforeAttach.getAttachNum());
+				attachmentRepository.deleteAttach(beforeAttach.getAttachNum());
 			}
 			
 			AttachmentDTO attachmentDTO = new AttachmentDTO();

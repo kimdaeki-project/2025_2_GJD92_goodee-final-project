@@ -124,7 +124,7 @@
 		</table>
 		
 		<!-- 페이지네이션 -->
-		<c:if test="${ notice.content.size() gt 0 }">
+		<c:if test="${ fault.content.size() gt 0 }">
 		<nav>
 			<ul class="pagination justify-content-center">
 				<c:if test="${ fault.hasPrevious() and pager.startPage gt 1 }">
