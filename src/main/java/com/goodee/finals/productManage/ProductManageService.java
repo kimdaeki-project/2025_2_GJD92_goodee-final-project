@@ -94,12 +94,12 @@ public class ProductManageService {
 			newPmDTO.setPmType(90);
 			newPmDTO.setPmAmount(pmAmount);
 			newPmDTO.setPmRemainAmount(pAmount + (-pmAmount));
-			newPmDTO.setPmNote("No."+pmNum+" - 정정");
+			newPmDTO.setPmNote(productManageDTO.getPmNote() + " (No."+pmNum+"  내용 정정)");
 		}else {
 			newPmDTO.setPmType(80);
 			newPmDTO.setPmAmount(pmAmount);
 			newPmDTO.setPmRemainAmount(pAmount + pmAmount);
-			newPmDTO.setPmNote("No."+pmNum+" - 정정");
+			newPmDTO.setPmNote(productManageDTO.getPmNote() + " (No."+pmNum+"  내용 정정)");
 		}
 		
 		// product 현재수량 저장
@@ -130,10 +130,10 @@ public class ProductManageService {
 		Long remainAmountUpdated = 0L;
 		
 		if(newDeletePm.getPmType() == 80) { // 입고시
-			newDeletePm.setPmNote("No."+pmNum+" - 입고 취소"); // 기존 pmDTO 수량과 반대수량 입력
+			newDeletePm.setPmNote("No."+pmNum+"  입고 취소"); // 기존 pmDTO 수량과 반대수량 입력
 			remainAmountUpdated = productDTO.getProductAmount() + newDeletePm.getPmAmount();
 		} else if (newDeletePm.getPmType() == 90){ // 출고시
-			newDeletePm.setPmNote("No."+pmNum+" - 출고 취소"); // 기존 pmDTO 수량과 반대수량 입력
+			newDeletePm.setPmNote("No."+pmNum+"  출고 취소"); // 기존 pmDTO 수량과 반대수량 입력
 			remainAmountUpdated = productDTO.getProductAmount() - newDeletePm.getPmAmount();
 		}
 		

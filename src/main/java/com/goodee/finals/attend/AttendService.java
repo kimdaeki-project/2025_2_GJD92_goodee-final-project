@@ -1,5 +1,6 @@
 package com.goodee.finals.attend;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import com.goodee.finals.attend.AttendController.WeeklyWorkResult;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 
@@ -94,6 +97,56 @@ public class AttendService {
 		
 		return attendRepository.countAbsentDays(year, month, staffCode, today, holiday);
 	}
+	
+	public WeeklyWorkResult getWeeklyWorkTime(LocalDate monday, LocalDate sunday, Integer staffCode) {
+        List<AttendDTO> records = attendRepository
+                .findByStaffDTO_StaffCodeAndAttendDateBetween(staffCode, monday, sunday);
+
+        Duration total = Duration.ZERO;      // 총 근로시간
+        Duration overtime = Duration.ZERO;   // 일일 연장근로시간
+        Duration weeklyOvertime = Duration.ZERO; // 주 40시간 초과분
+
+        for (AttendDTO record : records) {
+            if (record.getAttendIn() != null && record.getAttendOut() != null) {
+                LocalTime in = record.getAttendIn();
+                LocalTime out = record.getAttendOut();
+
+                Duration duration = Duration.between(in, out);
+
+                // 휴게시간 1시간 차감 (12~13시 걸치는 경우)
+                boolean isRestApplicable = in.isBefore(LocalTime.NOON) && out.isAfter(LocalTime.of(13, 0));
+                if (isRestApplicable) {
+                    duration = duration.minusHours(1);
+                }
+
+                if (!duration.isNegative()) {
+                    total = total.plus(duration);
+
+                    // 일일 연장근로 (9시간 초과)
+                    if (duration.toMinutes() > 540) {
+                        overtime = overtime.plusMinutes(duration.toMinutes() - 540);
+                    }
+                }
+            }
+        }
+
+        // 주 40시간 초과분 계산
+        if (total.toMinutes() > 2400) {
+            weeklyOvertime = weeklyOvertime.plusMinutes(total.toMinutes() - 2400);
+        }
+
+        return new WeeklyWorkResult(
+                formatDuration(total),
+                formatDuration(overtime),
+                formatDuration(weeklyOvertime)
+        );
+    }
+
+    private String formatDuration(Duration duration) {
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        return String.format("%02dh %02dm", hours, minutes);
+    }
 	
 	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, LocalDate today, Pageable pageable) {
 		

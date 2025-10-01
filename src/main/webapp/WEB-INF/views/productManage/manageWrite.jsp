@@ -123,7 +123,7 @@ aside.sidenav {
 								style="width: 100px;">물품검색</button>
 
 							<label for="itemName">물품번호</label>
-							<input type="text" name="productCode" id="searchInput" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
+							<input type="text" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
 								
 							<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
 							
@@ -178,11 +178,9 @@ aside.sidenav {
 								<div class="d-flex justify-content-end align-items-end">
 									<div class="input-group">
 										<input type="text" class="form-control" id="searchInput" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-<!-- 										<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="searchProduct()" style="width: 50px; height: 30px;" >검색</button> -->
 									</div>
 								</div>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="닫기"></button>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
 								<table class="table">
@@ -195,18 +193,7 @@ aside.sidenav {
 										</tr>
 									</thead>
 									<tbody id="productTable">
-<%-- 										<c:forEach items="${productList}" var="p"> --%>
-<!-- 											<tr> -->
-<%-- 												<td>${p.productCode}</td> --%>
-<%-- 												<td>${p.productTypeDTO.productTypeName}</td> --%>
-<%-- 												<td>${p.productName}</td> --%>
-<!-- 												<td> -->
-<!-- 													<button type="button" -->
-<!-- 														class="btn btn-sm btn-primary select-product" -->
-<%-- 														onclick="selectProduct(${p.productCode}, ${p.productTypeDTO.productTypeCode}, ${p.productTypeDTO.productTypeName}, ${p.productName})">선택</button> --%>
-<!-- 												</td> -->
-<!-- 											</tr> -->
-<%-- 										</c:forEach> --%>
+									
 									</tbody>
 								</table>
 							</div>

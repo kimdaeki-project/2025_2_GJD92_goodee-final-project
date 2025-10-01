@@ -1,6 +1,9 @@
 package com.goodee.finals.attend;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +98,7 @@ public class AttendController {
 	@GetMapping("")
 	public String list(@RequestParam(required = false) Integer year,
 			            @RequestParam(required = false) Integer month,
+			            @RequestParam(value = "baseDate", required = false) String baseDateStr,
 			            @PageableDefault(size = 10, sort = "attendDate", direction = Direction.DESC ) Pageable pageable,
 			            Model model) {
 		
@@ -102,14 +106,52 @@ public class AttendController {
 		StaffDTO staffDTO = staffService.getStaff(staffCode);
 		model.addAttribute("staffDTO", staffDTO);
 	    
+		LocalDate baseDate = (baseDateStr == null) ? LocalDate.now() : LocalDate.parse(baseDateStr);
+		LocalDate today = LocalDate.now();
+		
+		// 주 근로시간
+		LocalDate monday = baseDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate sunday = baseDate.with(java.time.temporal.TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        // 이전/다음 주 계산
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d");
+        LocalDate prevWeek = monday.minusWeeks(1);
+        LocalDate nextWeek = monday.plusWeeks(1);
+        model.addAttribute("mondayStr", monday.format(formatter));
+        model.addAttribute("sundayStr", sunday.format(formatter));
+        
+        // DB에서 주간 근로시간 합계 조회
+        WeeklyWorkResult result = attendService.getWeeklyWorkTime(monday, sunday, staffCode);
+        model.addAttribute("totalWorkTime", result.getTotalWorkTime());
+        model.addAttribute("overtimeWorkTime", result.getOvertimeWorkTime());
+        model.addAttribute("weeklyOvertime", result.getWeeklyOvertime());
+        
+     // ✅ 1. totalWorkTime 문자열을 분으로 변환
+        String totalWorkTimeStr = result.getTotalWorkTime();
+        int totalWorkedMinutes = parseWorkTimeToMinutes(totalWorkTimeStr);
+
+        // ✅ 2. 최대 근로시간 (40시간 = 2400분)
+        int maxWeeklyMinutes = 40 * 60;
+
+        // ✅ 3. 잔여 근로시간 계산
+        int remainingMinutes = Math.max(0, maxWeeklyMinutes - totalWorkedMinutes);
+
+        // ✅ 4. 다시 hh mm 포맷으로 변환
+        String remainingWorkTime = formatMinutesToHhMm(remainingMinutes);
+
+        // ✅ 5. JSP에 전달
+        model.addAttribute("remainingWorkTime", remainingWorkTime);
+        
+        model.addAttribute("prevWeek", prevWeek);
+        model.addAttribute("nextWeek", nextWeek);
+        
 	    // 출퇴근 내역
-	    LocalDate now = LocalDate.now();
-	    int targetYear = (year == null) ? now.getYear() : year;
-	    int targetMonth = (month == null) ? now.getMonthValue() : month;
+	    int targetYear = (year == null) ? today.getYear() : year;
+	    int targetMonth = (month == null) ? today.getMonthValue() : month;
 	    model.addAttribute("year", targetYear);
 	    model.addAttribute("month", targetMonth);
 	    
-	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, now, pageable);
+	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, today, pageable);
 	    model.addAttribute("attendances", attendances);
 	    
 	    // 지각
@@ -121,10 +163,44 @@ public class AttendController {
 	    model.addAttribute("earlyLeaveCount", earlyLeaveCount);
 	    
 	    // 결근
-	    long absentCount = attendService.getAbsentCount(staffCode, targetYear, targetMonth, now);
+	    long absentCount = attendService.getAbsentCount(staffCode, targetYear, targetMonth, today);
 	    model.addAttribute("absentCount", absentCount);
 		
 		return "attend/list";
 	}
 	
+	public static class WeeklyWorkResult {
+		private String totalWorkTime;      // 총 근로시간
+	    private String overtimeWorkTime;   // 연장근로 (1일 9시간 초과분)
+	    private String weeklyOvertime;     // 주 40시간 초과분
+
+	    public WeeklyWorkResult(String totalWorkTime, String overtimeWorkTime, String weeklyOvertime) {
+	        this.totalWorkTime = totalWorkTime;
+	        this.overtimeWorkTime = overtimeWorkTime;
+	        this.weeklyOvertime = weeklyOvertime;
+	    }
+
+	    public String getTotalWorkTime() { return totalWorkTime; }
+	    public String getOvertimeWorkTime() { return overtimeWorkTime; }
+	    public String getWeeklyOvertime() { return weeklyOvertime; }
+	}
+	
+	private int parseWorkTimeToMinutes(String workTime) {
+	    if (workTime == null || !workTime.contains("h")) return 0;
+
+	    try {
+	        String[] parts = workTime.split("h|m");
+	        int hours = Integer.parseInt(parts[0].trim());
+	        int minutes = Integer.parseInt(parts[1].trim());
+	        return hours * 60 + minutes;
+	    } catch (Exception e) {
+	        return 0;
+	    }
+	}
+
+	private String formatMinutesToHhMm(int minutes) {
+	    int h = minutes / 60;
+	    int m = minutes % 60;
+	    return String.format("%02dh %02dm", h, m);
+	}
 }

@@ -3,8 +3,8 @@
 	
 const modalEl = document.getElementById('productModal');
 const productModal = new bootstrap.Modal(modalEl);
-const searchInput = document.getElementById("searchInput");
-const productTable = document.getElementById("productTable")
+const searchInput = document.getElementById('searchInput');
+const productTable = document.getElementById('productTable')
 let products =null;
 
 
@@ -14,24 +14,28 @@ document.addEventListener("shown.bs.modal", ()=> {
 	.then(r => {
 		console.log(r)
 		products = r;
-		renderProduct(r)
+		renderProduct(products)
 	})
 	)
 })
 	
 
 searchInput.addEventListener("input", e => {
-	const keyword = e.target.value;
-	console.log("입력됨")
+	const keyword = e.target.value.trim().toLowerCase();
+	
 	console.log(keyword)
 	
 	const filteredProduct = products.filter(p => 
-			p.productName(keyword)
+			p.productName.toLowerCase().includes(keyword) || // 물품이름
+			p.productTypeDTO.productTypeName.toLowerCase().includes(keyword) || // 물품타입이름
+			p.productCode.toString().includes(keyword) // 물품코드
 		);
-		renderStaff(filteredProduct);
+		
+		renderProduct(filteredProduct); // 결과물 랜더링
 })
 
 function renderProduct(r) {
+	if(!productTable) return; // 태그확인 안전장치
 	
 	productTable.innerHTML = ""
 	
@@ -53,7 +57,7 @@ function renderProduct(r) {
 				)">선택</button>		
 		</td>
 		`
-			productTable.append(tr);
+		productTable.appendChild(tr);
 	})
 }
 

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -59,7 +60,7 @@ aside.sidenav {
 
 	    <div class="mt-3" style="min-height: 500px;">
 			    	<div class="col-10 offset-1">
-			    		<table class="table text-center">
+			    		<table class="table table-hover text-center">
 			    			<thead>
 			    				<tr>
 			    					<th>물품번호</th>
@@ -75,7 +76,7 @@ aside.sidenav {
 				    					<td>${ product.productCode }</td>
 				    					<td>${ product.productTypeDTO.productTypeName}</td>
 				    					<td><a href="/product/${ product.productCode }" style="color: #737373;">${ product.productName }</a></td>
-				    					<td>${ product.productAmount }</td>
+				    					<td><fmt:formatNumber value="${ product.productAmount }" type="number" /></td>
 			    					</tr>
 			    				</c:forEach>
 

@@ -26,7 +26,7 @@
 	
     <div class="mt-3" style="min-height: 500px;">
 		    	<div class="col-10 offset-1">
-		    		<table class="table text-center">
+		    		<table class="table table-hover text-center">
 		    			<thead>
 		    				<tr>
 		    					<th>분실물번호</th>
@@ -86,7 +86,7 @@
 					</nav>
 		    </div>
 			
-		    <button onclick="location.href='/lost/write'">등록</button>
+		    <button onclick="location.href='/lost/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>

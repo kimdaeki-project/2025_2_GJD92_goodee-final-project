@@ -81,7 +81,7 @@
     <div class="form-box">
       <h2>입출고 상세</h2>
       
-      <img width="300" height="300" style="object-fit: cover;" src="/file/product/${ productManageDTO.productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
+      <img width="300" height="300" style="object-fit: contain;" src="/file/product/${ productManageDTO.productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
       
       <table>
       	<tbody>
