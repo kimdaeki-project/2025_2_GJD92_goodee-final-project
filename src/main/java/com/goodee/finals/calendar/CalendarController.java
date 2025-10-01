@@ -39,7 +39,7 @@ public class CalendarController {
 		return "calendar/calendar";
 	}
 	
-	@GetMapping("eventList")
+	@GetMapping("calList")
 	@ResponseBody
 	public List<CalendarDTO> getCalendarList(@RequestParam(required = false) List<Integer> calTypes) {
 		if(calTypes == null || calTypes.size() < 1 ) { // 체크된 일정타입이 없으면 바로 return
@@ -86,6 +86,12 @@ public class CalendarController {
 		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
 		
 		return calendarService.disableEvent(calendarDTO, staffDTO);
+	}
+	
+	@PostMapping("updateDate")
+	@ResponseBody
+	public boolean updateCalDate(@RequestBody CalendarDTO calendarDTO) {
+		return calendarService.updateCalDate(calendarDTO);
 	}
 	
 }

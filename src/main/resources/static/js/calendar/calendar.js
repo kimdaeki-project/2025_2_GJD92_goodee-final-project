@@ -52,7 +52,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 	slotDuration: "01:00:00",
 	  scrollTime: "00:00:00",
 	nowIndicator: true, // 현재시간을 빨간 선으로 표시
-      selectable: true, // 날짜 범위를 드래그하여 새로운 일정 구간을 선택 - 사용 할지 미정
+//      selectable: true, // 날짜 범위를 드래그하여 새로운 일정 구간을 선택 - 사용 할지 미정
 	 titleFormat: function(date) {
         const y = date.date.year;
 		const m = String(date.date.month + 1).padStart(2, '0');
@@ -66,61 +66,52 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		center: 'title',
 		 right: 'prev,today,next'
 	},
-	buttonText: { // 툴바 버튼 이름
+	buttonText: {    // 툴바 버튼 이름
 		   day: '일간',
 		  list: '목록',
 		  week: '주간',
 	 	 month: '월간',
 		 today: '오늘'
 	},
-	eventClick: function(eventInfo) {
-		let calStart      = eventInfo.event.startStr;
-		let calReg        = eventInfo.event._def.extendedProps.calReg;
-		calReg   = dayjs(calReg).format("YYYY-MM-DD HH:mm");		
-		calStart = eventInfo.event.allDay ? dayjs(calStart).format("YYYY-MM-DD") : dayjs(calStart).format("YYYY-MM-DD HH:mm");				
-
-		const calNum      = eventInfo.event._def.extendedProps.calNum;
-		const calType     = eventInfo.event._def.extendedProps.calType;
-		const calTitle    = eventInfo.event._def.extendedProps.calTitle;
-		const calPlace    = eventInfo.event._def.extendedProps.calPlace;
-		const staffName   = eventInfo.event._def.extendedProps.staffName;
-		const staffCode   = eventInfo.event._def.extendedProps.staffCode;
-		const calContent  = eventInfo.event._def.extendedProps.calContent;
-		const calTypeName = eventInfo.event._def.extendedProps.calTypeName;
-		
-		document.getElementById("detailModalReg").textContent = calReg;
-		document.getElementById("detailModalDate").textContent = calStart;
-		document.getElementById("detailModalTitle").textContent = calTitle
-		document.getElementById("detailModalPlace").textContent = calPlace;
-		document.getElementById("detailModalWriter").textContent = staffName;
-		document.getElementById("detailModalContent").textContent = calContent;
-		document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
-		document.getElementById("detailDeptCircle").style.backgroundColor = eventBgColor(calType);
-		
-		inputCalNum.value = calNum;  
-		
-		// 공휴일, 작성자 본인이 아닌경우 수정,삭제 버튼 숨김처리
-		if(calType == 2000 || loginStaffCode != staffCode) {
-			btnUpAndDel.forEach(function(el) {
-				el.classList.add("d-none");
-			})
-		} else {
-			btnUpAndDel.forEach(function(el) {
-				el.classList.remove("d-none");
-			})
+	views: {
+		timeGridWeek: {
+			titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' }
+		},
+		listDay: {
+			titleFormat: function(arg) {
+				const y = arg.date.year;
+				const m = String(arg.date.month + 1).padStart(2, '0');
+				const d = String(arg.date.day).padStart(2, '0');
+				const weekday = arg.date.marker.toLocaleDateString('ko-KR', { weekday: 'long' });
+				return `${y}-${m}-${d} ${weekday}`;
+			}
 		}
+	},
+	eventClick: function(eventInfo) {
+		calDetail(eventInfo);
 		modalCalendarDetail.show();
 	},
-	dateClick: function(dateInfo) { // 날짜 빈공간 클릭
-		showWriteModal(dateInfo.dateStr);
+	dateClick: function(dateInfo) { 
+		showWriteModal(dateInfo.dateStr); 
+	},
+	eventDrop: function(eventInfo) { 
+		dragResizeUpdate(eventInfo); 
+	},
+	eventResize: function(eventInfo) {
+		dragResizeUpdate(eventInfo)
+	},
+	eventMouseEnter: function(info) { 
+		info.el.style.cursor = "pointer"; 
+	}, // 마우스 포인터
+	eventMouseLeave: function(info) { 
+		info.el.style.cursor = "default";	
 	},
 	events: function(fetchInfo, successCallback, failureCallback) { // 일정 불러오기
-		fetch(`/calendar/eventList?calTypes=${ selectedCalType }`, { method: 'GET' })
+		fetch(`/calendar/calList?calTypes=${ selectedCalType }`, { method: 'GET' })
 		.then(r => r.json())
 		.then(r => {
-//			console.log("서버 응답:", r);
-			const events = r.map(event => addInCalendar(event));
-//			console.log(events);
+//			console.log(fetchInfo)
+			const events = r.map(cal => addInCalendar(cal));
 			successCallback(events); // 달력에 이벤트 반영
 		})
 		.catch(e => {
@@ -149,7 +140,6 @@ calTypeCheckboxs.forEach(function (calTypeCheckbox) {
 	})
 })
 
-
 btnUpdateCalendar.addEventListener("click", () => {
 	btnAddCalendar.dataset.request = "update";
 	const calNum = inputCalNum.value;
@@ -164,13 +154,17 @@ btnUpdateCalendar.addEventListener("click", () => {
 			inputCalStartMin.value   = dayjs(cal.calStart).format("mm");
 			inputCalStartHour.value  = dayjs(cal.calStart).format("HH");
 			inputCalStartDate.value  = dayjs(cal.calStart).format("YYYY-MM-DD");
-			                         
+			
 			inputCalType.value       = cal.calType;
 			inputCalPlace.value      = cal.calPlace;
 			inputCalTitle.value      = cal.calTitle;
 			inputCalContent.value    = cal.calContent;
 			inputCalIsAllDay.checked = cal.calIsAllDay;
-						
+			
+			if(cal.calIsAllDay) {
+				 inputCalEndDate.value = plusOneDay(cal);
+			}
+			
 			showHideInput(cal.calIsAllDay);
 			
 			if(modalCalendarDetail) modalCalendarDetail.hide();
@@ -303,7 +297,7 @@ function addCalendar() {
 		calIsAllDay: inputCalIsAllDay.checked
 	};
 	// fetch로 DB에 등록
-	// 1. 일정쓰기
+	// 1. 일정 쓰기
 	if(btnAddCalendar.dataset.request == "add") {
 		fetch("calendar/add", {
 			method: "POST",
@@ -316,8 +310,8 @@ function addCalendar() {
 			console.log(addedCalendar)
 			calendar.addEvent(addInCalendar(addedCalendar))
 		})
+	// 2. 일정 수정
 	} else if(btnAddCalendar.dataset.request == "update") {
-		// Update일때는 객체에 calNum 추가
 		calEvent.calNum = inputCalNum.value;
 		
 		fetch("calendar/update", {
@@ -326,61 +320,133 @@ function addCalendar() {
 			body: JSON.stringify(calEvent)
 		})
 		.then(r => r.json())
-		.then(UpdatedCalendar => {
-			console.log(UpdatedCalendar)
-			updateCalendarEvent(UpdatedCalendar);
+		.then(updatedCal => {
+			updateEvent(updatedCal);
 		})
 	}
 	if(modalAddCalendar) modalAddCalendar.hide();
 }
 
-function addInCalendar(event) {
+function addInCalendar(cal) {
 	return {
-		id: event.calNum,              
-		title: event.calTitle,         
-		start: event.calStart,         
-		end: event.calEnd,     
-		allDay: event.calIsAllDay,
-		backgroundColor: eventBgColor(event.calType),
+		id: cal.calNum,              
+		title: cal.calTitle,         
+		start: cal.calStart,         
+		end: plusOneDay(cal),     
+		allDay: cal.calIsAllDay,
+		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
 		classNames: ['my-event'],
+//		editable : (cal.staffDTO.staffCode === loginStaffCode) && (cal.calType != 2000),
 		editable : true,
 		extendedProps: {
-			calNum      : event.calNum,
-			calReg      : event.calReg,
-			calType     : event.calType,
-			calPlace    : event.calPlace,
-			calTitle    : event.calTitle,
-			calContent  : event.calContent,
-			calTypeName : event.calTypeName,
-			staffCode   : event.staffDTO.staffCode,
-			staffName   : event.staffDTO.staffName,
-			deptCode    : event.staffDTO.deptDTO.deptCode,
-			deptDetail  : event.staffDTO.deptDTO.deptDetail
+			calNum      : cal.calNum,
+			calReg      : cal.calReg,
+			calType     : cal.calType,
+			calPlace    : cal.calPlace,
+			calTitle    : cal.calTitle,
+			calContent  : cal.calContent,
+			calTypeName : cal.calTypeName,
+			staffCode   : cal.staffDTO.staffCode,
+			staffName   : cal.staffDTO.staffName,
+			deptCode    : cal.staffDTO.deptDTO.deptCode,
+			deptDetail  : cal.staffDTO.deptDTO.deptDetail
 		}
 	}
 }
 
-// 기존 등록된 캘린더를 수정
-function updateCalendarEvent(updatedCalendar) {
-	const event = calendar.getEventById(updatedCalendar.calNum);
+// 이벤트 수정
+function updateEvent(updatedCal) {
+	const event = calendar.getEventById(updatedCal.calNum);
 	if (event) {
-	  event.setProp("title", updatedCalendar.calTitle);
-	  event.setStart(updatedCalendar.calStart);
-	  event.setEnd(updatedCalendar.calEnd);
-	  event.setAllDay(updatedCalendar.calIsAllDay);
-	  event.setProp("backgroundColor", eventBgColor(updatedCalendar.calType));
-
-	  event.setExtendedProp("calType", updatedCalendar.calType);
-	  event.setExtendedProp("calTitle", updatedCalendar.calTitle);
-	  event.setExtendedProp("calPlace", updatedCalendar.calPlace);
-	  event.setExtendedProp("calContent", updatedCalendar.calContent);
-	  event.setExtendedProp("calTypeName", updatedCalendar.calTypeName);
-	  event.setExtendedProp("deptCode", updatedCalendar.staffDTO.deptDTO? deptDTO.deptCode : null);
-	  event.setExtendedProp("deptCode", updatedCalendar.staffDTO.deptDTO? deptDTO.deptDetail : null);
+		event.setAllDay(updatedCal.calIsAllDay);
+		event.setProp("title", updatedCal.calTitle);
+		event.setStart(updatedCal.calStart);
+		event.setEnd(plusOneDay(updatedCal));
+		event.setProp("backgroundColor", eventBgColor(updatedCal.calType));
+		
+		event.setExtendedProp("calType", updatedCal.calType);
+		event.setExtendedProp("calTitle", updatedCal.calTitle);
+		event.setExtendedProp("calPlace", updatedCal.calPlace);
+		event.setExtendedProp("calContent", updatedCal.calContent);
+		event.setExtendedProp("calTypeName", updatedCal.calTypeName);
+		event.setExtendedProp("deptCode", updatedCal.staffDTO.deptDTO ? updatedCal.staffDTO.deptDTO.deptCode : null);
+		event.setExtendedProp("deptDetail", updatedCal.staffDTO.deptDTO ? updatedCal.staffDTO.deptDTO.deptDetail : null);
 	}
 }
 
+function calDetail(eventInfo) {
+	let calStart      = eventInfo.event.startStr;
+	let calReg        = eventInfo.event._def.extendedProps.calReg;
+	calReg   = dayjs(calReg).format("YYYY-MM-DD HH:mm");		
+	calStart = eventInfo.event.allDay ? dayjs(calStart).format("YYYY-MM-DD") : dayjs(calStart).format("YYYY-MM-DD HH:mm");				
+
+	const calNum      = eventInfo.event._def.extendedProps.calNum;
+	const calType     = eventInfo.event._def.extendedProps.calType;
+	const calTitle    = eventInfo.event._def.extendedProps.calTitle;
+	const calPlace    = eventInfo.event._def.extendedProps.calPlace;
+	const staffName   = eventInfo.event._def.extendedProps.staffName;
+	const staffCode   = eventInfo.event._def.extendedProps.staffCode;
+	const calContent  = eventInfo.event._def.extendedProps.calContent;
+	const calTypeName = eventInfo.event._def.extendedProps.calTypeName;
+	
+	document.getElementById("detailModalReg").textContent = calReg;
+	document.getElementById("detailModalDate").textContent = calStart;
+	document.getElementById("detailModalTitle").textContent = calTitle
+	document.getElementById("detailModalPlace").textContent = calPlace ? "장소 - " + calPlace : "";
+	document.getElementById("detailModalWriter").textContent = staffName;
+	document.getElementById("detailModalContent").textContent = calContent;
+	document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
+	document.getElementById("detailDeptCircle").style.backgroundColor = eventBgColor(calType);
+	
+	inputCalNum.value = calNum;  
+	
+	// 공휴일, 작성자 본인이 아닌경우 수정,삭제 버튼 숨김처리
+	if(calType == 2000 || loginStaffCode != staffCode) {
+		btnUpAndDel.forEach(function(el) {
+			el.classList.add("d-none");
+		})
+	} else {
+		btnUpAndDel.forEach(function(el) {
+			el.classList.remove("d-none");
+		})
+	}
+}
+
+// 드래그드롭시 날짜 업데이트
+function dragResizeUpdate(eventInfo) {
+	const calStart = dayjs(eventInfo.event.startStr).format("YYYY-MM-DDTHH:mm:ss");
+	let calEnd = dayjs(eventInfo.event.endStr).format("YYYY-MM-DDTHH:mm:ss");
+	
+	if(eventInfo.event.allDay) {
+		calEnd = dayjs(eventInfo.event.endStr).add(-1, "day").format("YYYY-MM-DDTHH:mm:ss");
+	};
+	
+	console.log("startStr:", eventInfo.event.startStr);
+	console.log("endStr:", eventInfo.event.endStr);
+	console.log("allDay:", eventInfo.event.allDay);
+		
+	
+	const calEvent = {
+		calNum   : eventInfo.event._def.extendedProps.calNum,
+		calStart : calStart,
+		calEnd   : calEnd
+	}
+	
+	fetch("/calendar/updateDate", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(calEvent)
+	})
+	.then(r => r.json())
+	.then(r => {
+		if(r) console.log("날짜변경 성공")
+		else console.log("날짜변경 실패")
+	})
+	.catch(error => {
+		console.log("DB수정 에러발생" ,error)
+	})
+}
 
 function eventBgColor(calType) {
 	switch (calType) {
@@ -404,6 +470,10 @@ function showHideInput(checked) {
 	if(checked) {
 		selectMinHour.forEach(function (select) {
 			select.classList.add("d-none");
+			inputCalStartMin.value  = "00";
+			inputCalStartHour.value = "00";
+			inputCalEndMin.value    = "00";
+			inputCalEndHour.value   = "00";
 		})
 	} else {
 		selectMinHour.forEach(function (select) {
@@ -415,3 +485,15 @@ function showHideInput(checked) {
 function getSelectedTypes() {
 	return Array.from(calTypeCheckboxs).filter(cb => cb.checked).map(cb => cb.dataset.calType);
 }
+
+function plusOneDay(cal) {
+	let modEndDate = cal.calEnd;
+	
+	if(cal.calIsAllDay) {
+		modEndDate = dayjs(modEndDate).add(1, "day").toDate();
+	}
+	
+	return modEndDate;
+}
+
+
