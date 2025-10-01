@@ -49,21 +49,21 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/vacation?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="휴가 사용 내역">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">휴가 사용 내역</span>
 			        </a>
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/overtime?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="연장근무 내역">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">연장근무 내역</span>
 			        </a>
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/early?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="조기 퇴근 내역">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">조기 퇴근 내역</span>
 			        </a>
