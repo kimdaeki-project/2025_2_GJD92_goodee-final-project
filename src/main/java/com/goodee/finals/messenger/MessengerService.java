@@ -216,6 +216,14 @@ public class MessengerService {
 		return temp;
 	}
 
+	public boolean leaveMember(ChatRoomDTO chatRoomDTO) {
+		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
+		Integer staffCode = staffDTO.get().getStaffCode();
+		int result = messengerRepository.leaveMember(chatRoomDTO.getChatRoomNum(), staffCode);
+		if (result > 0) return true;
+		else return false;
+	}
+
 	
 	
 }

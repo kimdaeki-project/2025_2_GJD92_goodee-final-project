@@ -31,8 +31,7 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 		   "ORDER BY cb.chatBodyDtm DESC")
 	List<MessengerTestDTO> getLatest(Long chatRoomNum, Integer staffCode);
 
-	@Modifying
-	@Transactional
+	@Modifying @Transactional
 	@Query("UPDATE ChatUserDTO cu " + 
 		   "SET cu.chatBodyNum = :chatBodyNum " + 
 		   "WHERE cu.chatRoomDTO.chatRoomNum = :chatRoomNum " + 
@@ -53,9 +52,12 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 	@Query("SELECT cu FROM ChatUserDTO cu WHERE cu.chatRoomDTO.chatRoomNum = :chatRoomNum")
 	List<ChatUserDTO> getNotify(Long chatRoomNum);
 
-    @Modifying
-    @Transactional
+    @Modifying @Transactional
     @Query(value = "INSERT INTO chat_user (staff_code, chat_body_num, chat_room_num, chat_group_latest) VALUES (:staffCode, :chatBodyNum, :chatRoomNum, :chatBodyNum)", nativeQuery = true)
 	int saveJoinStaffs(Integer staffCode, Long chatRoomNum, Long chatBodyNum);
+
+    @Modifying @Transactional
+    @Query(value = "DELETE FROM chat_user WHERE chat_room_num = :chatRoomNum AND staff_code = :staffCode", nativeQuery = true)
+	int leaveMember(Long chatRoomNum, Integer staffCode);
 	
 }

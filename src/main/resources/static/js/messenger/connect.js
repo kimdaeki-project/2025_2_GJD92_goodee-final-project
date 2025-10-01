@@ -298,3 +298,31 @@ joinStaffBtn.addEventListener('click', () => {
 		modal.style.display = "none";
 	});
 });
+// 채팅방 나가기
+const leaveBtn = document.querySelector('#chat-leave');
+leaveBtn.addEventListener('click', () => {
+	const confirm = window.confirm('채팅방을 나가시겠습니까?');
+	if (confirm) {
+		const contents = senderName + '님이 채팅방을 나갔습니다.';
+		const message = {
+		    chatBodyType: "NEW",
+		    contents: contents,
+		    chatRoomNum: chatRoomNum,
+		    staffCode: sender,
+			chatBodyContent: contents,
+			staffName: senderName
+		};
+		stompClient.send("/pub/chat/" + chatRoomNum, {}, JSON.stringify(message));
+		fetch('/msg/room/leave', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({chatRoomNum: chatRoomNum})
+		})
+		.then(response => response.json())
+		.then(response => {
+			if (response) {
+				location.href = '/msg/room';
+			}
+		})
+	}
+});

@@ -182,5 +182,11 @@ public class MessengerController {
 		else return false;
 	}
 	
+	@PostMapping("/room/leave") @ResponseBody
+	public boolean memberLeave(@RequestBody ChatRoomDTO chatRoomDTO) {
+		boolean result = messengerService.leaveMember(chatRoomDTO);
+		return result;
+	}
+	
 	
 }

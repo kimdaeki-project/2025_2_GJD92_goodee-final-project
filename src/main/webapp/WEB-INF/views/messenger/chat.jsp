@@ -9,14 +9,16 @@
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 <link href="/css/messenger/chat.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 	<h2>메신저</h2>
-	<div>
-		<a href="/msg/room">채팅방 목록</a>
-	</div>
-	<div>
-		<div id="addMemeber">멤버 추가</div>
+	<div class="chat-top-group">
+		<div><a href="/msg/room">채팅방 목록</a></div>
+		<div>
+			<span id="addMemeber" class="material-icons" style="cursor: pointer;">person_add</span>
+			<span id="chat-leave" class="material-icons" style="cursor: pointer;">logout</span>
+		</div>
 	</div>
 	<sec:authorize access="isAuthenticated()">
 		<sec:authentication property="principal" var="staff" />
@@ -45,8 +47,13 @@
 	    	</c:if>
 		</c:forEach>
 	</div>
-	<input type="text" id="messageInput" placeholder="메시지를 입력하세요" />
-	<button id="sendButton">전송</button>
+	<div class="message-container-chat">
+	    <textarea rows="3" cols="30" id="messageInput" placeholder="메시지를 입력해 주세요."></textarea>
+	    <div class="button-wrapper">
+	        <button id="sendButton">전송</button>
+	    </div>
+	</div>
+
 	
 	<!-- 멤버 추가 모달 -->
 	<div id="addMemberModal">
