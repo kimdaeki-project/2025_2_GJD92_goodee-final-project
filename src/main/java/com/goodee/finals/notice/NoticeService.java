@@ -101,6 +101,14 @@ public class NoticeService {
 
 	@Transactional
 	public NoticeDTO edit(NoticeDTO noticeDTO, MultipartFile[] files, List<Long> deleteFiles) {
+		String editTitle = noticeDTO.getNoticeTitle();
+		String editContent = noticeDTO.getNoticeContent();
+		boolean editPinned = noticeDTO.isNoticePinned();
+
+		noticeDTO = noticeRepository.findById(noticeDTO.getNoticeNum()).get();
+		noticeDTO.setNoticeTitle(editTitle);
+		noticeDTO.setNoticeContent(editContent);
+		noticeDTO.setNoticePinned(editPinned);
 		
 		if (deleteFiles != null && deleteFiles.size() > 0) {
 			for (Long attachNum : deleteFiles) {
