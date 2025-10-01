@@ -20,7 +20,7 @@
 	<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 		<c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
 		<div class="d-flex">
-			<c:import url="/WEB-INF/views/address/address-sidebar.jsp"></c:import>
+			<c:import url="/WEB-INF/views/drive/drive-sidebar.jsp"></c:import>
 			<section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 
 				<!-- 여기에 메인 컨텐츠 작성 -->
