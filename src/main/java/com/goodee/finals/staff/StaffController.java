@@ -291,4 +291,39 @@ public class StaffController {
 		return "staff/default-pw";
 	}
 	
+	@GetMapping("vacation")
+	public String getStaffVacation(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffVacationDTO> staffList = staffService.getStaffVacation(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("searchCode", "vacation");
+		model.addAttribute("searchType", "휴가 사용 내역");
+		
+		return "staff/list-search";
+	}
+	
+	@GetMapping("overtime")
+	public String getStaffOvertime(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffOvertimeDTO> staffList = staffService.getStaffOvertime(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("searchCode", "overtime");
+		model.addAttribute("searchType", "연장근무 내역");
+		
+		return "staff/list-search";
+	}
+	
+	@GetMapping("early")
+	public String getStaffEarly(@PageableDefault(size = 10) Pageable pageable, String search, Model model) {
+		if (search == null) search = "";
+		
+		Page<StaffEarlyDTO> staffList = staffService.getStaffEarly(search, pageable);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("searchCode", "early");
+		model.addAttribute("searchType", "조기 퇴근 내역");
+		
+		return "staff/list-search";
+	}
 }
