@@ -11,6 +11,9 @@
 <link href="/css/messenger/list.css" rel="stylesheet">
 </head>
 <body>
+    <form action="/msg/room/all" method="get" id="formAll"></form>
+    <form action="/msg/room" method="get" id="formDm"><input type="hidden" name="roomType" value="dm"></form>
+    <form action="/msg/room" method="get" id="formGroup"><input type="hidden" name="roomType" value="group"></form>
     <!-- 좌측 사이드바 -->
     <div class="sidebar">
         <a href="/msg"><span class="material-icons">person_outline</span></a>
@@ -71,5 +74,12 @@
     </script>
     <script type="text/javascript" src="/js/messenger/list.js"></script>
     <c:import url="/WEB-INF/views/messenger/heartBeat.jsp"/>
+    <script type="text/javascript">
+    	const formAll = document.querySelector('#formAll');
+    	const tabAll = document.querySelector('.tab-all');
+    	tabAll.addEventListener('click', () => {
+    		formAll.submit();
+    	});
+    </script>
 </body>
 </html>

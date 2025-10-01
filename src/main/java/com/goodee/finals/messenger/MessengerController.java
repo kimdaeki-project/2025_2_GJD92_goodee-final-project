@@ -39,8 +39,9 @@ public class MessengerController {
     	return "messenger/home";
     }
 	
-	@GetMapping("room")
-	public String pop(Model model) {
+	@GetMapping("room/{roomType}")
+	public String pop(@PathVariable("roomType") String roomType, Model model) {
+		System.out.println(roomType);
 		List<ChatRoomDTO> result = messengerService.list();
 		model.addAttribute("room", result);
 		return "messenger/list";
