@@ -8,7 +8,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 <c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -91,6 +90,28 @@
 								<p>누적 근로시간 : ${totalWorkTime}</p>
 								<p>잔여 근로시간 : ${remainingWorkTime }</p>
 								<p>연장 근로시간 : ${weeklyOvertime eq null ? "00h 00m" : weeklyOvertime}</p>
+								
+								<div class="work-progress" style="margin-top:15px;">
+  <label>근로시간 현황</label>
+  <div class="progress" style="height: 25px; border-radius: 10px;">
+  
+    <!-- 주 근로시간 -->
+    <div class="progress-bar bg-success" role="progressbar" 
+         style="width: 77%; height: 12px;" 
+         aria-valuenow="40" aria-valuemin="0" aria-valuemax="52">
+      40h
+    </div>
+    
+    <!-- 연장 근로시간 -->
+    <div class="progress-bar bg-primary" role="progressbar" 
+         style="width: 23%; height: 12px;" 
+         aria-valuenow="12" aria-valuemin="0" aria-valuemax="52">
+      +12h
+    </div>
+    
+  </div>
+</div>
+								
 							</div>
 						</div>
 					</div>

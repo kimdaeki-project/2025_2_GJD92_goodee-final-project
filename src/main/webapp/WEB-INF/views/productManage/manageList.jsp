@@ -99,10 +99,6 @@ aside.sidenav {
 					 <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
 				</c:if>
 				
-			    	</div>
-			    </div>
-			    
-			    
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
 						  <ul class="pagination">
@@ -132,6 +128,10 @@ aside.sidenav {
 			    </div>
 				
 			    <button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/productManage/write'">입출고등록</button>
+			    	</div>
+			    </div>
+			    
+			    
 	    </section>
     </div>
   </main>

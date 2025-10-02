@@ -25,41 +25,41 @@
 	</div>
 	
     <div class="mt-3" style="min-height: 500px;">
-		    	<div class="col-10 offset-1">
-		    		<table class="table table-hover text-center">
-		    			<thead>
-		    				<tr>
-		    					<th>분실물번호</th>
-		    					<th>분실물명</th>
-		    					<th>작성자</th>
-		    					<th>연락처</th>
-		    					<th>등록일자</th>
-		    				</tr>
-		    			</thead>
-		    			<tbody>
-		    				
-		    				<c:forEach var="lost" items="${ lostList.content }">
-		    					<tr>
-			    					<td>${ lost.lostNum }</td>
-			    					<td><a href="/lost/${ lost.lostNum }" style="color: #737373;">${ lost.lostName }</a></td>
-			    					<td>${ lost.staffDTO.staffName }</td>
-			    					<td>${ lost.staffDTO.staffPhone }</td>
-			    					<td>${ lost.lostDate }</td>
-		    					</tr>
-		    				</c:forEach>
-		    				
-		    			</tbody>
-		    		</table>
-		    
+    	<div class="col-10 offset-1">
+    		<table class="table table-hover text-center">
+    			<thead>
+    				<tr>
+    					<th>분실물번호</th>
+    					<th>분실물명</th>
+    					<th>작성자</th>
+    					<th>연락처</th>
+    					<th>등록일자</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+    				
+    				<c:forEach var="lost" items="${ lostList.content }">
+    					<tr>
+	    					<td>${ lost.lostNum }</td>
+	    					<td><a href="/lost/${ lost.lostNum }" style="color: #737373;">${ lost.lostName }</a></td>
+	    					<td>${ lost.staffDTO.staffName }</td>
+	    					<td>${ lost.staffDTO.staffPhone }</td>
+	    					<td>${ lost.lostDate }</td>
+    					</tr>
+    				</c:forEach>
+    				
+    			</tbody>
+    		</table>
+    
 		     <c:if test="${ totalLost eq 0 }">
-		        <div class="alert alert-secondary text-center">검색된 결과가 없습니다.</div>
+		        <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
 		    </c:if>
-		    
-		    	</div>
-		    </div>
-		    
-    <div class="d-flex justify-content-center aling-items-center">
-		    	<nav aria-label="Page navigation example">
+    
+    	</div>
+    	
+    	<div class="d-flex justify-content-center aling-items-center">
+    			<c:if test="${lostList.content.size() gt 0}">
+			    	<nav aria-label="Page navigation example">
 					  <ul class="pagination">
 					    <c:if test="${ lostList.number - 2 ge 0 }">
 						    <li class="page-item">
@@ -84,9 +84,12 @@
 					    </c:if>
 					  </ul>
 					</nav>
+				</c:if>
 		    </div>
 			
 		    <button onclick="location.href='/lost/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
+    </div>
+		    
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
