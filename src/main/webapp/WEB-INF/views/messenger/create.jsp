@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>채팅방 생성</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="/css/messenger/create.css" rel="stylesheet">
@@ -20,11 +22,12 @@
 				<sec:authentication property="principal" var="logged" />
 				<input type="hidden" id="logged" value="${ logged.staffCode }">
 			</sec:authorize>
-			<form action="/msg/create" method="post" id="form">
+			<form:form action="/msg/create" method="post" id="form" modelAttribute="chatRoomDTO">
 			    <label for="chatRoomName">채팅방 이름</label>
 			    <input type="text" name="chatRoomName" id="chatRoomName" placeholder="방 이름을 입력해주세요">
+			    <form:errors path="chatRoomName"></form:errors>
 			    <input type="hidden" id="addedStaff" name="addedStaff">
-			</form>
+			</form:form>
 			<div class="scroll-members">
 			<div class="section-title">임원</div>
             <c:forEach items="${ staff }" var="m">

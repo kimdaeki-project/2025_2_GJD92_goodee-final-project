@@ -18,7 +18,11 @@ fetch("/msg/unread/count", {
             badge.innerText = unread[chatRoomNum] > 0 ? unread[chatRoomNum] : "";
 
             let latestMessage = document.querySelector('#chat-room-last-' + chatRoomNum);
-            latestMessage.innerText = latest[chatRoomNum].chatBodyContent;
+			if (latest[chatRoomNum].chatBodyContent.includes('\n')) {
+				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.split('\n')[0] + '...';
+			} else {
+	            latestMessage.innerText = latest[chatRoomNum].chatBodyContent;				
+			}
 
             let time = document.querySelector('#time-' + chatRoomNum);
             let timeFromJava = latest[chatRoomNum].chatBodyDtm;
