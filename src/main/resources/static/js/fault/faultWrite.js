@@ -1,30 +1,73 @@
 /**
  * 어트랙션 고장 신고 등록/수정 JS
  */
-
-// 파일 미리보기 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   if (!form) return; // form이 없으면 종료
 
-  // 파일 미리보기 (update.jsp 전용)
   const attachInput = document.querySelector("#attach");
+  const preview = document.querySelector("#preview");
+  const noImageText = document.querySelector("#noImageText");
+
+  // ==============================
+  // 파일 사이즈 & 이미지 타입 제한
+  // ==============================
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
+
+  // ==============================
+  // 파일 미리보기 (등록/수정 공통)
+  // ==============================
   if (attachInput) {
     attachInput.addEventListener("change", (event) => {
-      const preview = document.querySelector("#preview");
-      const noImageText = document.querySelector("#noImageText");
+      const file = event.target.files[0];
 
-      if (event.target.files && event.target.files[0]) {
+      if (file) {
+        // 파일 크기 검사
+        if (file.size > MAX_FILE_SIZE) {
+          Swal.fire({
+            text: "파일 크기는 5MB 이하여야 합니다.",
+            icon: "error",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "확인"
+          });
+          event.target.value = "";
+          if (preview) preview.src = "";
+          if (preview) preview.style.display = "none";
+          if (noImageText) noImageText.style.display = "block";
+          return;
+        }
+
+        // 이미지 타입 검사
+        if (!ALLOWED_TYPES.includes(file.type)) {
+          Swal.fire({
+            text: "이미지 파일(jpg, jpeg, png, gif, bmp, webp)만 업로드 가능합니다.",
+            icon: "error",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "확인"
+          });
+          event.target.value = "";
+          if (preview) preview.src = "";
+          if (preview) preview.style.display = "none";
+          if (noImageText) noImageText.style.display = "block";
+          return;
+        }
+
+        // 미리보기 출력
         const reader = new FileReader();
         reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.style.display = "block";
+          if (preview) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          }
           if (noImageText) noImageText.style.display = "none";
         };
-        reader.readAsDataURL(event.target.files[0]);
+        reader.readAsDataURL(file);
       } else {
-        preview.src = "";
-        preview.style.display = "none";
+        if (preview) {
+          preview.src = "";
+          preview.style.display = "none";
+        }
         if (noImageText) noImageText.style.display = "block";
       }
     });

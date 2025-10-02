@@ -1,13 +1,47 @@
 // ==============================
+// 파일 사이즈 & 이미지 타입 제한
+// ==============================
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
+
+// ==============================
 // 파일 미리보기
 // ==============================
 document.querySelector("#attach").addEventListener("change", (event) => {
-  if (event.target.files && event.target.files[0]) {
+  const file = event.target.files[0];
+
+  if (file) {
+    // 파일 크기 검사
+    if (file.size > MAX_FILE_SIZE) {
+      Swal.fire({
+        text: "파일 크기는 5MB 이하여야 합니다.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인"
+      });
+      event.target.value = "";
+      document.querySelector("#preview").src = "";
+      return;
+    }
+
+    // 이미지 타입 검사
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      Swal.fire({
+        text: "이미지 파일(jpg, jpeg, png, gif, bmp, webp)만 업로드 가능합니다.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인"
+      });
+      event.target.value = "";
+      document.querySelector("#preview").src = "";
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = function (event) {
       document.querySelector("#preview").src = event.target.result;
     };
-    reader.readAsDataURL(event.target.files[0]);
+    reader.readAsDataURL(file);
   } else {
     document.querySelector("#preview").src = "";
   }
@@ -92,6 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
             cancelButtonText: "취소"
           }).then((result) => {
             if (result.isConfirmed) {
+				let aaa = document.getElementById("staffCodeValid");
+				aaa.value = document.querySelector("#staffSelect").value;
               form.submit();
             }
           });

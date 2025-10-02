@@ -65,6 +65,7 @@ public class HomeController {
 		Page<ApprovalListDTO> result = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), "", pageable);
 		List<ApprovalListDTO> approvalList = new ArrayList<>();
 		
+		// 어트랙션 운용현황
 		for (int i = 0; i < Math.min(5, result.getContent().size()); i++) {
 			approvalList.add(result.getContent().get(i));
 		}

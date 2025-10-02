@@ -68,6 +68,17 @@ public class RideController {
 	// rideDTO 값 받아서 DB 저장
 	@PostMapping("add")  
 	public String registRide(@Valid RideDTO rideDTO, BindingResult bindingResult, MultipartFile attach, Model model) throws Exception{
+		boolean check = rideService.doubleCheck(bindingResult, attach);
+		
+		if(check) {
+			model.addAttribute("mode", "add");  // 등록 모드
+			
+			List<StaffDTO> staffList = rideService.getStaffList();
+			model.addAttribute("staffList", staffList);
+			
+			return "ride/rideAdd";
+		} 
+		
 		boolean result = rideService.registRide(rideDTO, attach);
 		
 		String resultMsg = "어트랙션 등록에 실패했습니다.";

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -41,6 +42,23 @@ public class RideService {
     public RideDTO getRideById(String rideCode) throws Exception {
         return rideRepository.findById(rideCode).orElse(null);
     }
+    
+    
+    // 어노테이션 2차 검사(1차에서 어노테이션으로 거르지 못한 것들), 첨부파일
+    public boolean doubleCheck(BindingResult bindingResult, MultipartFile attach) throws Exception {
+    	boolean result = bindingResult.hasErrors();
+    	
+    	if (result) {
+    		return result;
+    	} 
+    	
+    	if (attach == null || attach.getSize() <= 0) {
+    		return true;
+    	}
+    	
+    	return result;
+    }
+    
     
     
 	// 어트랙션 등록
