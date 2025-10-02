@@ -24,8 +24,8 @@ public interface CalendarRepository extends JpaRepository<CalendarDTO, Long>{
 
 	@Query("SELECT new com.goodee.finals.calendar.CalTypeDTO(c.calType, c.calTypeName) " +
 	       "FROM CalendarDTO c " +
-	       "WHERE c.deptDTO.deptCode = :deptCode " +
-	       "   OR c.calType IN (2000,2001,2002) " +
+	       "WHERE (c.deptDTO.deptCode = :deptCode AND c.calEnabled = true)" +
+	       "   OR (c.calType IN (2000,2001,2002) AND c.calEnabled = true) " +
 	       "GROUP BY c.calType, c.calTypeName")
 	List<CalTypeDTO> getCalTypesByDept(@Param("deptCode") Integer deptCode);
 	
