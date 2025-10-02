@@ -127,6 +127,8 @@ public class MessengerController {
 			model.addAttribute("chatRoomNum", checkTrueResult.getChatRoomNum());
 			model.addAttribute("chat", messages);
 			model.addAttribute("next", resultIfNotPresent.hasNext());
+			ChatRoomDTO chatRoomResult = messengerService.findChatRoom(checkTrueResult);
+			model.addAttribute("chatRoom", chatRoomResult);
 		} else {
 			Page<MessengerTestDTO> resultIfPresent = (Page<MessengerTestDTO>)result.get("result");
 			List<MessengerTestDTO> messages = new ArrayList<>(resultIfPresent.getContent());
@@ -134,6 +136,11 @@ public class MessengerController {
 			model.addAttribute("chatRoomNum", (Long)result.get("chatRoomNum"));
 			model.addAttribute("chat", messages);
 			model.addAttribute("next", resultIfPresent.hasNext());
+			
+			ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+			chatRoomDTO.setChatRoomNum((Long)result.get("chatRoomNum"));
+			chatRoomDTO = messengerService.findChatRoom(chatRoomDTO);
+			model.addAttribute("chatRoom", chatRoomDTO);
 		}
 		return "messenger/chat";
 	}
