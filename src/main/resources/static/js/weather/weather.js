@@ -3,11 +3,12 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-	const tempText = document.querySelector("p:nth-of-type(2)")?.innerText;
+	const p = document.querySelector("p:nth-of-type(2)");
+	const tempText = p ? p.innerText : undefined;
 	if (!tempText) return;
 	
 	const temp = parseFloat(tempText.replace("기온: ", "").replace("℃", ""));
-	const iconDiv =document.getElementById("weather-icon");
+	const iconDiv = document.getElementById("weather-icon");
 	
 	let icon = "☁️";
 	  if (temp >= 30) icon = "☀️";
