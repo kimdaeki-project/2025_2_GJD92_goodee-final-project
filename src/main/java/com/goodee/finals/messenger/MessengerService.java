@@ -61,10 +61,19 @@ public class MessengerService {
 		
 	}
 
-	public List<ChatRoomDTO> list() {
+	public List<ChatRoomDTO> list(String roomType) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer loggedStaff = staffDTO.get().getStaffCode();
-		List<ChatRoomDTO> result = messengerRepository.findChatRoomByStaffCode(loggedStaff);
+		List<ChatRoomDTO> result = null; 
+		if ("all".equals(roomType)) { // 모든 채팅을 전부 가져오기
+			result = messengerRepository.findChatRoomByStaffCode(loggedStaff);			
+		} else {
+			boolean type = false; // 일단 1:1 채팅으로 세팅
+			if ("group".equals(roomType)) { // 그룹 채팅으로 세팅
+				type = true;
+			}
+			result = messengerRepository.findChatRoomByStaffCodeAndType(loggedStaff, type);
+		}
 		return result;
 	}
 
@@ -214,6 +223,20 @@ public class MessengerService {
 			temp = messengerRepository.saveJoinStaffs(staffCode, chatRoomNum, chatBodyNum);
 		}
 		return temp;
+	}
+
+	public boolean leaveMember(ChatRoomDTO chatRoomDTO) {
+		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
+		Integer staffCode = staffDTO.get().getStaffCode();
+		int result = messengerRepository.leaveMember(chatRoomDTO.getChatRoomNum(), staffCode);
+		if (result > 0) return true;
+		else return false;
+	}
+
+	public ChatRoomDTO findChatRoom(ChatRoomDTO chatRoomDTO) {
+		ChatRoomDTO result = messengerRepository.findById(chatRoomDTO.getChatRoomNum()).get();
+		if (result != null) return result;
+		else return null;
 	}
 
 	

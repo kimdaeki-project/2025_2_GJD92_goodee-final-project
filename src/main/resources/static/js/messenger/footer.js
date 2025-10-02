@@ -6,7 +6,7 @@ function openMessenger() {
     window.open(
         "/msg",
         "MessengerWindow",
-        "width=400,height=500,resizable=no,scrollbars=yes"
+        "width=400,height=620,resizable=no,scrollbars=yes"
     );
 }
 

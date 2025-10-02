@@ -61,11 +61,29 @@ clearAll.addEventListener('click', () => {
 const createRoomBtn = document.querySelector('#createRoom');
 const form = document.querySelector('#form');
 createRoomBtn.addEventListener('click', () => {
-	if (room.length > 0) {
+	if (room.length > 1) {
+		let chatRoomNameInput = document.querySelector('#chatRoomName').value;
+		if (chatRoomNameInput == null || chatRoomNameInput == '') {
+			Swal.fire({
+				text: "채팅방 이름을 입력해주세요.",
+				icon: "warning",
+				confirmButtonColor: "#191919",
+				confirmButtonText: "확인"
+			});
+			return;
+		}
 		const logged = document.querySelector('#logged');
 		room.push(logged.value);
 		let addedStaff = document.querySelector('#addedStaff');
 		addedStaff.value = room.join(",");
 		form.submit();
+	} else {
+		Swal.fire({
+			text: "최소 2명 이상의 인원을 선택해주세요.",
+			icon: "warning",
+			confirmButtonColor: "#191919",
+			confirmButtonText: "확인"
+		});
+		return;
 	}
 });
