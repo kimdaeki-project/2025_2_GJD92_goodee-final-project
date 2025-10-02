@@ -43,7 +43,6 @@ public class CalendarDTO {
 	@JoinColumn(name = "staffCode")
 	private StaffDTO staffDTO;
 	
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "deptCode")
 	private DeptDTO deptDTO;

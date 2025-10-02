@@ -93,6 +93,7 @@
   gap: 10px;
   font-size: 12px;
   line-height: 1.4;
+  width: 200px;
 }
 
 .worktime {

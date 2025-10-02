@@ -110,16 +110,19 @@ public class ProductService {
 	public boolean updateProduct(ProductDTO productDTO, MultipartFile attach) {
 		setProductUpdate(productDTO);
 		
+		
 		if(attach != null && attach.getSize() > 0) {
-			ProductDTO before = productRepository.findById(productDTO.getProductCode()).orElseThrow();
-			AttachmentDTO beforeAttach = before.getProductAttachmentDTO().getAttachmentDTO();
-			
-			String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
-			boolean deleteResult = fileService.fileDelete(FileService.PRODUCT, savedName);
-			
-			if(deleteResult) {
-				productRepository.deleteBeforeAttach(beforeAttach.getAttachNum());
-				attachmentRepository.deleteAttach(beforeAttach.getAttachNum());
+			if(productDTO.getProductAttachmentDTO() != null) {
+				ProductDTO before = productRepository.findById(productDTO.getProductCode()).orElseThrow();
+				AttachmentDTO beforeAttach = before.getProductAttachmentDTO().getAttachmentDTO();
+				
+				String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
+				boolean deleteResult = fileService.fileDelete(FileService.PRODUCT, savedName);
+				
+				if(deleteResult) {
+					productRepository.deleteBeforeAttach(beforeAttach.getAttachNum());
+					attachmentRepository.deleteAttach(beforeAttach.getAttachNum());
+				}
 			}
 			
 			AttachmentDTO attachmentDTO = new AttachmentDTO();

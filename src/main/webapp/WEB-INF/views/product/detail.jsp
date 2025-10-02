@@ -81,7 +81,7 @@
     <div class="form-box">
       <h2>분실물 상세</h2>
       
-      <img width="300" height="300" style="object-fit: cover;" src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
+      <img width="300" height="300" style="object-fit: contain;" src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"/>
       
       <table>
       	<tbody>

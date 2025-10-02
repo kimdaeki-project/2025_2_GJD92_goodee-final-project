@@ -35,6 +35,9 @@
     .btn-submit:hover {
       background-color: #555;
     }
+    .updateDeletebtns {
+		display: flex;
+	}
 	</style>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -68,14 +71,15 @@
       	</tbody>
       </table>  
       
-      <button onclick="location.href='/lost/${lostNum}/update'">수정</button>
-      <form action="/lost/${lostNum }/delete" method="post">
-	      <button type="submit">삭제</button>
-	  </form>
-		<br>
-        
-      <button onclick="location.href='/lost'" >목록</button>
-    </div>
+      <div class="updateDeletebtns">
+	      <button onclick="location.href='/lost/${lostNum}/update'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">수정</button>
+	      <form action="/lost/${lostNum }/delete" method="post">
+		      <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">삭제</button>
+		  </form>
+	  </div>
+	        
+	      <button onclick="location.href='/lost'" class="btn btn-sm btn-outline-secondary" >목록</button>
+	  </div>
     
     </section>
   </main>

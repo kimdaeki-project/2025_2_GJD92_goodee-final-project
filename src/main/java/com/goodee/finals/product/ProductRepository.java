@@ -16,12 +16,14 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
 			          "INNER JOIN staff s USING(staff_code) " +
 			          "INNER JOIN product_type pt USING(product_type_code) " +
 			          "WHERE (p.product_name LIKE %:search% " +
+			          "OR p.product_code LIKE %:search% " +
 			          "OR pt.product_type_name LIKE %:search%) " +
 			          "AND p.product_delete = false",
 			  countQuery = "SELECT COUNT(*) FROM product p " +
 			               "INNER JOIN staff s USING(staff_code) " +
 			               "INNER JOIN product_type pt USING(product_type_code) " +
 			               "WHERE (p.product_name LIKE %:search% " +
+			               "OR p.product_code LIKE %:search% " +
 			               "OR pt.product_type_name LIKE %:search%) " +
 			               "AND p.product_delete = false",
 			  nativeQuery = true
@@ -34,7 +36,7 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
             "WHERE p.product_type_code = :productTypeCode " +
             "ORDER BY p.product_code DESC LIMIT 1",
     nativeQuery = true)
-Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
+	Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
 	
 	long countByProductDeleteFalse();
 	

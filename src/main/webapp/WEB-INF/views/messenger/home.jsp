@@ -14,7 +14,7 @@
     <!-- 좌측 사이드바 -->
     <div class="sidebar">
         <span class="material-icons active">person_outline</span>
-        <a href="/msg/room"><span class="material-icons">chat_bubble_outline</span></a>
+        <a href="/msg/room/all"><span class="material-icons">chat_bubble_outline</span></a>
     </div>
 
     <!-- 메인 컨텐츠 -->

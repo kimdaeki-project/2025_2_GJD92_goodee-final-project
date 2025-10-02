@@ -35,7 +35,11 @@ function renderHtmlChatList(room) {
 			badge.innerText = newCount;
 		}
 		let latestMessage = document.querySelector('#chat-room-last-' + room);
-		latestMessage.innerText = response.chatBodyContent;
+		if (response.chatBodyContent.includes('\n')) {
+			latestMessage.innerText = response.chatBodyContent.split('\n')[0] + '...';
+		} else {
+			latestMessage.innerText = response.chatBodyContent;		
+		}
 		let time = document.querySelector('#time-' + room);
         let timeFromJava = response.chatBodyDtm;
 		let today = new Date();
