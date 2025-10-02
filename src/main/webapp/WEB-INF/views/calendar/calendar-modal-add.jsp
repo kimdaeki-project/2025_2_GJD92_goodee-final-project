@@ -6,7 +6,7 @@
       <div class="modal-content border-0 rounded-3 shadow">
         <div class="modal-header">
           <h5 class="modal-title">일정 쓰기</h5>
-          <button type="button" class="btn-close btn-close-white bg-black" data-bs-dismiss="modal" aria-label="닫기"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
         </div>
 
         <div class="modal-body m-3">

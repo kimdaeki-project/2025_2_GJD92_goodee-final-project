@@ -27,17 +27,16 @@
 				<div class="p-6">
 					<form:form method="post" modelAttribute="driveDTO">
 						<div class="d-flex align-items-center gap-1 w-50">
-							<form:label path="driveName" cssClass="ms-0 me-1 mb-0 fs-6">그룹 이름 : </form:label>
+							<form:label path="driveName" cssClass="ms-0 me-1 mb-0 fs-6">드라이브 이름 : </form:label>
 							<form:input path="driveName" cssClass="form-control w-auto" value=""/>
 						</div>
 						<div>
 							<form:errors path="driveName" cssClass="text-danger small"></form:errors>
 						</div>
 						<div class="mt-4 d-flex align-items-center">
-							<span class="fs-6">연락처 추가 :</span>
+							<span class="fs-6">드라이브 공유 : </span>
 							<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" 
-								data-bs-toggle="modal" data-bs-target="#shareModal">
-								<i class="material-symbols-rounded opacity-5 fs-5" data-content="주소록">3p</i>
+								id="btnShowModalShare" data-bs-toggle="modal" data-bs-target="#shareModal">
 								<i class="material-symbols-rounded opacity-5 fs-5">group_add</i>
 							</button>
 						</div>
@@ -96,7 +95,9 @@
 	</script>
 	
 	<c:if test="${not empty driveDTO.driveNum}">
-	<script>document.querySelector("i[data-content='${driveDTO.driveName}']").parentElement.classList.add("bg-gradient-dark", "text-white")</script>
+	<script>
+	document.querySelector("i[data-content='${driveDTO.driveName}']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	</script>
 	</c:if>
 	<script src="/js/drive/create.js"></script>
 </body>

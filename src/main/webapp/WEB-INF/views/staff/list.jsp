@@ -128,7 +128,7 @@
 			    					<td>${ staff.deptDTO.deptDetail }</td>
 			    					<td>${ staff.jobDTO.jobDetail }</td>
 			    					<td>${ staff.staffPhone }</td>
-			    					<td></td>
+			    					<td>${ staff.todayState }</td>
 		    					</tr>
 		    				</c:forEach>
 		    				
