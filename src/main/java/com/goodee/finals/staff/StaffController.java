@@ -1,5 +1,7 @@
 package com.goodee.finals.staff;
 
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +37,26 @@ public class StaffController {
 		if (search == null) search = "";
 		
 		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
+		for (StaffDTO staffDTO : staffList) {
+			if (!CollectionUtils.isEmpty(staffDTO.getAttendDTOs()) && !ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendIn())) {
+				if (!ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendOut())) {
+					staffDTO.setTodayState("퇴근");
+				} else {
+					staffDTO.setTodayState("근무중");
+				}
+			} else {
+				LocalTime nowTime = LocalTime.now();
+				LocalTime deadline = LocalTime.of(15, 0);
+				
+				if (nowTime.isBefore(deadline)) {
+					staffDTO.setTodayState("미출근");
+				} else {
+					staffDTO.setTodayState("결근");
+				}
+				
+			}
+		}
+
 		model.addAttribute("staffList", staffList);
 		model.addAttribute("search", search);
 		
@@ -88,6 +112,16 @@ public class StaffController {
 		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
 		model.addAttribute("staffList", staffList);
 		model.addAttribute("search", search);
+		
+		Integer remainLeave = staffService.getStaffLeaveTotal();
+		Integer usedLeave = staffService.getStaffLeaveUsed();
+		Integer ownLeave = remainLeave - usedLeave;
+		Double leaveRate = (double) Math.round(((double) usedLeave / remainLeave) * 1000) / 10;
+		
+		model.addAttribute("remainLeave", remainLeave);
+		model.addAttribute("usedLeave", usedLeave);
+		model.addAttribute("ownLeave", ownLeave);
+		model.addAttribute("leaveRate", leaveRate);
 		
 		return "staff/list-leave";
 	}

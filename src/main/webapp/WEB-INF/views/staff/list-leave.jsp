@@ -78,22 +78,22 @@
 	    			<div class="d-flex gap-3">
 	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">전체 연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ remainLeave }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용 연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ usedLeave }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">잔여 연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ ownLeave }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용률</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ leaveRate }%</p>
 		    			</div>
 	    			</div>
 	    			
