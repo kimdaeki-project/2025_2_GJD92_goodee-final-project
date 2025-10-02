@@ -30,7 +30,7 @@ const inputCalIsAllDay  = document.getElementById("allDayCheckBox")
 const selectMinHour     = document.querySelectorAll(".select-min-hour"); // 종일 체크시 숨김처리 용도
 
 // 상세모달
-const btnUpdateCalendar = document.getElementById("btnUpdateCalendar");
+const btnOpenUpdateModal = document.getElementById("btnOpenUpdateModal");
 const btnDeleteCalendar = document.getElementById("btnDeleteCalendar");
 const btnUpAndDel       = document.querySelectorAll(".btn-update-delete");
 
@@ -109,9 +109,9 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 	events: function(fetchInfo, successCallback, failureCallback) { // 일정 불러오기
 		fetch(`/calendar/calList?calTypes=${ selectedCalType }`, { method: 'GET' })
 		.then(r => r.json())
-		.then(r => {
+		.then(cals => {
 //			console.log(fetchInfo)
-			const events = r.map(cal => addInCalendar(cal));
+			const events = cals.map(cal => addInCalendar(cal));
 			successCallback(events); // 달력에 이벤트 반영
 		})
 		.catch(e => {
@@ -140,7 +140,7 @@ calTypeCheckboxs.forEach(function (calTypeCheckbox) {
 	})
 })
 
-btnUpdateCalendar.addEventListener("click", () => {
+btnOpenUpdateModal.addEventListener("click", () => {
 	btnAddCalendar.dataset.request = "update";
 	const calNum = inputCalNum.value;
 	
@@ -154,16 +154,12 @@ btnUpdateCalendar.addEventListener("click", () => {
 			inputCalStartMin.value   = dayjs(cal.calStart).format("mm");
 			inputCalStartHour.value  = dayjs(cal.calStart).format("HH");
 			inputCalStartDate.value  = dayjs(cal.calStart).format("YYYY-MM-DD");
-			
+
 			inputCalType.value       = cal.calType;
 			inputCalPlace.value      = cal.calPlace;
 			inputCalTitle.value      = cal.calTitle;
 			inputCalContent.value    = cal.calContent;
 			inputCalIsAllDay.checked = cal.calIsAllDay;
-			
-			if(cal.calIsAllDay) {
-				 inputCalEndDate.value = plusOneDay(cal);
-			}
 			
 			showHideInput(cal.calIsAllDay);
 			
@@ -177,7 +173,6 @@ btnUpdateCalendar.addEventListener("click", () => {
 })
 
 btnDeleteCalendar.addEventListener("click", () => {
-	
 	Swal.fire({
 	   title: "일정 삭제",
 	   text: '일정을 삭제하시겠습니까?.',
@@ -194,7 +189,7 @@ btnDeleteCalendar.addEventListener("click", () => {
 		if(!result.isConfirmed) {
 			return
 		}
-		const calNum = inputCalNum.value;
+		const calNum = inputCalNum.value;		
 		const param  = new URLSearchParams();
 		param.append("calNum", calNum);
 		
@@ -204,10 +199,13 @@ btnDeleteCalendar.addEventListener("click", () => {
 		})
 		.then(r => r.json())
 		.then(r => {
-			if(r) {
+			if (r) {
 				const event = calendar.getEventById(calNum)
-				if(event) {
+				if (event) {
 					event.remove();
+					selectMinHour.forEach(function (select) {
+						select.classList.remove("d-none");
+					})
 				}
 			} else {
 				Swal.fire({
@@ -331,9 +329,9 @@ function addInCalendar(cal) {
 	return {
 		id: cal.calNum,              
 		title: cal.calTitle,         
+		allDay: cal.calIsAllDay,
 		start: cal.calStart,         
 		end: plusOneDay(cal),     
-		allDay: cal.calIsAllDay,
 		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
 		classNames: ['my-event'],
@@ -399,7 +397,7 @@ function calDetail(eventInfo) {
 	document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
 	document.getElementById("detailDeptCircle").style.backgroundColor = eventBgColor(calType);
 	
-	inputCalNum.value = calNum;  
+	inputCalNum.value = calNum; // hiddenInput에 calNum을 설정해줌
 	
 	// 공휴일, 작성자 본인이 아닌경우 수정,삭제 버튼 숨김처리
 	if(calType == 2000 || loginStaffCode != staffCode) {

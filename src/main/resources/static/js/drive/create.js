@@ -11,7 +11,6 @@ const searchInput = document.getElementById('searchInput');    // 사원 검색[
 const shareStaffs = document.querySelectorAll('.shareStaff');
 const btnAddAllDeptStaff = document.getElementById("btnAddAllDeptStaff");
 
-
 /*
 	드래그 이동
 	jsp에 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script> 라이브러리 추가
@@ -27,6 +26,8 @@ new Sortable(selectedList, {
 document.addEventListener('DOMContentLoaded', function () {
 	document.addEventListener('shown.bs.modal', function(e) { // shown.bs.modal 모달 창이 켜졌을때 실행
 		if (e.target.id === 'shareModal') {
+			
+			
 			fetch('/drive/staffList') // 사원 리스트 DB에서 조회
 			.then(r => r.json())
 			.then(r => {

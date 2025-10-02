@@ -63,7 +63,7 @@
 
 			<!-- 푸터 -->
 			<div class="modal-footer border-0 justify-content-end">
-				<button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center btn-update-delete" id="btnUpdateCalendar">
+				<button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center btn-update-delete" id="btnOpenUpdateModal">
 					<span class="material-symbols-rounded fs-6">edit</span>
 				</button>
 				<button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center btn-update-delete" id="btnDeleteCalendar">

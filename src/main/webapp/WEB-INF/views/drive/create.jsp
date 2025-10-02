@@ -95,9 +95,9 @@
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	</script>
 	
-	<c:if test="${not empty driveDTO.driveNum}">
+<%-- 	<c:if test="${not empty driveDTO.driveNum}"> --%>
 	<script>document.querySelector("i[data-content='${driveDTO.driveName}']").parentElement.classList.add("bg-gradient-dark", "text-white")</script>
-	</c:if>
+<%-- 	</c:if> --%>
 	<script src="/js/drive/create.js"></script>
 </body>
 
