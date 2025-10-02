@@ -136,29 +136,29 @@
 		  </div>
 		  
 		  <!-- 사진첨부 -->
-		<div class="form-group row mb-3">
-		  <form:label path="rideState" class="col-sm-4 col-form-label text-start">첨부파일</form:label>
-		  <div class="col-sm-5">
-		    <c:if test="${not empty rideDTO.rideAttachmentDTO}">
+		  <div class="form-group row mb-3">
+		    <form:label path="rideState" class="col-sm-4 col-form-label text-start">첨부파일</form:label>
+		    <div class="col-sm-5">
+		      <c:if test="${not empty rideDTO.rideAttachmentDTO}">
 		      <!-- 기존 파일 존재 여부 -->
 		      <input type="hidden" id="hasExistingFile" value="true"/>
-		    </c:if>
-		    <c:if test="${empty rideDTO.rideAttachmentDTO}">
-		      <input type="hidden" id="hasExistingFile" value="false"/>
-		    </c:if>
-		
-		    <img id="preview"
-		         style="object-fit: cover; width:200px; height:200px; !important;"
-		         <c:if test="${ not empty rideDTO.rideName }">
-		           src="/file/ride/${ rideDTO.rideAttachmentDTO.attachmentDTO.savedName }"
-		         </c:if>
-		         class="border border-1 border-dark p-1"/>
-		    <label for="attach">
-		      <div class="btn btn-outline-secondary px-2 py-0 m-auto">어트랙션 사진 등록</div>
-		    </label>
+		      </c:if>
+		      <c:if test="${empty rideDTO.rideAttachmentDTO}">
+		        <input type="hidden" id="hasExistingFile" value="false"/>
+		      </c:if>
+			  <!-- 이미지 미리보기 -->
+		      <img id="preview"
+		           style="object-fit: cover; width:200px; height:200px; !important;"
+		           <c:if test="${ not empty rideDTO.rideName }">
+		             src="/file/ride/${ rideDTO.rideAttachmentDTO.attachmentDTO.savedName }"
+		           </c:if>
+		           class="border border-1 border-dark p-1"/>
+		      <label for="attach">
+		        <div class="btn btn-outline-secondary px-2 py-0 m-auto">어트랙션 사진 등록</div>
+		      </label>
+		    </div>
+		    <input type="file" class="d-none" id="attach" name="attach"/>
 		  </div>
-		  <input type="file" class="d-none" id="attach" name="attach"/>
-		</div>
 	
 		
 		  <!-- 버튼 -->

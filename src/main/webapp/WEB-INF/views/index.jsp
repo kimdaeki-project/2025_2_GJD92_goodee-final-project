@@ -209,14 +209,13 @@
 	
 	        <!-- 날씨 -->
 	        <div class="panel weather">
-	          <h2>날씨</h2>
-	          <p>지역: 서울</p>
-	          <div class="icon">☀️</div>
-	          <ul>
-	            <li>기온: 32.1℃</li>
-	            <li>습도: 60%</li>
-	            <li>풍속: 2m/s</li>
-	          </ul>
+	        	<div class="card">
+	        		<h2>날씨</h2>
+					<div id="weather-icon"></div>	        		
+	        		<p>지역 : ${location }</p>
+	        		<p>기온: ${weather.temperature}℃</p>
+				    <p>풍속: ${weather.windspeed} m/s</p>
+	        	</div>
 	        </div>
 	
 	        <!-- 결재 현황 -->
@@ -264,6 +263,7 @@
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/weather/weather.js"></script>
 	<script>
 		document.querySelector("i[data-content='대시보드']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	</script>
