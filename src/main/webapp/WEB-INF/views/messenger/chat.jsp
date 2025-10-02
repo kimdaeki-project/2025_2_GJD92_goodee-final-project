@@ -9,6 +9,7 @@
 <title>메신저</title>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link href="/css/messenger/chat.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -39,15 +40,17 @@
 	</c:if>
 	<div class="chat-top-group">
 		<div>
-			<a href="/msg/room" class="chat-list-anchor">채팅방 목록</a>
+			<a href="/msg/room/all" class="chat-list-anchor">채팅방 목록</a>
 			<c:if test="${ chatRoom.chatRoomGroup eq true }">
 				&nbsp;
 				<span class="chat-list-anchor group-member-list">멤버 목록</span>
 			</c:if>
 		</div>
 		<div>
-			<span id="addMemeber" class="material-icons" style="cursor: pointer;">person_add</span>
-			<span id="chat-leave" class="material-icons" style="cursor: pointer;">logout</span>
+			<c:if test="${ chatRoom.chatRoomGroup eq true }">
+				<span id="addMemeber" class="material-icons" style="cursor: pointer;">person_add</span>
+				<span id="chat-leave" class="material-icons" style="cursor: pointer;">logout</span>
+			</c:if>
 		</div>
 	</div>
 	<input type="hidden" id="chatRoomNum" value="${ chatRoomNum }">
@@ -114,5 +117,8 @@
 		</div>
 	</div>
 	<script type="text/javascript" src="/js/messenger/connect.js"></script>
+	<c:if test="${ chatRoom.chatRoomGroup eq true }">	
+		<script type="text/javascript" src="/js/messenger/connect-group.js"></script>
+	</c:if>
 </body>
 </html>

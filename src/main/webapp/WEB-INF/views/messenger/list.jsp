@@ -12,8 +12,8 @@
 </head>
 <body>
     <form action="/msg/room/all" method="get" id="formAll"></form>
-    <form action="/msg/room" method="get" id="formDm"><input type="hidden" name="roomType" value="dm"></form>
-    <form action="/msg/room" method="get" id="formGroup"><input type="hidden" name="roomType" value="group"></form>
+    <form action="/msg/room/dm" method="get" id="formDm"></form>
+    <form action="/msg/room/group" method="get" id="formGroup"></form>
     <!-- 좌측 사이드바 -->
     <div class="sidebar">
         <a href="/msg"><span class="material-icons">person_outline</span></a>
@@ -30,9 +30,9 @@
 
         <!-- 탭 메뉴 -->
         <div class="tabs">
-            <div class="tab tab-all active">전체</div>
-            <div class="tab tab-dm">1:1</div>
-            <div class="tab tab-group">그룹</div>
+            <div class="tab tab-all <c:if test="${ active eq 'all' }"> active</c:if>">전체</div>
+            <div class="tab tab-dm <c:if test="${ active eq 'dm' }"> active</c:if>">1:1</div>
+            <div class="tab tab-group <c:if test="${ active eq 'group' }"> active</c:if>">그룹</div>
         </div>
 
         <!-- 채팅방 리스트 -->
@@ -76,9 +76,19 @@
     <c:import url="/WEB-INF/views/messenger/heartBeat.jsp"/>
     <script type="text/javascript">
     	const formAll = document.querySelector('#formAll');
+    	const formDm = document.querySelector('#formDm');
+    	const formGroup = document.querySelector('#formGroup');
     	const tabAll = document.querySelector('.tab-all');
+    	const tabDm = document.querySelector('.tab-dm');
+    	const tabGroup = document.querySelector('.tab-group');
     	tabAll.addEventListener('click', () => {
     		formAll.submit();
+    	});
+    	tabDm.addEventListener('click', () => {
+    		formDm.submit();
+    	});
+    	tabGroup.addEventListener('click', () => {
+    		formGroup.submit();
     	});
     </script>
 </body>

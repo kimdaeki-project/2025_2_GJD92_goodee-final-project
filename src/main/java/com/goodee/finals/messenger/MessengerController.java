@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.goodee.finals.staff.StaffDTO;
 
-@RequestMapping("/msg/**") @Controller
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("/msg/**") @Controller @Slf4j
 public class MessengerController {
 	
 	@Autowired
@@ -41,9 +45,9 @@ public class MessengerController {
 	
 	@GetMapping("room/{roomType}")
 	public String pop(@PathVariable("roomType") String roomType, Model model) {
-		System.out.println(roomType);
-		List<ChatRoomDTO> result = messengerService.list();
+		List<ChatRoomDTO> result = messengerService.list(roomType);
 		model.addAttribute("room", result);
+		model.addAttribute("active", roomType);
 		return "messenger/list";
 	}
 	
@@ -55,7 +59,12 @@ public class MessengerController {
 	}
 	
 	@PostMapping("create")
-	public String create(@RequestParam(required = false) List<Integer> addedStaff, ChatRoomDTO chatRoomDTO, Model model) {
+	public String create(@RequestParam(required = false) List<Integer> addedStaff, @Valid ChatRoomDTO chatRoomDTO, BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			List<StaffDTO> result = messengerService.getStaff();
+			model.addAttribute("staff", result);
+			return "messenger/create";
+		}
 		ChatRoomDTO result = messengerService.createRoom(addedStaff, chatRoomDTO);
 		model.addAttribute("resultMsg", "채팅방이 생성되었습니다.");
 		model.addAttribute("resultIcon", "success");
@@ -163,7 +172,7 @@ public class MessengerController {
 	
 	@GetMapping("footer") @ResponseBody
 	public List<ChatRoomDTO> footer() {
-		List<ChatRoomDTO> result = messengerService.list();
+		List<ChatRoomDTO> result = messengerService.list("all");
 		return result;
 	} 
 	

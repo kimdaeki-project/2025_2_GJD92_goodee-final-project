@@ -16,7 +16,13 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 		   "FROM ChatRoomDTO cr " +
 		   "JOIN cr.chatUserDTOs cu " +
 		   "WHERE cu.staffDTO.staffCode = :staffCode")
-	List<ChatRoomDTO> findChatRoomByStaffCode(@Param("staffCode")Integer loggedStaff);
+	List<ChatRoomDTO> findChatRoomByStaffCode(@Param("staffCode") Integer loggedStaff);
+	
+	@Query("SELECT cr " +
+		   "FROM ChatRoomDTO cr " +
+		   "JOIN cr.chatUserDTOs cu " +
+		   "WHERE cu.staffDTO.staffCode = :staffCode AND cr.chatRoomGroup = :type")
+	List<ChatRoomDTO> findChatRoomByStaffCodeAndType(@Param("staffCode") Integer loggedStaff, boolean type);
 
 	@Query("SELECT cb " + 
 		   "FROM MessengerTestDTO cb " +
@@ -59,5 +65,6 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
     @Modifying @Transactional
     @Query(value = "DELETE FROM chat_user WHERE chat_room_num = :chatRoomNum AND staff_code = :staffCode", nativeQuery = true)
 	int leaveMember(Long chatRoomNum, Integer staffCode);
+
 	
 }

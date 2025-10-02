@@ -61,10 +61,19 @@ public class MessengerService {
 		
 	}
 
-	public List<ChatRoomDTO> list() {
+	public List<ChatRoomDTO> list(String roomType) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer loggedStaff = staffDTO.get().getStaffCode();
-		List<ChatRoomDTO> result = messengerRepository.findChatRoomByStaffCode(loggedStaff);
+		List<ChatRoomDTO> result = null; 
+		if ("all".equals(roomType)) { // 모든 채팅을 전부 가져오기
+			result = messengerRepository.findChatRoomByStaffCode(loggedStaff);			
+		} else {
+			boolean type = false; // 일단 1:1 채팅으로 세팅
+			if ("group".equals(roomType)) { // 그룹 채팅으로 세팅
+				type = true;
+			}
+			result = messengerRepository.findChatRoomByStaffCodeAndType(loggedStaff, type);
+		}
 		return result;
 	}
 
