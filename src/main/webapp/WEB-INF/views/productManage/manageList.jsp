@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -59,14 +60,18 @@ aside.sidenav {
 			    		<table class="table text-center">
 			    			<thead>
 			    				<tr>
-			    					<th class="col-1">번호</th>
-			    					<th class="col-1">등록일자</th>
+			    					<th>No.</th>
+			    					<th>등록일자</th>
 <!-- 			    					<th class="col-1">물품타입</th> -->
-			    					<th class="col-2">물품명</th>
+<!-- 			    					<th>물품코드</th> -->
+			    					<th>물품명</th>
 			    					<th class="col-1">구분</th>
 			    					<th class="col-1">등록수량</th>
-			    					<th class="col-1">잔여수량</th>
-			    					<th class="col-1">작성자</th>
+<!-- 			    					<th>입고</th> -->
+<!-- 			    					<th>출고</th> -->
+			    					<th>잔여수량</th>
+			    					<th>비고</th>
+			    					<th>작성자</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -76,22 +81,27 @@ aside.sidenav {
 				    					<td>${ pm.pmNum }</td>
 				    					<td>${ pm.pmDate }</td>
 <%-- 				    					<td>${ pm.productDTO.productTypeDTO.productTypeName }</td> --%>
+<%-- 				    					<td>${ pm.productDTO.productCode }</td> --%>
 				    					<td><a href="/productManage/${ pm.pmNum }" style="color: #737373;">${ pm.productDTO.productName }</a></td>
+<%-- 				    					<td>${ pm.pmType eq 80 ? pm.pmAmount : "-" }</td> --%>
+<%-- 				    					<td>${ pm.pmType eq 90 ? pm.pmAmount : "-" }</td> --%>
 				    					<td>${ pm.pmType eq 90 ? "출고" : "입고" }</td>
-				    					<td>${ pm.pmAmount }</td>
-				    					<td>${ pm.pmRemainAmount }</td>
+				    					<td><fmt:formatNumber value="${ pm.pmAmount }" type="number" /></td>
+										<td><fmt:formatNumber value="${ pm.pmRemainAmount }" type="number" /></td>
+				    					<td>${ pm.pmNote }</td>
 				    					<td>${ pm.staffDTO.staffName }</td>
 			    					</tr>
 			    				</c:forEach>
 			    				
 			    			</tbody>
 			    		</table>
+			    <c:if test="${ totalProductManage eq 0 }">
+					 <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+				</c:if>
+				
 			    	</div>
 			    </div>
 			    
-			    <c:if test="${ totalProductManage eq 0 }">
-					<div>검색된 결과가 없습니다.</div>
-				</c:if>
 			    
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
@@ -126,7 +136,7 @@ aside.sidenav {
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/product/list.js"></script>
+	<script src="/js/productManage/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")

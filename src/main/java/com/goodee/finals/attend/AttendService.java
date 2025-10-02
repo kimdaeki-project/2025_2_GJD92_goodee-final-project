@@ -82,24 +82,31 @@ public class AttendService {
 	    return attendRepository.countEarlyLeaveByStaffCodeInMonth(staffCode, standardTime, startDate, endDate);
 	}
 	
-	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, Pageable pageable) {
-		
-		String monthStr = "" + month;
-		
-		if (month < 10) {
-			monthStr = "0" + month;
-		}
-		monthStr = year + monthStr;
-		
-		List<HolidayDTO> holidayList = attendRepository.findByMonth(monthStr);
-		
+	public long getAbsentCount(Integer staffCode, int year, int month, LocalDate today) {
+		String monthStr = (month < 10) ? "0" + month : "" + month;
+	    monthStr = year + monthStr;
+	    
+	    List<HolidayDTO> holidayList = attendRepository.findByMonth(monthStr);
 		List<Integer> holiday = new ArrayList<>();
-		
 		for (HolidayDTO holidayDTO : holidayList) {
 			holiday.add(holidayDTO.getDate().getDayOfMonth());
 		}
 		
-        return attendRepository.findMonthlyAttendances(year, month, staffCode, pageable, holiday);
+		return attendRepository.countAbsentDays(year, month, staffCode, today, holiday);
+	}
+	
+	public Page<AttendDTO> getMonthlyAttendances(Integer staffCode, int year, int month, LocalDate today, Pageable pageable) {
+		
+		String monthStr = (month < 10) ? "0" + month : "" + month;
+	    monthStr = year + monthStr;
+		
+		List<HolidayDTO> holidayList = attendRepository.findByMonth(monthStr);
+		List<Integer> holiday = new ArrayList<>();
+		for (HolidayDTO holidayDTO : holidayList) {
+			holiday.add(holidayDTO.getDate().getDayOfMonth());
+		}
+		
+        return attendRepository.findMonthlyAttendancesUntilToday(year, month, staffCode, today, pageable, holiday);
     }
 	
 }

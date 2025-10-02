@@ -29,7 +29,7 @@
             <div class="row text-center">
               <div class="col">지각<br><strong>${lateCount }</strong></div>
               <div class="col">조퇴<br><strong>${earlyLeaveCount }</strong></div>
-              <div class="col">결근<br><strong>1</strong></div>
+              <div class="col">결근<br><strong>${absentCount }</strong></div>
             </div>
           </div>
         </div>

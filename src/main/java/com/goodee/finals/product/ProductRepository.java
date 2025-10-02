@@ -3,6 +3,7 @@ package com.goodee.finals.product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -36,4 +37,7 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
 Integer findTopProductCodeByProductType(@Param("productTypeCode") Integer productTypeCode);
 	
 	long countByProductDeleteFalse();
+	
+	@NativeQuery(value = "DELETE FROM product_attach WHERE attach_num = :attachNum")
+	void deleteBeforeAttach(Long attachNum);
 }

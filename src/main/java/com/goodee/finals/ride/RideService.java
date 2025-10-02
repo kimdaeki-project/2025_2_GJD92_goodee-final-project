@@ -1,5 +1,6 @@
 package com.goodee.finals.ride;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class RideService {
    
 	@Autowired
 	private RideRepository rideRepository;
-	
+
 	// 어트랙션 전체 조회(리스트)
 	public List<RideDTO> getAllRides() throws Exception {
 		return rideRepository.findByRideDeletedFalse();
@@ -40,7 +41,8 @@ public class RideService {
     public RideDTO getRideById(String rideCode) throws Exception {
         return rideRepository.findById(rideCode).orElse(null);
     }
-	
+    
+    
 	// 어트랙션 등록
  	public boolean registRide(RideDTO rideDTO, MultipartFile attach) throws Exception {	
  		String fileName = null;

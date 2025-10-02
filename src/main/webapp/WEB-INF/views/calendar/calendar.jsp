@@ -7,6 +7,7 @@
 	<meta charset="UTF-8">
 	<title>캘린더</title>
 	
+	<link rel="stylesheet" href="/css/calendar/calendar.css"/>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -18,9 +19,10 @@
     <div class="d-flex">
 		<c:import url="/WEB-INF/views/calendar/calendar-sidebar.jsp"></c:import>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden;">
-	    	<div class="d-flex justify-content-end mt-3 me-3">
-	    		<div>이쪽은 검색란</div>	    	
-	    	</div>
+	    	<input type="hidden" id="calNum" value="">
+<!-- 	    	<div class="d-flex justify-content-end mt-3 me-3"> -->
+<!-- 	    		<div>이쪽은 검색란</div>	    	 -->
+<!-- 	    	</div> -->
 	    	<div id='calendar' class="mt-3"></div>
 		    <!-- 여기에 코드 작성 -->
 		    <!-- 여기에 코드 작성 -->
@@ -38,6 +40,7 @@
 	<script>
 		document.querySelector("i[data-content='일정']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "일정";
+		const loginStaffCode  = ${ staffDTO.staffCode }		
 	</script>
 	<script src="/js/calendar/calendar.js"></script>
 	

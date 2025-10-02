@@ -34,5 +34,7 @@ public interface RideRepository extends JpaRepository<RideDTO, String> {
     // 삭제 안 된 + 타입별
     List<RideDTO> findByRideTypeAndRideDeletedFalse(String rideType);
 
+    // 삭제 안 된 + 운휴,고장,점검 상태
+    List<RideDTO> findByRideDeletedFalseAndRideStateInOrderByRideStateAsc(List<Integer> rideStates);
 
 }

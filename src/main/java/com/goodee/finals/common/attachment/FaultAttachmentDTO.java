@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "fault_attach")
-@IdClass(FaultAttachmentDTO.class)
+@IdClass(FaultAttachmentDTO.PK.class)
 public class FaultAttachmentDTO {
 
 	

@@ -27,24 +27,44 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 		                                 @Param("startDate") LocalDate startDate,
 		                                 @Param("endDate") LocalDate endDate);
 
-		@Query("SELECT COUNT(a) FROM AttendDTO a " +
-		       "WHERE a.attendOut < :time " +
-		       "AND a.staffDTO.staffCode = :staffCode " +
-		       "AND a.attendDate BETWEEN :startDate AND :endDate")
-		long countEarlyLeaveByStaffCodeInMonth(@Param("staffCode") int staffCode,
-		                                       @Param("time") LocalTime time,
-		                                       @Param("startDate") LocalDate startDate,
-		                                       @Param("endDate") LocalDate endDate);
+	@Query("SELECT COUNT(a) FROM AttendDTO a " +
+	       "WHERE a.attendOut < :time " +
+	       "AND a.staffDTO.staffCode = :staffCode " +
+	       "AND a.attendDate BETWEEN :startDate AND :endDate")
+	long countEarlyLeaveByStaffCodeInMonth(@Param("staffCode") int staffCode,
+	                                       @Param("time") LocalTime time,
+	                                       @Param("startDate") LocalDate startDate,
+	                                       @Param("endDate") LocalDate endDate);
+	
+	// 휴무일 리스트 가져오기	
+	@Query("SELECT h FROM HolidayDTO h WHERE to_char(h.date, 'yyyymm') = :monthStr")
+	List<HolidayDTO> findByMonth(String monthStr);
+	
+	// 휴무일 제외한 출퇴근 내역 가져오기
 	@Query("SELECT a FROM AttendDTO a " +
 	           "WHERE FUNCTION('YEAR', a.attendDate) = :year " +
 	           "AND FUNCTION('MONTH', a.attendDate) = :month " +
 	           "AND FUNCTION('DAY', a.attendDate) NOT IN :holiday " +
-	           "AND a.staffDTO.staffCode = :staffCode")
-	Page<AttendDTO> findMonthlyAttendances(@Param("year") int year,
-                                           @Param("month") int month,
-                                           @Param("staffCode") Integer staffCode,
-                                           Pageable pageable, List<Integer> holiday);
+	           "AND a.staffDTO.staffCode = :staffCode " + 
+			   "AND a.attendDate <= :today")
+	Page<AttendDTO> findMonthlyAttendancesUntilToday(@Param("year") int year,
+		                                             @Param("month") int month,
+		                                             @Param("staffCode") Integer staffCode,
+		                                             @Param("today") LocalDate today,
+		                                             Pageable pageable, List<Integer> holiday);
 	
-	@Query("SELECT h FROM HolidayDTO h WHERE to_char(h.date, 'yyyymm') = :monthStr")
-	List<HolidayDTO> findByMonth(String monthStr);
+	// 휴무일 제외한 출퇴근 내역 중 결근 갯수
+	@Query("SELECT COUNT(a) FROM AttendDTO a " +
+		       "WHERE FUNCTION('YEAR', a.attendDate) = :year " +
+		       "AND FUNCTION('MONTH', a.attendDate) = :month " +
+		       "AND FUNCTION('DAY', a.attendDate) NOT IN :holiday " +
+		       "AND a.staffDTO.staffCode = :staffCode " +
+		       "AND a.attendDate <= :today " +
+		       "AND a.attendIn IS NULL AND a.attendOut IS NULL")
+	Long countAbsentDays(@Param("year") int year,
+	                     @Param("month") int month,
+	                     @Param("staffCode") Integer staffCode,
+	                     @Param("today") LocalDate today,
+	                     @Param("holiday") List<Integer> holiday);
+	
 }
