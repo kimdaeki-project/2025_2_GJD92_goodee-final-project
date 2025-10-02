@@ -19,11 +19,13 @@ public class WeatherController {
 		double lon = 126.9780;  // 서울 경도
 		
 		WeatherDTO weather = weatherService.getForecast(lat, lon);
+		System.out.println("### WeatherDTO: " + weather);          // 전체 DTO 출력
+		System.out.println("### Current: " + weather.getCurrentWeather());
 		
 		model.addAttribute("weather", weather.getCurrentWeather());
 		model.addAttribute("location", "서울");
 		
-		return "/";
+		return "index";
 		
 	}
 

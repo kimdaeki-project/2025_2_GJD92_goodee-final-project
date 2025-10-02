@@ -58,7 +58,7 @@
 			<div class="form-group row mb-3">
 				<form:label path="faultContent" class="col-sm-4 col-form-label text-start">신고 내용</form:label>
 				<div class="col-sm-5">
-					<form:textarea path="faultContent" cssClass="form-control" placeholder="신고 내용을 입력하세요."/>
+					<form:textarea path="faultContent" cssClass="form-control" style="resize:none;" placeholder="신고 내용을 입력하세요."/>
 				</div>
 			</div>
 			

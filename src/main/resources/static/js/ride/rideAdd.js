@@ -126,6 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
             cancelButtonText: "취소"
           }).then((result) => {
             if (result.isConfirmed) {
+				let aaa = document.getElementById("staffCodeValid");
+				aaa.value = document.querySelector("#staffSelect").value;
               form.submit();
             }
           });

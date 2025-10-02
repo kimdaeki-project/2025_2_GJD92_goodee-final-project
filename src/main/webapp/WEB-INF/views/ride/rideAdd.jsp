@@ -40,6 +40,7 @@
 		    <form:label path="rideName" class="col-sm-4 col-form-label text-start">어트랙션 이름</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideName" cssClass="form-control" placeholder="ex) 롤링썬더"/>
+		      <form:errors path="rideName"></form:errors>
 		    </div>
 		  </div>
 		
@@ -48,6 +49,7 @@
 		    <form:label path="rideCode" class="col-sm-4 col-form-label text-start">어트랙션 코드</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideCode" cssClass="form-control" placeholder="ex) A001"/>
+		      <form:errors path="rideCode"></form:errors>
 		    </div>
 		  </div>
 		
@@ -55,14 +57,15 @@
 	      <div class="form-group row mb-3">
 		    <form:label path="staffDTO.staffCode" class="col-sm-4 col-form-label text-start">담당자</form:label>
 		    <div class="col-sm-5">
-		      <form:select path="staffDTO.staffCode" cssClass="form-select">
-		        <form:option value="">-- 담당자를 선택하세요 --</form:option>
+		      <form:select path="staffDTO.staffCode" cssClass="form-select" id="staffSelect">
+		        <form:option value="-1">-- 담당자를 선택하세요 --</form:option>
 		        <c:forEach var="staff" items="${staffList}">
 		          <form:option value="${staff.staffCode}">
 		            ${staff.staffName} (${staff.staffCode})
 		          </form:option>
 		        </c:forEach>
 		      </form:select>
+		      <form:errors path="staffCodeValid"></form:errors>
 		    </div>
 		  </div>
 		
@@ -78,6 +81,7 @@
 		        <form:option value="D11">관람형 어트랙션</form:option>
 		        <form:option value="E11">어린이 어트랙션</form:option>
 		      </form:select>
+		      <form:errors path="rideType"></form:errors>
 		    </div>
 		  </div>
 		
@@ -86,6 +90,7 @@
 		    <form:label path="rideCapacity" class="col-sm-4 col-form-label text-start">탑승인원</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideCapacity" cssClass="form-control" placeholder="ex) 5명"/>
+		      <form:errors path="rideCapacity"></form:errors>
 		    </div>
 		  </div>
 		
@@ -94,6 +99,7 @@
 		    <form:label path="rideDuration" class="col-sm-4 col-form-label text-start">운행시간</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideDuration" cssClass="form-control" placeholder="ex) 약 1분 30초"/>
+		      <form:errors path="rideDuration"></form:errors>
 		    </div>
 		  </div>
 		
@@ -102,6 +108,7 @@
 		    <form:label path="rideRule" class="col-sm-4 col-form-label text-start">이용정보</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideRule" cssClass="form-control" placeholder="ex) 140cm 이상"/>
+		      <form:errors path="rideRule"></form:errors>
 		    </div>
 		  </div>
 		
@@ -110,6 +117,7 @@
 		    <form:label path="rideInfo" class="col-sm-4 col-form-label text-start">어트랙션 설명</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideInfo" cssClass="form-control" placeholder="ex) 어린이만 탑승 가능"/>
+		      <form:errors path="rideInfo"></form:errors>
 		    </div>
 		  </div>
 		
@@ -118,6 +126,7 @@
 		    <form:label path="rideDate" class="col-sm-4 col-form-label text-start">개장일</form:label>
 		    <div class="col-sm-5">
 		      <form:input path="rideDate" type="date" cssClass="form-control"/>
+		      <form:errors path="rideDate"></form:errors>
 		    </div>
 		  </div>
 		
@@ -126,12 +135,13 @@
 		    <form:label path="rideState" class="col-sm-4 col-form-label text-start">운행상태</form:label>
 		    <div class="col-sm-5">
 		      <form:select path="rideState" cssClass="form-select">
-		        <form:option value="">-- 운행 상태를 선택하세요 --</form:option>
+		        <form:option value="-1">-- 운행 상태를 선택하세요 --</form:option>
 		        <form:option value="200">운영</form:option>
 		        <form:option value="300">운휴</form:option>
 		        <form:option value="400">고장</form:option>
 		        <form:option value="500">점검</form:option>
 		      </form:select>
+		      <form:errors path="rideState"></form:errors>
 		    </div>
 		  </div>
 		  
@@ -171,6 +181,7 @@
 		                  style="width: 100px;">수정</button>
 		        </c:when>
 		        <c:otherwise>
+		          <form:hidden path="staffCodeValid" id="staffCodeValid"/>
 		          <button type="submit"
 		                  class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
 		                  style="width: 100px;">등록</button>

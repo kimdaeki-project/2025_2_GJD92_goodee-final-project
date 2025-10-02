@@ -30,7 +30,7 @@ public class WeatherDTO {
 	public static class CurrentWeather {
 		
 		@JsonProperty("temperature")
-		private Double temperture;  // °C
+		private Double temperature;  // °C
 		
 		@JsonProperty("windspeed")
 		private Double windspeed;  // m/s
