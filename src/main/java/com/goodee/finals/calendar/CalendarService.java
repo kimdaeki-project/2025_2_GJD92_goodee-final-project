@@ -38,7 +38,6 @@ public class CalendarService {
 		return calendarRepository.getCalTypesByDept(staffDTO.getDeptDTO().getDeptCode());
 	}
 
-	
 	public List<CalendarDTO> getCalendarList(StaffDTO staffDTO, List<Integer> calTypes) { 
 		return calendarRepository.getCalendarList(staffDTO.getDeptDTO().getDeptCode(), calTypes);
 	}

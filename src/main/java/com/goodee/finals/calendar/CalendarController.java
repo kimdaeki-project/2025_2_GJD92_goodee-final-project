@@ -50,7 +50,7 @@ public class CalendarController {
 		List<CalendarDTO> list = calendarService.getCalendarList(staffDTO, calTypes);
 		
 		if(list == null || list.isEmpty()) {
-			list = null;
+			list = Collections.emptyList();
 		}
 		return list;
 	}

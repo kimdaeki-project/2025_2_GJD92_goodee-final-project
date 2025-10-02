@@ -3,13 +3,19 @@ console.log('create_modal.js 연결')
 let staffs = [];
 let currentDept = null;
 
-const addBtn = document.getElementById('addBtn');              // 회원 추가[모달]
-const selectedList = document.getElementById("selectedList");  // 추가된 회원[모달] 
-const saveBtn = document.getElementById('saveStaffBtn');       // 추가된 회원 저장[모달]
-const deptBtn = document.querySelectorAll('.dept-btn');        // 부서 선택[모달]
-const searchInput = document.getElementById('searchInput');    // 사원 검색[모달]
+// 메인
 const shareStaffs = document.querySelectorAll('.shareStaff');
-const btnAddAllDeptStaff = document.getElementById("btnAddAllDeptStaff");
+
+// 공유 사원 모달
+const btnShowModalShare = document.getElementById("btnShowModalShare");
+const btnMoveToRight = document.getElementById('btnMoveToRight');              // 회원 추가
+const selectedList = document.getElementById("selectedList");  // 추가된 회원
+const saveBtn = document.getElementById('saveStaffBtn');       // 추가된 회원 저장
+const deptBtn = document.querySelectorAll('.deptBtn');        // 부서 선택
+const searchInput = document.getElementById('searchInput');    // 사원 검색
+const checkAllStaff = document.getElementById("checkAllStaff");
+const staffList = document.getElementById("staffList");
+const btnClearList = document.getElementById("btnClearList");
 
 /*
 	드래그 이동
@@ -26,8 +32,6 @@ new Sortable(selectedList, {
 document.addEventListener('DOMContentLoaded', function () {
 	document.addEventListener('shown.bs.modal', function(e) { // shown.bs.modal 모달 창이 켜졌을때 실행
 		if (e.target.id === 'shareModal') {
-			
-			
 			fetch('/drive/staffList') // 사원 리스트 DB에서 조회
 			.then(r => r.json())
 			.then(r => {
@@ -50,20 +54,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 });
 
+// 모달창 닫히면 추가된 사원 목록 초기화
 document.addEventListener("hidden.bs.modal", () => {
 	selectedList.innerHTML = '';
+	checkAllStaff.checked = false;
 })
 
-/*
-	모달창에 체크된 사원들 오른쪽으로 이동
-*/
-addBtn.addEventListener('click', () => {
-	const staffList = document.getElementById('staffList');
+/* 모달창에 체크된 사원들 오른쪽으로 이동 */
+btnMoveToRight.addEventListener('click', () => {
 	const savedStaff = document.getElementById('savedStaff');
 
 	// 체크되어있는 요소들을 가져옴
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked');
-
+	
 	// 이미 추가되어있는 사원	
 	const mainStaffCode = Array.from(savedStaff.querySelectorAll('input[type="hidden"')).map(input => input.value);
 	
@@ -106,42 +109,31 @@ addBtn.addEventListener('click', () => {
 		
 		// 사원 리스트 체크박스 해제
 		check.checked = false;
+		
+		// 전체 체크 박스 해제ㅐ
+		checkAllStaff.checked = false;
 	})
 })
 
-btnAddAllDeptStaff.addEventListener("click", () => {
-	currentDept.forEach((staff) => {
-		
-		const mainStaffCode = Array.from(savedStaff.querySelectorAll('input[type="hidden"]')).map(input => input.value);
-		if (mainStaffCode.includes(String(staff.staffCode))) {
-			Swal.fire({
-		        text: "이미 추가된 사용자 입니다",
-		        icon: "info",
-		        confirmButtonColor: "#191919",
-		        confirmButtonText: "확인"
-	  	    });
-			return;
-		}
-			
-		const newLi = document.createElement('li');
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center';
-		newLi.innerHTML = `<span data-staff-code="${staff.staffCode}">
-						  ${staff.staffName}(${staff.jobDTO.jobDetail})${staff.deptDTO.deptDetail}</span>
-						  <button class="btn-close btn-close-white remove-btn" aria-label="Remove"></button>`;
-		
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove();
-		});
-		
-		selectedList.appendChild(newLi);
-	})
+btnClearList.addEventListener("click", () => {
+	selectedList.innerHTML = "";
 })
 
+checkAllStaff.addEventListener("click", () => {
+	const checkboxs = staffList.querySelectorAll('input[type="checkbox"]');
+	
+	if(checkAllStaff.checked) {
+		checkboxs.forEach(function (chkBox){
+			chkBox.checked = checkAllStaff.checked;
+		})
+	} else {
+		checkboxs.forEach(function (chkBox){
+			chkBox.checked = checkAllStaff.checked;
+		})
+	}
+})
 
-
-/*
-	추가된 사원 저장(메인 컨텐츠에 추가)
-*/
+/* 추가된 사원 저장(메인 컨텐츠에 추가) */
 saveBtn.addEventListener('click', () => {
 	const savedStaff = document.getElementById('savedStaff'); // tbody의 id
 	
@@ -192,21 +184,20 @@ saveBtn.addEventListener('click', () => {
 	
 })
 
-/*
-	부서 선택
-*/
+/* 부서 선택 */
 deptBtn.forEach(d => {
 	d.addEventListener('click', function(e){
+		const allStaffCheckboxName = document.getElementById("allStaffCheckboxName");
 		
 		searchInput.value = ''; // 부서 변경시 검색란 초기화
 		const deptName = e.target.getAttribute('data-team'); // 버튼에 저장된 data-team 가져옴
-		btnAddAllDeptStaff.textContent = (deptName + " 전체 추가").trim();			
+		allStaffCheckboxName.textContent = deptName + " 전체";
 		console.log("선택된 부서 : " + deptName);
 		
 		if(deptName == '전체') { // '전체' 일때만 모든 사원 출력
+			allStaffCheckboxName.textContent = "전체";
 			currentDept = staffs
 			renderStaff(currentDept);
-			btnAddAllDeptStaff.textContent = "전체 추가";
 			return;
 		}
 		const DeptStaff = staffs.filter(s => s.deptDTO.deptDetail == deptName); // 부서에 해당하는 사원 필터링
@@ -215,9 +206,7 @@ deptBtn.forEach(d => {
 	})
 })
 
-/*
-	검색 - input이벤트 =  value값이 변경될때마다 감지
-*/
+/* 검색 - input이벤트 =  value값이 변경될때마다 감지 */
 searchInput.addEventListener('input', (e) => {
 	const keyword = e.target.value;
 	
@@ -230,11 +219,8 @@ searchInput.addEventListener('input', (e) => {
 })
 
 
-/*
-	모달창 사원 목록 랜더링 (매개변수 : 랜더링할 리스트)
-*/
+/* 모달창 사원 목록 랜더링 (매개변수 : 랜더링할 리스트) */
 function renderStaff(list) {
-	const staffList = document.getElementById('staffList');
 	if(!staffList) return; // 태그확인 안전장치	
 	
 	staffList.innerHTML = ''; // 사원목록 초기화
@@ -245,9 +231,23 @@ function renderStaff(list) {
 		li.className = 'list-group-item d-flex align-items-center'
 		li.innerHTML = `<input type="checkbox" class="me-2" value="${staff.staffCode}">
 		      <span>${staff.staffName}(${staff.jobDTO.jobDetail}) ${staff.deptDTO.deptDetail}</span>`;
+	
 		// 사원목록에 추가
 		staffList.appendChild(li);
 	})
+	
+	const staffListchkBoxes = staffList.querySelectorAll('input[type="checkbox"]');
+	
+	staffListchkBoxes.forEach(function (staffChkBox) {
+		staffChkBox.addEventListener("click", () => {
+			console.log("실행됨")
+			const isAllchecked = Array.from(staffListchkBoxes).every(chkBox => chkBox.checked)
+			checkAllStaff.checked = isAllchecked;
+			const isAnyChecked = Array.from(staffListchkBoxes).some(chkBox => chkBox.checked)
+			btnMoveToRight.disabled = !isAnyChecked;
+		})
+	})
+	    
 }
 
 function deleteDrive(driveNum, driveDefaultNum) {

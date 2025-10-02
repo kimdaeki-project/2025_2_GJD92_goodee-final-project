@@ -111,6 +111,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		.then(r => r.json())
 		.then(cals => {
 //			console.log(fetchInfo)
+			if(!cals) return;
 			const events = cals.map(cal => addInCalendar(cal));
 			successCallback(events); // 달력에 이벤트 반영
 		})
