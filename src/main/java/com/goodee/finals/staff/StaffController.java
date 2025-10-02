@@ -46,14 +46,13 @@ public class StaffController {
 				}
 			} else {
 				LocalTime nowTime = LocalTime.now();
-				LocalTime deadline = LocalTime.of(15, 0);
+				LocalTime deadline = LocalTime.of(18, 0);
 				
 				if (nowTime.isBefore(deadline)) {
 					staffDTO.setTodayState("미출근");
 				} else {
 					staffDTO.setTodayState("결근");
 				}
-				
 			}
 		}
 
