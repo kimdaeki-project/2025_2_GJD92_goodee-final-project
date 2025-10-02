@@ -58,22 +58,22 @@
 	    			<div class="d-flex gap-3">
 	    				<button class="rounded p-0 bg-white" id="request" onclick="aprvFilter(this)" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결재 요청 문서</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalRequest }</p>
 		    			</button>
 		    			
 		    			<button class="rounded p-0 bg-white" id="ready" onclick="aprvFilter(this)" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결재 대기 문서</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalReady }</p>
 		    			</button>
 		    			
 		    			<button class="rounded p-0 bg-white" id="mine" onclick="aprvFilter(this)" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">내 기안 문서</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalMine }</p>
 		    			</button>
 		    			
 		    			<button class="rounded p-0 bg-white" id="finish" onclick="aprvFilter(this)" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결재 완료 문서</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalFinish }</p>
 		    			</button>
 	    			</div>
 	    			

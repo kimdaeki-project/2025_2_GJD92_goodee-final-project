@@ -1,6 +1,7 @@
 package com.goodee.finals.staff;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.alert.AlertDTO;
 import com.goodee.finals.approval.ApprovalDTO;
 import com.goodee.finals.approval.ApproverDTO;
+import com.goodee.finals.attend.AttendDTO;
 import com.goodee.finals.calendar.CalendarDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.common.attachment.StaffSignDTO;
@@ -140,6 +142,10 @@ public class StaffDTO implements UserDetails {
 	@JsonIgnore
 	private List<CalendarDTO> calendarDTOs;
 	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "staffDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<AttendDTO> attendDTOs;
+	
 	@Column(insertable = false)
 	@ColumnDefault("1")
 	private Boolean staffLocked;
@@ -156,6 +162,8 @@ public class StaffDTO implements UserDetails {
 	private Integer inputDeptCode;
 	@Transient
 	private Integer inputJobCode;
+	@Transient
+	private String todayState;
 	
 	@Override
 	public String getUsername() {

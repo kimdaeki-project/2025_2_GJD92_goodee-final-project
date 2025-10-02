@@ -49,21 +49,21 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/vacation?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="휴가 사용 내역">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">휴가 사용 내역</span>
 			        </a>
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/overtime?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="연장근무 내역">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">연장근무 내역</span>
 			        </a>
 			      </li>
 			      
 			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="#">
+			        <a class="nav-link text-dark" href="/staff/early?page=0">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="조기 퇴근 내역">diversity_3</i>
 			          <span class="nav-link-text ms-1 text-sm">조기 퇴근 내역</span>
 			        </a>
@@ -78,22 +78,22 @@
 	    			<div class="d-flex gap-3">
 	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">전체 연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ remainLeave }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용 연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ usedLeave }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">잔여 연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ ownLeave }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">사용률</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ leaveRate }%</p>
 		    			</div>
 	    			</div>
 	    			

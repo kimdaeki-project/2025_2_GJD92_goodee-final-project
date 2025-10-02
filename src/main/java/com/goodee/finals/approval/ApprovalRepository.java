@@ -83,4 +83,16 @@ public interface ApprovalRepository extends JpaRepository<ApprovalDTO, Integer> 
 	
 	@NativeQuery(value = "DELETE FROM early WHERE aprv_code = :aprvCode")
 	void deleteEarly(Integer aprvCode);
+	
+	@NativeQuery(value = "SELECT COUNT(*) FROM approval al INNER JOIN approver ar USING(aprv_code) WHERE al.aprv_state = 701 AND ar.apvr_state = 721 AND ar.staff_code = :staffCode")
+	Integer getApprovalRequestCount(Integer staffCode);
+	
+	@NativeQuery(value = "SELECT COUNT(*) FROM approval al INNER JOIN approver ar USING(aprv_code) WHERE al.aprv_state = 701 AND ar.apvr_state = 720 AND ar.staff_code = :staffCode")
+	Integer getApprovalReadyCount(Integer staffCode);
+	
+	@NativeQuery(value = "SELECT COUNT(*) FROM approval WHERE staff_code = :staffCode")
+	Integer getApprovalMineCount(Integer staffCode);
+	
+	@NativeQuery(value = "SELECT COUNT(*) FROM approval al INNER JOIN approver ar USING(aprv_code) WHERE al.aprv_state IN (701, 702, 703) AND ar.apvr_type IN (711, 712, 713) AND ar.apvr_state IN (722, 723) AND ar.staff_code = :staffCode")
+	Integer getApprovalFinishCount(Integer staffCode);
 }

@@ -442,6 +442,22 @@ public class ApprovalService {
 		
 		return true;
 	}
+	
+	public Integer getApprovalRequestCount(Integer staffCode) {
+		return approvalRepository.getApprovalRequestCount(staffCode);
+	}
+
+	public Integer getApprovalReadyCount(Integer staffCode) {
+		return approvalRepository.getApprovalReadyCount(staffCode);
+	}
+
+	public Integer getApprovalMineCount(Integer staffCode) {
+		return approvalRepository.getApprovalMineCount(staffCode);
+	}
+
+	public Integer getApprovalFinishCount(Integer staffCode) {
+		return approvalRepository.getApprovalFinishCount(staffCode);
+	}
 
 	private ApprovalDTO setDraftDefault(InputApprovalDTO inputApprovalDTO, Integer aprvType, Integer aprvState) {
 		ApprovalDTO approvalDTO = new ApprovalDTO();

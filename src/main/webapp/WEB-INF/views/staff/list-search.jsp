@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -74,29 +75,7 @@
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    	<div class="mt-5">
-	    		<div class="col-10 offset-1 d-flex justify-content-between">
-	    			<div class="d-flex gap-3">
-	    				<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">정원</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalStaff }</p>
-		    			</div>
-		    			
-		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
-		    			</div>
-		    			
-		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
-		    			</div>
-		    			
-		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결근</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
-		    			</div>
-	    			</div>
-	    			
+	    		<div class="col-10 offset-1 d-flex justify-content-end">
 	    			<div class="d-flex justify-content-end align-items-end">
     					<div class="input-group">
 							  <input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
@@ -109,30 +88,118 @@
 		    <div class="mt-3" style="min-height: 500px;">
 		    	<div class="col-10 offset-1">
 		    		<table class="table text-center">
-		    			<thead>
-		    				<tr>
-		    					<th class="col-2">사원번호</th>
-		    					<th class="col-2">이름</th>
-		    					<th class="col-2">부서</th>
-		    					<th class="col-2">직위</th>
-		    					<th class="col-2">연락처</th>
-		    					<th class="col-2">상태</th>
-		    				</tr>
-		    			</thead>
-		    			<tbody>
+		    			<c:if test="${ searchCode eq 'vacation' }">
 		    				
-		    				<c:forEach var="staff" items="${ staffList.content }">
-		    					<tr>
-			    					<td>${ staff.staffCode }</td>
-			    					<td><a href="/staff/${ staff.staffCode }" style="color: #737373;">${ staff.staffName }</a></td>
-			    					<td>${ staff.deptDTO.deptDetail }</td>
-			    					<td>${ staff.jobDTO.jobDetail }</td>
-			    					<td>${ staff.staffPhone }</td>
-			    					<td>${ staff.todayState }</td>
-		    					</tr>
-		    				</c:forEach>
+		    				<thead>
+			    				<tr>
+			    					<th class="col-1">번호</th>
+			    					<th class="col-2">이름</th>
+			    					<th class="col-1">부서</th>
+			    					<th class="col-1">직위</th>
+			    					<th class="col-1">종류</th>
+			    					<th class="col-3">기간</th>
+			    					<th class="col-1">비고</th>
+			    				</tr>
+			    			</thead>
+			    			<tbody>
+			    				
+			    				<c:forEach var="staff" items="${ staffList.content }">
+			    					<tr>
+			    						<fmt:parseDate value="${ staff.vacStart }" pattern="yyyy-MM-dd" var="parsedVacStart" type="both" />
+			    						<fmt:parseDate value="${ staff.vacEnd }" pattern="yyyy-MM-dd" var="parsedVacEnd" type="both" />
+			    					
+				    					<td>${ staff.vacNum }</td>
+				    					<td>${ staff.staffName }</td>
+				    					<td>${ staff.deptDetail }</td>
+				    					<td>${ staff.jobDetail }</td>
+				    					<td>
+				    						<c:if test="${ staff.vacType eq 9010 }">연차</c:if>
+				    						<c:if test="${ staff.vacType eq 9011 }">공가</c:if>
+				    						<c:if test="${ staff.vacType eq 9012 }">병가</c:if>
+				    					</td>
+				    					<td><fmt:formatDate pattern="yyyy년 MM월 dd일" value="${ parsedVacStart }"/>  ~ <fmt:formatDate pattern="yyyy년 MM월 dd일" value="${ parsedVacEnd }"/></td>
+				    					<td><a href="/approval/${ staff.aprvCode }" style="color: #737373;">문서조회</a></td>
+			    					</tr>
+			    				</c:forEach>
+			    				
+			    			</tbody>
 		    				
-		    			</tbody>
+		    			</c:if>
+		    			
+		    			<c:if test="${ searchCode eq 'overtime' }">
+		    			
+		    				<thead>
+			    				<tr>
+			    					<th class="col-1">번호</th>
+			    					<th class="col-2">이름</th>
+			    					<th class="col-1">부서</th>
+			    					<th class="col-1">직위</th>
+			    					<th class="col-2">시작시간</th>
+			    					<th class="col-2">종료시간</th>
+			    					<th class="col-1">비고</th>
+			    				</tr>
+			    			</thead>
+			    			<tbody>
+			    				
+			    				<c:forEach var="staff" items="${ staffList.content }">
+			    					<tr>
+			    						<fmt:parseDate value="${ staff.overStart }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedOverStart" type="both" />
+			    						<fmt:parseDate value="${ staff.overEnd }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedOverEnd" type="both" />
+			    					
+			    						<td>${ staff.overNum }</td>
+				    					<td>${ staff.staffName }</td>
+				    					<td>${ staff.deptDetail }</td>
+				    					<td>${ staff.jobDetail }</td>
+				    					<td><fmt:formatDate pattern="yyyy년 MM월 dd일 HH시 mm분" value="${ parsedOverStart }"/></td>
+				    					<td><fmt:formatDate pattern="yyyy년 MM월 dd일 HH시 mm분" value="${ parsedOverEnd }"/></td>
+				    					<td><a href="/approval/${ staff.aprvCode }" style="color: #737373;">문서조회</a></td>
+			    					</tr>
+			    				</c:forEach>
+			    				
+			    			</tbody>
+		    				
+		    			</c:if>
+		    			
+		    			<c:if test="${ searchCode eq 'early' }">
+		    			
+		    				<thead>
+			    				<tr>
+			    					<th class="col-1">번호</th>
+			    					<th class="col-2">이름</th>
+			    					<th class="col-1">부서</th>
+			    					<th class="col-1">직위</th>
+			    					<th class="col-1">종류</th>
+			    					<th class="col-2">조퇴시간</th>
+			    					<th class="col-1">비고</th>
+			    				</tr>
+			    			</thead>
+			    			<tbody>
+			    				
+			    				<c:forEach var="staff" items="${ staffList.content }">
+			    					<tr>
+			    						<fmt:parseDate value="${ staff.earlyDtm }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEarlyDtm" type="both" />
+			    						
+			    						<td>${ staff.earlyNum }</td>
+				    					<td>${ staff.staffName }</td>
+				    					<td>${ staff.deptDetail }</td>
+				    					<td>${ staff.jobDetail }</td>
+				    					<td>
+				    						<c:if test="${ staff.earlyType eq 9030 }">질병</c:if>
+				    						<c:if test="${ staff.earlyType eq 9031 }">경조사</c:if>
+				    						<c:if test="${ staff.earlyType eq 9032 }">외부행사</c:if>
+				    						<c:if test="${ staff.earlyType eq 9039 }">기타</c:if>
+				    					</td>
+				    					<td><fmt:formatDate pattern="yyyy년 MM월 dd일 HH시 mm분" value="${ parsedEarlyDtm }"/></td>
+				    					<td><a href="/approval/${ staff.aprvCode }" style="color: #737373;">문서조회</a></td>
+			    					</tr>
+			    				</c:forEach>
+			    				
+			    			</tbody>
+		    			
+		    			</c:if>
+		    		
+		    		
+		    			
 		    		</table>
 		    	</div>
 		    </div>
@@ -169,11 +236,14 @@
     </div>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/staff/list.js"></script>
+	<script src="/js/staff/list-search.js"></script>
 	<script>
+		const searchCode = "${ searchCode }"
+		const searchType = "${ searchType }"
+	
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='사원 조회']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "사원 조회"
+		document.querySelector("i[data-content='${ searchType }']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = searchType
 	</script>
 </body>
 

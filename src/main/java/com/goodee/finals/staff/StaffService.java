@@ -2,6 +2,7 @@ package com.goodee.finals.staff;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,9 @@ public class StaffService implements UserDetailsService {
 	}
 	
 	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
-		return staffRepository.findAllBySearch(search, pageable);
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
+		
+		return staffRepository.findAllBySearchWithTodayAttend(today, search, pageable);
 	}
 	
 	public Page<StaffDTO> getStaffQuitSearchList(String search, Pageable pageable) {
@@ -216,6 +219,26 @@ public class StaffService implements UserDetailsService {
 		
 		if (result != null) return true;
 		else return false;
+	}
+	
+	public Page<StaffVacationDTO> getStaffVacation(String search, Pageable pageable) {
+		return staffRepository.findAllStaffVacation(search, pageable);
+	}
+
+	public Page<StaffOvertimeDTO> getStaffOvertime(String search, Pageable pageable) {
+		return staffRepository.findAllStaffOvertime(search, pageable);
+	}
+
+	public Page<StaffEarlyDTO> getStaffEarly(String search, Pageable pageable) {
+		return staffRepository.findAllStaffEarly(search, pageable);
+	}
+	
+	public Integer getStaffLeaveTotal() {
+		return staffRepository.findStaffLeaveTotal();
+	}
+
+	public Integer getStaffLeaveUsed() {
+		return staffRepository.findStaffLeaveUsed();
 	}
 	
 	

@@ -50,6 +50,7 @@ public class ApprovalController {
 		Page<ApprovalListDTO> approvalList = approvalService.getApprovalList(staffDTO.getStaffCode(), search, pageable);
 		model.addAttribute("approvalList", approvalList);
 		
+		setApprovalData(staffDTO.getStaffCode(), model);
 		return "approval/list";
 	}
 	
@@ -62,6 +63,7 @@ public class ApprovalController {
 		Page<ApprovalListDTO> approvalList = approvalService.getApprovalRequestList(staffDTO.getStaffCode(), search, pageable);
 		model.addAttribute("approvalList", approvalList);
 		
+		setApprovalData(staffDTO.getStaffCode(), model);
 		return "approval/list";
 	}
 	
@@ -74,6 +76,7 @@ public class ApprovalController {
 		Page<ApprovalListDTO> approvalList = approvalService.getApprovalReadyList(staffDTO.getStaffCode(), search, pageable);
 		model.addAttribute("approvalList", approvalList);
 		
+		setApprovalData(staffDTO.getStaffCode(), model);
 		return "approval/list";
 	}
 	
@@ -86,6 +89,7 @@ public class ApprovalController {
 		Page<ApprovalResultDTO> approvalList = approvalService.getApprovalMineList(staffDTO.getStaffCode(), search, pageable);
 		model.addAttribute("approvalList", approvalList);
 		
+		setApprovalData(staffDTO.getStaffCode(), model);
 		return "approval/list";
 	}
 	
@@ -98,6 +102,7 @@ public class ApprovalController {
 		Page<ApprovalResultDTO> approvalList = approvalService.getApprovalFinishList(staffDTO.getStaffCode(), search, pageable);
 		model.addAttribute("approvalList", approvalList);
 		
+		setApprovalData(staffDTO.getStaffCode(), model);
 		return "approval/list";
 	}
 	
@@ -628,4 +633,15 @@ public class ApprovalController {
 		return approvalService.getApprovalSaved(staffDTO.getStaffCode());
 	}
 	
+	private void setApprovalData(Integer staffCode, Model model) {
+		Integer request = approvalService.getApprovalRequestCount(staffCode);
+		Integer ready = approvalService.getApprovalReadyCount(staffCode);
+		Integer mine = approvalService.getApprovalMineCount(staffCode);
+		Integer finish = approvalService.getApprovalFinishCount(staffCode);
+		
+		model.addAttribute("totalRequest", request);
+		model.addAttribute("totalReady", ready);
+		model.addAttribute("totalMine", mine);
+		model.addAttribute("totalFinish", finish);
+	}
 }
