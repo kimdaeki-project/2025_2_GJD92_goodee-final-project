@@ -74,6 +74,7 @@ public class HomeController {
 		// 어트랙션 운휴 현황
 		List<RideDTO> rides = homeService.homeList();
 		model.addAttribute("rides", rides);
+		
 		// 날씨
 		
 		return "index";

@@ -177,12 +177,10 @@ aside.sidenav {
 								<h5 class="modal-title">물품 목록</h5>
 								<div class="d-flex justify-content-end align-items-end">
 									<div class="input-group">
-										<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-										<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+										<input type="text" class="form-control" id="searchInput" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
 									</div>
 								</div>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="닫기"></button>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
 								<table class="table">
@@ -194,22 +192,8 @@ aside.sidenav {
 											<th>선택</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach items="${productList}" var="p">
-											<tr>
-												<td>${p.productCode}</td>
-												<td>${p.productTypeDTO.productTypeName}</td>
-												<td>${p.productName}</td>
-												<td>
-													<button type="button"
-														class="btn btn-sm btn-primary select-product"
-														data-code="${p.productCode}"
-														data-type-code="${p.productTypeDTO.productTypeCode}"
-														data-type-name="${p.productTypeDTO.productTypeName}"
-														data-name="${p.productName}">선택</button>
-												</td>
-											</tr>
-										</c:forEach>
+									<tbody id="productTable">
+									
 									</tbody>
 								</table>
 							</div>
@@ -221,7 +205,7 @@ aside.sidenav {
 		</div>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/product/write.js"></script>
+	<script src="/js/productManage/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")
@@ -229,29 +213,5 @@ aside.sidenav {
 	</script>
 </body>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".select-product").forEach(btn => {
-      btn.addEventListener("click", function () {
-        // 모달에서 가져온 값
-        const code = this.dataset.code;
-        const typeCode = this.dataset.typeCode;
-        const typeName = this.dataset.typeName;
-        const name = this.dataset.name;
-
-        // 부모 form input에 넣기
-        document.querySelector("input[name='productCode']").value = code;
-        document.querySelector("input[name='productTypeDTO.productTypeCode']").value = typeCode;
-        document.querySelector("input[name='productTypeDTO.productTypeName']").value = typeName;
-        document.querySelector("input[name='productName']").value = name;
-
-        // 모달 닫기
-        const modalEl = document.getElementById('productModal');
-        const modal = bootstrap.Modal.getInstance(modalEl);
-        modal.hide();
-      });
-    });
-  });
-</script>
 
 </html>

@@ -57,11 +57,11 @@ aside.sidenav {
 		
 	    <div class="mt-3" style="min-height: 500px;">
 			    	<div class="col-10 offset-1">
-			    		<table class="table text-center">
+			    		<table class="table table-hover text-center">
 			    			<thead>
 			    				<tr>
 			    					<th>No.</th>
-			    					<th>등록일자</th>
+			    					<th>입출고일자</th>
 <!-- 			    					<th class="col-1">물품타입</th> -->
 <!-- 			    					<th>물품코드</th> -->
 			    					<th>물품명</th>
@@ -70,8 +70,8 @@ aside.sidenav {
 <!-- 			    					<th>입고</th> -->
 <!-- 			    					<th>출고</th> -->
 			    					<th>잔여수량</th>
-			    					<th>비고</th>
 			    					<th>작성자</th>
+			    					<th>비고</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -88,8 +88,8 @@ aside.sidenav {
 				    					<td>${ pm.pmType eq 90 ? "출고" : "입고" }</td>
 				    					<td><fmt:formatNumber value="${ pm.pmAmount }" type="number" /></td>
 										<td><fmt:formatNumber value="${ pm.pmRemainAmount }" type="number" /></td>
-				    					<td>${ pm.pmNote }</td>
 				    					<td>${ pm.staffDTO.staffName }</td>
+				    					<td class="text-start">${ pm.pmNote }</td>
 			    					</tr>
 			    				</c:forEach>
 			    				
@@ -99,10 +99,6 @@ aside.sidenav {
 					 <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
 				</c:if>
 				
-			    	</div>
-			    </div>
-			    
-			    
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
 						  <ul class="pagination">
@@ -132,6 +128,10 @@ aside.sidenav {
 			    </div>
 				
 			    <button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/productManage/write'">입출고등록</button>
+			    	</div>
+			    </div>
+			    
+			    
 	    </section>
     </div>
   </main>

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.product.ProductService;
@@ -55,15 +56,32 @@ public class ProductManageController {
 	
 	@GetMapping("write")
 	public String write(@PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
-		if (search == null) search = "";
-		
-		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
-		List<ProductDTO> productList = productPage.getContent();
-		
-		model.addAttribute("productList", productList);
-		model.addAttribute("search", search);
+//		if (search == null) search = "";
+//		
+//		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
+//		List<ProductDTO> productList = productPage.getContent();
+//		
+//		model.addAttribute("productList", productList);
+//		model.addAttribute("search", search);
 		
 		return "productManage/manageWrite";
+	}
+	
+	
+	@GetMapping("loadProducts")
+	@ResponseBody
+	public List<ProductDTO> loadloadProducts() {
+//		if (search == null) search = "";
+//		
+//		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
+//		List<ProductDTO> productList = productPage.getContent();
+//		
+//		model.addAttribute("productList", productList);
+//		model.addAttribute("search", search);
+		
+		List<ProductDTO> productList =  pmService.list();
+		
+		return productList;
 	}
 	
 	@PostMapping("write")
