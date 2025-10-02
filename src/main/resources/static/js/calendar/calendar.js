@@ -341,6 +341,7 @@ function addInCalendar(cal) {
 		extendedProps: {
 			calNum      : cal.calNum,
 			calReg      : cal.calReg,
+			calMod      : cal.calMod,
 			calType     : cal.calType,
 			calPlace    : cal.calPlace,
 			calTitle    : cal.calTitle,
@@ -364,6 +365,7 @@ function updateEvent(updatedCal) {
 		event.setEnd(plusOneDay(updatedCal));
 		event.setProp("backgroundColor", eventBgColor(updatedCal.calType));
 		
+		event.setExtendedProp("calMod", updatedCal.calMod);
 		event.setExtendedProp("calType", updatedCal.calType);
 		event.setExtendedProp("calTitle", updatedCal.calTitle);
 		event.setExtendedProp("calPlace", updatedCal.calPlace);
@@ -381,6 +383,7 @@ function calDetail(eventInfo) {
 	calStart = eventInfo.event.allDay ? dayjs(calStart).format("YYYY-MM-DD") : dayjs(calStart).format("YYYY-MM-DD HH:mm");				
 
 	const calNum      = eventInfo.event._def.extendedProps.calNum;
+	const calMod      = eventInfo.event._def.extendedProps.calMod;
 	const calType     = eventInfo.event._def.extendedProps.calType;
 	const calTitle    = eventInfo.event._def.extendedProps.calTitle;
 	const calPlace    = eventInfo.event._def.extendedProps.calPlace;
@@ -397,6 +400,7 @@ function calDetail(eventInfo) {
 	document.getElementById("detailModalContent").textContent = calContent;
 	document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
 	document.getElementById("detailDeptCircle").style.backgroundColor = eventBgColor(calType);
+	document.getElementById("detailModalMod").textContent = dayjs(calMod).format("YYYY-MM-DD HH:mm");
 	
 	inputCalNum.value = calNum; // hiddenInput에 calNum을 설정해줌
 	
