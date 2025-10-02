@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;

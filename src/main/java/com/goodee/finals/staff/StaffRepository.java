@@ -18,6 +18,9 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearch(String search, Pageable pageable);
 	
+	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) LEFT OUTER JOIN (SELECT * FROM attend WHERE attend_date = :today) a USING(staff_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
+	Page<StaffDTO> findAllBySearchWithTodayAttend(String today, String search, Pageable pageable);
+	
 	@Query(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE s.dept_code = :deptCode AND (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1", nativeQuery = true)
 	Page<StaffDTO> findAllByDeptCodeAndSearch(Integer deptCode, String search, Pageable pageable);
 	
@@ -52,4 +55,9 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 			+ " ORDER BY e.earlyNum DESC")
 	Page<StaffEarlyDTO> findAllStaffEarly(String search, Pageable pageable);
 	
+	@NativeQuery(value = "SELECT SUM(staff_remain_leave) FROM staff")
+	Integer findStaffLeaveTotal();
+	
+	@NativeQuery(value = "SELECT SUM(staff_used_leave) FROM staff")
+	Integer findStaffLeaveUsed();
 }
