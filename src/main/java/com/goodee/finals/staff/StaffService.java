@@ -218,6 +218,18 @@ public class StaffService implements UserDetailsService {
 		else return false;
 	}
 	
+	public Page<StaffVacationDTO> getStaffVacation(String search, Pageable pageable) {
+		return staffRepository.findAllStaffVacation(search, pageable);
+	}
+
+	public Page<StaffOvertimeDTO> getStaffOvertime(String search, Pageable pageable) {
+		return staffRepository.findAllStaffOvertime(search, pageable);
+	}
+
+	public Page<StaffEarlyDTO> getStaffEarly(String search, Pageable pageable) {
+		return staffRepository.findAllStaffEarly(search, pageable);
+	}
+	
 	
 	
 	

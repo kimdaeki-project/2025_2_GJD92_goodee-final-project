@@ -14,18 +14,42 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 
 	@NativeQuery(value = "SELECT staff_code FROM staff ORDER BY staff_code DESC LIMIT 1")
 	Integer findLastStaffCode();
+	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearch(String search, Pageable pageable);
+	
 	@Query(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE s.dept_code = :deptCode AND (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1", nativeQuery = true)
 	Page<StaffDTO> findAllByDeptCodeAndSearch(Integer deptCode, String search, Pageable pageable);
+	
 	@Query("SELECT s FROM StaffDTO s JOIN FETCH s.deptDTO JOIN FETCH s.jobDTO")
 	List<StaffDTO> findAllWithDeptAndJob();
+	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 0")
 	Page<StaffDTO> findAllQuitBySearch(String search, Pageable pageable);
 	
 	List<StaffDTO> findByStaffCodeNot(Integer loggedStaff);
 	
 	// deptDTO.deptCode 시설부서의 코드 꺼내옴
-    List<StaffDTO> findByDeptDTO_DeptCode(Integer deptCode);
+  List<StaffDTO> findByDeptDTO_DeptCode(Integer deptCode);
+  
 	List<StaffDTO> findByStaffCodeNotIn(List<Integer> currentMemeber);
+	
+	@Query("SELECT new com.goodee.finals.staff.StaffVacationDTO(al.aprvCode, s.staffName, d.deptDetail, j.jobDetail, v.vacNum, v.vacType, v.vacStart, v.vacEnd) "
+			+ " FROM ApprovalDTO al JOIN al.staffDTO s JOIN al.vacationDTO v JOIN s.deptDTO d JOIN s.jobDTO j"
+			+ " WHERE al.aprvType = 901 AND al.aprvState = 702 AND s.staffName LIKE %:search%"
+			+ " ORDER BY v.vacNum DESC")
+	Page<StaffVacationDTO> findAllStaffVacation(String search, Pageable pageable);
+	
+	@Query("SELECT new com.goodee.finals.staff.StaffOvertimeDTO(al.aprvCode, s.staffName, d.deptDetail, j.jobDetail, o.overNum, o.overStart, o.overEnd) "
+			+ " FROM ApprovalDTO al JOIN al.staffDTO s JOIN al.overtimeDTO o JOIN s.deptDTO d JOIN s.jobDTO j"
+			+ " WHERE al.aprvType = 902 AND al.aprvState = 702 AND s.staffName LIKE %:search%"
+			+ " ORDER BY o.overNum DESC")
+	Page<StaffOvertimeDTO> findAllStaffOvertime(String search, Pageable pageable);
+	
+	@Query("SELECT new com.goodee.finals.staff.StaffEarlyDTO(al.aprvCode, s.staffName, d.deptDetail, j.jobDetail, e.earlyNum, e.earlyType, e.earlyDtm) "
+			+ " FROM ApprovalDTO al JOIN al.staffDTO s JOIN al.earlyDTO e JOIN s.deptDTO d JOIN s.jobDTO j"
+			+ " WHERE al.aprvType = 903 AND al.aprvState = 702 AND s.staffName LIKE %:search%"
+			+ " ORDER BY e.earlyNum DESC")
+	Page<StaffEarlyDTO> findAllStaffEarly(String search, Pageable pageable);
+	
 }
