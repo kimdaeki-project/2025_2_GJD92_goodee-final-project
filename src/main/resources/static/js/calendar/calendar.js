@@ -425,11 +425,6 @@ function dragResizeUpdate(eventInfo) {
 		calEnd = dayjs(eventInfo.event.endStr).add(-1, "day").format("YYYY-MM-DDTHH:mm:ss");
 	};
 	
-	console.log("startStr:", eventInfo.event.startStr);
-	console.log("endStr:", eventInfo.event.endStr);
-	console.log("allDay:", eventInfo.event.allDay);
-		
-	
 	const calEvent = {
 		calNum   : eventInfo.event._def.extendedProps.calNum,
 		calStart : calStart,
