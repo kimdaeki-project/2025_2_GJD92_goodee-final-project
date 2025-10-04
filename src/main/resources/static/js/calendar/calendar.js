@@ -112,7 +112,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		.then(cals => {
 //			console.log(fetchInfo)
 			if(!cals) return;
-			const events = cals.map(cal => addInCalendar(cal));
+			const events = cals.map(cal => addInCalendar(cal)).filter(event => event !== null);
 			successCallback(events); // 달력에 이벤트 반영
 		})
 		.catch(e => {
@@ -137,6 +137,19 @@ btnModalWrite.addEventListener("click", () => {
 calTypeCheckboxs.forEach(function (calTypeCheckbox) {
 	calTypeCheckbox.addEventListener("change", () => {
 		selectedCalType = getSelectedTypes();
+		
+		const uncheckedTypes = Array.from(calTypeCheckboxs).filter(box => !box.checked).map(box => parseInt(box.dataset.calType));
+
+		console.log(uncheckedTypes);
+		
+		calendar.getEvents().forEach(event => {
+			const eventType = event.extendedProps.calType;
+			if (uncheckedTypes.includes(eventType)) {
+				console.log(eventType)
+				event.remove();
+			}
+		});
+		
 		calendar.refetchEvents();
 	})
 })
@@ -327,6 +340,12 @@ function addCalendar() {
 }
 
 function addInCalendar(cal) {
+	const eventId = String(cal.calNum);
+	
+	if(calendar.getEventById(eventId)) {
+		return null;
+	}
+	
 	return {
 		id: cal.calNum,              
 		title: cal.calTitle,         
