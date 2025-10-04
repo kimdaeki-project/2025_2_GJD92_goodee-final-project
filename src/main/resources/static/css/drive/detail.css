@@ -68,3 +68,9 @@
 	--bs-table-bg-state: white !important; /* 버튼 깜박거림 수정 */
 /* 	--bs-table-color-state: white !important; */
 }
+
+.navbar-vertical .nav-item:hover .nav-link {
+    background-color: transparent !important;
+	color: inherit !important;
+	box-shadow: none !important;
+}

@@ -151,7 +151,8 @@
 	<c:import url="/WEB-INF/views/drive/upload-modal.jsp"></c:import>
 	<script>
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
-	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.parentElement.classList.add("bg-gradient-dark", "text-white", "rounded")
+	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.classList.add("text-white")
 	document.querySelector("#navTitle").textContent = "드라이브"
 	</script>
 	<script src="/js/drive/detail.js"></script>

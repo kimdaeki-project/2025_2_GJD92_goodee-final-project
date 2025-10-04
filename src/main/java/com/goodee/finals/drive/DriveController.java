@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,10 +45,13 @@ public class DriveController {
 		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO);
 		List<DriveShareDTO> shareDriveList = driveService.getShareDriveByStaffCode(staffDTO);
 		
+		if(ObjectUtils.isEmpty(myDriveList)) {
+			DriveDTO driveDTO = driveService.createDefaultDrive(staffDTO);
+			myDriveList.add(driveDTO);
+		}
 		model.addAttribute("staffDTO", staffDTO);
 		model.addAttribute("myDriveList", myDriveList);
 		model.addAttribute("shareDriveList", shareDriveList);
-
     }
 	
 	@GetMapping("staffList")
@@ -70,6 +74,10 @@ public class DriveController {
 	    }
 	    
 		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
+		System.out.println(driveDTO.getDriveName());
+		System.out.println(driveDTO.getDriveNum());
+		System.out.println(driveDTO.getDriveEnabled());
+		System.out.println(driveDTO.getDriveDate());
 		
 	    model.addAttribute("docList", docList);
 	    model.addAttribute("driveDTO", driveDTO);
