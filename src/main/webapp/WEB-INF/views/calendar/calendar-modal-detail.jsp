@@ -52,8 +52,9 @@
 
 				<!-- 수정일 -->
 				<div class="d-flex justify-content-between align-items-center">
-					<div class="d-flex align-items-center gap-2">
+					<div class="d-flex align-items-center justify-content-between gap-2 w-100">
 						<span class="text-secondary">수정일</span>
+						<span class="text-secondary" id="detailModalMod"></span>
 					</div>
 					<div class="text-secondary">
 						<span id="detailModalMod"></span>

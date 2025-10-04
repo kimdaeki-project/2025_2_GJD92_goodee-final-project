@@ -187,6 +187,7 @@ saveBtn.addEventListener('click', () => {
 /* 부서 선택 */
 deptBtn.forEach(d => {
 	d.addEventListener('click', function(e){
+		checkAllStaff.checked = false;
 		const allStaffCheckboxName = document.getElementById("allStaffCheckboxName");
 		
 		searchInput.value = ''; // 부서 변경시 검색란 초기화

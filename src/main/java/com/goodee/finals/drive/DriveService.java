@@ -229,7 +229,7 @@ public class DriveService {
 		documentDTO.setDriveDTO(driveDTO);
 		documentDTO.setDocStatus("ACTIVE");
 		documentDTO.setDocDate(currentDate);
-		documentDTO.setDocExpire(currentDate.plusDays(6));
+		documentDTO.setDocExpire(currentDate.plusDays(90));
 		documentDTO.setDocContentType(newContentType);
 		documentDTO.setAttachmentDTO(attachmentDTO);
 		
