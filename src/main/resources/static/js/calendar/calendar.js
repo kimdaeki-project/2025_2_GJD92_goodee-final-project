@@ -137,19 +137,6 @@ btnModalWrite.addEventListener("click", () => {
 calTypeCheckboxs.forEach(function (calTypeCheckbox) {
 	calTypeCheckbox.addEventListener("change", () => {
 		selectedCalType = getSelectedTypes();
-		
-		const uncheckedTypes = Array.from(calTypeCheckboxs).filter(box => !box.checked).map(box => parseInt(box.dataset.calType));
-
-		console.log(uncheckedTypes);
-		
-		calendar.getEvents().forEach(event => {
-			const eventType = event.extendedProps.calType;
-			if (uncheckedTypes.includes(eventType)) {
-				console.log(eventType)
-				event.remove();
-			}
-		});
-		
 		calendar.refetchEvents();
 	})
 })
@@ -318,9 +305,8 @@ function addCalendar() {
 		})
 		.then(r => r.json())
 		.then(addedCalendar => {
-			// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent() 사용해서 랜더링
 			console.log(addedCalendar)
-			calendar.addEvent(addInCalendar(addedCalendar))
+			calendar.refetchEvents();
 		})
 	// 2. 일정 수정
 	} else if(btnAddCalendar.dataset.request == "update") {
@@ -333,19 +319,15 @@ function addCalendar() {
 		})
 		.then(r => r.json())
 		.then(updatedCal => {
-			updateEvent(updatedCal);
+			console.log(updatedCal)
+			calendar.refetchEvents();
 		})
 	}
 	if(modalAddCalendar) modalAddCalendar.hide();
+	showHideInput(false)
 }
 
 function addInCalendar(cal) {
-	const eventId = String(cal.calNum);
-	
-	if(calendar.getEventById(eventId)) {
-		return null;
-	}
-	
 	return {
 		id: cal.calNum,              
 		title: cal.calTitle,         
@@ -371,27 +353,6 @@ function addInCalendar(cal) {
 			deptCode    : cal.staffDTO.deptDTO.deptCode,
 			deptDetail  : cal.staffDTO.deptDTO.deptDetail
 		}
-	}
-}
-
-// 이벤트 수정
-function updateEvent(updatedCal) {
-	const event = calendar.getEventById(updatedCal.calNum);
-	if (event) {
-		event.setAllDay(updatedCal.calIsAllDay);
-		event.setProp("title", updatedCal.calTitle);
-		event.setStart(updatedCal.calStart);
-		event.setEnd(plusOneDay(updatedCal));
-		event.setProp("backgroundColor", eventBgColor(updatedCal.calType));
-		
-		event.setExtendedProp("calMod", updatedCal.calMod);
-		event.setExtendedProp("calType", updatedCal.calType);
-		event.setExtendedProp("calTitle", updatedCal.calTitle);
-		event.setExtendedProp("calPlace", updatedCal.calPlace);
-		event.setExtendedProp("calContent", updatedCal.calContent);
-		event.setExtendedProp("calTypeName", updatedCal.calTypeName);
-		event.setExtendedProp("deptCode", updatedCal.staffDTO.deptDTO ? updatedCal.staffDTO.deptDTO.deptCode : null);
-		event.setExtendedProp("deptDetail", updatedCal.staffDTO.deptDTO ? updatedCal.staffDTO.deptDTO.deptDetail : null);
 	}
 }
 
