@@ -41,4 +41,17 @@ public class FileService {
 		File file = new File(baseDir + attachType, fileName);
 		return file.delete();
 	}
+	
+	public String readableFileSize(Long fileSize) {
+		if(fileSize < 1024) {
+			return String.format("%.2f KB", (float)fileSize / 1000);
+		}
+		
+		int unit = 1024;
+		int unitLevel = (int) (Math.log(fileSize) / Math.log(unit));
+		String unitName = "KMGTPE".charAt(unitLevel - 1) + "";
+		
+		return String.format("%.2f %sB", fileSize / Math.pow(unit, unitLevel), unitName);
+	}
+	
 }

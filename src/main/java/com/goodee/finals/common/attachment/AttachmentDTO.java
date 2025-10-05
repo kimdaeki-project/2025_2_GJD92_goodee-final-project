@@ -28,6 +28,7 @@ public class AttachmentDTO {
 	private String originName;
 	private String savedName;
 	private Long attachSize;
+	private String attachSizeDetail;
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
 	@JsonIgnore

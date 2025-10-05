@@ -87,7 +87,7 @@
 							          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
 							          <td>${ doc.attachmentDTO.originName }</td>
 							          <td class="text-center">${ doc.docDate }
-							          <td class="text-center">${ doc.attachmentDTO.attachSize } KB</td>
+							          <td class="text-center">${ doc.attachmentDTO.attachSizeDetail } </td>
 							          <td class="text-center">${ doc.docContentType }</td>
 							          <td class="text-center">${ doc.staffDTO.staffName }</td>
 							        </tr>

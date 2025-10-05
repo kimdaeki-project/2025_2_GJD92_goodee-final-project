@@ -213,7 +213,7 @@ public class DriveService {
 				
 				attachmentDTO.setSavedName(fileName);
 				attachmentDTO.setAttachSize(attach.getSize());
-				
+				attachmentDTO.setAttachSizeDetail(fileService.readableFileSize(attach.getSize()));
 				attachmentDTO.setOriginName(attach.getOriginalFilename());
 				
 			} catch (IOException e) {
