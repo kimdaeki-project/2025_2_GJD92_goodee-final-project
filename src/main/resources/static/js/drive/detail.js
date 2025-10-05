@@ -8,6 +8,9 @@ const checkAll = document.getElementById("checkAll");
 const checkBoxes = document.querySelectorAll(".checkBoxes");
 const btnDownloadFile = document.getElementById("btnDownloadFile");
 const btnDeleteFile = document.getElementById("btnDeleteFile");
+const fileTypeSelect = document.getElementById("fileTypeSelect");
+const frmSearch = document.getElementById("frmSearch");
+const fileType = document.getElementById("fileType");
 
 // 클릭하면 파일 선택창 열기
 dropZone.addEventListener("click", () => fileInput.click());
@@ -66,6 +69,12 @@ checkAll.addEventListener("change", () => {
 			checkBox.checked = checkAll.checked;
 		})
 	changeButtonStatus();
+})
+
+fileTypeSelect.addEventListener("change", () => {
+	const selectedType = fileTypeSelect.value; 	
+	fileType.value = selectedType;  	
+	frmSearch.submit();
 })
 
 checkBoxes.forEach(function (checkBox){

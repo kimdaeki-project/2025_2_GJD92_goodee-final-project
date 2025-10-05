@@ -21,8 +21,6 @@
 			<c:import url="/WEB-INF/views/drive/drive-sidebar.jsp"></c:import>
 			<section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3 p-4">
 
-				<!-- 여기에 코드 작성 -->
-				<!-- 여기에 코드 작성 -->
 				<!-- 툴바 -->
 				<div class="d-flex align-items-center flex-wrap gap-2 mb-3">
 				
@@ -32,15 +30,14 @@
 				  
 				  <!-- 새 문서 -->
 <!-- 				  <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mb-0">새 문서</button> -->
-				
 				  <!-- 파일 유형 -->
 				  <div class="d-flex align-items-center gap-2">
-				    <select class="form-select form-select-sm w-auto align-self-center rounded" id="fileTypeSelect">
-				      <option value="all" selected>파일 유형: 선택</option>
-				      <option value="doc">문서</option>
-				      <option value="image">이미지</option>
-				      <option value="video">동영상</option>
-				      <option value="audio">오디오</option>
+				    <select class="form-select form-select-sm w-auto align-self-center rounded" id="fileTypeSelect" >
+				      <option value="all" ${ empty pager.fileType ? "selected" : ""}>파일 유형: 선택</option>
+				      <option value="doc" ${ pager.fileType eq 'doc' ? "selected" : ""}>문서</option>
+				      <option value="image" ${ pager.fileType eq 'image' ? "selected" : "" }>이미지</option>
+				      <option value="video" ${ pager.fileType eq 'video' ? "selected" : "" }>동영상</option>
+				      <option value="audio" ${ pager.fileType eq 'audio' ? "selected" : "" }>오디오</option>
 				    </select>
 				  </div>
 				
@@ -57,11 +54,11 @@
 				  </button>
 				  
 				  <!-- 검색 -->
-				  <form action="/drive/${ driveDTO.driveNum }" class="ms-auto d-flex align-items-center gap-2">
+				  <form action="/drive/${ driveDTO.driveNum }" class="ms-auto d-flex align-items-center gap-2" id="frmSearch">
 				    <div class="ms-auto d-flex align-items-center">
 					  <input type="text" id="searchInput" class="form-control form-control-sm me-1"
 					         name="keyword" value="${ pager.keyword }" placeholder="파일명, 등록자 입력" style="width: 200px;">
-					
+					  <input type="hidden" id="fileType" name="fileType">
 					  <button type="submit" class="btn btn-dark btn-sm mb-0" id="btnSearch">
 					    <span class="material-symbols-rounded">search</span>
 					  </button>

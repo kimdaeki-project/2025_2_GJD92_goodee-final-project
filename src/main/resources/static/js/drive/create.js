@@ -193,7 +193,6 @@ deptBtn.forEach(d => {
 		searchInput.value = ''; // 부서 변경시 검색란 초기화
 		const deptName = e.target.getAttribute('data-team'); // 버튼에 저장된 data-team 가져옴
 		allStaffCheckboxName.textContent = deptName + " 전체";
-		console.log("선택된 부서 : " + deptName);
 		
 		if(deptName == '전체') { // '전체' 일때만 모든 사원 출력
 			allStaffCheckboxName.textContent = "전체";

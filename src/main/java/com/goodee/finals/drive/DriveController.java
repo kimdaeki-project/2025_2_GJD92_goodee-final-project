@@ -74,10 +74,6 @@ public class DriveController {
 	    }
 	    
 		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
-		System.out.println(driveDTO.getDriveName());
-		System.out.println(driveDTO.getDriveNum());
-		System.out.println(driveDTO.getDriveEnabled());
-		System.out.println(driveDTO.getDriveDate());
 		
 	    model.addAttribute("docList", docList);
 	    model.addAttribute("driveDTO", driveDTO);

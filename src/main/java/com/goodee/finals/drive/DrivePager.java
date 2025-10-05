@@ -15,6 +15,7 @@ public class DrivePager {
 	int startPage;
 	int endPage;
 	String keyword;
+	String fileType;
 	
 	public void calc(Page<DocumentDTO> docList) {
 		this.currentPage = docList.getNumber();

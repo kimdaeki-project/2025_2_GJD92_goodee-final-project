@@ -1,7 +1,9 @@
 package com.goodee.finals.drive;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,10 +78,21 @@ public class DriveService {
 		Long driveNum = driveDTO.getDriveNum();
 		String keyword = drivePager.getKeyword();
 		Integer jobCode = staffDTO.getJobDTO().getJobCode();
+		String fileTypeSelect = drivePager.getFileType();
+		List<String> fileTypeList = new ArrayList<>();
 		
+		if(fileTypeSelect == null) fileTypeSelect = "all"; 
 		if(keyword == null) keyword = "";
+				
+		switch (fileTypeSelect) {
+		case "all": fileTypeList = null; break;		
+		case "audio":  fileTypeList = Arrays.asList("MP3", "WAV", "OGG", "AAC", "FLAC"); break;
+		case "video":  fileTypeList = Arrays.asList("MP4", "AVI", "MOV", "WMV", "MKV", "WEBM"); break;
+		case "image":  fileTypeList = Arrays.asList("JPG", "JPEG", "PNG", "GIF", "BMP", "SVG", "WEBP"); break;
+		case "doc":  fileTypeList = Arrays.asList( "PDF", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "TXT", "HWP"); break;
+		}
 		
-		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, jobCode ,pageable);
+		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, jobCode ,pageable, fileTypeList);
 		drivePager.calc(result);
 		
 		return result;
@@ -200,6 +213,7 @@ public class DriveService {
 				
 				attachmentDTO.setSavedName(fileName);
 				attachmentDTO.setAttachSize(attach.getSize());
+				
 				attachmentDTO.setOriginName(attach.getOriginalFilename());
 				
 			} catch (IOException e) {
