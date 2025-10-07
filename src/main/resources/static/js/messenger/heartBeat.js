@@ -22,7 +22,7 @@ function connectWebSocket(staffCode) {
 				synchronize(payload.msg);
 			} else if (payload.type == 'NOUNREADCOUNT') {
 				setChatRoomChecker(payload.msg);
-			} else if (payload.type == 'GROUPINVITATION') {
+			} else if (payload.type == 'STANDARD') {
 				showNotificationApproval(payload.msg, msg.headers.destination);
 			}
 		})

@@ -43,12 +43,10 @@
 		                body: JSON.stringify({ alertMsg: wsMsg, staffCodeToDb: sub })
 		            })
                 	.then(response => response.json())
-	                .then(response => console.log(response));
-		            let notification = {
-		            		type: 'APPROVAL',
-		            		msg: wsMsg
-		            }
-		            stompClient.send("/pub/notify/" + sub, {}, JSON.stringify(notification));
+	                .then(response => console.log(response));            	
+			            
+		            let notification = { type: 'STANDARD', msg: wsMsg }            	
+	            	stompClient.send("/pub/notify/" + sub, {}, JSON.stringify(notification));
 		        });
 		        location.href = url;
 		    } else {
