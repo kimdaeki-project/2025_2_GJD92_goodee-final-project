@@ -112,7 +112,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		.then(cals => {
 //			console.log(fetchInfo)
 			if(!cals) return;
-			const events = cals.map(cal => addInCalendar(cal));
+			const events = cals.map(cal => addInCalendar(cal)).filter(event => event !== null);
 			successCallback(events); // 달력에 이벤트 반영
 		})
 		.catch(e => {
@@ -176,7 +176,7 @@ btnOpenUpdateModal.addEventListener("click", () => {
 btnDeleteCalendar.addEventListener("click", () => {
 	Swal.fire({
 	   title: "일정 삭제",
-	   text: '일정을 삭제하시겠습니까?.',
+	   text: '일정을 삭제하시겠습니까?',
 	   icon: "error",
 	   showCancelButton: true,
 	   confirmButtonColor: "#191919",
@@ -305,9 +305,8 @@ function addCalendar() {
 		})
 		.then(r => r.json())
 		.then(addedCalendar => {
-			// 캘린더에 추가 랜더링 - 반환 받은 객체를 calendar.addEvent() 사용해서 랜더링
 			console.log(addedCalendar)
-			calendar.addEvent(addInCalendar(addedCalendar))
+			calendar.refetchEvents();
 		})
 	// 2. 일정 수정
 	} else if(btnAddCalendar.dataset.request == "update") {
@@ -320,10 +319,12 @@ function addCalendar() {
 		})
 		.then(r => r.json())
 		.then(updatedCal => {
-			updateEvent(updatedCal);
+			console.log(updatedCal)
+			calendar.refetchEvents();
 		})
 	}
 	if(modalAddCalendar) modalAddCalendar.hide();
+	showHideInput(false)
 }
 
 function addInCalendar(cal) {
@@ -341,6 +342,7 @@ function addInCalendar(cal) {
 		extendedProps: {
 			calNum      : cal.calNum,
 			calReg      : cal.calReg,
+			calMod      : cal.calMod,
 			calType     : cal.calType,
 			calPlace    : cal.calPlace,
 			calTitle    : cal.calTitle,
@@ -354,26 +356,6 @@ function addInCalendar(cal) {
 	}
 }
 
-// 이벤트 수정
-function updateEvent(updatedCal) {
-	const event = calendar.getEventById(updatedCal.calNum);
-	if (event) {
-		event.setAllDay(updatedCal.calIsAllDay);
-		event.setProp("title", updatedCal.calTitle);
-		event.setStart(updatedCal.calStart);
-		event.setEnd(plusOneDay(updatedCal));
-		event.setProp("backgroundColor", eventBgColor(updatedCal.calType));
-		
-		event.setExtendedProp("calType", updatedCal.calType);
-		event.setExtendedProp("calTitle", updatedCal.calTitle);
-		event.setExtendedProp("calPlace", updatedCal.calPlace);
-		event.setExtendedProp("calContent", updatedCal.calContent);
-		event.setExtendedProp("calTypeName", updatedCal.calTypeName);
-		event.setExtendedProp("deptCode", updatedCal.staffDTO.deptDTO ? updatedCal.staffDTO.deptDTO.deptCode : null);
-		event.setExtendedProp("deptDetail", updatedCal.staffDTO.deptDTO ? updatedCal.staffDTO.deptDTO.deptDetail : null);
-	}
-}
-
 function calDetail(eventInfo) {
 	let calStart      = eventInfo.event.startStr;
 	let calReg        = eventInfo.event._def.extendedProps.calReg;
@@ -381,6 +363,7 @@ function calDetail(eventInfo) {
 	calStart = eventInfo.event.allDay ? dayjs(calStart).format("YYYY-MM-DD") : dayjs(calStart).format("YYYY-MM-DD HH:mm");				
 
 	const calNum      = eventInfo.event._def.extendedProps.calNum;
+	const calMod      = eventInfo.event._def.extendedProps.calMod;
 	const calType     = eventInfo.event._def.extendedProps.calType;
 	const calTitle    = eventInfo.event._def.extendedProps.calTitle;
 	const calPlace    = eventInfo.event._def.extendedProps.calPlace;
@@ -397,6 +380,7 @@ function calDetail(eventInfo) {
 	document.getElementById("detailModalContent").textContent = calContent;
 	document.getElementById("detailModalDept").textContent = calTypeName + " 일정";
 	document.getElementById("detailDeptCircle").style.backgroundColor = eventBgColor(calType);
+	document.getElementById("detailModalMod").textContent = dayjs(calMod).format("YYYY-MM-DD HH:mm");
 	
 	inputCalNum.value = calNum; // hiddenInput에 calNum을 설정해줌
 	
@@ -420,11 +404,6 @@ function dragResizeUpdate(eventInfo) {
 	if(eventInfo.event.allDay) {
 		calEnd = dayjs(eventInfo.event.endStr).add(-1, "day").format("YYYY-MM-DDTHH:mm:ss");
 	};
-	
-	console.log("startStr:", eventInfo.event.startStr);
-	console.log("endStr:", eventInfo.event.endStr);
-	console.log("allDay:", eventInfo.event.allDay);
-		
 	
 	const calEvent = {
 		calNum   : eventInfo.event._def.extendedProps.calNum,

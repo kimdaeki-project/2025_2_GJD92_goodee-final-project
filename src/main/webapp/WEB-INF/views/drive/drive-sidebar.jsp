@@ -31,7 +31,7 @@
 										</a>
 										<c:if test="${ not empty driveDTO and myDrive.driveNum eq driveDTO.driveNum }">
 											<div class="d-flex align-items-center drive-setting">
-												<a href="/drive/${ myDrive.driveNum }/update" class="d-flex align-items-center" style="text-decoration: none;">
+												<a href="/drive/${ myDrive.driveNum }/update" class="d-flex align-items-center pe-1" style="text-decoration: none; color: white;">
 													<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveNum }">settings</i>
 												</a>
 											</div>
