@@ -111,6 +111,8 @@ function htmlTagBuilder(msg, alertNum) {
 	anchor.appendChild(div);
 	list.appendChild(anchor);
 	dm.prepend(list);
+	// no-alert 제거
+	removeNoAlert();
 	
 	close.addEventListener('click', function(e) {
 		e.preventDefault(); e.stopPropagation();
@@ -126,6 +128,9 @@ function htmlTagBuilder(msg, alertNum) {
 				dm.removeChild(toDeleteEl);
 				let alertCountFromDelete = parseInt(alertBadge.innerText) - 1;
 				alertCountDecider(alertCountFromDelete);
+				
+				// no-alert 처리
+				if (dm.querySelectorAll('li:not(.no-alert)').length === 0) noAlert();
 			}
 		});
 	});
@@ -144,7 +149,11 @@ function htmlTagBuilder(msg, alertNum) {
 				dm.removeChild(toDeleteEl);
 				let alertCountFromDelete = parseInt(alertBadge.innerText) - 1;
 				alertCountDecider(alertCountFromDelete);
-				window.location.href = this.href;			
+				
+				// no-alert 처리
+				if (dm.querySelectorAll('li:not(.no-alert)').length === 0) noAlert();
+				
+				window.location.href = this.href;
 			}
 		})
 	});
@@ -201,3 +210,22 @@ function setChatRoomChecker(msg) {
 		currentChatRoomChecker = msg;
 	}
 }
+// 알림 없을 때 대비
+function noAlert() {
+	let noAlertList = document.querySelector('.no-alert');
+	if (!noAlertList) {
+		let li = document.createElement('li');
+		li.classList.add('no-alert');
+		li.innerText = '새 알림이 없습니다.';
+		dm.appendChild(li);
+	}
+}
+// 알림이 생겼을 때 no-alert 제거
+function removeNoAlert() {
+	let noAlertList = document.querySelector('.no-alert');
+	if (noAlertList) noAlertList.remove();
+}
+// no-alert 초기화
+document.addEventListener('DOMContentLoaded', () => {
+	if (dm.querySelectorAll('li').length === 0) noAlert();
+})
