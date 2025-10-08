@@ -14,16 +14,14 @@ function connectWebSocket(staffCode) {
 		console.log("Connected: " + frame);
 		stompClient.subscribe("/sub/notify/" + staffCode, (msg) => {
 			let payload = JSON.parse(msg.body);
-			if (payload.type == 'APPROVAL') {
-				showNotificationApproval(payload.msg, msg.headers.destination);				
-			} else if (payload.type == 'CHATCOUNT') {
+			if (payload.type == 'CHATCOUNT') {
 				plusOneChatCount(payload.msg);
 			} else if (payload.type == 'SYNCCHATCOUNT') {
 				synchronize(payload.msg);
 			} else if (payload.type == 'NOUNREADCOUNT') {
 				setChatRoomChecker(payload.msg);
 			} else if (payload.type == 'STANDARD') {
-				showNotificationApproval(payload.msg, msg.headers.destination);
+				standardAlert(payload.msg, msg.headers.destination);
 			}
 		})
 	}, (err) => {
@@ -32,7 +30,7 @@ function connectWebSocket(staffCode) {
 	});
 }
 
-function showNotificationApproval(msg, destination) {
+function standardAlert(msg, destination) {
     const notyf = new Notyf();
     notyf.success('새로운 알림이 도착했습니다!');
 	fetch('/alert/new', {
@@ -72,6 +70,7 @@ function htmlTagBuilder(msg, alertNum) {
 	let type;
 	if (msg.includes('결재')) type = 'aprv';
 	else if (msg.includes('채팅방')) type = 'inv';
+	else if (msg.includes('어트랙션')) type = 'fix';
 	let list = document.createElement('li');
 	let listClassForDelete = 'list-' + alertNum;
 	list.classList.add('mb-2', listClassForDelete);
@@ -79,6 +78,7 @@ function htmlTagBuilder(msg, alertNum) {
 	anchor.classList.add('dropdown-item', 'border-radius-md');
 	if (type == 'aprv') anchor.setAttribute('href', '/approval/' + msg.split(',')[1]);
 	else if (type == 'inv') anchor.setAttribute('href', '#');
+	else if (type == 'fix') anchor.setAttribute('href', '/fault/' + + msg.split(',')[1]);
 	let div = document.createElement('div');
 	div.classList.add('d-flex', 'py-1', 'justify-content-between', 'align-items-center');
 	let divLeft = document.createElement('div');
@@ -93,6 +93,7 @@ function htmlTagBuilder(msg, alertNum) {
 	img.classList.add('avatar', 'avatar-sm', 'me-3');
 	if (type == 'aprv') img.setAttribute('src', '/images/heartBeat/aprv.png');
 	else if (type == 'inv') img.setAttribute('src', '/images/heartBeat/invitation.png');
+	else if (type == 'fix') img.setAttribute('src', '/images/heartBeat/fix.png');
 	let divBot = document.createElement('div');
 	divBot.classList.add('d-flex', 'flex-column', 'justify-content-center');
 	let h6 = document.createElement('h6');

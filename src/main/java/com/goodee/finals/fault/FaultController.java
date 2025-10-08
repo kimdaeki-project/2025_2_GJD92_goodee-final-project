@@ -1,5 +1,6 @@
 package com.goodee.finals.fault;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodee.finals.ride.RideDTO;
 import com.goodee.finals.staff.StaffDTO;
 
@@ -89,14 +92,14 @@ public class FaultController {
 	    
 	    
 	    // 서비스 호출
-	    boolean result = faultService.writeFault(faultDTO);
+	    FaultDTO result = faultService.writeFault(faultDTO);
 
 	    String resultMsg = "어트랙션 고장 신고 등록에 실패했습니다.";
 	    String resultIcon = "warning";
 	    String resultUrl = "/fault/";
 	    boolean popupClose = false; // 등록 성공 후 창 닫기
 
-	    if (result) {
+	    if (result != null) {
 	        resultMsg = "어트랙션 고장 신고 등록을 완료하였습니다.";
 	        resultIcon = "success";
 	        popupClose = true; // 성공 시 팝업 닫기
@@ -106,8 +109,19 @@ public class FaultController {
 	    model.addAttribute("resultIcon", resultIcon);
 	    model.addAttribute("resultUrl", resultUrl);
 	    model.addAttribute("popupClose", popupClose);
+	    
+	    // 담당자에게 알림 발송
+	    List<String> wsSub = new ArrayList<>();
+	    wsSub.add(result.getStaffDTO().getStaffCode() + "");
+	    ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+			model.addAttribute("wsMsg", "어트랙션 고장 신고의 담당자로 배정되었습니다.," + result.getFaultNum());
+		} catch (JsonProcessingException e) {
+			return null;
+		}
 
-	    return "common/result";
+	    return "common/notifyResult";
 	}
 
 	
