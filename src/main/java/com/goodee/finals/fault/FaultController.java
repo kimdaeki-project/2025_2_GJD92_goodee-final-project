@@ -176,6 +176,21 @@ public class FaultController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
+	    // 담당자 배정 상태일 때만 배정된 담당자에게 알림 발송 - 411
+		if (faultDTO.getFaultState().equals(411)) {			
+			List<String> wsSub = new ArrayList<>();
+			wsSub.add(faultDTO.getStaffDTO().getStaffCode() + "");
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+				model.addAttribute("wsMsg", "어트랙션 고장 신고의 담당자로 배정되었습니다.," + faultDTO.getFaultNum());
+			} catch (JsonProcessingException e) {
+				return null;
+			}
+			
+			return "common/notifyResult";
+		}
+		
 		return "common/result";
 				
 	}
