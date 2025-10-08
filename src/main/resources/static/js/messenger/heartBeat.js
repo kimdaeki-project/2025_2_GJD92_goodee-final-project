@@ -6,6 +6,8 @@ let stompClient = null;
 let currentChatRoomChecker = null;
 const dm = document.querySelector('.dropdown-menu');
 const alertBadge = document.querySelector('.badge.bg-danger.rounded-pill');
+let alertCountNoDelete = 0;
+let chatCountGlobal = 0;
 
 function connectWebSocket(staffCode) {
 	const socket = new SockJS('http://localhost/ws-stomp');
@@ -43,7 +45,7 @@ function standardAlert(msg, destination) {
 		htmlTagBuilder(msg, response.alertNum);		
 	});
 	
-	let alertCount = parseInt(alertBadge.innerText) + 1;
+	let alertCount = alertCountNoDelete + 1;
 	alertCountDecider(alertCount);
 }
 
@@ -55,7 +57,6 @@ function renderAlerts(staffCodeForAlert) {
 	})
 	.then(response => response.json())
 	.then(response => {
-		let alertCountNoDelete = 0;
 		response.forEach(alert => {
 			if (!alert.alertDelete) {
 				htmlTagBuilder(alert.alertMsg, alert.alertNum);
@@ -127,7 +128,7 @@ function htmlTagBuilder(msg, alertNum) {
 			if (response) {
 				let toDeleteEl = document.querySelector('.list-' + alertNum);
 				dm.removeChild(toDeleteEl);
-				let alertCountFromDelete = parseInt(alertBadge.innerText) - 1;
+				let alertCountFromDelete = alertCountNoDelete - 1;
 				alertCountDecider(alertCountFromDelete);
 				
 				// no-alert 처리
@@ -148,7 +149,7 @@ function htmlTagBuilder(msg, alertNum) {
 			if (response) {
 				let toDeleteEl = document.querySelector('.list-' + alertNum);
 				dm.removeChild(toDeleteEl);
-				let alertCountFromDelete = parseInt(alertBadge.innerText) - 1;
+				let alertCountFromDelete = alertCountNoDelete - 1;
 				alertCountDecider(alertCountFromDelete);
 				
 				// no-alert 처리
@@ -170,18 +171,17 @@ function alertCountDecider(count) {
 
 function plusOneChatCount(chatRoomNum) {
 	let bdg = document.querySelector('.badge-footer-display');
-	let count = parseInt(bdg.innerText);
 	if (currentChatRoomChecker == null) {
-		count = count + 1;
+		chatCountGlobal++;
 	} else {
 		if (currentChatRoomChecker != chatRoomNum) {
-			count = count + 1;
+			chatCountGlobal++;
 		}
 	}
-	if (count > 9) {
+	if (chatCountGlobal > 9) {
 		bdg.innerText = '9+';
 	} else {
-		bdg.innerText = count;
+		bdg.innerText = chatCountGlobal;
 	}
 }
 
@@ -195,11 +195,11 @@ function synchronize(chatRoomNum) {
     .then(res => res.json())
 	.then(res => {
 		let bdg = document.querySelector('.badge-footer-display');
-		let count = parseInt(bdg.innerText) - res.unread[chatRoomNum];
-		if (count > 9) {
+		chatCountGlobal = chatCountGlobal - res.unread[chatRoomNum];
+		if (chatCountGlobal > 9) {
 			bdg.innerText = '9+';
 		} else {
-			bdg.innerText = count;
+			bdg.innerText = chatCountGlobal;
 		}
 	});
 }
@@ -229,4 +229,4 @@ function removeNoAlert() {
 // no-alert 초기화
 document.addEventListener('DOMContentLoaded', () => {
 	if (dm.querySelectorAll('li').length === 0) noAlert();
-})
+});
