@@ -73,16 +73,26 @@ public class MessengerService {
 			result = messengerRepository.findChatRoomByStaffCode(loggedStaff);
 			comparator = messengerRepository.findMaxChatBodyNum(loggedStaff);
 			
+			if (comparator == null || comparator.size() == 0) {
+				return result;
+			}
+			
 			List<ChatRoomDTO> chatRoomYesMsg = new ArrayList<>();
 			List<ChatRoomDTO> chatRoomNoMsg = new ArrayList<>();
-			for (ChatRoomDTOProjection c : comparator) {
-				for (ChatRoomDTO cr : result) {
+			for (ChatRoomDTO cr : result) {
+				int cnt = 0;
+				
+				for (ChatRoomDTOProjection c : comparator) {
 					if (cr.getChatRoomNum().equals(c.getChatRoomNum())) {
 						cr.setChatRoomMax(c.getChatRoomMax());
 						chatRoomYesMsg.add(cr);
-					} else {
-						chatRoomNoMsg.add(cr);
+						break;
 					}
+					cnt++;
+				}
+				
+				if (cnt == comparator.size()) {
+					chatRoomNoMsg.add(cr);
 				}
 			}
 			Collections.sort(chatRoomYesMsg, new Comparator<ChatRoomDTO>() {
@@ -91,15 +101,48 @@ public class MessengerService {
 					return o2.getChatRoomMax().intValue() - o1.getChatRoomMax().intValue();
 				}
 			});
-			for (ChatRoomDTO c : chatRoomYesMsg) {
-				System.out.println(c.getChatRoomNum() + ": " + c.getChatRoomMax());
-			}
+			result = new ArrayList<>(); // result 변수 다시 초기화 -> 정렬된 리스트랑 채팅이 하나도 없는 리스트를 합치기 위해
+			result.addAll(chatRoomYesMsg);
+			result.addAll(chatRoomNoMsg);
 		} else {
 			boolean type = false; // 일단 1:1 채팅으로 세팅
 			if ("group".equals(roomType)) { // 그룹 채팅으로 세팅
 				type = true;
 			}
 			result = messengerRepository.findChatRoomByStaffCodeAndType(loggedStaff, type);
+			comparator = messengerRepository.findMaxChatBodyNumAndType(loggedStaff, type);
+			
+			if (comparator == null || comparator.size() == 0) {
+				return result;
+			}
+			
+			List<ChatRoomDTO> chatRoomYesMsg = new ArrayList<>();
+			List<ChatRoomDTO> chatRoomNoMsg = new ArrayList<>();
+			for (ChatRoomDTO cr : result) {
+				int cnt = 0;
+				
+				for (ChatRoomDTOProjection c : comparator) {
+					if (cr.getChatRoomNum().equals(c.getChatRoomNum())) {
+						cr.setChatRoomMax(c.getChatRoomMax());
+						chatRoomYesMsg.add(cr);
+						break;
+					}
+					cnt++;
+				}
+				
+				if (cnt == comparator.size()) {
+					chatRoomNoMsg.add(cr);
+				}
+			}
+			Collections.sort(chatRoomYesMsg, new Comparator<ChatRoomDTO>() {
+				@Override
+				public int compare(ChatRoomDTO o1, ChatRoomDTO o2) {
+					return o2.getChatRoomMax().intValue() - o1.getChatRoomMax().intValue();
+				}
+			});
+			result = new ArrayList<>(); // result 변수 다시 초기화 -> 정렬된 리스트랑 채팅이 하나도 없는 리스트를 합치기 위해
+			result.addAll(chatRoomYesMsg);
+			result.addAll(chatRoomNoMsg);
 		}
 		return result;
 	}
