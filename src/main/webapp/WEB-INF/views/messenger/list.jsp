@@ -59,7 +59,7 @@
                 </div>
                 <div class="chat-room-right">
                     <span class="time" id="time-${ r.chatRoomNum }"></span>
-                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
+                    <span id="unread-count-${ r.chatRoomNum }" class="badge" style="color: red; font-weight: bold;"></span>
                 </div>
             </form>
         </c:forEach>
