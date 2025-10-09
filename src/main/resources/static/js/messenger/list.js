@@ -48,3 +48,19 @@ forms.forEach(form => {
         form.submit();
     });
 });
+// 채팅방 타입 변경
+const formAll = document.querySelector('#formAll');
+const formDm = document.querySelector('#formDm');
+const formGroup = document.querySelector('#formGroup');
+const tabAll = document.querySelector('.tab-all');
+const tabDm = document.querySelector('.tab-dm');
+const tabGroup = document.querySelector('.tab-group');
+tabAll.addEventListener('click', () => {
+	formAll.submit();
+});
+tabDm.addEventListener('click', () => {
+	formDm.submit();
+});
+tabGroup.addEventListener('click', () => {
+	formGroup.submit();
+});
