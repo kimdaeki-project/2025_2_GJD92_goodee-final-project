@@ -66,5 +66,12 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
     @Query(value = "DELETE FROM chat_user WHERE chat_room_num = :chatRoomNum AND staff_code = :staffCode", nativeQuery = true)
 	int leaveMember(Long chatRoomNum, Integer staffCode);
 
+    @Query(value = "SELECT cr.chat_room_num AS chatRoomNum, MAX(cb.chat_body_num) AS chatRoomMax FROM chat_room cr " +
+    	   "JOIN chat_body cb ON cr.chat_room_num = cb.chat_room_num " + 
+    	   "JOIN chat_user cu ON cr.chat_room_num = cu.chat_room_num " +
+    	   "WHERE cu.staff_code = :loggedStaff " +
+    	   "GROUP BY cr.chat_room_num", nativeQuery = true)
+	List<ChatRoomDTOProjection> findMaxChatBodyNum(Integer loggedStaff);
+
 	
 }
