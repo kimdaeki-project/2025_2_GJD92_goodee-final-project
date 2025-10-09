@@ -27,10 +27,10 @@ public class MessengerService {
 	@Autowired
 	StompRepository stompRepository;
 
-	public List<StaffDTO> getStaff() {
+	public List<StaffDTO> getStaff(String keyword) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer loggedStaff = staffDTO.get().getStaffCode();
-		List<StaffDTO> result = staffRepository.findByStaffCodeNot(loggedStaff);
+		List<StaffDTO> result = staffRepository.findByStaffCodeNotAndStaffNameContaining(loggedStaff, keyword);
 		return result;
 	}
 

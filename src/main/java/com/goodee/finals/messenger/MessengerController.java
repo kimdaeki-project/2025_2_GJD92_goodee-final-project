@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,9 +42,12 @@ public class MessengerController {
 	private SimpMessagingTemplate simpMessagingTemplate;
     
     @GetMapping("")
-    public String home(Model model) {
-    	List<StaffDTO> result = messengerService.getStaff();
+    public String home(String keyword, Model model) {
+    	if (keyword == null) keyword = "";
+    	log.info("{}", keyword);
+    	List<StaffDTO> result = messengerService.getStaff(keyword);
     	model.addAttribute("members", result);
+    	model.addAttribute("keyword", keyword);
     	return "messenger/home";
     }
 	
@@ -58,16 +60,18 @@ public class MessengerController {
 	}
 	
 	@GetMapping("create")
-	public String create(Model model) {
-		List<StaffDTO> result = messengerService.getStaff();
+	public String create(String keyword, Model model) {
+		if (keyword == null) keyword = "";
+		List<StaffDTO> result = messengerService.getStaff(keyword);
 		model.addAttribute("staff", result);
+		model.addAttribute("keyword", keyword);
 		return "messenger/create";
 	}
 	
 	@PostMapping("create")
 	public String create(@RequestParam(required = false) List<Integer> addedStaff, @Valid ChatRoomDTO chatRoomDTO, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			List<StaffDTO> result = messengerService.getStaff();
+			List<StaffDTO> result = messengerService.getStaff("");
 			model.addAttribute("staff", result);
 			return "messenger/create";
 		}
