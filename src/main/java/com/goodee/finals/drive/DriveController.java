@@ -49,6 +49,7 @@ public class DriveController {
 			DriveDTO driveDTO = driveService.createDefaultDrive(staffDTO);
 			myDriveList.add(driveDTO);
 		}
+		
 		model.addAttribute("staffDTO", staffDTO);
 		model.addAttribute("myDriveList", myDriveList);
 		model.addAttribute("shareDriveList", shareDriveList);
@@ -63,7 +64,7 @@ public class DriveController {
     
 	@GetMapping({ "", "{driveNum}" })
 	public String getDrive(@PathVariable(required = false) Long driveNum, DrivePager drivePager, Model model, 
-		@PageableDefault(size = 15, sort = "docDate", direction = Sort.Direction.DESC) Pageable pageable) {
+		@PageableDefault(size = 15, sort = "docNum", direction = Sort.Direction.DESC) Pageable pageable) {
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		DriveDTO driveDTO = null;
