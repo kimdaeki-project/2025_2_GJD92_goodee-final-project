@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.goodee.finals.common.attachment.ProductAttachmentDTO;
 import com.goodee.finals.productManage.ProductManageDTO;
 import com.goodee.finals.staff.StaffDTO;
@@ -32,6 +33,7 @@ public class ProductDTO {
 	@Id
 	private Integer productCode;
 	private String productName;
+	private String productSpec;
 	private Long productAmount = 0L;
 	private LocalDate productDate = LocalDate.now();
 	@Column(columnDefinition = "boolean default false")
@@ -55,6 +57,6 @@ public class ProductDTO {
 	
 	// 물품 사진파일
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
-	@JsonIgnore
+	@JsonManagedReference
 	private ProductAttachmentDTO productAttachmentDTO;
 }

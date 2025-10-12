@@ -1,5 +1,6 @@
 package com.goodee.finals.common.attachment;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.goodee.finals.lost.LostDTO;
 
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ public class LostAttachmentDTO {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "lostNum", insertable = false, updatable = false)
+	@JsonBackReference
 	private LostDTO lostDTO;
 	
 	@Id

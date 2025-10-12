@@ -6,22 +6,8 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>입출고 등록</title>
 <style type="text/css">
-.form-box {
-	background: #fff;
-	padding: 40px;
-	border-radius: 12px;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-	width: 400px;
-	text-align: center;
-}
-
-.form-box h2 {
-	margin-bottom: 30px;
-	font-size: 20px;
-	font-weight: bold;
-}
 
 .form-group {
 	margin-bottom: 20px;
@@ -45,20 +31,6 @@
 
 .form-group input[type="file"] {
 	padding: 4px;
-}
-
-.btn-submit {
-	background-color: #333;
-	color: #fff;
-	padding: 10px 30px;
-	border: none;
-	border-radius: 6px;
-	font-size: 14px;
-	cursor: pointer;
-}
-
-.btn-submit:hover {
-	background-color: #555;
 }
 
 aside.sidenav {
@@ -108,65 +80,83 @@ aside.sidenav {
 				</div>
 			</aside>
 
-			<section class="border-radius-xl bg-white ms-2 mt-2 me-3"
-				style="height: 92vh; overflow: hidden scroll;">
-
-				<div class="form-box">
-					<h2>${empty productManageDTO.pmNum ? "입출고 등록" : "입출고 수정" }</h2>
+			<section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; width: 100%; overflow: hidden;">
+			
+				<div class="col-6 offset-3">
+					<h4 class="text-center mt-5 mb-5">${empty productManageDTO.pmNum ? "입출고 등록" : "입출고 수정" }</h4>
 					<form method="post" enctype="multipart/form-data">
-
-						<div class="form-group">
+						<div class="d-flex justify-content-between" style="gap: 50px;" >
 						
-							<button type="button"
-								class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-								data-bs-toggle="modal" data-bs-target="#productModal"
-								style="width: 100px;">물품검색</button>
-
-							<label for="itemName">물품번호</label>
-							<input type="text" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
+							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px;">
+								<div class="form-group">
+									<label for="productCode">물품번호</label>
+									<input type="text" id="productCode" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
+								</div>
+										
+									<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
+									
+								<div class="form-group">
+									<label for="productTypeName">물품타입</label>
+									<input type="text" id="productTypeName" name="productTypeDTO.productTypeName" value="${productManageDTO.productDTO.productTypeDTO.productTypeName }" readonly required placeholder="물품을 검색해주세요.">
+								</div>
+										 
+								<div class="form-group">
+									<label for="productName">물품명</label>
+									<input type="text" id="productName" name="productName" value="${productManageDTO.productDTO.productName }" readonly required placeholder="물품을 검색해주세요.">
+								</div>
+									
+								<div class="form-group">
+									<label for="productSpec">규격</label>
+									<input type="text" id="productSpec" name="productSpec" value="${productManageDTO.productDTO.productSpec }" readonly required placeholder="물품을 검색해주세요.">
+								</div>
+							</div>
+							
+							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px;">
+								<div class="d-flex flex-column justify-content-between" style="gap:20px;">
+								<div>
+								<button type="button" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"	data-bs-toggle="modal" data-bs-target="#productModal"
+									style="height:40px; width:140px;">물품검색</button>
+								</div>
 								
-							<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
-							
-							<label for="itemName">물품타입</label>
-							<input type="text" name="productTypeDTO.productTypeName" value="${productManageDTO.productDTO.productTypeDTO.productTypeName }" readonly required placeholder="물품을 검색해주세요.">
-								 
-							<label for="itemName">물품명</label>
-							<input type="text" name="productName" value="${productManageDTO.productDTO.productName }" readonly required placeholder="물품을 검색해주세요.">
-							
-						</div>
-
-						<div class="form-group">
-							<label>유형</label>
-							<div class="radio-group">
-								<label>
-									<label>
-							            <input type="radio" name="pmType" value="80"
-							                <c:if test="${empty productManageDTO or productManageDTO.pmType == 80}">checked</c:if>> 입고
-							        </label> 
-								<label>
-									<input type="radio"	name="pmType" value="90"
-										<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고
-								</label>
+								<div>
+								<div class="form-group">
+									<label>유형</label>
+									<div class="radio-group d-flex justify-content-start" style="gap: 15px;" >
+										<label>
+								            <input type="radio" name="pmType" value="80"
+								                <c:if test="${empty productManageDTO or productManageDTO.pmType == 80}">checked</c:if>> 입고
+								        </label> 
+										<label>
+											<input type="radio"	name="pmType" value="90"
+												<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고
+										</label>
+									</div>
+								</div>
+		
+								<div class="form-group">
+									<label>수량</label>
+									<input type="text" name="pmAmount" value="${productManageDTO.pmAmount }">
+								</div>
+								
+								<div class="form-group">
+									<label>비고</label>
+									<input type="text" name="pmNote" value="${productManageDTO.pmNote }">
+								</div>
+								
+								</div>
+								</div>
 							</div>
 						</div>
 
-						<div class="form-group">
-							<label>수량</label>
-							<input type="text" name="pmAmount" value="${productManageDTO.pmAmount }">
+						<div class="mt-4 d-flex justify-content-center gap-3">
+							<button type="submit"
+								class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
+								style="width: 100px;">${ empty productManageDTO.pmNum ? "등록" : "수정" }</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary"
+								onclick="history.back();" style="width: 100px;">취소</button>
 						</div>
-						
-						<div class="form-group">
-							<label>비고</label>
-							<input type="text" name="pmNote" value="${productManageDTO.pmNote }">
-						</div>
-
-						<button type="submit"
-							class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-							style="width: 100px;">${ empty productManageDTO.pmNum ? "등록" : "수정" }</button>
-						<button type="button" class="btn btn-sm btn-outline-secondary"
-							onclick="history.back();" style="width: 100px;">취소</button>
 					</form>
-				</div>
+					</div>
 
 				<!-- 모달창 내용 -->
 				<div class="modal fade" id="productModal" tabindex="-1"
@@ -175,14 +165,16 @@ aside.sidenav {
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title">물품 목록</h5>
-								<div class="d-flex justify-content-end align-items-end">
-									<div class="input-group">
-										<input type="text" class="form-control" id="searchInput" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-									</div>
-								</div>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
+							
 							<div class="modal-body">
+								<div class="d-flex justify-content-end align-items-end">
+									<div class="input-group" style="width: 30%;">
+										<input type="text" class="form-control" id="searchInput" placeholder="검색어를 입력하세요." style="height:40px; border-radius: 0.375rem 0 0 0.375rem !important;" >
+									</div>
+								</div>
+								
 								<table class="table">
 									<thead>
 										<tr>
@@ -205,7 +197,7 @@ aside.sidenav {
 		</div>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
-	<script src="/js/productManage/list.js"></script>
+	<script src="/js/productManage/write.js"></script>
 	<script>
 		document.querySelector("i[data-content='재고']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("i[data-content='물품관리대장']").parentElement.classList.add("bg-gradient-dark", "text-white")

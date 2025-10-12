@@ -17,6 +17,7 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
 			          "INNER JOIN product_type pt USING(product_type_code) " +
 			          "WHERE (p.product_name LIKE %:search% " +
 			          "OR p.product_code LIKE %:search% " +
+			          "OR p.product_spec LIKE %:search% " +
 			          "OR pt.product_type_name LIKE %:search%) " +
 			          "AND p.product_delete = false",
 			  countQuery = "SELECT COUNT(*) FROM product p " +
@@ -24,6 +25,7 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Integer>{
 			               "INNER JOIN product_type pt USING(product_type_code) " +
 			               "WHERE (p.product_name LIKE %:search% " +
 			               "OR p.product_code LIKE %:search% " +
+			               "OR p.product_spec LIKE %:search% " +
 			               "OR pt.product_type_name LIKE %:search%) " +
 			               "AND p.product_delete = false",
 			  nativeQuery = true
