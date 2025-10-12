@@ -87,8 +87,8 @@ aside.sidenav {
 					<form method="post" enctype="multipart/form-data">
 						<div class="d-flex justify-content-between" style="gap: 50px;" >
 						
-							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px;">
-								<div class="form-group">
+							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px; border: 1px solid lightgray; border-radius: 20px; padding:10px;">
+								<div class="form-group mt-4">
 									<label for="productCode">물품번호</label>
 									<input type="text" id="productCode" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
 								</div>
@@ -122,11 +122,11 @@ aside.sidenav {
 								<div class="form-group">
 									<label>유형</label>
 									<div class="radio-group d-flex justify-content-start" style="gap: 15px;" >
-										<label>
+										<label style="font-size: 16px;">
 								            <input type="radio" name="pmType" value="80"
 								                <c:if test="${empty productManageDTO or productManageDTO.pmType == 80}">checked</c:if>> 입고
 								        </label> 
-										<label>
+										<label style="font-size: 16px;">
 											<input type="radio"	name="pmType" value="90"
 												<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고
 										</label>
@@ -148,7 +148,7 @@ aside.sidenav {
 							</div>
 						</div>
 
-						<div class="mt-4 d-flex justify-content-center gap-3">
+						<div class="mt-6 d-flex justify-content-center gap-3">
 							<button type="submit"
 								class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
 								style="width: 100px;">${ empty productManageDTO.pmNum ? "등록" : "수정" }</button>
