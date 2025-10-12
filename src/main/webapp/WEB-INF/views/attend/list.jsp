@@ -19,10 +19,10 @@
 		class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 		<c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
 		<section class="border-radius-xl bg-white ms-2 mt-2 me-3"
-			style="height: 92vh; overflow: hidden scroll;">
+			style="height: 92vh; overflow: hidden;">
 
 			<div class="container-fluid">
-				<div class="row">
+				<div class="row  mt-2">
 					<!-- 왼쪽 카드 영역 -->
 					<div class="col-md-4">
 						<!-- 이달 근태 현황 -->
@@ -118,7 +118,7 @@
 
 					<!-- 오른쪽 출퇴근 내역 -->
 					<div class="col-md-8">
-						<div class="card">
+						<div class="card" style="height:640px;">
 							<div class="card-header">
 								출퇴근 내역
 								<form action="${pageContext.request.contextPath}/attend/monthly"
