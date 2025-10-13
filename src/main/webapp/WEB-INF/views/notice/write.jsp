@@ -8,10 +8,7 @@
 	<meta charset="UTF-8">
 	<title>공지사항</title>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
-	<style type="text/css">
-		.file-remove { margin-bottom: 0px; margin-left: 20px; }
-		input[type="checkbox"] { accent-color: #191919; }
-	</style>
+	<link href="/css/notice/write.css" rel="stylesheet">
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -61,6 +58,7 @@
 
 			<c:if test="${ notice ne null }">
 				<input type="hidden" name="noticeNum" value="${ notice.noticeNum }">
+				<input type="hidden" name="noticeTmp" value="${ notice.noticeTmp }">
 				<input type="hidden" name="deleteFiles" id="deleteFiles">
 			</c:if>
 
@@ -71,7 +69,10 @@
 				<button id="btn-write" data-kind="write" class="btn btn-dark px-4">등록</button>
 			</c:if>
 			<c:if test="${ notice ne null }">
-				<button id="btn-write" data-kind="edit" class="btn btn-dark px-4">수정</button>
+				<button id="btn-write" data-kind="edit" class="btn btn-dark px-4">
+					<c:if test="${ notice.noticeTmp eq true }">등록</c:if>
+					<c:if test="${ notice.noticeTmp eq false }">수정</c:if>
+				</button>
 			</c:if>
 			<button type="reset" class="btn btn-outline-secondary px-4" id="btn-cancel">취소</button>
 		</div>

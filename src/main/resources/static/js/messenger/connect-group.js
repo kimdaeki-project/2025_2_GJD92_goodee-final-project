@@ -123,7 +123,6 @@ joinStaffBtn.addEventListener('click', () => {
 	})
 	.then(response => response.json())
 	.then(response => {
-		console.log(response);
 		modal.style.display = "none";
 		let targetAll = document.querySelectorAll('.selected-member[data-staffCode]');
 		targetAll.forEach(t => {

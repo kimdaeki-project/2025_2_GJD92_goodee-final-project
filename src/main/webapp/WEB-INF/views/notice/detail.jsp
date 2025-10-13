@@ -77,9 +77,17 @@
 
 		<!-- 버튼 영역 -->
 		<div class="d-flex gap-2">
-			<a href="/notice" class="btn btn-foot">목록</a>
+			<c:if test="${ notice.noticeTmp eq true }">
+				<a href="/notice/temp" class="btn btn-foot">목록</a>			
+			</c:if>
+			<c:if test="${ notice.noticeTmp eq false }">
+				<a href="/notice" class="btn btn-foot">목록</a>						
+			</c:if>
 			<c:if test="${ notice.staffDTO.staffCode eq logged.staffCode }">
-				<a href="/notice/${ notice.noticeNum }/edit" class="btn btn-foot">수정</a>
+				<a href="/notice/${ notice.noticeNum }/edit" class="btn btn-foot">
+					<c:if test="${ notice.noticeTmp eq true }">등록</c:if>
+					<c:if test="${ notice.noticeTmp eq false }">수정</c:if>
+				</a>
 				<button id="btn-delete" class="btn btn-outline-danger">삭제</button>
 			</c:if>
 		</div>
