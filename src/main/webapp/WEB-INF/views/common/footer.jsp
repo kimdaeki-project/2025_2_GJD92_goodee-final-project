@@ -64,12 +64,11 @@
 	        })
 	        .then(res => res.json())
 	        .then(res => {
-	        	let unreadTotal = 0;
 	        	result.forEach(room => {
-	        		unreadTotal += res.unread[room];
+	        		chatCountGlobal += res.unread[room]; // 이거 변수는 heartBeat.js 에 존재함
 	        	});
 	        	let bdg = document.querySelector('.badge-footer-display');
-	        	let count = unreadTotal;
+	        	let count = chatCountGlobal;
 	        	if (count > 9) {
 	        		bdg.innerText = '9+';
 	        	} else {

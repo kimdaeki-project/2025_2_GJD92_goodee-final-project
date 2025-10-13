@@ -17,11 +17,13 @@ fetch("/msg/unread/count", {
             let badge = document.querySelector('#unread-count-' + chatRoomNum);
             badge.innerText = unread[chatRoomNum] > 0 ? unread[chatRoomNum] : "";
 
-            let latestMessage = document.querySelector('#chat-room-last-' + chatRoomNum);
-			if (latest[chatRoomNum].chatBodyContent.includes('\n')) {
-				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.split('\n')[0] + '...';
+            let latestMessage = document.querySelector('#chat-room-last-' + chatRoomNum); 
+			if (latest[chatRoomNum].chatBodyContent.trim().substr(0, 17).includes('\n')) {
+				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.trim().split('\n')[0] + '...';
+			} else if (latest[chatRoomNum].chatBodyContent.length >= 17) {
+				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.trim().substr(0, 17) + '...';				
 			} else {
-	            latestMessage.innerText = latest[chatRoomNum].chatBodyContent;				
+	            latestMessage.innerText = latest[chatRoomNum].chatBodyContent.trim();				
 			}
 
             let time = document.querySelector('#time-' + chatRoomNum);
@@ -47,4 +49,20 @@ forms.forEach(form => {
     form.addEventListener('click', () => {
         form.submit();
     });
+});
+// 채팅방 타입 변경
+const formAll = document.querySelector('#formAll');
+const formDm = document.querySelector('#formDm');
+const formGroup = document.querySelector('#formGroup');
+const tabAll = document.querySelector('.tab-all');
+const tabDm = document.querySelector('.tab-dm');
+const tabGroup = document.querySelector('.tab-group');
+tabAll.addEventListener('click', () => {
+	formAll.submit();
+});
+tabDm.addEventListener('click', () => {
+	formDm.submit();
+});
+tabGroup.addEventListener('click', () => {
+	formGroup.submit();
 });

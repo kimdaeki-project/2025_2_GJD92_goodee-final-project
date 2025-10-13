@@ -23,8 +23,6 @@ public class MessengerTestDTO {
 	@Column(columnDefinition = "LONGTEXT")
 	private String chatBodyContent;
 	private LocalDateTime chatBodyDtm = LocalDateTime.now();
-	@Column(columnDefinition = "boolean default false")
-	private boolean chatBodyDelete;
 	private String chatBodyType;
 	
 	@Transient
