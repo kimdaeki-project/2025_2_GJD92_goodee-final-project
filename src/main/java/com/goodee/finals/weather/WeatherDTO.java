@@ -1,7 +1,6 @@
 package com.goodee.finals.weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,35 +10,37 @@ import lombok.ToString;
 @ToString
 public class WeatherDTO {
 
-	@JsonProperty("latitude")
-	private double latitude;
+    private double latitude;
+    private double longitude;
 
-	@JsonProperty("longitude")
-	private double longitude;
-	
-	@JsonProperty("timezone")
-	private String timezone;
-	
-	@JsonProperty("current_weather")
-	private CurrentWeather currentWeather;
-	
-	
-	@Getter
-	@Setter
-	@ToString
-	public static class CurrentWeather {
-		
-		@JsonProperty("temperature")
-		private Double temperature;  // °C
-		
-		@JsonProperty("windspeed")
-		private Double windspeed;  // m/s
-		
-		@JsonProperty("time")
-		private String time;
-		
-		
-	}
-	
-	
+    @JsonProperty("generationtime_ms")
+    private double generationTimeMs;
+
+    @JsonProperty("utc_offset_seconds")
+    private int utcOffsetSeconds;
+
+    private String timezone;
+
+    @JsonProperty("timezone_abbreviation")
+    private String timezoneAbbreviation;
+
+    private double elevation;
+
+    @JsonProperty("current_weather")
+    private CurrentWeather currentWeather;
+
+
+    @Getter
+    @Setter
+    @ToString
+    public static class CurrentWeather {
+        private double temperature;
+        private double windspeed;
+        private double winddirection;
+        private int weathercode;
+        private String time;
+        
+        @JsonProperty("is_day")
+        private int isDay;
+    }
 }
