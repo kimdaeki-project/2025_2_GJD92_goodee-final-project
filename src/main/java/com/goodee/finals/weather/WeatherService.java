@@ -1,26 +1,31 @@
 package com.goodee.finals.weather;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class WeatherService {
-	
-	private RestTemplate restTemplate;
-	
-	public WeatherService(RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
-	
-	public WeatherDTO getForecast(double lat, double lon) {
-		String url = String.format(
-			"https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current_weather=true&timezone=auto",
-			lat, lon
-		);
-		
-		return restTemplate.getForObject(url, WeatherDTO.class);
-	}
-	
-	
 
+    private final WebClient webClient;
+
+    public WeatherService(WebClient.Builder builder) {
+        this.webClient = builder.baseUrl("https://api.open-meteo.com").build();
+    }
+
+    public Mono<WeatherDTO> getWeather(double lat, double lon, String timezone) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v1/forecast")
+                        .queryParam("latitude", lat)
+                        .queryParam("longitude", lon)
+                        .queryParam("current_weather", "true")
+                        .queryParam("hourly", "relative_humidity_2m")
+                        .queryParam("timezone", timezone)
+                        .build())
+                .retrieve()
+                .bodyToMono(WeatherDTO.class);
+        
+        
+    }
 }

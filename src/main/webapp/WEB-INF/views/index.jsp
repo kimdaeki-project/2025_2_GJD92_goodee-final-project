@@ -62,8 +62,7 @@
       font-size: 14px;
     }
 
-    .panel h2 {
-      font-size: 16px;
+    .panel h3 {
       margin-bottom: 10px;
       border-bottom: 1px solid #eee;
       padding-bottom: 5px;
@@ -147,7 +146,7 @@
 
 			<!-- 왼쪽 (출근 / 근무시간) -->
 			<div class="panel check-in">
-				<h2>오늘</h2>
+				<h3>오늘</h3>
 				<p>${todayDate}</p>
 				<div class="time-info">
 				<div class="time-circle">
@@ -195,7 +194,7 @@
 	
 	        <!-- 어트랙션 운휴 현황 -->
 	        <div class="panel attraction-status">
-	          <h2>어트랙션 운휴 현황</h2>
+	          <h3>어트랙션 운휴 현황</h3>
 	          <table>
 	            <tr><td>어트랙션</td><td>상태</td></tr>
 	          	<c:forEach items="${rides }" var="ride">
@@ -205,20 +204,15 @@
 	          </table>
 	        </div>
 	
-	        <!-- 날씨 -->
-	        <div class="panel weather">
-	        	<div class="card">
-	        		<h2>날씨</h2>
-					<div id="weather-icon"></div>	        		
-	        		<p>지역 : ${location }</p>
-	        		<p>기온: ${weather.temperature}℃</p>
-				    <p>풍속: ${weather.windspeed} m/s</p>
-	        	</div>
-	        </div>
-	
+			<!-- 날씨 -->
+			<div class="panel weather-card">
+				<h3>날씨</h3>
+				<div id="weather-info" style="font-size:1rem;">⏳ 불러오는 중...</div>
+			</div>
+
 	        <!-- 결재 현황 -->
 	        <div class="panel approval">
-	          <h2>결재 현황</h2><a href="/approval">더보기</a>
+	          <h3>결재 현황</h3><a href="/approval">더보기</a>
 	          <table class="table text-center">
 	            <tr>
 		            <td class="col-2">문서번호</td>
@@ -239,7 +233,7 @@
 	
 	        <!-- 공지사항 -->
 	        <div class="panel notices">
-	          <h2>공지사항</h2><a href="/notice">더보기</a>
+	          <h3>공지사항</h3><a href="/notice">더보기</a>
 	          <table>
 	            <tr>
 		            <td>번호</td>

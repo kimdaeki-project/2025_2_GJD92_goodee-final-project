@@ -8,6 +8,29 @@ const cancelBtn = document.querySelector('#btn-cancel');
 const input = document.querySelector('#fileInput');
 
 btn.addEventListener('click', () => {
+	
+	const noticeTitle = document.querySelector('#noticeTitle').value.trim();
+	const noticeContent = document.querySelector('#noticeContent').value.trim();
+	if (noticeTitle.length === 0) {
+		Swal.fire({
+			text: "제목을 입력해주세요.",
+			icon: "warning",
+			showCancelButton: false,
+			confirmButtonColor: "#191919",
+			confirmButtonText: "확인"
+		});
+		return;
+	} else if (noticeContent.length === 0) {
+		Swal.fire({
+			text: "내용을 입력해주세요.",
+			icon: "warning",
+			showCancelButton: false,
+			confirmButtonColor: "#191919",
+			confirmButtonText: "확인"
+		})
+		return;
+	}
+	
 	const data = btn.getAttribute('data-kind');
 	const dt = new DataTransfer();
 	newFiles.forEach(f => dt.items.add(f));
@@ -27,7 +50,7 @@ btn.addEventListener('click', () => {
 						text: "상단고정은 최대 5개까지 가능합니다.",
 						icon: "warning",
 						showCancelButton: false,
-						confirmButtonColor: "#3085d6",
+						confirmButtonColor: "#191919",
 						confirmButtonText: "확인"
 					}).then(result => console.log(result));
 				} else {
@@ -54,13 +77,13 @@ btn.addEventListener('click', () => {
 						text: "상단고정은 최대 5개까지 가능합니다.",
 						icon: "warning",
 						showCancelButton: false,
-						confirmButtonColor: "#3085d6",
+						confirmButtonColor: "#191919",
 						confirmButtonText: "확인"
 					}).then(result => console.log(result));
 				} else {
 					form.submit();
 				}
-			});			
+			});
 		} else {
 			form.submit();
 		}
@@ -68,20 +91,7 @@ btn.addEventListener('click', () => {
 });
 
 cancelBtn.addEventListener('click', () => {
-	Swal.fire({
-		text: "게시글을 임시저장하시겠습니까?",
-		icon: "warning",
-		showCancelButton: true,
-		confirmButtonColor: "#3085d6",
-		confirmButtonText: "확인",
-		cancelButtonText: "취소"
-	}).then(result => {
-		if (result.isConfirmed) {
-			console.log('미구현');
-		} else {
-			location.href = "/notice";
-		}
-	});
+	location.href = "/notice";
 });
 // -------------------------------------------------- //
 const existingFiles = window.existingFiles || [];
@@ -134,15 +144,12 @@ const deleteExistingFiles = [];
 		    }
 
 		    const meta = document.createElement('div');
-		    meta.innerHTML = `
-		        <div>${file.name}</div>
-		        <div class="text-muted">${humanFileSize(file.size)}</div>
-		    `;
+		    meta.innerHTML = `<div>${file.name}ㆍ<span class="text-muted">${humanFileSize(file.size)}</span></div>`;
 
 		    const removeBtn = document.createElement('button');
-		    removeBtn.textContent = '삭제';
+		    removeBtn.textContent = '제거';
 		    removeBtn.type = 'button';
-		    removeBtn.className = 'btn btn-sm btn-outline-danger ms-3';
+		    removeBtn.className = 'btn btn-sm btn-outline-danger file-remove';
 		    removeBtn.onclick = () => {
 				deleteExistingFiles.push(file.attachNum);
 		        existingFiles.splice(idx,1);
@@ -178,15 +185,12 @@ const deleteExistingFiles = [];
             }
 
             const meta = document.createElement('div');
-            meta.innerHTML = `
-                <div>${file.name}</div>
-                <div class="text-muted">${file.type || '알 수 없음'} · ${humanFileSize(file.size)}</div>
-            `;
+			meta.innerHTML = `<div>${file.name}ㆍ<span class="text-muted">${humanFileSize(file.size)}</span></div>`;
 
             const removeBtn = document.createElement('button');
             removeBtn.textContent = '제거';
             removeBtn.type = 'button';
-            removeBtn.className = 'btn btn-sm btn-outline-danger ms-3';
+            removeBtn.className = 'btn btn-sm btn-outline-danger file-remove';
             removeBtn.onclick = () => {
                 newFiles.splice(idx, 1);
                 renderList();

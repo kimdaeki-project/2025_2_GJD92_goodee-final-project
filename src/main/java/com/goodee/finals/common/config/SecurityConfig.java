@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistry;
@@ -50,10 +51,8 @@ public class SecurityConfig {
 		// Authorization
 		.authorizeHttpRequests((option) -> { option
 			// static resources
-			.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-			.requestMatchers("/staff/info", "/approval/**").authenticated()
-			// 임시
-			.anyRequest().permitAll()
+			.requestMatchers("/css/**", "/js/**", "/images/**", "/WEB-INF/**", "/staff/login").permitAll()
+			.anyRequest().authenticated()
 			;
 		})
 		
@@ -64,6 +63,7 @@ public class SecurityConfig {
 			.passwordParameter("staffPw")
 			.successHandler(customAuthenticationSuccessHandler)
 			.failureHandler(customAuthenticationFailureHandler)
+			.permitAll()
 			;
 		})
 		

@@ -81,7 +81,7 @@ public class FaultService {
 	
 	// 어트랙션 고장 신고 작성
 	@Transactional
-	public boolean writeFault(FaultDTO faultDTO) throws Exception {
+	public FaultDTO writeFault(FaultDTO faultDTO) throws Exception {
 		
 		try {
 			// 선택된 어트랙션을 DB에서 조회
@@ -98,11 +98,15 @@ public class FaultService {
 			// 저장
 			FaultDTO save = faultRepository.save(faultDTO);
 			
-			return save != null && save.getFaultNum() != null;
+			if (save != null && save.getFaultNum() != null) {
+				return save;
+			} else {
+				return null;
+			}
 					
 		}catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 		
 	}

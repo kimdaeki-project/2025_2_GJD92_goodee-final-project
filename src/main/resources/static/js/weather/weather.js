@@ -1,21 +1,39 @@
-/**
- *  Open-Meteo 날씨 API
- */
-
 document.addEventListener("DOMContentLoaded", () => {
-	const p = document.querySelector("p:nth-of-type(2)");
-	const tempText = p ? p.innerText : undefined;
-	if (!tempText) return;
-	
-	const temp = parseFloat(tempText.replace("기온: ", "").replace("℃", ""));
-	const iconDiv = document.getElementById("weather-icon");
-	
-	let icon = "☁️";
-	  if (temp >= 30) icon = "☀️";
-	  else if (temp >= 20) icon = "🌤️";
-	  else if (temp >= 10) icon = "🌦️";
-	  else icon = "❄️";
+      const div = document.getElementById('weather-info');
+	  
+  fetch('/weather/api')
+    .then(res => res.json())
+    .then(data => {
 
-	  iconDiv.innerText = icon;
-	
+      if (data.error) {
+        div.innerText = '⚠️ 날씨 정보를 불러올 수 없습니다.';
+        return;
+      }
+
+      let icon = '❄️';
+      if (data.weathercode == 0) icon = '☀️';
+      else if (data.weathercode <= 3) icon = '🌤️';
+      else if (data.weathercode <= 45) icon = '☁️';
+      else if (data.weathercode <= 67) icon = '🌧️';
+      else if (data.weathercode <= 82) icon = '⛈️';
+
+	  div.innerHTML = `
+	    <div style="font-size:4rem;">
+	      ${icon}
+	    </div>
+	    <div style="font-size:1.2rem; font-weight:bold; margin-top:5px;">
+	      ${data.city}
+	    </div>
+	    <div style="font-size:1rem; margin-top:10px;">
+	      기온  ${data.temperature}℃<br>
+	      풍속  ${data.windspeed} m/s<br>
+		  습도  ${data.humidity}%
+	    </div>
+		
+	  `;
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('weather-info').innerText = '❌ 오류 발생';
+    });
 });

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 
@@ -7,6 +8,10 @@
 	<meta charset="UTF-8">
 	<title>공지사항</title>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	<style type="text/css">
+		.file-remove { margin-bottom: 0px; margin-left: 20px; }
+		input[type="checkbox"] { accent-color: #191919; }
+	</style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -16,20 +21,19 @@
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3 p-4" style="height: 90vh; overflow: hidden scroll;">
     
-		<form method="post" id="form" enctype="multipart/form-data" class="container" style="max-width: 1000px;">
+		<form:form method="post" id="form" enctype="multipart/form-data" class="container" style="max-width: 1000px;" modelAttribute="noticeDTO">
 
 			<!-- 제목 + 상단 고정 (라벨 왼쪽, 체크박스 오른쪽 끝) -->
 			<div class="mb-3">
 			    <div class="d-flex justify-content-between align-items-center mb-2">
 			        <label for="noticeTitle" class="fw-bold">제목</label>
 			        <div class="form-check">
-			            <input class="form-check-input" type="checkbox" id="noticePinned" name="noticePinned"
-			                ${ notice.noticePinned ? "checked" : "" }>
+			            <input class="aaa" type="checkbox" id="noticePinned" name="noticePinned" ${ notice.noticePinned ? "checked" : "" }>
 			            <label class="form-check-label fw-bold" for="noticePinned">상단 고정</label>
 			        </div>
 			    </div>
-			    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle"
-			           value="${ notice.noticeTitle }">
+			    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" value="${ notice.noticeTitle }">
+			    <form:errors path="noticeTitle" cssStyle="color: red;"></form:errors>
 			</div>
 
 			<!-- 첨부파일 -->
@@ -43,8 +47,7 @@
 			    </div>
 			
 			    <!-- 파일 리스트 박스 (form-control 대신 커스텀 박스) -->
-			    <div id="fileList" class="border rounded p-3 text-center text-muted bg-white" 
-			         style="min-height: 70px;">
+			    <div id="fileList" class="border rounded p-3 text-center text-muted bg-white"  style="min-height: 70px;">
 			        선택된 파일이 없습니다.
 			    </div>
 			</div>
@@ -52,8 +55,8 @@
 			<!-- 본문 -->
 			<div class="mb-4">
 				<label for="noticeContent" class="fw-bold d-block mb-2">본문</label>
-				<textarea rows="10" class="form-control" id="noticeContent" 
-						  name="noticeContent" style="resize: none;">${ notice.noticeContent }</textarea>
+				<textarea rows="10" class="form-control" id="noticeContent" name="noticeContent" style="resize: none;">${ notice.noticeContent }</textarea>
+				<form:errors path="noticeContent" cssStyle="color: red;"></form:errors>
 			</div>
 
 			<c:if test="${ notice ne null }">
@@ -61,7 +64,7 @@
 				<input type="hidden" name="deleteFiles" id="deleteFiles">
 			</c:if>
 
-		</form>
+		</form:form>
 		<!-- 버튼 -->
 		<div class="d-flex justify-content-end gap-2 mt-4" style="max-width:1000px; margin:0 auto;">
 			<c:if test="${ notice eq null }">
