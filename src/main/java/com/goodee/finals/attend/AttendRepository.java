@@ -12,6 +12,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.goodee.finals.approval.EarlyDTO;
+import com.goodee.finals.approval.OvertimeDTO;
+import com.goodee.finals.approval.VacationDTO;
+
 @Repository
 public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 
@@ -36,9 +40,21 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 	                                       @Param("startDate") LocalDate startDate,
 	                                       @Param("endDate") LocalDate endDate);
 	
-	// 휴무일 리스트 가져오기	
+	// 휴무일 리스트 (주말 + 공휴일)
 	@Query("SELECT h FROM HolidayDTO h WHERE to_char(h.date, 'yyyymm') = :monthStr")
 	List<HolidayDTO> findByMonth(String monthStr);
+	
+	// 연장근로 리스트	
+	@Query("SELECT o FROM OvertimeDTO o JOIN o.approvalDTO a WHERE a.staffDTO.staffCode = :staffCode AND to_char(o.overStart, 'yyyymm') = :monthStr")
+	List<OvertimeDTO> findAllOvertimeByStaffCodeAndByMonth(Integer staffCode, String monthStr);
+	
+	// 휴가연차 리스트	
+	@Query("SELECT v FROM VacationDTO v JOIN v.approvalDTO a WHERE a.staffDTO.staffCode = :staffCode AND to_char(v.vacStart, 'yyyymm') = :monthStr AND to_char(v.vacEnd, 'yyyymm') = :monthStr")
+	List<VacationDTO> findAllVacationByStaffCodeAndByMonth(Integer staffCode, String monthStr);
+	
+	// 조기퇴근 리스트	
+	@Query("SELECT e FROM EarlyDTO e JOIN e.approvalDTO a WHERE a.staffDTO.staffCode = :staffCode AND to_char(e.earlyDtm, 'yyyymm') = :monthStr")
+	List<EarlyDTO> findAllEarlyByStaffCodeAndByMonth(Integer staffCode, String monthStr);
 	
 	// 휴무일 제외한 출퇴근 내역 가져오기
 	@Query("SELECT a FROM AttendDTO a " +

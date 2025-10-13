@@ -23,7 +23,7 @@
 			style="height: 92vh; overflow: hidden;">
 
 			<div class="container-fluid">
-				<div class="row  mt-2">
+				<div class="row  mt-3">
 					<!-- 왼쪽 카드 영역 -->
 					<div class="col-md-4">
 						<!-- 이달 근태 현황 -->
@@ -94,7 +94,7 @@
 								<p>연장 근로시간 : ${weeklyOvertime eq null ? "00h 00m" : weeklyOvertime}</p>
 								
 								
-								<div class="work-progress" style="margin-top:15px;">
+								<div class="work-progress mt-5" style="margin-top:15px;">
 								  <label>근로시간 현황</label>
 								  <div class="progress" style="height: 25px; border-radius: 10px;">
 								  
@@ -122,7 +122,7 @@
 
 					<!-- 오른쪽 출퇴근 내역 -->
 					<div class="col-md-8">
-						<div class="card" style="height:641px; overflow: hidden scroll;">
+						<div class="card" style="height:674px; overflow: hidden;">
 							<div class="card-header">
 								<div>
 								출퇴근 내역
@@ -173,6 +173,7 @@
 													<td>${attend.workTime }</td>
 													<td>${attend.totalWorkTime }</td>
 													<td>${attend.attendStatus }</td>
+													
 													<td>
 											            <c:set var="isOvertime" value="false" />
 											            <c:forEach items="${overtimeList}" var="over">

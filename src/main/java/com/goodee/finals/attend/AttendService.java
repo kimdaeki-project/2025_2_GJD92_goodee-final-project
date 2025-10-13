@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.goodee.finals.approval.EarlyDTO;
 import com.goodee.finals.approval.OvertimeDTO;
-import com.goodee.finals.approval.OvertimeRepository;
 import com.goodee.finals.approval.VacationDTO;
 import com.goodee.finals.approval.VacationRepository;
 import com.goodee.finals.attend.AttendController.WeeklyWorkResult;
@@ -32,8 +32,6 @@ public class AttendService {
 	StaffRepository staffRepository;
 	@Autowired
 	VacationRepository vacationRepository;
-	@Autowired
-	OvertimeRepository overtimeRepository;
 
 	public AttendDTO attendIn(AttendDTO attendDTO) {
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -106,13 +104,18 @@ public class AttendService {
 	}
 	
 	public WeeklyWorkResult getWeeklyWorkTime(LocalDate monday, LocalDate sunday, Integer staffCode) {
-		// 선택된 한 주의 월~일요일까지의 출퇴근내역 
-		// 휴가이거나 공휴일이 포함되어있으면? true면? 해당 주의 월요일부터 일요일 날짜의 
-		// 월요일의날짜시작~일요일의날짜끝으로 그 날짜 사이에 holiday,vacation 이 있다면, 그냥 total에 8시간 더해주기
+		// 선택된 한 주의 월~일요일까지의 출퇴근내역
+		// 월요일의날짜시작~일요일의날짜끝으로 그 날짜 사이에 공휴일,연차,조퇴 있다면, 그냥 total에 8시간 더해주기
+		// 연장근로 total 8 + 추가근로시간
 		
         List<AttendDTO> records = attendRepository
                 .findByStaffDTO_StaffCodeAndAttendDateBetween(staffCode, monday, sunday);
-
+//        List<HolidayDTO> weeklyHoliday = holidayRepository.findByStaffDTO_StaffCodeAndAttendDateBetween;
+//        List<VacationDTO> weeklyVacation = vacationRepository.findByStaffDTO_StaffCodeAndAttendDateBetween;
+//        List<EarlyDTO> weeklyEarly = earlyRepository.findByStaffDTO_StaffCodeAndAttendDateBetween;
+//        List<OvertimeDTO> weeklyOvertime = overtimeRepository.findByStaffDTO_StaffCodeAndAttendDateBetween;
+        
+        
         Duration total = Duration.ZERO;      // 총 근로시간
         Duration overtime = Duration.ZERO;   // 일일 연장근로시간
         Duration weeklyOvertime = Duration.ZERO; // 주 40시간 초과분
@@ -172,17 +175,13 @@ public class AttendService {
 		}
 		
 		// 연차 리스트 가져오기
-		List<VacationDTO> vacationList = vacationRepository.findAllVacationByStaffCodeAndByMonth(staffCode, monthStr);
+		List<VacationDTO> vacationList = attendRepository.findAllVacationByStaffCodeAndByMonth(staffCode, monthStr);
 		for (VacationDTO vacationDTO : vacationList) {
 			
 			Integer vacStartDay = vacationDTO.getVacStart().getDayOfMonth();
 			Integer vacEndDay = vacationDTO.getVacEnd().getDayOfMonth();
 			
 			if (vacationDTO.getVacStart().getDayOfMonth() != vacationDTO.getVacEnd().getDayOfMonth()) {
-				// 1일부터 2일 연차사용으로 총 2일 휴가라면, 2-1 = 1 - 1
-				// 1일부터 3일 연차사용으로 총 3일 휴가라면, 3-1 = 2 - 1 = 1
-				// vacStartDay+1 값으로 holiday.add 한번더 해주기
-				// 1일부터 4일 연차사용으로 총 4일 휴가라면, 4-1 = 3 - 1 = 2 => 2번 반복
 				holiday.add(vacStartDay);
 				holiday.add(vacEndDay);
 			} else {
@@ -199,7 +198,15 @@ public class AttendService {
 		String monthStr = (month < 10) ? "0" + month : "" + month;
 	    monthStr = year + monthStr;
 		
-		return overtimeRepository.findAllOvertimeByStaffCodeAndByMonth(staffCode, monthStr);
+		return attendRepository.findAllOvertimeByStaffCodeAndByMonth(staffCode, monthStr);
+	}
+	
+	// 조기퇴근 날짜와 시간 가져오기
+	public List<EarlyDTO> findAllEarlyByStaffCodeAndByMonth(Integer staffCode, int year, int month){
+		String monthStr = (month < 10) ? "0" + month : "" + month;
+		monthStr = year + monthStr;
+		
+		return attendRepository.findAllEarlyByStaffCodeAndByMonth(staffCode, monthStr);
 	}
 	
 }
