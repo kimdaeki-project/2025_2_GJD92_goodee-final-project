@@ -82,18 +82,18 @@
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">근무 / 퇴근</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ workingStaff }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
 		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">연차</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ leavedStaff }</p>
 		    			</div>
 		    			
 		    			<div class="rounded" style="border: 1px solid #686868; width: 150px; height: 100px; box-shadow: 2px 2px 5px gray;">
-		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">결근</p>
-		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">35</p>
+		    				<p class="text-start ms-3 mt-2 mb-0" style="color: #686868; font-weight: 700;">미출근 / 결근</p>
+		    				<p class="text-end me-3 mt-2" style="color: #686868; font-weight: 700; font-size: 35px;">${ totalStaff - workingStaff - leavedStaff }</p>
 		    			</div>
 	    			</div>
 	    			

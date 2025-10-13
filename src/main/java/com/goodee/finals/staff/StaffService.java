@@ -66,6 +66,14 @@ public class StaffService implements UserDetailsService {
 		return staffRepository.count();
 	}
 	
+	public List<Integer> getLeavedStaffToday() {
+		return staffRepository.findLeavedStaffToday();
+	}
+	
+	public Integer getWorkingStaffToday() {
+		return staffRepository.findWorkingStaff();
+	}
+	
 	public boolean registStaff(StaffDTO staffDTO, MultipartFile attach) {
 		staffDTO = setStaffDefault(staffDTO);
 		
