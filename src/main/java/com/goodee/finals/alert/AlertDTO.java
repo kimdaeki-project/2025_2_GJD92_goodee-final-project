@@ -22,8 +22,6 @@ public class AlertDTO {
 	private Long alertNum;
 	private String alertMsg;
 	@Column(columnDefinition = "boolean default false")
-	private boolean alertCheck;
-	@Column(columnDefinition = "boolean default false")
 	private boolean alertDelete;
 	
 	@ManyToOne @JoinColumn(name = "staffCode") @JsonIgnore

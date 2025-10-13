@@ -77,7 +77,7 @@
 	<div class="message-container-chat">
 	    <textarea rows="3" cols="30" id="messageInput" placeholder="메시지를 입력해 주세요."></textarea>
 	    <div class="button-wrapper">
-	        <button id="sendButton">전송</button>
+	        <button id="sendButton" disabled>전송</button>
 	    </div>
 	</div>
 

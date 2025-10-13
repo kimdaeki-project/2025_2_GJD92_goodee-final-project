@@ -16,7 +16,7 @@
     <div class="create-room-container">
         <!-- 멤버 리스트 -->
         <div class="member-list">
-        	<a class="anchor" href="/msg/room">채팅 목록</a>
+        	<a class="anchor" href="/msg/room/all">채팅 목록</a>
             <h3>그룹 채팅방 생성</h3>
             <sec:authorize access="isAuthenticated()">
 				<sec:authentication property="principal" var="logged" />
@@ -28,6 +28,12 @@
 			    <form:errors path="chatRoomName"></form:errors>
 			    <input type="hidden" id="addedStaff" name="addedStaff">
 			</form:form>
+			<!-- 검색을 했을 때 추가한 멤버가 같이 이동이 되지 않아서 고민좀 해봐야할 듯 -->
+<%-- 	    	<form action="/msg/create" method="get">
+	    		<label for="search" id="search-label">초대할 멤버 선택</label>
+		    	<input type="text" placeholder="이름을 입력하세요" name="keyword" value="${ keyword }" class="search-input" id="search">
+		    	<button class="search-btn">검색</button>
+	    	</form> --%>
 			<div class="scroll-members">
 			<div class="section-title">임원</div>
             <c:forEach items="${ staff }" var="m">
