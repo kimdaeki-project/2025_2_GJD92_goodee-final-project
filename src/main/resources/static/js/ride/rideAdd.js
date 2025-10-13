@@ -16,7 +16,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
       Swal.fire({
         text: "파일 크기는 5MB 이하여야 합니다.",
         icon: "error",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       event.target.value = "";
@@ -29,7 +29,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
       Swal.fire({
         text: "이미지 파일(jpg, jpeg, png, gif, bmp, webp)만 업로드 가능합니다.",
         icon: "error",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       event.target.value = "";
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         text: "입력하지 않은 정보가 있습니다.",
         icon: "warning",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       return;
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             Swal.fire({
               text: "이미 있는 어트랙션 코드 입니다.",
               icon: "error",
-              confirmButtonColor: "#3085d6",
+              confirmButtonColor: "#191919",
               confirmButtonText: "확인"
             });
             return; // 중복이면 여기서 끝냄
@@ -120,8 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
             text: "어트랙션을 등록하시겠습니까?",
             icon: "question",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
+            confirmButtonColor: "#191919",
+            cancelButtonColor: "#FFFFFF",
             confirmButtonText: "등록",
             cancelButtonText: "취소"
           }).then((result) => {
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Swal.fire({
             text: "중복 검사 중 오류가 발생했습니다.",
             icon: "error",
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#191919",
             confirmButtonText: "확인"
           });
           console.error(err);
@@ -146,8 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
         text: "어트랙션을 수정하시겠습니까?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#191919",
+        cancelButtonColor: "#FFFFFF",
         confirmButtonText: "수정",
         cancelButtonText: "취소"
       }).then((result) => {
