@@ -5,6 +5,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.goodee.finals.drive.DriveDTO;
+import com.goodee.finals.drive.DriveRepository;
+import com.goodee.finals.drive.DriveService;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.JobDTO;
@@ -27,13 +30,18 @@ public class DefaultInitializer implements ApplicationRunner {
 	@Autowired
 	private StaffRepository staffRepository;
 	@Autowired
+	private DriveRepository driveRepository;
+	@Autowired
 	private StaffService staffService;
+	@Autowired
+	private DriveService driveService;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		setDeptDefault();
 		setJobDefault();
 		setAdmin();
+		setDeptDrive();
 	}
 
 	private void setDeptDefault() {
@@ -78,6 +86,20 @@ public class DefaultInitializer implements ApplicationRunner {
 			staffDTO.setStaffName("정도현");
 			
 			staffService.registStaff(staffDTO, null);
+		}
+	}
+	
+	private void setDeptDrive() {
+		if(driveRepository.count() == 1) {
+			String[] driveNameArr = {"임원 드라이브", "인사팀 드라이브", "운영팀 드라이브", "시설팀 드라이브"};		
+			StaffDTO staffDTO = staffService.getStaff(20250001);
+			
+			for(int i = 0; i < driveNameArr.length; i++) {
+				DriveDTO driveDTO = new DriveDTO();
+				driveDTO.setDriveName(driveNameArr[i]);
+				driveDTO.setStaffDTO(staffDTO);
+				driveService.createDrive(driveDTO);
+			}
 		}
 	}
 }

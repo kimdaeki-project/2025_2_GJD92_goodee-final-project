@@ -45,7 +45,7 @@ public class DriveController {
 		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO);
 		List<DriveShareDTO> shareDriveList = driveService.getShareDriveByStaffCode(staffDTO);
 		
-		if(ObjectUtils.isEmpty(myDriveList) || driveService.getDefaultDrive(staffDTO) == null) {
+		if(myDriveList == null || myDriveList.size() < 1) {
 			DriveDTO driveDTO = driveService.createDefaultDrive(staffDTO);
 			myDriveList.add(driveDTO);
 		}

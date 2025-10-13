@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -33,7 +34,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class DriveService {
-
+	private static final Long ROLE_HQ_DRIVE = 2L;
+	private static final Long ROLE_HR_DRIVE = 3L;
+	private static final Long ROLE_OP_DRIVE = 4L;
+	private static final Long ROLE_FA_DRIVE = 5L;
+	
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
 	
@@ -108,8 +113,50 @@ public class DriveService {
 		return driveRepository.findById(driveNum).orElseThrow();
 	}
 	
+	// 사원 등록시 기본드라이브 생성
+	public DriveDTO createDefaultDrive(StaffDTO staffDTO) {
+		DriveDTO driveDTO = new DriveDTO();
+		driveDTO.setDriveName(staffDTO.getStaffName() + "님");
+		driveDTO.setIsPersonal(true);
+		driveDTO.setStaffDTO(staffDTO);
+		driveDTO.setDriveEnabled(true);
+		
+		driveDTO = driveRepository.save(driveDTO);
+		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
+		
+		if(driveRepository.count() > 1)	addInDeptDrive(staffDTO); // 최초 서버 실행시 제외
+		
+		return driveDTO;
+	}
+
+	// 사원 등록시 부서 공유드라이브에 추가
+	public DriveDTO addInDeptDrive(StaffDTO staffDTO) {
+		Integer deptCode = staffDTO.getDeptDTO().getDeptCode();
+		DriveDTO driveDTO = null;
+		
+		switch (deptCode) {
+			case 1000: driveDTO = driveRepository.findById(ROLE_HQ_DRIVE).orElseThrow(); break;
+			case 1001: driveDTO = driveRepository.findById(ROLE_HR_DRIVE).orElseThrow(); break;
+			case 1002: driveDTO = driveRepository.findById(ROLE_OP_DRIVE).orElseThrow(); break;
+			case 1003: driveDTO = driveRepository.findById(ROLE_FA_DRIVE).orElseThrow(); break;
+		}
+		
+		if(driveDTO.getDriveShareDTOs() == null) {
+			driveDTO.setDriveShareDTOs(new ArrayList<DriveShareDTO>());
+		} 	
+		DriveShareDTO driveShareDTO = new DriveShareDTO();
+		driveShareDTO.setDriveDTO(driveDTO);
+		driveShareDTO.setStaffDTO(staffDTO);
+		driveDTO.setIsPersonal(false);
+		driveDTO.getDriveShareDTOs().add(driveShareDTO);
+		
+		driveDTO = driveRepository.save(driveDTO);
+		
+		return driveDTO;
+	}
+	
 	public DriveDTO createDrive(DriveDTO driveDTO) {
-		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    // 드라이브 이름 중복 조회
+		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName().trim());    // 드라이브 이름 중복 조회
 		if(existDriveName != null) {
 			System.out.println("DriveService createDrive : 중복된이름 존재 메서드 종료");
 			return null;
@@ -142,19 +189,20 @@ public class DriveService {
 		return driveDTO; 
 	}
 	
+	
 	public DriveDTO updateDrive(DriveDTO driveDTO) {
-		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    
-		if(existDriveName != null && !existDriveName.getDriveNum().equals(driveDTO.getDriveNum())) { // 중복이름과 PK가 같지 않은경우 return;
+		DriveDTO existDrive = driveRepository.findByDriveName(driveDTO.getDriveName());    
+		if(existDrive != null && !existDrive.getDriveNum().equals(driveDTO.getDriveNum())) { // 중복이름과 PK가 같지 않은경우 return;
 			System.out.println("DriveService : 중복된이름 존재 메서드 종료");
 			return null;
 		}
 		
 		DriveDTO originDrive = driveRepository.findById(driveDTO.getDriveNum()).orElseThrow();
 		originDrive.getDriveShareDTOs().clear(); // 기존 드라이브 연간관계 끊기
+		originDrive.setDriveName(driveDTO.getDriveName().trim());
 		
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().isEmpty()) {
 			originDrive.setIsPersonal(true);
-			originDrive.setDriveName(driveDTO.getDriveName().trim());
 			return driveRepository.save(originDrive);
 		}
 		
@@ -164,7 +212,6 @@ public class DriveService {
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(originDrive);
 			originDrive.setIsPersonal(false);
-			originDrive.setDriveName(driveDTO.getDriveName().trim());
 			originDrive.getDriveShareDTOs().add(driveShare);
 		}
 		
@@ -177,22 +224,6 @@ public class DriveService {
 			return null;
 		}
 		driveDTO.setDriveEnabled(false);
-		driveDTO = driveRepository.save(driveDTO);
-		
-		return driveDTO;
-	}
-	
-	// 사원 등록시 기본드라이브 생성
-	public DriveDTO createDefaultDrive(StaffDTO staffDTO) {
-		DriveDTO driveDTO = new DriveDTO();
-		driveDTO.setDriveName(staffDTO.getStaffName() + "님");
-		driveDTO.setIsPersonal(true);
-		driveDTO.setStaffDTO(staffDTO);
-		driveDTO.setDriveEnabled(true);
-		
-		driveDTO = driveRepository.save(driveDTO);
-		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
-		
 		driveDTO = driveRepository.save(driveDTO);
 		
 		return driveDTO;
@@ -279,5 +310,6 @@ public class DriveService {
 	public List<AttachmentDTO> getAttachListByAttachNum(List<Long> attachNums) {
 		return attachmentRepository.findAllById(attachNums);
 	}
+	
 	
 }
