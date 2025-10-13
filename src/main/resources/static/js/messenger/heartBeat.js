@@ -33,20 +33,29 @@ function connectWebSocket(staffCode) {
 }
 
 function standardAlert(msg, destination) {
-    const notyf = new Notyf();
-    notyf.success('새로운 알림이 도착했습니다!');
-	fetch('/alert/new', {
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ staffCodeToDb: destination.split("/").pop() })    
-	})
-	.then(response => response.json())
-	.then(response => {
-		htmlTagBuilder(msg, response.alertNum);		
-	});
 	
-	let alertCount = alertCountNoDelete + 1;
-	alertCountDecider(alertCount);
+	/*
+		* 원래는 알림을 DB에 저장하고 바로 웹소켓 요청을 쏴서 DB에 있는 해당 사용자의 가장 최신 알림을 가져옴
+		* 근데 이게 DB에 저장이 완벽히 되기도 전에 조회해와서 가장 최신이 아닌 가장 최신 -1 알림을 가져와버림
+		* 그래서 DB에 완벽히 저장 되고 그 알림을 가져올 수 있도록 알림이 오는 시간을 일부 지연시킴(DB랑 싱크하기 위해서)
+	*/
+	
+	setTimeout(function () { 
+		const notyf = new Notyf();
+	    notyf.success('새로운 알림이 도착했습니다!');
+		fetch('/alert/new', {
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ staffCodeToDb: destination.split("/").pop() })    
+		})
+		.then(response => response.json())
+		.then(response => {
+			htmlTagBuilder(msg, response.alertNum);		
+		});
+		
+		alertCountNoDelete ++;
+		alertCountDecider();		
+	 }, 500);
 }
 
 function renderAlerts(staffCodeForAlert) {
@@ -63,7 +72,7 @@ function renderAlerts(staffCodeForAlert) {
 				alertCountNoDelete++;				
 			}
 		});
-		alertCountDecider(alertCountNoDelete);
+		alertCountDecider();
 	});
 }
 
@@ -128,8 +137,8 @@ function htmlTagBuilder(msg, alertNum) {
 			if (response) {
 				let toDeleteEl = document.querySelector('.list-' + alertNum);
 				dm.removeChild(toDeleteEl);
-				let alertCountFromDelete = alertCountNoDelete - 1;
-				alertCountDecider(alertCountFromDelete);
+				alertCountNoDelete--;
+				alertCountDecider();
 				
 				// no-alert 처리
 				if (dm.querySelectorAll('li:not(.no-alert)').length === 0) noAlert();
@@ -149,8 +158,8 @@ function htmlTagBuilder(msg, alertNum) {
 			if (response) {
 				let toDeleteEl = document.querySelector('.list-' + alertNum);
 				dm.removeChild(toDeleteEl);
-				let alertCountFromDelete = alertCountNoDelete - 1;
-				alertCountDecider(alertCountFromDelete);
+				alertCountNoDelete--;
+				alertCountDecider();
 				
 				// no-alert 처리
 				if (dm.querySelectorAll('li:not(.no-alert)').length === 0) noAlert();
@@ -161,11 +170,11 @@ function htmlTagBuilder(msg, alertNum) {
 	});
 }
 
-function alertCountDecider(count) {
-	if (count > 9) {			
+function alertCountDecider() {
+	if (alertCountNoDelete > 9) {			
 		alertBadge.innerText = '9+';
 	} else {
-		alertBadge.innerText = count;
+		alertBadge.innerText = alertCountNoDelete;
 	}
 }
 
