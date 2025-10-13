@@ -1,6 +1,8 @@
 package com.goodee.finals.weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,6 +30,9 @@ public class WeatherDTO {
 
     @JsonProperty("current_weather")
     private CurrentWeather currentWeather;
+    
+    @JsonProperty("hourly")
+    private Hourly hourly;
 
 
     @Getter
@@ -43,4 +48,17 @@ public class WeatherDTO {
         @JsonProperty("is_day")
         private int isDay;
     }
+    
+    @Getter
+    @Setter
+    @ToString
+    public static class Hourly {
+    	private String[] time;
+    	
+    	@JsonProperty("relative_humidity_2m")
+    	private double[] relativeHumidity2m;  // 습도(%)
+    }
+    
+    
+    
 }

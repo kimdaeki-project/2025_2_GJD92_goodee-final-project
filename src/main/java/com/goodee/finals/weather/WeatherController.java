@@ -49,10 +49,18 @@ public class WeatherController {
                     .block();
 
             var current = weather.getCurrentWeather();
+            
+            // 습도
+            double[] humidities = weather.getHourly().getRelativeHumidity2m();
+            double humidity = humidities != null && humidities.length > 0 ? humidities[0] : -1;
+
             data.put("city", city);
             data.put("temperature", current.getTemperature());
             data.put("windspeed", current.getWindspeed());
             data.put("weathercode", current.getWeathercode());
+           
+            data.put("humidity", humidity);
+
 
         } catch (Exception e) {
             data.put("error", e.getMessage());

@@ -26,8 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	    </div>
 	    <div style="font-size:1rem; margin-top:10px;">
 	      기온  ${data.temperature}℃<br>
-	      풍속  ${data.windspeed} m/s
+	      풍속  ${data.windspeed} m/s<br>
+		  습도  ${data.humidity}%
 	    </div>
+		
 	  `;
     })
     .catch(err => {
