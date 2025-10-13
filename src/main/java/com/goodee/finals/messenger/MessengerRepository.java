@@ -26,7 +26,7 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 
 	@Query("SELECT cb " + 
 		   "FROM MessengerTestDTO cb " +
-		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyDelete = false AND cb.chatBodyNum >= :chatGroupLatest")
+		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyNum >= :chatGroupLatest")
 	Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum, Long chatGroupLatest);
 
 	List<ChatRoomDTO> findByChatRoomGroupFalseAndChatUserDTOsStaffDTOStaffCode(Integer loggedStaffCode);
