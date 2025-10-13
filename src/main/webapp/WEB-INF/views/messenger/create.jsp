@@ -16,7 +16,7 @@
     <div class="create-room-container">
         <!-- 멤버 리스트 -->
         <div class="member-list">
-        	<a class="anchor" href="/msg/room">채팅 목록</a>
+        	<a class="anchor" href="/msg/room/all">채팅 목록</a>
             <h3>그룹 채팅방 생성</h3>
             <sec:authorize access="isAuthenticated()">
 				<sec:authentication property="principal" var="logged" />
