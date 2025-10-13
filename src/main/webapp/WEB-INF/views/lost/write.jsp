@@ -53,7 +53,7 @@
 
 	        <div style="flex: 1;">
 		        <div class="form-group">
-		        	<img id="preview" width="410" height="410" style="object-fit: clip;" <c:if test="${ not empty lostDTO.lostNum }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+		        	<img id="preview" width="370" height="370" style="object-fit: clip;" <c:if test="${ not empty lostDTO.lostNum }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
 		        </div>
 		        
 		        <div class="form-group">

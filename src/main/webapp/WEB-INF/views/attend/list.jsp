@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 
@@ -72,45 +73,48 @@
 
 						<!-- 근로시간 현황 -->
 						<div class="card">
-							<div class="card-header">
-								근로시간 현황 
+							<div class="card-header d-flex justify-content-between">
+								<div>근로시간 현황</div>
 								
-								<span class="float-end">
+								<div class="d-flex align-content-center">
         							<a href="/attend?baseDate=${prevWeek}">
         								<span class="material-symbols-outlined">chevron_backward</span>
         							</a>
-									<small>${mondayStr }(월)&nbsp; ~ &nbsp;${sundayStr }(일)</small> 
+									<small>&nbsp;${mondayStr }(월)&nbsp; ~ &nbsp;${sundayStr }(일)&nbsp;</small> 
         							<a href="/attend?baseDate=${nextWeek}">
         								<span class="material-symbols-outlined">chevron_forward</span>
         							</a>
-								</span>
+								</div>
 							</div>
+							
 							<div class="card-body">
 								<p>주 근로시간 : 40h 00m</p>
 								<p>누적 근로시간 : ${totalWorkTime}</p>
 								<p>잔여 근로시간 : ${remainingWorkTime }</p>
 								<p>연장 근로시간 : ${weeklyOvertime eq null ? "00h 00m" : weeklyOvertime}</p>
 								
+								
 								<div class="work-progress" style="margin-top:15px;">
-  <label>근로시간 현황</label>
-  <div class="progress" style="height: 25px; border-radius: 10px;">
-  
-    <!-- 주 근로시간 -->
-    <div class="progress-bar bg-success" role="progressbar" 
-         style="width: 77%; height: 12px;" 
-         aria-valuenow="40" aria-valuemin="0" aria-valuemax="52">
-      40h
-    </div>
-    
-    <!-- 연장 근로시간 -->
-    <div class="progress-bar bg-primary" role="progressbar" 
-         style="width: 23%; height: 12px;" 
-         aria-valuenow="12" aria-valuemin="0" aria-valuemax="52">
-      +12h
-    </div>
-    
-  </div>
-</div>
+								  <label>근로시간 현황</label>
+								  <div class="progress" style="height: 25px; border-radius: 10px;">
+								  
+								    <!-- 주 근로시간 -->
+								    <div class="progress-bar bg-success" role="progressbar" 
+								         style="width: 77%; height: 12px;" 
+								         aria-valuenow="40" aria-valuemin="0" aria-valuemax="52">
+								      40h
+								    </div>
+								    
+								    <!-- 연장 근로시간 -->
+								    <div class="progress-bar bg-primary" role="progressbar" 
+								         style="width: 23%; height: 12px;" 
+								         aria-valuenow="12" aria-valuemin="0" aria-valuemax="52">
+								      +12h
+								    </div>
+								    
+								  </div>
+								</div>
+								
 								
 							</div>
 						</div>
@@ -118,31 +122,37 @@
 
 					<!-- 오른쪽 출퇴근 내역 -->
 					<div class="col-md-8">
-						<div class="card" style="height:640px;">
+						<div class="card" style="height:641px; overflow: hidden scroll;">
 							<div class="card-header">
+								<div>
 								출퇴근 내역
-								<form action="${pageContext.request.contextPath}/attend/monthly"
-									method="get">
-									<input type="hidden" name="staffCode"
-										value="${staffDTO.staffCode}" /> <label for="year">년도</label>
+								</div>
+								<div>
+								<form action="${pageContext.request.contextPath}/attend/monthly" method="get">
+									<input type="hidden" name="staffCode" value="${staffDTO.staffCode}" />
+									<label for="year">년도</label>
 									<select name="year" id="year">
 										<c:forEach var="y" begin="2020" end="2030">
 											<option value="${y}"
 												<c:if test="${y == year}">selected</c:if>>${y}</option>
 										</c:forEach>
-									</select> <label for="month">월</label> <select name="month" id="month">
-										<c:forEach var="m" begin="1" end="12">
-											<option value="${m}"
-												<c:if test="${m == month}">selected</c:if>>${m}월</option>
-										</c:forEach>
 									</select>
+										<label for="month">월</label>
+										<select name="month" id="month">
+											<c:forEach var="m" begin="1" end="12">
+												<option value="${m}"
+													<c:if test="${m == month}">selected</c:if>>${m}월</option>
+											</c:forEach>
+										</select>
 
 									<button type="submit"
-										class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">조회</button>
+										class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white mt-2 me-3">조회</button>
 								</form>
+								</div>
+								</div>
 
 								<div class="card-body">
-									<table class="table text-center align-middle">
+									<table class="table text-center align-middle" style="font-size:15px;">
 										<thead>
 											<tr>
 												<th>날짜</th>
@@ -163,7 +173,21 @@
 													<td>${attend.workTime }</td>
 													<td>${attend.totalWorkTime }</td>
 													<td>${attend.attendStatus }</td>
-													<td>${attend.workStatus }</td>
+													<td>
+											            <c:set var="isOvertime" value="false" />
+											            <c:forEach items="${overtimeList}" var="over">
+											                <!-- overStart의 'yyyy-MM-dd' 부분만 추출 -->
+											                <c:set var="overDateOnly" value="${fn:substring(over.overStart, 0, 10)}" />
+											                <c:if test="${attend.attendDate eq overDateOnly}">
+											                    <c:set var="isOvertime" value="true" />
+											                </c:if>
+											            </c:forEach>
+											
+											            <c:choose>
+											                <c:when test="${isOvertime}">연장근로</c:when>
+											                <c:otherwise>-</c:otherwise>
+											            </c:choose>
+											        </td>
 												</tr>
 											</c:forEach>
 										</tbody>
@@ -189,7 +213,6 @@
 										</nav>
 									</c:if>
 								</div>
-							</div>
 						</div>
 					</div>
 				</div>

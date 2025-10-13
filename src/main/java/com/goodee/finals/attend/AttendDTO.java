@@ -106,24 +106,4 @@ public class AttendDTO {
         return "-";
     }
     
-    public String getWorkStatus() {
-        if (attendIn == null || attendOut == null) {
-            return "-";
-        }
-
-        Duration duration = Duration.between(attendIn, attendOut);
-
-        // 휴게시간 조건
-        boolean isRestApplicable = attendIn.isBefore(LocalTime.NOON) && attendOut.isAfter(LocalTime.of(13, 0));
-        if (isRestApplicable) {
-            duration = duration.minusHours(1);
-        }
-
-        // 연장근로 기준: 9시간 이상
-        if (duration.toMinutes() >= 540) {
-            return "연장근로";
-        }
-
-        return "-";
-    }
 }

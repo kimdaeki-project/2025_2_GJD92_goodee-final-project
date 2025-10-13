@@ -3,7 +3,6 @@ package com.goodee.finals.attend;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.goodee.finals.approval.OvertimeDTO;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffService;
 
@@ -166,6 +166,14 @@ public class AttendController {
 	    long absentCount = attendService.getAbsentCount(staffCode, targetYear, targetMonth, today);
 	    model.addAttribute("absentCount", absentCount);
 		
+	    // 연장근로
+	    List<OvertimeDTO> overtimeList = attendService.findAllOvertimeByStaffCodeAndByMonth(staffCode, targetYear, targetMonth);
+	    model.addAttribute("overtimeList", overtimeList);
+	    
+	    for (OvertimeDTO overtimeDTO : overtimeList) {
+			System.out.println(overtimeDTO.getOverStart().getDayOfMonth());
+		}
+	    
 		return "attend/list";
 	}
 	
