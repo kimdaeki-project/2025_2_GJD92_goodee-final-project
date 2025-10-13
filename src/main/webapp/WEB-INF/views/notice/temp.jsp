@@ -20,7 +20,7 @@
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3 p-4" style="height: 90vh; overflow: hidden scroll;">
     	
     	<!-- 검색창 -->
-    	<form action="/notice" class="mb-4">
+    	<form action="/notice/temp" class="mb-4">
 		    <div class="d-flex justify-content-end">
 		        <div class="input-group w-25">
 		            <input type="text" class="form-control" placeholder="제목 또는 작성자로 검색" name="keyword" value="${ pager.keyword }">
@@ -43,20 +43,6 @@
 				</tr>
 			</thead>
 			<tbody>
-				<!-- 고정공지 -->
-				<c:if test="${ notice.number eq 0 }">
-				<c:forEach items="${ pinned }" var="n">
-					<tr class="fw-bold" style="background-color: rgba(0, 0, 0, 0.05);">
-						<th scope="row">&#x1F4E2;</th>
-						<td>${ n.staffDTO.deptDTO.deptDetail }팀</td>
-						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>
-						<td>${ n.staffDTO.staffName }</td>
-						<td>${ n.noticeDate }</td>
-						<td>${ n.noticeHits }</td>
-					</tr>
-				</c:forEach>
-				</c:if>
-				
 				<!-- 일반공지 -->
 				<c:forEach items="${ notice.content }" var="n">
 					<tr>
@@ -104,14 +90,6 @@
 		</c:if>    	
     	<!-- 공지 없음 -->
     	
-    	<!-- 작성 버튼 -->
-    	<div class="d-flex justify-content-end mt-3">
-    		<div>
-				<a href="/notice/temp" class="btn bg-gradient-dark">임시보관함</a>    		
-	    		<a href="/notice/write" class="btn bg-gradient-dark">작성</a>
-    		</div>
-    	</div>
-    	
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
@@ -122,4 +100,3 @@
 </body>
 
 </html>
-
