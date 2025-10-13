@@ -1,6 +1,4 @@
-/**
- * 어트랙션 고장 신고 등록/수정 JS
- */
+// 어트랙션 고장 신고 등록/수정 JS
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   if (!form) return; // form이 없으면 종료
@@ -9,15 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const preview = document.querySelector("#preview");
   const noImageText = document.querySelector("#noImageText");
 
-  // ==============================
   // 파일 사이즈 & 이미지 타입 제한
-  // ==============================
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
 
-  // ==============================
   // 파일 미리보기 (등록/수정 공통)
-  // ==============================
   if (attachInput) {
     attachInput.addEventListener("change", (event) => {
       const file = event.target.files[0];
@@ -28,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Swal.fire({
             text: "파일 크기는 5MB 이하여야 합니다.",
             icon: "error",
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#191919",
             confirmButtonText: "확인"
           });
           event.target.value = "";
@@ -43,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Swal.fire({
             text: "이미지 파일(jpg, jpeg, png, gif, bmp, webp)만 업로드 가능합니다.",
             icon: "error",
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#191919",
             confirmButtonText: "확인"
           });
           event.target.value = "";
@@ -106,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         text: "입력하지 않은 정보가 있습니다.",
         icon: "warning",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       return;
@@ -123,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	      Swal.fire({
 	        text: "날짜 양식이 올바르지 않습니다.",
 	        icon: "error",
-	        confirmButtonColor: "#3085d6",
+	        confirmButtonColor: "#191919",
 	        confirmButtonText: "확인"
 	      });
 	      return;
@@ -138,8 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
         : "어트랙션 고장 신고를 등록하시겠습니까?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#191919",
+      cancelButtonColor: "#FFFFFF",
       confirmButtonText: isUpdatePage ? "수정" : "등록",
       cancelButtonText: "취소"
     }).then((result) => {

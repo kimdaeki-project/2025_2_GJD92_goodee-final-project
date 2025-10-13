@@ -16,7 +16,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
       Swal.fire({
         text: "파일 크기는 5MB 이하여야 합니다.",
         icon: "error",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       event.target.value = "";
@@ -29,7 +29,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
       Swal.fire({
         text: "이미지 파일(jpg, jpeg, png, gif, bmp, webp)만 업로드 가능합니다.",
         icon: "error",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       event.target.value = "";
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         text: "입력하지 않은 정보가 있습니다.",
         icon: "warning",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       return;
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	    Swal.fire({
 	      text: "점검 시작일은 종료일보다 늦을 수 없습니다.",
 	      icon: "error",
-	      confirmButtonColor: "#3085d6",
+	      confirmButtonColor: "#191919",
 	      confirmButtonText: "확인"
 	    });
 	    return;
@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	      text: "어트랙션 점검 기록을 등록하시겠습니까?",
 	      icon: "question",
 	      showCancelButton: true,
-	      confirmButtonColor: "#3085d6",
-	      cancelButtonColor: "#d33",
+	      confirmButtonColor: "#191919",
+	      cancelButtonColor: "#FFFFFF",
 	      confirmButtonText: "등록",
 	      cancelButtonText: "취소"
 	    }).then((result) => {
@@ -129,8 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	      text: "어트랙션 점검 기록을 수정하시겠습니까?",
 	      icon: "question",
 	      showCancelButton: true,
-	      confirmButtonColor: "#3085d6",
-	      cancelButtonColor: "#d33",
+	      confirmButtonColor: "#191919",
+	      cancelButtonColor: "#FFFFFF",
 	      confirmButtonText: "수정",
 	      cancelButtonText: "취소"
 	    }).then((result) => {
