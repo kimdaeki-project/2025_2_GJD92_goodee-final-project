@@ -31,7 +31,7 @@
         <!-- 탭 메뉴 -->
         <div class="tabs">
             <div class="tab tab-all <c:if test="${ active eq 'all' }"> active</c:if>">전체</div>
-            <div class="tab tab-dm <c:if test="${ active eq 'dm' }"> active</c:if>">1:1</div>
+            <div class="tab tab-dm <c:if test="${ active eq 'dm' }"> active</c:if>">개인</div>
             <div class="tab tab-group <c:if test="${ active eq 'group' }"> active</c:if>">그룹</div>
         </div>
 
@@ -59,7 +59,7 @@
                 </div>
                 <div class="chat-room-right">
                     <span class="time" id="time-${ r.chatRoomNum }"></span>
-                    <span id="unread-count-${ r.chatRoomNum }" class="badge"></span>
+                    <span id="unread-count-${ r.chatRoomNum }" class="badge" style="color: red; font-weight: bold;"></span>
                 </div>
             </form>
         </c:forEach>
@@ -74,22 +74,5 @@
     </script>
     <script type="text/javascript" src="/js/messenger/list.js"></script>
     <c:import url="/WEB-INF/views/messenger/heartBeat.jsp"/>
-    <script type="text/javascript">
-    	const formAll = document.querySelector('#formAll');
-    	const formDm = document.querySelector('#formDm');
-    	const formGroup = document.querySelector('#formGroup');
-    	const tabAll = document.querySelector('.tab-all');
-    	const tabDm = document.querySelector('.tab-dm');
-    	const tabGroup = document.querySelector('.tab-group');
-    	tabAll.addEventListener('click', () => {
-    		formAll.submit();
-    	});
-    	tabDm.addEventListener('click', () => {
-    		formDm.submit();
-    	});
-    	tabGroup.addEventListener('click', () => {
-    		formGroup.submit();
-    	});
-    </script>
 </body>
 </html>

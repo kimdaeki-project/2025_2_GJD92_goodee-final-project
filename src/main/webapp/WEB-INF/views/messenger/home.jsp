@@ -19,6 +19,10 @@
 
     <!-- 메인 컨텐츠 -->
     <div class="main">
+    	<form action="/msg" method="get" class="search-form">
+	    	<input type="text" placeholder="이름을 입력하세요" name="keyword" value="${ keyword }">
+	    	<button>검색</button>
+    	</form>
         <h3>메신저</h3>
         <sec:authorize access="isAuthenticated()">
             <sec:authentication property="principal" var="staff" />

@@ -31,10 +31,11 @@
 		    confirmButtonColor: "#191919",
 		    confirmButtonText: "확인"
 		}).then((result) => {
-		    const url = "${ resultUrl }"
+		    const url = "${ resultUrl }";
+		    const popupClose = "${ popupClose }";
 		    
-		    if (url != null && url != "") {
-		        const wsSub = ${ wsSub }
+		    if (popupClose != null && popupClose == "true") {
+		        const wsSub = ${ wsSub };
 		        const wsMsg = "${ wsMsg }";
 		        wsSub.forEach(sub => {
 		            fetch('/alert/save', {
@@ -43,17 +44,35 @@
 		                body: JSON.stringify({ alertMsg: wsMsg, staffCodeToDb: sub })
 		            })
                 	.then(response => response.json())
-	                .then(response => console.log(response));
-		            let notification = {
-		            		type: 'APPROVAL',
-		            		msg: wsMsg
-		            }
-		            stompClient.send("/pub/notify/" + sub, {}, JSON.stringify(notification));
+	                .then(response => console.log(response));            	
+			            
+		            let notification = { type: 'STANDARD', msg: wsMsg }            	
+	            	stompClient.send("/pub/notify/" + sub, {}, JSON.stringify(notification));
+		            
+		            window.close();
 		        });
-		        location.href = url;
 		    } else {
-		        history.back();
+			    if (url != null && url != "") {
+			        const wsSub = ${ wsSub };
+			        const wsMsg = "${ wsMsg }";
+			        wsSub.forEach(sub => {
+			            fetch('/alert/save', {
+			                method: 'post',
+			                headers: { 'Content-Type': 'application/json' },
+			                body: JSON.stringify({ alertMsg: wsMsg, staffCodeToDb: sub })
+			            })
+	                	.then(response => response.json())
+		                .then(response => console.log(response));            	
+				            
+			            let notification = { type: 'STANDARD', msg: wsMsg }            	
+		            	stompClient.send("/pub/notify/" + sub, {}, JSON.stringify(notification));
+			        });
+			        location.href = url;
+			    } else {
+			        history.back();
+			    }   	
 		    }
+		    
 		});
 	</script>
 </body>

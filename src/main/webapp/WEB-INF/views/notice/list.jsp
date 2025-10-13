@@ -46,7 +46,7 @@
 				<!-- 고정공지 -->
 				<c:if test="${ notice.number eq 0 }">
 				<c:forEach items="${ pinned }" var="n">
-					<tr class="fw-bold">
+					<tr class="fw-bold" style="background-color: rgba(0, 0, 0, 0.05);">
 						<th scope="row">&#x1F4E2;</th>
 						<td>${ n.staffDTO.deptDTO.deptDetail }팀</td>
 						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>

@@ -284,8 +284,8 @@
     cursor: pointer;
 }
 
-#sendButton:hover {
-    background-color: #333;
+#sendButton:disabled {
+	opacity: 50%;
 }
 /* ------------------------------ */
 .chat-top-group {
