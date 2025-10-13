@@ -17,13 +17,13 @@ fetch("/msg/unread/count", {
             let badge = document.querySelector('#unread-count-' + chatRoomNum);
             badge.innerText = unread[chatRoomNum] > 0 ? unread[chatRoomNum] : "";
 
-            let latestMessage = document.querySelector('#chat-room-last-' + chatRoomNum);
-			if (latest[chatRoomNum].chatBodyContent.length >= 17) {
-				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.substr(0, 17) + '...';				
-			} else if (latest[chatRoomNum].chatBodyContent.includes('\n')) {
-				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.split('\n')[0] + '...';
+            let latestMessage = document.querySelector('#chat-room-last-' + chatRoomNum); 
+			if (latest[chatRoomNum].chatBodyContent.trim().substr(0, 17).includes('\n')) {
+				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.trim().split('\n')[0] + '...';
+			} else if (latest[chatRoomNum].chatBodyContent.length >= 17) {
+				latestMessage.innerText = latest[chatRoomNum].chatBodyContent.trim().substr(0, 17) + '...';				
 			} else {
-	            latestMessage.innerText = latest[chatRoomNum].chatBodyContent;				
+	            latestMessage.innerText = latest[chatRoomNum].chatBodyContent.trim();				
 			}
 
             let time = document.querySelector('#time-' + chatRoomNum);
