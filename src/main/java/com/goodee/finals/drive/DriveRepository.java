@@ -10,6 +10,6 @@ public interface DriveRepository extends JpaRepository<DriveDTO, Long> {
 
 	public DriveDTO findByDriveName(String driveName);
 	public List<DriveDTO> findAllByStaffDTO_StaffCode(Integer staffCode);
-	DriveDTO findByStaffDTO_StaffCodeAndIsPersonalTrueAndDriveDefaultNumIsNotNull(Integer staffCode);
-
+	public List<DriveDTO> findAllByDriveEnabledFalse();
+	public DriveDTO findByStaffDTO_StaffCodeAndIsPersonalTrueAndDriveDefaultNumIsNotNull(Integer staffCode);
 }

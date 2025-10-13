@@ -60,6 +60,10 @@
 									</li>
 								</c:if>
 							</c:forEach>
+							
+							<c:if test="${ staffDTO.jobDTO.jobCode eq 1100 }">
+								
+							</c:if>
 						</ul>
 					</div>
 				</div>

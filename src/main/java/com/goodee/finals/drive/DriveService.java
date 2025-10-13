@@ -71,6 +71,10 @@ public class DriveService {
 		return driveRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 내 드라이브
 	}
 	
+	public List<DriveDTO> getDisabledDriveList() {
+		return driveRepository.findAllByDriveEnabledFalse();
+	}
+	
 	public List<DriveShareDTO> getShareDriveByStaffCode(StaffDTO staffDTO) {
 		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공유 드라이브
 	}

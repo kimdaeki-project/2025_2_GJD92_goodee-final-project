@@ -41,15 +41,17 @@ public class DriveController {
     @ModelAttribute
     public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	
-		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO);
-		List<DriveShareDTO> shareDriveList = driveService.getShareDriveByStaffCode(staffDTO);
+		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO); // 1  
 		
 		if(myDriveList == null || myDriveList.size() < 1) {
-			DriveDTO driveDTO = driveService.createDefaultDrive(staffDTO);
+			DriveDTO driveDTO = driveService.createDefaultDrive(staffDTO); 
 			myDriveList.add(driveDTO);
 		}
+		if(staffDTO.getJobDTO().getJobCode().equals(1100)) {
+			List<DriveDTO> disabledDriveList = driveService.getDisabledDriveList();
+		}
 		
+		List<DriveShareDTO> shareDriveList = driveService.getShareDriveByStaffCode(staffDTO); // TODO - DB에 드라이브 데이터가 없는 경우 위 createDefaultDrive에서 기본드라이브 + 부서 공용 드라이브 추가해줌. 웹페이지에서 직접 가입할 경우 조건문 위로 올려도됨. 현재는 편의상 그대로둠 
 		model.addAttribute("staffDTO", staffDTO);
 		model.addAttribute("myDriveList", myDriveList);
 		model.addAttribute("shareDriveList", shareDriveList);
