@@ -66,81 +66,81 @@
 			      </form>
 				</div>
 					
-					<div class="table-responsive">
-					  <table class="table table-hover align-middle mb-0 table-figma drive-table">
-					    <thead class="border-top">
+				<div class="table-responsive">
+				  <table class="table table-hover align-middle mb-0 table-figma drive-table" style="table-layout: fixed; width: 100%;">
+				    <thead class="border-top">
+				      <tr>
+				        <th class="text-center" style="width:36px;"><input type="checkbox" id="checkAll"/></th>
+				        <th>파일명</th>
+				        <th style="width: 180px;" class="text-center">등록일</th>
+				        <th style="width: 120px;" class="text-center">용량</th>
+				        <th style="width: 120px;" class="text-center">확장자</th>
+				        <th style="width: 140px;" class="text-center">등록자</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+					  <c:choose>
+					    <c:when test="${ not empty docList.content }">
+					      <c:forEach items="${ docList.content }" var="doc" >
+						      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode }">
+						        <tr>
+						          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
+						          <td><div class="text-truncate">${ doc.attachmentDTO.originName }</div></td>
+						          <td class="text-center">${ doc.docDate }
+						          <td class="text-center">${ doc.attachmentDTO.attachSizeDetail } </td>
+						          <td class="text-center">${ doc.docContentType }</td>
+						          <td class="text-center">${ doc.staffDTO.staffName }</td>
+						        </tr>
+						      </c:if>
+					      </c:forEach>
+					    </c:when>
+					    <c:otherwise>
+					      <!-- 데이터 없을 때만 중앙 정렬 -->
 					      <tr>
-					        <th class="text-center" style="width:36px;"><input type="checkbox" id="checkAll"/></th>
-					        <th>파일명</th>
-					        <th style="width:180px;" class="text-center">등록일</th>
-					        <th style="width:120px;" class="text-center">용량</th>
-					        <th style="width:120px;" class="text-center">확장자</th>
-					        <th style="width:140px;" class="text-center">등록자</th>
+					        <td colspan="6" class="border-0">
+					          <div class="d-flex justify-content-center align-items-center text-secondary" style="height:60vh;">
+					          	<i class="material-symbols-rounded opacity-5 fs-5">news</i>
+					            등록된 파일이 없습니다.
+					          </div>
+					        </td>
 					      </tr>
-					    </thead>
-					    <tbody>
-						  <c:choose>
-						    <c:when test="${ not empty docList.content }">
-						      <c:forEach items="${ docList.content }" var="doc" >
-							      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode }">
-							        <tr>
-							          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
-							          <td>${ doc.attachmentDTO.originName }</td>
-							          <td class="text-center">${ doc.docDate }
-							          <td class="text-center">${ doc.attachmentDTO.attachSizeDetail } </td>
-							          <td class="text-center">${ doc.docContentType }</td>
-							          <td class="text-center">${ doc.staffDTO.staffName }</td>
-							        </tr>
-							      </c:if>
-						      </c:forEach>
-						    </c:when>
-						    <c:otherwise>
-						      <!-- 데이터 없을 때만 중앙 정렬 -->
-						      <tr>
-						        <td colspan="6" class="border-0">
-						          <div class="d-flex justify-content-center align-items-center text-secondary" style="height:60vh;">
-						          	<i class="material-symbols-rounded opacity-5 fs-5">news</i>
-						            등록된 파일이 없습니다.
-						          </div>
-						        </td>
-						      </tr>
-						    </c:otherwise>
-						  </c:choose>
-						</tbody>
-					  </table>
-					  
-					  <div class="mt-2 d-flex justify-content-end me-4">
-					  	<span>총 ${ docList.content.size() }개</span>
-					  </div>
-					  
-					  <c:if test="${ docList.content.size() gt 0 }">
-						  <nav class="mt-4">
-						    <ul class="pagination justify-content-center">
-						      <c:if test="${ docList.hasPrevious() and pager.startPage gt 1 }">
-						        <li class="page-item">
-						          <a class="page-link border border-secondary rounded-0" 
-						             href="?page=${ pager.startPage - 1 }&keyword=${ pager.keyword }">&lt;</a>
-						        </li>
-						      </c:if>
-						
-						      <c:forEach var="i" begin="${ pager.startPage }" end="${ pager.endPage }">
-						        <li class="page-item ${ i == docList.number ? 'active' : '' }">
-						          <a class="page-link border border-secondary ${ i == docList.number ? 'bg-dark text-white border-dark' : '' }" 
-						             href="?page=${i}&keyword=${ pager.keyword }" style="border-radius: 7px !important">${i + 1}</a>
-						        </li>
-						      </c:forEach>
-						
-						      <c:if test="${ docList.hasNext() and pager.endPage + 1 ne docList.totalPages }">
-						        <li class="page-item">
-						          <a class="page-link border border-secondary rounded-0" 
-						             href="?page=${ pager.endPage + 1 }&keyword=${ pager.keyword }">&gt;</a>
-						        </li>
-						      </c:if>
-						    </ul>
-						  </nav>
-			 		  </c:if>
-					</div>
+					    </c:otherwise>
+					  </c:choose>
+					</tbody>
+				  </table>
+				  
+				  <div class="mt-2 d-flex justify-content-end me-4">
+				  	<span>총 ${ docList.content.size() }개</span>
+				  </div>
+				  
+				</div>
 					
+				  <c:if test="${ docList.content.size() gt 0 }">
+					  <nav class="mt-4">
+					    <ul class="pagination justify-content-center">
+					      <c:if test="${ docList.hasPrevious() and pager.startPage gt 1 }">
+					        <li class="page-item">
+					          <a class="page-link border border-secondary rounded-0" 
+					             href="?page=${ pager.startPage - 1 }&keyword=${ pager.keyword }">&lt;</a>
+					        </li>
+					      </c:if>
+					
+					      <c:forEach var="i" begin="${ pager.startPage }" end="${ pager.endPage }">
+					        <li class="page-item ${ i == docList.number ? 'active' : '' }">
+					          <a class="page-link border border-secondary ${ i == docList.number ? 'bg-dark text-white border-dark' : '' }" 
+					             href="?page=${i}&keyword=${ pager.keyword }" style="border-radius: 7px !important">${i + 1}</a>
+					        </li>
+					      </c:forEach>
+					
+					      <c:if test="${ docList.hasNext() and pager.endPage + 1 ne docList.totalPages }">
+					        <li class="page-item">
+					          <a class="page-link border border-secondary rounded-0" 
+					             href="?page=${ pager.endPage + 1 }&keyword=${ pager.keyword }">&gt;</a>
+					        </li>
+					      </c:if>
+					    </ul>
+					  </nav>
+		 		  </c:if>
 			</section>
 		</div>
 	</main>

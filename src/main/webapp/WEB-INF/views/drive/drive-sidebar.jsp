@@ -22,8 +22,29 @@
 				<div class="collapse show" id="collapseMyDrive">
 					<div class="d-flex">
 						<ul class="navbar-nav" id="drive-my">
+						
+							<!-- 기본드라이브 최상단 -->
 							<c:forEach items="${ myDriveList }" var="myDrive">
-								<c:if test="${ myDrive.driveEnabled }">
+								<c:if test="${ myDrive.driveEnabled and not empty myDrive.driveDefaultNum }">
+									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
+										<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
+											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
+											<span class="nav-link-text ms-1 text-sm text-truncate" style="max-width: 110px;" title="${myDrive.driveName}">${ myDrive.driveName }</span>
+										</a>
+<%-- 										<c:if test="${ not empty driveDTO and myDrive.driveNum eq driveDTO.driveNum }"> --%>
+<!-- 											<div class="d-flex align-items-center drive-setting"> -->
+<%-- 												<a href="/drive/${ myDrive.driveNum }/update" class="d-flex align-items-center pe-1" style="text-decoration: none; color: white;"> --%>
+<%-- 													<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveNum }">settings</i> --%>
+<!-- 												</a> -->
+<!-- 											</div> -->
+<%-- 										</c:if> --%>
+									</li>
+								</c:if>
+							</c:forEach>
+						
+							<!-- 기본드라이브 제외한 목록 -->
+							<c:forEach items="${ myDriveList }" var="myDrive">
+								<c:if test="${ myDrive.driveEnabled and empty myDrive.driveDefaultNum }">
 									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
 										<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
 											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>

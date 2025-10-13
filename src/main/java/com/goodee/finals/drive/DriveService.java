@@ -89,7 +89,7 @@ public class DriveService {
 		case "audio":  fileTypeList = Arrays.asList("MP3", "WAV", "OGG", "AAC", "FLAC"); break;
 		case "video":  fileTypeList = Arrays.asList("MP4", "AVI", "MOV", "WMV", "MKV", "WEBM"); break;
 		case "image":  fileTypeList = Arrays.asList("JPG", "JPEG", "PNG", "GIF", "BMP", "SVG", "WEBP"); break;
-		case "doc":  fileTypeList = Arrays.asList( "PDF", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "TXT", "HWP"); break;
+		case "doc":  fileTypeList = Arrays.asList( "PDF", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "TXT", "HWP", "JSON", "CSV"); break;
 		}
 		
 		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, jobCode ,pageable, fileTypeList);
@@ -201,7 +201,7 @@ public class DriveService {
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
 		
-		if(attach.getOriginalFilename().length() > 50) {
+		if(attach.getOriginalFilename().length() > 255) {
 			System.out.println("파일명이 너무 깁니다.");
 			return null;
 		}
