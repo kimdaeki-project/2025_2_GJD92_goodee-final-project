@@ -1,12 +1,8 @@
-// ==============================
 // 파일 사이즈 & 이미지 타입 제한
-// ==============================
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
 
-// ==============================
 // 파일 미리보기
-// ==============================
 document.querySelector("#attach").addEventListener("change", (event) => {
   const file = event.target.files[0];
 
@@ -48,9 +44,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
 });
 
 
-// ==============================
 // 등록 / 수정 폼 검증
-// ==============================
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const rideCodeInput = document.querySelector("input[name='rideCode']");
@@ -59,32 +53,24 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // ==============================
-    // 1. 입력값 확인 (빈칸 + 첨부파일)
-    // ==============================
-    const requiredInputs = form.querySelectorAll("input, select");
-    let emptyField = false;
+	// 입력값 확인 (빈칸 + 첨부파일)
+	const requiredInputs = form.querySelectorAll("input:not([type='hidden']):not([readonly]):not([disabled]), select:not([disabled])");
+	let emptyField = false;
 
-    requiredInputs.forEach((el) => {
-      const type = el.getAttribute("type");
+	requiredInputs.forEach((el) => {
+	  const type = el.getAttribute("type");
 
-      if (type === "file") {
-        const existingFile = document.querySelector("#hasExistingFile");
-        const hasExistingFile = existingFile && existingFile.value === "true";
-        const isFileEmpty = !el.value.trim();
+	  if (type === "file") {
+	    const existingFile = document.querySelector("#hasExistingFile");
+	    const hasExistingFile = existingFile && existingFile.value === "true";
+	    const isFileEmpty = !el.value.trim();
 
-        if (mode === "add" && isFileEmpty) {
-          emptyField = true; // 등록 시: 파일 필수
-        }
-        if (mode === "edit" && !hasExistingFile && isFileEmpty) {
-          emptyField = true; // 수정 시: 기존 파일 없고 새 파일도 없으면 오류
-        }
-      } else {
-        if (!el.value.trim()) {
-          emptyField = true;
-        }
-      }
-    });
+	    if (mode === "add" && isFileEmpty) emptyField = true;
+	    if (mode === "edit" && !hasExistingFile && isFileEmpty) emptyField = true;
+	  } else {
+	    if (!el.value.trim()) emptyField = true;
+	  }
+	});
 
     if (emptyField) {
       Swal.fire({
@@ -96,9 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // ==============================
-    // 2. 등록(add)일 때만 rideCode 중복 검사
-    // ==============================
+    // 등록(add)일 때만 rideCode 중복 검사
     const rideCode = rideCodeInput.value.trim();
 
     if (mode === "add") {
@@ -123,7 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonColor: "#191919",
             cancelButtonColor: "#FFFFFF",
             confirmButtonText: "등록",
-            cancelButtonText: "취소"
+            cancelButtonText: "취소",
+			customClass: {
+						cancelButton: 'my-cancel-btn'
+			}
           }).then((result) => {
             if (result.isConfirmed) {
 				let aaa = document.getElementById("staffCodeValid");
@@ -149,7 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmButtonColor: "#191919",
         cancelButtonColor: "#FFFFFF",
         confirmButtonText: "수정",
-        cancelButtonText: "취소"
+        cancelButtonText: "취소",
+		customClass: {
+								cancelButton: 'my-cancel-btn'
+					}
       }).then((result) => {
         if (result.isConfirmed) {
           form.submit();

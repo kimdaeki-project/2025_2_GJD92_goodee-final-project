@@ -1,12 +1,8 @@
-// ==============================
 // 파일 사이즈 & 이미지 타입 제한
-// ==============================
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
 
-// ==============================
 // 파일 미리보기
-// ==============================
 document.querySelector("#attach").addEventListener("change", (event) => {
   const file = event.target.files[0];
 
@@ -47,7 +43,7 @@ document.querySelector("#attach").addEventListener("change", (event) => {
   }
 });
 
-// 등록 / 수정 폼 검증
+// 등록/수정 폼 검증
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
 
@@ -59,9 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // ==============================
-    // 1. 입력값 확인 (빈칸 + 첨부파일)
-    // ==============================
+    // 입력값 확인 (빈칸 + 첨부파일)
     const requiredInputs = form.querySelectorAll("input, select");
     let emptyField = false;
 
@@ -96,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-	 // 2. 날짜 유효성 검사
+	 // 날짜 유효성 검사
 	  const startDate = new Date(isptStartInput.value);
 	  const endDate = new Date(isptEndInput.value);
 	  if (startDate > endDate) {
@@ -109,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	    return;
 	  }
 
-	  // 3. 최종 등록/수정 확인
+	  // 최종 등록/수정 확인
 	  if (mode === "add") {
 	    Swal.fire({
 	      text: "어트랙션 점검 기록을 등록하시겠습니까?",
