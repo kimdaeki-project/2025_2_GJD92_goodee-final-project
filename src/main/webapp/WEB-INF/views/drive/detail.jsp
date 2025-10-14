@@ -82,7 +82,6 @@
 					  <c:choose>
 					    <c:when test="${ not empty docList.content }">
 					      <c:forEach items="${ docList.content }" var="doc" >
-						      <c:if test="${ doc.jobDTO.jobCode ge staffDTO.jobDTO.jobCode }">
 						        <tr>
 						          <td class="text-center"><input type="checkbox" class="checkBoxes" value="${ doc.attachmentDTO.attachNum }" /></td>
 						          <td><div class="text-truncate">${ doc.attachmentDTO.originName }</div></td>
@@ -91,7 +90,6 @@
 						          <td class="text-center">${ doc.docContentType }</td>
 						          <td class="text-center">${ doc.staffDTO.staffName }</td>
 						        </tr>
-						      </c:if>
 					      </c:forEach>
 					    </c:when>
 					    <c:otherwise>
