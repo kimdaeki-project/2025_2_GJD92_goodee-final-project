@@ -1,6 +1,3 @@
-/**
- * 
- */
 // 어드랙션 고장 신고 삭제
 function deleteFault(faultNum) {
 	Swal.fire({

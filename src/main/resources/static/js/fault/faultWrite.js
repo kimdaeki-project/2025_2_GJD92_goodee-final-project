@@ -67,15 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==============================
   // 등록/수정 폼 검증 + 모달 확인
-  // ==============================
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
     let emptyField = false;
 
-    // 1. 입력값 확인 (hidden 제외)
+    // 입력값 확인 (hidden 제외)
     const requiredInputs = form.querySelectorAll("input:not([type=hidden]), select, textarea");
     requiredInputs.forEach((el) => {
       const type = el.getAttribute("type");
@@ -106,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 	
-	// 2. 날짜 유효성 검사 (오늘 이후 불가)
+	// 날짜 유효성 검사 (오늘 이후 불가)
 	  const dateInput = form.querySelector("input[name='faultDate']");
 	  if (dateInput && dateInput.value) {
 	    const selectedDate = new Date(dateInput.value);
@@ -124,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	    }
 	  }
 
-    // 2. 최종 등록/수정 확인 모달
+    // 최종 등록/수정 확인 모달
     const isUpdatePage = !!attachInput; // update.jsp에는 첨부파일 input 존재
     Swal.fire({
       text: isUpdatePage
