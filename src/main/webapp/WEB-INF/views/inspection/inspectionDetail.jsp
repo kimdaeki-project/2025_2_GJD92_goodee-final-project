@@ -8,8 +8,36 @@
 <head>
 	<meta charset="UTF-8">
 	<title>어트랙션 점검 기록 등록</title>
-	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<style>
+	/* 테이블 밑줄 제거 */
+	 .inspection-info table {
+	   border-collapse: collapse;
+	 }
+	
+	 .inspection-info th,
+	 .inspection-info td {
+	   border: none !important;
+	 }
+	
+	 .inspection-info tr {
+	   border-bottom: none !important;
+	 }
+	 
+ 	  /* 모달창 css */
+	 .my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
+
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -54,47 +82,47 @@
 					      <table class="table">
 					        <tr>
 					          <th>어트랙션 코드</th>
-					          <td>${inspection.rideDTO.rideCode}</td>
+					          <td>|&nbsp;&nbsp;${inspection.rideDTO.rideCode}</td>
 					        </tr>
 					        <tr>
 					          <th>어트랙션 기종</th>
-					          <td>${inspection.rideDTO.rideType}</td>
+					          <td>|&nbsp;&nbsp;${inspection.rideDTO.rideType}</td>
 					        </tr>
 					        <tr>
 					          <th>점검유형</th>
 					          	<c:if test="${ inspection.isptType eq 401 }">
-								<td>긴급점검(${inspection.isptType })</td>
+								<td>|&nbsp;&nbsp;긴급점검(${inspection.isptType })</td>
 								</c:if>
 								<c:if test="${ inspection.isptType eq 501 }">
-									<td>일일점검(${inspection.isptType })</td>
+									<td>|&nbsp;&nbsp;일일점검(${inspection.isptType })</td>
 								</c:if>
 								<c:if test="${ inspection.isptType eq 502 }">
-									<td>정기점검(${inspection.isptType })</td>
+									<td>|&nbsp;&nbsp;정기점검(${inspection.isptType })</td>
 								</c:if>
 					        </tr>
 					        <tr>
 					          <th>점검결과</th>
 					          	<c:if test="${ inspection.isptResult eq 201 }">
-								<td>정상(${ inspection.isptResult })</td>
+								<td>|&nbsp;&nbsp;정상(${ inspection.isptResult })</td>
 								</c:if>
 								<c:if test="${ inspection.isptResult eq 202 }">
-									<td>특이사항 있음(${ inspection.isptResult })</td>
+									<td>|&nbsp;&nbsp;특이사항 있음(${ inspection.isptResult })</td>
 								</c:if>
 								<c:if test="${ inspection.isptResult eq 203 }">
-									<td>운영불가(${ inspection.isptResult })</td>
+									<td>|&nbsp;&nbsp;운영불가(${ inspection.isptResult })</td>
 								</c:if>
 					        </tr>
 					        <tr>
 					          <th>담당자</th>
-					          <td>${inspection.staffDTO.staffName} (${inspection.staffDTO.staffCode})</td>
+					          <td>|&nbsp;&nbsp;${inspection.staffDTO.staffName} (${inspection.staffDTO.staffCode})</td>
 					        </tr>
 							<tr>
 					          <th>점검 시작일</th>
-					          <td>${inspection.isptStart}</td>
+					          <td>|&nbsp;&nbsp;${inspection.isptStart}</td>
 					        </tr>
 					        <tr>
 					          <th>점검 종료일</th>
-					          <td>${inspection.isptEnd}</td>
+					          <td>|&nbsp;&nbsp;${inspection.isptEnd}</td>
 					        </tr>
 					      </table>
 					    </div>
@@ -109,18 +137,18 @@
 				<!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
 				<c:if test="${staff.deptDTO.deptCode eq 1003}">
 				    <div class="form-group row mt-4 text-end">
-				      <div class="col-sm-12">
+				      <div class="col-sm-11">
 				      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
 				      	<form action="${pageContext.request.contextPath }/inspection/${inspection.isptNum}/update"
 				      			method="get" style="display: inline;">
 					        <button type="submit" 
 					        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
-					        		style="width: 100px;">수정</button>
+					        		style="width: 75px;">수정</button>
 				        </form>
 				        <!-- 삭제 버튼 -->
 				        <button type="button" 
 				                class="btn btn-sm btn-outline-secondary" 
-				                style="width: 100px;"
+				                style="width: 75px;"
 				                onclick="deleteInspection('${ inspection.isptNum }')">삭제</button>
 				      </div>
 				    </div>

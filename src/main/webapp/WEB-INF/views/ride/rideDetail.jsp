@@ -25,6 +25,7 @@
 	    border-bottom: none !important; /* 각 행 밑줄 제거 */
 	  }
 	  
+	  /* 모달창 css */
 	  .my-cancel-btn {
 	  background-color: #fff !important;   
 	  color: #212529 !important;           
@@ -36,8 +37,6 @@
 	  background-color: #f8f9fa !important;
 	}
 	</style>
-	
-	
 	
 </head>
 

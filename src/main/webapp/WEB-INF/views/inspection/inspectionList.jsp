@@ -57,11 +57,11 @@
 			  </div>
     	</aside>
     	
-	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
+	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height:92vh; overflow: hidden scroll;">
 	    <!-- 여기에 코드 작성 -->
     	<!-- 검색창 -->
 		<form action="/inspection" class="mb-4">
-		    <div class="d-flex justify-content-end">
+		    <div class="d-flex justify-content-end" style="margin-top:30px;">
 		        <div class="input-group w-25">
 		
 		            <!-- 검색 조건 선택 -->
@@ -192,7 +192,7 @@
         <div class="text-end mt-4 me-4">
           <a href="${pageContext.request.contextPath}/inspection/write "
              class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-             style="width: 100px;">등록</a>
+             style="width:75px;">등록</a>
         </div>
       </c:if>
       

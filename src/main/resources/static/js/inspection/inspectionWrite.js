@@ -112,7 +112,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	      confirmButtonColor: "#191919",
 	      cancelButtonColor: "#FFFFFF",
 	      confirmButtonText: "등록",
-	      cancelButtonText: "취소"
+	      cancelButtonText: "취소",
+		  customClass: {
+			cancelButton: 'my-cancel-btn'
+		  }
 	    }).then((result) => {
 	      if (result.isConfirmed) {
 	        form.submit();
@@ -126,7 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	      confirmButtonColor: "#191919",
 	      cancelButtonColor: "#FFFFFF",
 	      confirmButtonText: "수정",
-	      cancelButtonText: "취소"
+	      cancelButtonText: "취소",
+		  customClass: {
+			cancelButton: 'my-cancel-btn'
+		  }
 	    }).then((result) => {
 	      if (result.isConfirmed) {
 	        form.submit();
