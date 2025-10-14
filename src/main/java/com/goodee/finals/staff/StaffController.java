@@ -99,6 +99,13 @@ public class StaffController {
 	
 	@PostMapping("{staffCode}/update")
 	public String postStaffUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
+			StaffDTO temp = staffService.getStaff(staffDTO.getStaffCode());
+			staffDTO.setStaffAttachmentDTO(temp.getStaffAttachmentDTO());
+			
+			return "staff/form";
+		}
+		
 		boolean result = staffService.updateStaff(staffDTO, attach);
 		
 		String resultMsg = "사원 정보 수정 중 오류가 발생했습니다.";
@@ -226,6 +233,10 @@ public class StaffController {
 	
 	@PostMapping("regist")
 	public String postStaffRegist(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
+			return "staff/form";
+		}
+		
 		boolean result = staffService.registStaff(staffDTO, attach);
 		
 		String resultMsg = "사원 등록 중 오류가 발생했습니다.";

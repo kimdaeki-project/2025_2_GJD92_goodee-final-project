@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -111,6 +112,13 @@ public class StaffService implements UserDetailsService {
 		
 		if (result != null) return true;
 		else return false;
+	}
+	
+	public boolean checkRegistError(StaffDTO staffDTO, BindingResult bindingResult) {
+		boolean checked = true;
+		checked = !bindingResult.hasErrors();
+		
+		return checked;
 	}
 	
 	public boolean updateStaff(StaffDTO staffDTO, MultipartFile attach) {
