@@ -213,7 +213,6 @@ public class StaffService implements UserDetailsService {
 	public int updateStaffPassword(PasswordDTO passwordDTO) {
 		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();
 		
-		// TODO 비밀번호 유효성 검사
 		if (passwordDTO.getNewPw().equals("0000")) return 400;
 		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return 401;
 		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return 402;
