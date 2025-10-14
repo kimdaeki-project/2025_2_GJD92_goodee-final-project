@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DriveRepository extends JpaRepository<DriveDTO, Long> {
 
-	public DriveDTO findByDriveName(String driveName);
-	public List<DriveDTO> findAllByStaffDTO_StaffCode(Integer staffCode);
 	public List<DriveDTO> findAllByDriveEnabledFalse();
+	public List<DriveDTO> findAllByStaffDTO_StaffCode(Integer staffCode);
+	public DriveDTO findByDriveName(String driveName);
 	public DriveDTO findByStaffDTO_StaffCodeAndIsPersonalTrueAndDriveDefaultNumIsNotNull(Integer staffCode);
 }

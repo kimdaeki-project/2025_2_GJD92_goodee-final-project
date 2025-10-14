@@ -49,6 +49,7 @@ public class DriveController {
 		}
 		if(staffDTO.getJobDTO().getJobCode().equals(1100)) {
 			List<DriveDTO> disabledDriveList = driveService.getDisabledDriveList();
+			model.addAttribute("disabledDriveList", disabledDriveList);
 		}
 		
 		List<DriveShareDTO> shareDriveList = driveService.getShareDriveByStaffCode(staffDTO); // TODO - DB에 드라이브 데이터가 없는 경우 위 createDefaultDrive에서 기본드라이브 + 부서 공용 드라이브 추가해줌. 웹페이지에서 직접 가입할 경우 조건문 위로 올려도됨. 현재는 편의상 그대로둠 
