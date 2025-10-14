@@ -16,12 +16,16 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.goodee.finals.common.validation.MyPageValid;
+import com.goodee.finals.common.validation.StaffValid;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -98,7 +102,7 @@ public class StaffController {
 	}
 	
 	@PostMapping("{staffCode}/update")
-	public String postStaffUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+	public String postStaffUpdate(@Validated(StaffValid.class) StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
 		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
 			StaffDTO temp = staffService.getStaff(staffDTO.getStaffCode());
 			staffDTO.setStaffAttachmentDTO(temp.getStaffAttachmentDTO());
@@ -203,7 +207,14 @@ public class StaffController {
 	}
 	
 	@PostMapping("info/update")
-	public String postStaffInfoUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+	public String postStaffInfoUpdate(@Validated(MyPageValid.class) StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
+			StaffDTO temp = staffService.getStaff(staffDTO.getStaffCode());
+			staffDTO.setStaffAttachmentDTO(temp.getStaffAttachmentDTO());
+			
+			return "staff/info-update";
+		}
+		
 		boolean result = staffService.updateStaffFromInfo(staffDTO, attach);
 		
 		String resultMsg = "내 정보 수정 중 오류가 발생했습니다.";
@@ -232,7 +243,7 @@ public class StaffController {
 	}
 	
 	@PostMapping("regist")
-	public String postStaffRegist(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+	public String postStaffRegist(@Validated(StaffValid.class) StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
 		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
 			return "staff/form";
 		}

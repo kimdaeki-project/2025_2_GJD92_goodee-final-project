@@ -10,6 +10,12 @@
 	<title>내 정보</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	<style>
+		.inputDiv span {
+			font-size: 12px;
+			color: red;
+		}
+	</style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -70,13 +76,15 @@
 	        	</div>
 	        	
 	        	<div class="col-4">
-	        		<div class="col-6">
+	        		<div class="col-6 inputDiv">
 	    					<form:label path="staffEmail">이메일</form:label>
+	    					<form:errors path="staffEmail"></form:errors>
 	    					<form:input path="staffEmail" cssClass="form-control" />
 	    				</div>
 	    				
-	    				<div class="col-6 mt-3">
+	    				<div class="col-6 mt-3 inputDiv">
 	    					<form:label path="staffPhone">연락처</form:label>
+	    					<form:errors path="staffPhone"></form:errors>
 	    					<form:input path="staffPhone" cssClass="form-control" />
 	    				</div>
 	    				
