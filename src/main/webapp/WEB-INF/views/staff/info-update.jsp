@@ -15,6 +15,10 @@
 			font-size: 12px;
 			color: red;
 		}
+		
+		.error {
+			border-color: red !important;
+		}
 	</style>
 </head>
 
@@ -79,13 +83,13 @@
 	        		<div class="col-6 inputDiv">
 	    					<form:label path="staffEmail">이메일</form:label>
 	    					<form:errors path="staffEmail"></form:errors>
-	    					<form:input path="staffEmail" cssClass="form-control" />
+	    					<form:input path="staffEmail" cssClass="form-control" cssErrorClass="form-control error" />
 	    				</div>
 	    				
 	    				<div class="col-6 mt-3 inputDiv">
 	    					<form:label path="staffPhone">연락처</form:label>
 	    					<form:errors path="staffPhone"></form:errors>
-	    					<form:input path="staffPhone" cssClass="form-control" />
+	    					<form:input path="staffPhone" cssClass="form-control" cssErrorClass="form-control error" />
 	    				</div>
 	    				
 	    				<div class="col-6 mt-5 d-flex justify-content-center align-items-center">
