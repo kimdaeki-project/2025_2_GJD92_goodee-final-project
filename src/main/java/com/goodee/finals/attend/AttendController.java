@@ -3,7 +3,6 @@ package com.goodee.finals.attend;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.goodee.finals.approval.EarlyDTO;
+import com.goodee.finals.approval.OvertimeDTO;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffService;
 
@@ -154,18 +155,26 @@ public class AttendController {
 	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, targetYear, targetMonth, today, pageable);
 	    model.addAttribute("attendances", attendances);
 	    
-	    // 지각
+	    // 지각 갯수
 	    long lateCount = attendService.getLateCount(staffCode, targetYear, targetMonth);
 	    model.addAttribute("lateCount", lateCount);
 	    
-	    // 조퇴
+	    // 조퇴 갯수
 	    long earlyLeaveCount = attendService.getEarlyLeaveCount(staffCode, targetYear, targetMonth);
 	    model.addAttribute("earlyLeaveCount", earlyLeaveCount);
 	    
-	    // 결근
+	    // 결근 갯수
 	    long absentCount = attendService.getAbsentCount(staffCode, targetYear, targetMonth, today);
 	    model.addAttribute("absentCount", absentCount);
 		
+	    // 연장근로 리스트
+	    List<OvertimeDTO> overtimeList = attendService.findAllOvertimeByStaffCodeAndByMonth(staffCode, targetYear, targetMonth);
+	    model.addAttribute("overtimeList", overtimeList);
+	    
+	    // 조기퇴근 리스트
+	    List<EarlyDTO> earlyList = attendService.findAllEarlyByStaffCodeAndByMonth(staffCode, targetYear, targetMonth);
+	    model.addAttribute("earlyList", earlyList);
+	    
 		return "attend/list";
 	}
 	

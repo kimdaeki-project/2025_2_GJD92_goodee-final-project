@@ -1,5 +1,6 @@
 package com.goodee.finals.common.attachment;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.goodee.finals.product.ProductDTO;
 
 import jakarta.persistence.Entity;
@@ -25,6 +26,7 @@ public class ProductAttachmentDTO {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "productCode", insertable = false, updatable = false)
+	@JsonBackReference
 	private ProductDTO productDTO;
 	
 	@Id

@@ -3,6 +3,8 @@ let currentDept = null
 let currentUser = null
 let saveModalActivated = false;
 
+let doubleCheck = [];
+
 const addBtn = document.getElementById('addBtn')
 const selectedList = document.getElementById("selectedList")
 const supportedList = document.getElementById("supportedList")
@@ -54,75 +56,148 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		}
 	})
+	
+	document.addEventListener('hidden.bs.modal', () => {
+		doubleCheck = [];
+		selectedList.innerHTML = "";
+		supportedList.innerHTML = "";
+	})
 })
 
 addBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList')
 	
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			} 
+			
 		})
 		
-		selectedList.appendChild(newLi)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+	
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+				newLi.remove()
+			})
+			
+			selectedList.appendChild(newLi)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
 })
 
 receiptBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList')
 	
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			}
+			
 		})
 		
-		supportedList.appendChild(newLi)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+				newLi.remove()
+			})
+			
+			supportedList.appendChild(newLi)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
+	
 })
 
 agreeBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList')
 	
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="agree">[합] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			}
+			
 		})
 		
-		supportedList.appendChild(newLi)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="agree">[합] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+				newLi.remove()
+			})
+			
+			supportedList.appendChild(newLi)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
 })
 
 saveBtn.addEventListener('click', () => {

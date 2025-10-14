@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.product.ProductService;
+import com.goodee.finals.staff.StaffDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,23 +37,39 @@ public class ProductManageController {
 	public String getProductManageList(@PageableDefault(size = 10, sort = "pm_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
 		if (search == null) search = "";
 		
+		String searchValue = search;
+		
+		// 실제 검색용으로는 숫자 변환
+	    if ("입고".equals(search)) {
+	        search = "80";
+	    } else if ("출고".equals(search)) {
+	        search = "90";
+	    }
+			
 		Page<ProductManageDTO> productManageList = pmService.getProductManageSearchList(search, pageable);
 		
 		model.addAttribute("productManageList", productManageList);
 		model.addAttribute("search", search);
 		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		model.addAttribute("staffDTO", staffDTO);
+		
 		long totalProductManage = pmService.getTotalProduct();
 		model.addAttribute("totalProductManage", totalProductManage);
 		
+		// 검색창에 보일 원래 검색어를 별도로 넘긴다
+	    model.addAttribute("searchKeyword", searchValue);
+	    
 		return "productManage/manageList";
 	}
 	
 	@GetMapping("{pmNum}")
-	public String getProductManageDetail(@PathVariable Long pmNum, Model model) {
+	@ResponseBody
+	public ProductManageDTO getProductManageDetail(@PathVariable Long pmNum, Model model) {
 		ProductManageDTO productManageDTO = pmService.getProductManage(pmNum);
 		model.addAttribute("productManageDTO", productManageDTO);
 		
-		return "productManage/manageDetail";
+		return productManageDTO;
 	}
 	
 	@GetMapping("write")

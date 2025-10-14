@@ -19,6 +19,8 @@ import com.goodee.finals.attend.AttendDTO;
 import com.goodee.finals.calendar.CalendarDTO;
 import com.goodee.finals.common.attachment.StaffAttachmentDTO;
 import com.goodee.finals.common.attachment.StaffSignDTO;
+import com.goodee.finals.common.validation.MyPageValid;
+import com.goodee.finals.common.validation.StaffValid;
 import com.goodee.finals.drive.DocumentDTO;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveShareDTO;
@@ -42,6 +44,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,15 +71,20 @@ public class StaffDTO implements UserDetails {
 	private JobDTO jobDTO;
 	private String staffPw;
 	
+	@NotBlank(message = "이름을 입력해주세요.", groups = StaffValid.class)
 	private String staffName;
+	@NotNull(message = "성별을 선택해주세요.", groups = StaffValid.class)
 	private Integer staffGender;
+	@Email(message = "이메일을 정확하게 입력해주세요.", groups = {StaffValid.class, MyPageValid.class})
 	private String staffEmail;
+	@Pattern(regexp = "^$|^010-([0-9]{4,})-([0-9]{4,})$", message = "휴대폰 번호를 정확하게 입력해주세요.", groups = {StaffValid.class, MyPageValid.class})
 	private String staffPhone;
 	private Integer staffPostcode;
 	private String staffAddress;
 	private String staffAddressDetail;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@PastOrPresent(message = "오늘 이전의 날짜만 입력 가능합니다.", groups = StaffValid.class)
 	private LocalDate staffHireDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate staffFireDate;

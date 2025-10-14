@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -113,6 +114,13 @@ public class StaffService implements UserDetailsService {
 		else return false;
 	}
 	
+	public boolean checkRegistError(StaffDTO staffDTO, BindingResult bindingResult) {
+		boolean checked = true;
+		checked = !bindingResult.hasErrors();
+		
+		return checked;
+	}
+	
 	public boolean updateStaff(StaffDTO staffDTO, MultipartFile attach) {
 		setStaffUpdate(staffDTO);
 		
@@ -205,11 +213,11 @@ public class StaffService implements UserDetailsService {
 	public int updateStaffPassword(PasswordDTO passwordDTO) {
 		StaffDTO staffDTO = staffRepository.findById(passwordDTO.getStaffCode()).orElseThrow();
 		
-		// TODO 비밀번호 유효성 검사
 		if (passwordDTO.getNewPw().equals("0000")) return 400;
 		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return 401;
 		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return 402;
 		if (passwordEncoder.matches(passwordDTO.getNewPw(), staffDTO.getStaffPw())) return 403;
+		if (!passwordDTO.getNewPw().matches("^[a-zA-Z0-9]{8,16}$")) return 404;
 		
 		staffDTO.setStaffPw(passwordEncoder.encode(passwordDTO.getNewPw()));
 		staffRepository.saveAndFlush(staffDTO);

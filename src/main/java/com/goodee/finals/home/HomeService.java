@@ -30,7 +30,7 @@ public class HomeService {
 	
 	// 공지사항 최신글 5건 조회
 	public List<NoticeDTO> getRecentNoticesForDashboard() {
-        return noticeRepository.findTop5ByNoticePinnedFalseAndNoticeDeleteFalseOrderByNoticeDateDescNoticeNumDesc();
+        return noticeRepository.findTop5ByNoticePinnedFalseAndNoticeDeleteFalseAndNoticeTmpFalseOrderByNoticeDateDescNoticeNumDesc();
     }
 	
 	// 어트랙션 대시보드 운휴현황 조회
