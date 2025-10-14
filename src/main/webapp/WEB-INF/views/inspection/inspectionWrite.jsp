@@ -7,8 +7,22 @@
 <head>
 	<meta charset="UTF-8">
 	<title>어트랙션 점검 기록 등록</title>
-	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<style>
+	  /* 모달창 css */
+	  .my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
+	
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -140,15 +154,15 @@
 			       <c:when test="${mode eq 'edit'}">
 			         <button type="submit"
 			                 class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-			                 style="width: 100px;">수정</button>
+			                 style="width: 75px;">수정</button>
 			       </c:when>
 			       <c:otherwise>
 			         <button type="submit"
 			                 class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-			                 style="width: 100px;">등록</button>
+			                 style="width: 75px;">등록</button>
 			       </c:otherwise>
 			     </c:choose>
-			     <a href="/inspection" class="btn btn-sm btn-outline-secondary" style="width: 100px;">취소</a>
+			     <a href="/inspection" class="btn btn-sm btn-outline-secondary" style="width: 75px;">취소</a>
 			   </div>
 			 </div>	           
 			           

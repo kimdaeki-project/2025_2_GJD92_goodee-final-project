@@ -88,6 +88,11 @@ public class NoticeService {
 		return result;
 	}
 	
+	public Page<NoticeDTO> tempList(Pageable pageable, String keyword) {
+		Page<NoticeDTO> result = noticeRepository.tempList(keyword, pageable);
+		return result;
+	}
+	
 	public NoticeDTO detail(NoticeDTO noticeDTO) {
 		Long upOneHit = noticeDTO.getNoticeHits() + 1L;
 		noticeDTO.setNoticeHits(upOneHit);
@@ -101,14 +106,16 @@ public class NoticeService {
 
 	@Transactional
 	public NoticeDTO edit(NoticeDTO noticeDTO, MultipartFile[] files, List<Long> deleteFiles) {
-		String editTitle = noticeDTO.getNoticeTitle();
-		String editContent = noticeDTO.getNoticeContent();
-		boolean editPinned = noticeDTO.isNoticePinned();
-
-		noticeDTO = noticeRepository.findById(noticeDTO.getNoticeNum()).get();
-		noticeDTO.setNoticeTitle(editTitle);
-		noticeDTO.setNoticeContent(editContent);
-		noticeDTO.setNoticePinned(editPinned);
+		if (!noticeDTO.isNoticeTmpChecker()) {			
+			String editTitle = noticeDTO.getNoticeTitle();
+			String editContent = noticeDTO.getNoticeContent();
+			boolean editPinned = noticeDTO.isNoticePinned();
+			
+			noticeDTO = noticeRepository.findById(noticeDTO.getNoticeNum()).get();
+			noticeDTO.setNoticeTitle(editTitle);
+			noticeDTO.setNoticeContent(editContent);
+			noticeDTO.setNoticePinned(editPinned);
+		}
 		
 		if (deleteFiles != null && deleteFiles.size() > 0) {
 			for (Long attachNum : deleteFiles) {
@@ -165,4 +172,12 @@ public class NoticeService {
 		Optional<AttachmentDTO> result = attachmentRepository.findById(attachmentDTO.getAttachNum());
 		return result.get();
 	}
+
+	public NoticeDTO deleteTemp(Long toDelete) {
+		NoticeDTO found = noticeRepository.findById(toDelete).get();
+		found.setNoticeDelete(true);
+		NoticeDTO result = noticeRepository.save(found);
+		return result;
+	}
+
 }

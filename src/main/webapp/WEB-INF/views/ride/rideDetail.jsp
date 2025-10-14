@@ -9,6 +9,35 @@
 	<meta charset="UTF-8">
 	<title>어트랙션</title>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<style>
+	/* 테이블 밑줄 제거 */
+	  .ride-info table {
+	    border-collapse: collapse; /* 기본 여백 제거 */
+	  }
+	
+	  .ride-info th,
+	  .ride-info td {
+	    border: none !important; /* 밑줄(테두리) 제거 */
+	  }
+	
+	  .ride-info tr {
+	    border-bottom: none !important; /* 각 행 밑줄 제거 */
+	  }
+	  
+	  /* 모달창 css */
+	  .my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
+	
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -34,7 +63,7 @@
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-4">
-			      <h3 class="text-white text-capitalize ps-5 mt-3"> ${ride.rideName } </h3>
+			      <h2 class="text-white text-capitalize ps-5 mt-3"> ${ride.rideName } </h2>
 			    </div>
 			  </div>
 		  
@@ -52,40 +81,40 @@
 				    <div class="col-md-6 ride-info">
 				      <table class="table">
 				        <tr>
-				          <th>어트랙션 코드</th>
-				          <td>${ride.rideCode}</td>
+				          <th>어트랙션 코드  </th>
+				          <td>|&nbsp;&nbsp;${ride.rideCode}</td>
 				        </tr>
 				        <tr>
 				          <th>담당자</th>
-				          <td>${ride.staffDTO.staffName} (${ride.staffDTO.staffCode})</td>
+				          <td>|&nbsp;&nbsp;${ride.staffDTO.staffName} (${ride.staffDTO.staffCode})</td>
 				        </tr>
 				        <tr>
 				          <th>어트랙션 기종</th>
-				          <td>${ride.rideType}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideType}</td>
 				        </tr>
 				        <tr>
 				          <th>탑승인원</th>
-				          <td>${ride.rideCapacity}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideCapacity}</td>
 				        </tr>
 				        <tr>
 				          <th>운행시간</th>
-				          <td>${ride.rideDuration}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideDuration}</td>
 				        </tr>
 				        <tr>
 				          <th>이용정보</th>
-				          <td>${ride.rideRule}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideRule}</td>
 				        </tr>
 				        <tr>
 				          <th>어트랙션 설명</th>
-				          <td>${ride.rideInfo}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideInfo}</td>
 				        </tr>
 				        <tr>
 				          <th>개장일</th>
-				          <td>${ride.rideDate}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideDate}</td>
 				        </tr>
 				        <tr>
 				          <th>운행상태</th>
-				          <td>${ride.rideState}</td>
+				          <td>|&nbsp;&nbsp;${ride.rideState}</td>
 				        </tr>
 				      </table>
 				    </div>
@@ -99,18 +128,18 @@
 			<!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
 			<c:if test="${staff.deptDTO.deptCode eq 1003}">
 			    <div class="form-group row mt-4 text-end">
-			      <div class="col-sm-12">
+			      <div class="col-sm-11">
 			      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
 			      	<form action="${pageContext.request.contextPath }/ride/${ride.rideCode}/update"
 			      			method="get" style="display: inline;">
 				        <button type="submit" 
 				        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
-				        		style="width: 100px;">수정</button>
+				        		style="width: 75px; font-size:15px;">수정</button>
 			        </form>
 			        <!-- 삭제 버튼 -->
 			        <button type="button" 
 			                class="btn btn-sm btn-outline-secondary" 
-			                style="width: 100px;"
+			                style="width: 75px; font-size:15px;"
 			                onclick="ridedelete('${ ride.rideCode }')">삭제</button>
 			      </div>
 			    </div>

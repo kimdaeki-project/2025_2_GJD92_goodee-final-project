@@ -44,7 +44,6 @@ public class MessengerController {
     @GetMapping("")
     public String home(String keyword, Model model) {
     	if (keyword == null) keyword = "";
-    	log.info("{}", keyword);
     	List<StaffDTO> result = messengerService.getStaff(keyword);
     	model.addAttribute("members", result);
     	model.addAttribute("keyword", keyword);

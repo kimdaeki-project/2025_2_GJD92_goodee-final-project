@@ -123,7 +123,6 @@ joinStaffBtn.addEventListener('click', () => {
 	})
 	.then(response => response.json())
 	.then(response => {
-		console.log(response);
 		modal.style.display = "none";
 		let targetAll = document.querySelectorAll('.selected-member[data-staffCode]');
 		targetAll.forEach(t => {
@@ -155,7 +154,11 @@ leaveBtn.addEventListener('click', () => {
 		showCancelButton: true,
 		confirmButtonColor: "#191919",
 		confirmButtonText: "확인",
-		cancelButtonText: "취소"
+		cancelButtonText: "취소",
+		cancelButtonColor: "#FFFFFF",
+		customClass: {
+			cancelButton: 'my-cancel-btn'
+		}
 	})
 	.then(result => {
 		if (result.isConfirmed) {
