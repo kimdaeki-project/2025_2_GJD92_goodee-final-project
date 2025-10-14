@@ -26,7 +26,7 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 		       "WHERE a.attendIn > :time " +
 		       "AND a.staffDTO.staffCode = :staffCode " +
 		       "AND a.attendDate BETWEEN :startDate AND :endDate")
-		long countLateByStaffCodeInMonth(@Param("staffCode") int staffCode,
+	long countLateByStaffCodeInMonth(@Param("staffCode") int staffCode,
 		                                 @Param("time") LocalTime time,
 		                                 @Param("startDate") LocalDate startDate,
 		                                 @Param("endDate") LocalDate endDate);
@@ -89,4 +89,61 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
             LocalDate startDate,
             LocalDate endDate
     );
+    
+ 	// 주단위 휴가리스트 조회
+ 	@Query("""
+    	    SELECT h 
+    	    FROM HolidayDTO h 
+    	    WHERE h.date BETWEEN :startDate AND :endDate
+    	         OR h.date BETWEEN :startDate AND :endDate
+    	         OR h.date <= :startDate AND h.date >= :endDate
+    	""")
+ 	List<HolidayDTO> findHolidayByWeek(
+ 			Integer staffCode,
+ 			LocalDate startDate,
+ 			LocalDate endDate);
+ 	
+    // 주단위 휴가리스트 조회
+    @Query("""
+    	    SELECT v 
+    	    FROM VacationDTO v 
+    	    JOIN v.approvalDTO a 
+    	    WHERE a.staffDTO.staffCode = :staffCode
+    	      AND (
+    	            (v.vacStart BETWEEN :startDate AND :endDate)
+    	         OR (v.vacEnd BETWEEN :startDate AND :endDate)
+    	         OR (v.vacStart <= :startDate AND v.vacEnd >= :endDate)
+    	      )
+    	""")
+    	List<VacationDTO> findVacationByStaffCodeAndWeek(
+    			Integer staffCode,
+    	        LocalDate startDate,
+    	        LocalDate endDate);
+    
+    // 주단위 연장근로 리스트 조회
+    @Query("""
+    	    SELECT o 
+    	    FROM OvertimeDTO o 
+    	    JOIN o.approvalDTO a 
+    	    WHERE a.staffDTO.staffCode = :staffCode
+    	      AND to_char(o.overStart, 'yyyy-mm-dd') BETWEEN :startDate AND :endDate
+    	  """)
+    List<OvertimeDTO> findOvertimeByStaffCodeAndWeek(
+    		Integer staffCode,
+    		LocalDate startDate,
+    		LocalDate endDate);
+    
+    // 주단위 조기퇴근 리스트 조회
+    @Query("""
+    	    SELECT e 
+    	    FROM EarlyDTO e 
+    	    JOIN e.approvalDTO a 
+    	    WHERE a.staffDTO.staffCode = :staffCode
+    	      AND to_char(e.earlyDtm, 'yyyy-mm-dd') BETWEEN :startDate AND :endDate
+    	  """)
+    List<EarlyDTO> findEarlyByStaffCodeAndWeek(
+    		Integer staffCode,
+    		LocalDate startDate,
+    		LocalDate endDate);
+    
 }

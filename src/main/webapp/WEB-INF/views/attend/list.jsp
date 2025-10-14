@@ -88,10 +88,10 @@
 							</div>
 							
 							<div class="card-body">
-								<p>주 근로시간 : 40h 00m</p>
-								<p>누적 근로시간 : ${totalWorkTime}</p>
-								<p>잔여 근로시간 : ${remainingWorkTime }</p>
-								<p>연장 근로시간 : ${weeklyOvertime eq null ? "00h 00m" : weeklyOvertime}</p>
+								<p>- 주 근로시간 : 40h 00m</p>
+								<p>- 누적 근로시간 : ${totalWorkTime}</p>
+								<p>- 잔여 근로시간 : ${remainingWorkTime }</p>
+								<p>- 연장 근로시간 : ${overtimeWorkTime}</p>
 								
 								
 								<div class="work-progress mt-5" style="margin-top:15px;">
@@ -185,7 +185,7 @@
 											            </c:forEach>
 											
 											            <c:choose>
-											                <c:when test="${isOvertime}">연장근로</c:when>
+											                <c:when test="${isOvertime}">연장 근무</c:when>
 											                <c:otherwise>-</c:otherwise>
 											            </c:choose>
 											        </td>
