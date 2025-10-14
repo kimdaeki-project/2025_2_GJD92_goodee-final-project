@@ -1,8 +1,4 @@
-/**
- * 
- */
-
-/* 점검 검색 */
+// 점검 검색
 document.addEventListener("DOMContentLoaded", function () {
     const searchType = document.getElementById("searchType");
     const keywordInput = document.getElementById("keywordInput");

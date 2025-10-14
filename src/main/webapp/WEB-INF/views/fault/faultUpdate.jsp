@@ -8,8 +8,22 @@
 <head>
 	<meta charset="UTF-8">
 	<title>어트랙션 고장 신고</title>
-	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<style>
+	  /* 모달창 css */
+	  .my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
+	
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -33,6 +47,7 @@
 						modelAttribute="faultDTO"
 						enctype="multipart/form-data"
 						class="container col-8"
+						style="margin-top:70px;"
 						action="${pageContext.request.contextPath }/fault/${ faultDTO.faultNum }/update">
 						
 			<!-- PK (필수) -->
@@ -150,29 +165,17 @@
 				      			method="get" style="display: inline;">
 					        <button type="submit" 
 					        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
-					        		style="width: 100px;">수정</button>
+					        		style="width: 75px;">수정</button>
 				        </form>
 				        <!-- 삭제 버튼 -->
 				        <button type="button" 
 				                class="btn btn-sm btn-outline-secondary" 
-				                style="width: 100px;"
+				                style="width: 75px;"
 				                onclick="deleteFault('${ fault.faultNum }')">삭제</button>
 				      </div>
 				    </div>
 			    </c:if>
-			    </sec:authorize>
-			
-			<!-- 버튼 -->
-<!-- 			 <div class="form-group row mt-4 text-center">
-			   <div class="col-sm-12">
-		         <button type="submit"
-		                 class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-		                 style="width: 100px;">수정</button>
-			     <a href="/fault" class="btn btn-sm btn-outline-secondary" style="width: 100px;">취소</a>
-			   </div>
-			 </div>	
-			               -->   
-			                 
+			    </sec:authorize>                
 			
 			</form:form>
 

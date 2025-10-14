@@ -9,6 +9,20 @@
 	<title>어트랙션</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<style>
+		.my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
+	
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -32,7 +46,8 @@
 		           modelAttribute="rideDTO" 
 		           enctype="multipart/form-data" 
 		           class="container col-8"
-		           style="margin-top:100px"
+		           style="margin-top:60px;"
+		           
 		           data-mode="${mode}">
 		
 		  <!-- 어트랙션 이름 -->
@@ -178,16 +193,16 @@
 		        <c:when test="${mode eq 'edit'}">
 		          <button type="submit"
 		                  class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-		                  style="width: 100px;">수정</button>
+		                  style="width: 75px; font-size:15px;">수정</button>
 		        </c:when>
 		        <c:otherwise>
 		          <form:hidden path="staffCodeValid" id="staffCodeValid"/>
 		          <button type="submit"
 		                  class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-		                  style="width: 100px;">등록</button>
+		                  style="width: 75px; font-size:15px;">등록</button>
 		        </c:otherwise>
 		      </c:choose>
-		      <a href="/ride" class="btn btn-sm btn-outline-secondary" style="width: 100px;">취소</a>
+		      <a href="/ride" class="btn btn-sm btn-outline-secondary" style="width: 75px; font-size:15px;">취소</a>
 		    </div>
 		  </div>
 		
