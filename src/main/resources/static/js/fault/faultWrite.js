@@ -105,22 +105,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 	
 	// 날짜 유효성 검사 (오늘 이후 불가)
-	  const dateInput = form.querySelector("input[name='faultDate']");
-	  if (dateInput && dateInput.value) {
-	    const selectedDate = new Date(dateInput.value);
-	    const today = new Date();
-	    today.setHours(0, 0, 0, 0); // 오늘 0시 기준
+	const dateInput = form.querySelector("input[name='faultDate']");
+	if (dateInput && dateInput.value) {
+	  const todayStr = new Date().toISOString().split("T")[0];
+	  const selectedDateStr = dateInput.value;
 
-	    if (selectedDate > today) {
-	      Swal.fire({
-	        text: "날짜 양식이 올바르지 않습니다.",
-	        icon: "error",
-	        confirmButtonColor: "#191919",
-	        confirmButtonText: "확인"
-	      });
-	      return;
-	    }
+	  if (selectedDateStr > todayStr) {
+	    Swal.fire({
+	      text: "날짜 양식이 올바르지 않습니다.",
+	      icon: "error",
+	      confirmButtonColor: "#191919",
+	      confirmButtonText: "확인"
+	    });
+	    return;
 	  }
+	}
+
 
     // 최종 등록/수정 확인 모달
     const isUpdatePage = !!attachInput; // update.jsp에는 첨부파일 input 존재
@@ -133,7 +133,10 @@ document.addEventListener("DOMContentLoaded", () => {
       confirmButtonColor: "#191919",
       cancelButtonColor: "#FFFFFF",
       confirmButtonText: isUpdatePage ? "수정" : "등록",
-      cancelButtonText: "취소"
+      cancelButtonText: "취소",
+	  customClass: {
+		cancelButton: 'my-cancel-btn'
+	  }
     }).then((result) => {
       if (result.isConfirmed) {
         form.submit();

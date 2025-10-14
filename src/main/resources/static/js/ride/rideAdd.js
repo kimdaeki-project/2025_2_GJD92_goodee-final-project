@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonText: "등록",
             cancelButtonText: "취소",
 			customClass: {
-						cancelButton: 'my-cancel-btn'
+				cancelButton: 'my-cancel-btn'
 			}
           }).then((result) => {
             if (result.isConfirmed) {
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmButtonText: "수정",
         cancelButtonText: "취소",
 		customClass: {
-								cancelButton: 'my-cancel-btn'
+					cancelButton: 'my-cancel-btn'
 					}
       }).then((result) => {
         if (result.isConfirmed) {

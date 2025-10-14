@@ -60,7 +60,7 @@
 	    <!-- 여기에 코드 작성 -->
     	<!-- 검색창 -->
 		<form action="/fault" class="mb-4">
-		    <div class="d-flex justify-content-end">
+		    <div class="d-flex justify-content-end" style="margin-top:30px;">
 		        <div class="input-group w-25">
 		
 		            <!-- 검색 조건 선택 -->
