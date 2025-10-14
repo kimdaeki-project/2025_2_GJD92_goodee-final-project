@@ -86,7 +86,7 @@
 			
 			<!-- 등록 버튼 -->
 			<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white" 
-			        style="width: 100px; float: right;">등록	</button>
+			        style="width:75px; float: right;">등록	</button>
 			</form:form>
 
 	    </section>
