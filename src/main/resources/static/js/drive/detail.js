@@ -8,6 +8,50 @@ const checkAll = document.getElementById("checkAll");
 const checkBoxes = document.querySelectorAll(".checkBoxes");
 const btnDownloadFile = document.getElementById("btnDownloadFile");
 const btnDeleteFile = document.getElementById("btnDeleteFile");
+const fileTypeSelect = document.getElementById("fileTypeSelect");
+const frmSearch = document.getElementById("frmSearch");
+const fileType = document.getElementById("fileType");
+
+window.addEventListener("load", () => {
+  const COLLAPSE_KEY = "openDriveCollapses";
+  const DEFAULT_OPEN = ["collapseMyDrive", "collapseShareDrive"];
+
+  // 1️⃣ localStorage 초기화 (최초 1회만)
+  let opened = JSON.parse(localStorage.getItem(COLLAPSE_KEY));
+
+  if (!opened) {
+    // 최초 접근 시에만 기본 드라이브 2개를 저장
+    opened = [...DEFAULT_OPEN];
+    localStorage.setItem(COLLAPSE_KEY, JSON.stringify(opened));
+  }
+
+  // 2️⃣ collapse 열리고 닫힐 때 localStorage 갱신
+  document.querySelectorAll('.collapse').forEach(collapse => {
+    collapse.addEventListener('show.bs.collapse', () => {
+      let openedNow = JSON.parse(localStorage.getItem(COLLAPSE_KEY)) || [];
+      if (!openedNow.includes(collapse.id)) {
+        openedNow.push(collapse.id);
+        localStorage.setItem(COLLAPSE_KEY, JSON.stringify(openedNow));
+      }
+    });
+
+    collapse.addEventListener('hide.bs.collapse', () => {
+      let openedNow = JSON.parse(localStorage.getItem(COLLAPSE_KEY)) || [];
+      openedNow = openedNow.filter(id => id !== collapse.id);
+      localStorage.setItem(COLLAPSE_KEY, JSON.stringify(openedNow));
+    });
+  });
+
+  // 3️⃣ 페이지 로드 시 localStorage 기준으로 표시
+  const openedFinal = JSON.parse(localStorage.getItem(COLLAPSE_KEY)) || [];
+  document.querySelectorAll('.collapse').forEach(collapse => {
+    if (openedFinal.includes(collapse.id)) {
+      collapse.classList.add('show');   // 애니메이션 없이 즉시 표시
+    } else {
+      collapse.classList.remove('show');
+    }
+  });
+});
 
 // 클릭하면 파일 선택창 열기
 dropZone.addEventListener("click", () => fileInput.click());
@@ -66,6 +110,12 @@ checkAll.addEventListener("change", () => {
 			checkBox.checked = checkAll.checked;
 		})
 	changeButtonStatus();
+})
+
+fileTypeSelect.addEventListener("change", () => {
+	const selectedType = fileTypeSelect.value; 	
+	fileType.value = selectedType;  	
+	frmSearch.submit();
 })
 
 checkBoxes.forEach(function (checkBox){
@@ -148,5 +198,4 @@ function downloadFile(driveNum) {
 		const query = attachNums.map(num => "attachNums=" + num).join("&");
 		location.href = `/drive/${driveNum}/downloadDocument?` + query;
 	}
-	
 }

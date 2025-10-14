@@ -37,6 +37,7 @@
 	<c:import url="/WEB-INF/views/calendar/calendar-modal-detail.jsp"></c:import>
 	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.11/index.global.min.js"></script>
 	<script>
 		document.querySelector("i[data-content='일정']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "일정";

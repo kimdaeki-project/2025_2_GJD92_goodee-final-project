@@ -18,9 +18,9 @@
 		<!-- 일정 분류 체크 박스 -->
 		<div class="ps-4 mt-3">
 			<ul class="navbar-nav my-1">
-				<li class="nav-item mt-2">
-					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2000" style="accent-color: red;" checked><span>공휴일</span>
-				</li> 
+<!-- 				<li class="nav-item mt-2"> -->
+<!-- 					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2000" style="accent-color: red;" checked><span>공휴일</span> -->
+<!-- 				</li>  -->
 				<li class="nav-item mt-2">
 					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2001" style="accent-color: #F1C40F;" checked><span>점검 일정</span>
 				</li> 
