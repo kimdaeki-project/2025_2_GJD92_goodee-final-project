@@ -128,7 +128,7 @@
       border-collapse: collapse;
     }
 
-    table td, table th {
+    table td, table th, .table {
       padding: 8px;
       border-bottom: 1px solid #eee;
     }
@@ -153,9 +153,10 @@
 				<p style="font-size:22px;">${todayDate}</p>
 				<div class="time-info">
 				<div class="time-circle">
-				<div class="times-row">
-					<span style="font-size:16px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
-					<span style="font-size:16px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
+				
+				<div class="times-row"">
+					<span style="width:100px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
+					<span style="width:100px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
 				</div>
 			</div>
 			<div class="worktime">근무시간 : <span>${attendDTO.workTime}</span></div>

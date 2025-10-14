@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>입출고 상세</title>
 	<style type="text/css">
 	.form-box {
       background: #fff;
@@ -60,8 +60,8 @@
 			    
 			    	<li class="nav-item">
 			        <a class="nav-link text-dark" href="/product">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품 리스트">remove_shopping_cart</i>
-			          <span class="nav-link-text ms-1 text-sm">물품 리스트</span>
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="품목 리스트">remove_shopping_cart</i>
+			          <span class="nav-link-text ms-1 text-sm">품목 리스트</span>
 			        </a>
 			      </li>
 			      
