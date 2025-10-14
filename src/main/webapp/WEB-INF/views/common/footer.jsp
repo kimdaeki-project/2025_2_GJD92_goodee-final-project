@@ -79,3 +79,9 @@
 	</sec:authorize>
 </script>
 
+<script>
+if (!window.location.pathname.startsWith("/drive")) {
+	localStorage.removeItem("openDriveCollapses");
+}
+</script>
+
