@@ -1,6 +1,8 @@
 package com.goodee.finals.staff;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +50,8 @@ public class StaffController {
 				continue;
 			}
 			
-			if (!CollectionUtils.isEmpty(staffDTO.getAttendDTOs()) && !ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendIn())) {
-				if (!ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendOut())) {
+			if (!CollectionUtils.isEmpty(staffDTO.getAttendDTOs()) && staffDTO.getAttendDTOs().getLast().getAttendDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString().equals(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()) && !ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getLast().getAttendIn())) {
+				if (!ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getLast().getAttendOut())) {
 					staffDTO.setTodayState("퇴근");
 				} else {
 					staffDTO.setTodayState("근무중");
