@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.goodee.finals.common.validation.MyPageValid;
 import com.goodee.finals.common.validation.StaffValid;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -346,6 +345,8 @@ public class StaffController {
 			resultMsg = "비밀번호 확인이 일치하지 않습니다.";
 		} else if (result == 403) {
 			resultMsg = "현재 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.";
+		} else if (result == 404) {
+			resultMsg = "비밀번호는 8자 이상 16자 이하의 영문 대소문자와 숫자만 사용 가능합니다.";
 		}
 		
 		model.addAttribute("resultMsg", resultMsg);

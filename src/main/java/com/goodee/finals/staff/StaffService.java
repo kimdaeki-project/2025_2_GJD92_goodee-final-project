@@ -218,6 +218,7 @@ public class StaffService implements UserDetailsService {
 		if (!passwordEncoder.matches(passwordDTO.getOldPw(), staffDTO.getStaffPw())) return 401;
 		if (!passwordDTO.getNewPw().equals(passwordDTO.getNewPwChk())) return 402;
 		if (passwordEncoder.matches(passwordDTO.getNewPw(), staffDTO.getStaffPw())) return 403;
+		if (!passwordDTO.getNewPw().matches("^[a-zA-Z0-9]{8,16}$")) return 404;
 		
 		staffDTO.setStaffPw(passwordEncoder.encode(passwordDTO.getNewPw()));
 		staffRepository.saveAndFlush(staffDTO);
