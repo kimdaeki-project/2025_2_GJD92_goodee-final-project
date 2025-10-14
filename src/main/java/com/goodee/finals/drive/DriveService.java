@@ -86,22 +86,22 @@ public class DriveService {
 	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, StaffDTO staffDTO, Pageable pageable) {
 		Long driveNum = driveDTO.getDriveNum();
 		String keyword = drivePager.getKeyword();
-		Integer jobCode = staffDTO.getJobDTO().getJobCode();
+		Integer staffJobCode = staffDTO.getJobDTO().getJobCode();
 		String fileTypeSelect = drivePager.getFileType();
 		List<String> fileTypeList = new ArrayList<>();
 		
 		if(fileTypeSelect == null) fileTypeSelect = "all"; 
 		if(keyword == null) keyword = "";
-				
+		
 		switch (fileTypeSelect) {
-		case "all": fileTypeList = null; break;		
+		case "all": fileTypeList = null; break;
 		case "audio":  fileTypeList = Arrays.asList("MP3", "WAV", "OGG", "AAC", "FLAC"); break;
 		case "video":  fileTypeList = Arrays.asList("MP4", "AVI", "MOV", "WMV", "MKV", "WEBM"); break;
 		case "image":  fileTypeList = Arrays.asList("JPG", "JPEG", "PNG", "GIF", "BMP", "SVG", "WEBP"); break;
 		case "doc":  fileTypeList = Arrays.asList( "PDF", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "TXT", "HWP", "JSON", "CSV"); break;
 		}
 		
-		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, jobCode ,pageable, fileTypeList);
+		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, staffJobCode ,pageable, fileTypeList);
 		drivePager.calc(result);
 		
 		return result;
@@ -128,7 +128,7 @@ public class DriveService {
 		driveDTO = driveRepository.save(driveDTO);
 		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
 		
-		if(driveRepository.count() > 1)	addInDeptDrive(staffDTO); // 최초 서버 실행시 제외
+		if(driveRepository.count() > 1)	addInDeptDrive(staffDTO); // 최초 서버 실행시 부서드라이브 없음
 		
 		return driveDTO;
 	}
@@ -145,7 +145,7 @@ public class DriveService {
 			case 1003: driveDTO = driveRepository.findById(ROLE_FA_DRIVE).orElseThrow(); break;
 		}
 		
-		if(driveDTO.getDriveShareDTOs() == null) {
+		if(driveDTO.getDriveShareDTOs() == null) { // || isEmpty() 조건 추가시 영속성 추적 불가 에러 발생
 			driveDTO.setDriveShareDTOs(new ArrayList<DriveShareDTO>());
 		} 	
 		DriveShareDTO driveShareDTO = new DriveShareDTO();
@@ -160,7 +160,7 @@ public class DriveService {
 	}
 	
 	public DriveDTO createDrive(DriveDTO driveDTO) {
-		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName().trim());    // 드라이브 이름 중복 조회
+		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName().trim()); // 드라이브 이름 중복 조회
 		if(existDriveName != null) {
 			System.out.println("DriveService createDrive : 중복된이름 존재 메서드 종료");
 			return null;
@@ -234,16 +234,14 @@ public class DriveService {
 	}
 	
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
+		if(attach == null) return null;
+		if(attach.getOriginalFilename().length() > 255) return null;
+		
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
-		
-		if(attach.getOriginalFilename().length() > 255) {
-			System.out.println("파일명이 너무 깁니다.");
-			return null;
-		}
-		
 		if(attach != null && attach.getSize() != 0) {
 			try {
 				String path = FileService.DRIVE + "/" + driveNum;
+				
 				String fileName = fileService.saveFile(path, attach);
 				
 				attachmentDTO.setSavedName(fileName);
@@ -255,6 +253,7 @@ public class DriveService {
 				e.printStackTrace();
 			}
 		}
+		
 		LocalDate currentDate = LocalDate.now();
 		String contentType = attach.getOriginalFilename();
 		String newContentType = "";
@@ -269,6 +268,7 @@ public class DriveService {
 			jobDTO = new JobDTO();
 			jobDTO.setJobCode(1202);
 		}
+		
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
 		

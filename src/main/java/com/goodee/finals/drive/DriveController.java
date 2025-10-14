@@ -8,10 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,7 +41,7 @@ public class DriveController {
     @ModelAttribute
     public void sideBarDriveList(Model model) {
     	StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO); // 1  
+		List<DriveDTO> myDriveList = driveService.getAllMyDrive(staffDTO);
 		
 		if(myDriveList == null || myDriveList.size() < 1) {
 			DriveDTO driveDTO = driveService.createDefaultDrive(staffDTO); 
@@ -200,23 +200,41 @@ public class DriveController {
 	}
 	
 	@GetMapping("{driveNum}/downloadDocument")
-	public String downloadDocument(Long[] attachNums, @PathVariable Long driveNum, Model model) {
+	public String downloadDocument(Long[] attachNums, @PathVariable Long driveNum, Model model, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
+		Integer staffJobCode = staffDTO.getJobDTO().getJobCode();
 		String type = "document";
 		
+		model.addAttribute("type", type);
+		model.addAttribute("driveNum", driveNum);
+		
+		// 겹치는 로직 그대로 둔 이유 - 양쪽의 조회, model로 넘겨야하는 타입이 다름
 		if (attachNums.length == 1) {
 			AttachmentDTO file = driveService.getAttachByAttachNum(attachNums[0]);
+			Integer docJobCode = file.getDocumentDTO().getJobDTO().getJobCode();
+			if (staffJobCode > docJobCode) {
+				model.addAttribute("resultUrl", "/drive/" + driveNum);
+				model.addAttribute("resultMsg", "다운로드 권한이 없습니다");
+				model.addAttribute("resultIcon", "error");
+				return "common/result";
+			}
 			model.addAttribute("file", file);
-			model.addAttribute("type", type);
-			model.addAttribute("driveNum", driveNum);
+			
 			return "fileDownView";
 		} else {
 			List<AttachmentDTO> files = driveService.getAttachListByAttachNum(Arrays.asList(attachNums));
 			model.addAttribute("files", files);
-			model.addAttribute("type", type);
-			model.addAttribute("driveNum", driveNum);
+			for (AttachmentDTO file : files) {
+				Integer docJobCode = file.getDocumentDTO().getJobDTO().getJobCode();
+				if (staffJobCode > docJobCode) {
+					model.addAttribute("resultUrl", "/drive/" + driveNum);
+					model.addAttribute("resultMsg", "다운로드 권한이 없습니다");
+					model.addAttribute("resultIcon", "error");
+					return "common/result";
+				}
+			}
 			return "zipDownView";
 		}
-		
 	}
 	
 }

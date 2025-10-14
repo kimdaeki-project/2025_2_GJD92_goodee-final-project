@@ -19,12 +19,14 @@ public interface DocumentRepository extends JpaRepository<DocumentDTO, Long>{
 		       " JOIN FETCH d.attachmentDTO " +
 		       "WHERE d.driveDTO.driveNum = :driveNum " +
 		       "  AND d.docStatus = 'ACTIVE' " +
-		       "  AND d.jobDTO.jobCode >= :jobCode " +
+		       "  AND d.jobDTO.jobCode >= :staffJobCode " +
 		       "  AND ((d.attachmentDTO.originName LIKE %:keyword% OR d.staffDTO.staffName LIKE %:keyword%) " +
 		       "  AND (:fileTypeList IS NULL OR d.docContentType IN :fileTypeList))")
-	Page<DocumentDTO> findByDriveAndKeyword(@Param("driveNum") Long driveNum,
+	public Page<DocumentDTO> findByDriveAndKeyword(@Param("driveNum") Long driveNum,
 								            @Param("keyword") String keyword,
-								            @Param("jobCode") Integer jobCode,
+								            @Param("staffJobCode") Integer staffJobCode,
 								            Pageable pageable, 
 								            @Param("fileTypeList") List<String> fileTypeList);
+	
+	
 }
