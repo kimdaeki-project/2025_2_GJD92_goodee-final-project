@@ -100,7 +100,7 @@
     	
     	<!-- 공지 없음 -->
 		<c:if test="${ totalNotice eq 0 }">
-			<div class="alert alert-secondary text-center">검색된 결과가 없습니다.</div>
+			<div class="alert alert-secondary text-center no-search">검색된 결과가 없습니다.</div>
 		</c:if>    	
     	<!-- 공지 없음 -->
     	

@@ -101,7 +101,9 @@ function htmlTagBuilder(msg, alertNum) {
 	divTop.classList.add('.my-auto');
 	let img = document.createElement('img');
 	img.classList.add('avatar', 'avatar-sm', 'me-3');
-	if (type == 'aprv') img.setAttribute('src', '/images/heartBeat/aprv.png');
+	if (type == 'aprv' && msg.includes('승인')) img.setAttribute('src', '/images/heartBeat/aprv_check.png');
+	else if (type == 'aprv' && msg.includes('반려')) img.setAttribute('src', '/images/heartBeat/aprv_reject.png');
+	else if (type == 'aprv') img.setAttribute('src', '/images/heartBeat/aprv.png');
 	else if (type == 'inv') img.setAttribute('src', '/images/heartBeat/invitation.png');
 	else if (type == 'fix') img.setAttribute('src', '/images/heartBeat/fix.png');
 	let divBot = document.createElement('div');
