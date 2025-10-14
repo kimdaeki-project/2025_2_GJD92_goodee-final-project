@@ -90,7 +90,7 @@ public class NoticeController {
 		
 		NoticeDTO result = noticeService.write(noticeDTO, files);
 		if (result != null) {
-			model.addAttribute("resultMsg", "게시글이 등록되었습니다.");
+			model.addAttribute("resultMsg", "게시글이 임시저장되었습니다.");
 			model.addAttribute("resultIcon", "success");
 			model.addAttribute("resultUrl", "/notice/temp");
 			return "common/result";
