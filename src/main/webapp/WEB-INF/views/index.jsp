@@ -58,10 +58,10 @@
     /* 각 패널 카드 */
     .panel {
       background-color: #fff;
-      padding: 14px;
+      padding: 10px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .panel h3 {
