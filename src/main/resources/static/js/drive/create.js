@@ -29,30 +29,28 @@ new Sortable(selectedList, {
 	dragClass: "dragging"
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-	document.addEventListener('shown.bs.modal', function(e) { // shown.bs.modal 모달 창이 켜졌을때 실행
-		if (e.target.id === 'shareModal') {
-			fetch('/drive/staffList') // 사원 리스트 DB에서 조회
-			.then(r => r.json())
-			.then(r => {
-				staffs = r; // 전역 변수에 저장
-				staffs.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 직급별로 정렬
-				staffs = staffs.filter(staff => staff.staffCode != loginStaffCode) // 본인 제외
-				currentDept = staffs // 최초 선택된 부서는 전체로 초기화
-				renderStaff(staffs); // 사원 리스트 랜더링
-			})
-			.catch(error => console.log('fetch에러', error))
-		}
-	});
-	
-	if(shareStaffs) {
-		shareStaffs.forEach((tr) => {
-			tr.querySelector('.remove-saved').addEventListener('click', () => {
-					tr.remove(); 
-			})		
-		})	
+document.addEventListener('shown.bs.modal', function(e) { // shown.bs.modal 모달 창이 켜졌을때 실행
+	if (e.target.id === 'shareModal') {
+		fetch('/drive/staffList') // 사원 리스트 DB에서 조회
+		.then(r => r.json())
+		.then(r => {
+			staffs = r; // 전역 변수에 저장
+			staffs.sort((a, b) => a.jobDTO.jobCode - b.jobDTO.jobCode); // 직급별로 정렬
+			staffs = staffs.filter(staff => staff.staffCode != loginStaffCode) // 본인 제외
+			currentDept = staffs // 최초 선택된 부서는 전체로 초기화
+			renderStaff(staffs); // 사원 리스트 랜더링
+		})
+		.catch(error => console.log('fetch에러', error))
 	}
 });
+
+if(shareStaffs) {
+	shareStaffs.forEach((tr) => {
+		tr.querySelector('.remove-saved').addEventListener('click', () => {
+				tr.remove(); 
+		})		
+	})	
+}
 
 // 모달창 닫히면 추가된 사원 목록 초기화
 document.addEventListener("hidden.bs.modal", () => {
@@ -193,7 +191,6 @@ deptBtn.forEach(d => {
 		searchInput.value = ''; // 부서 변경시 검색란 초기화
 		const deptName = e.target.getAttribute('data-team'); // 버튼에 저장된 data-team 가져옴
 		allStaffCheckboxName.textContent = deptName + " 전체";
-		console.log("선택된 부서 : " + deptName);
 		
 		if(deptName == '전체') { // '전체' 일때만 모든 사원 출력
 			allStaffCheckboxName.textContent = "전체";

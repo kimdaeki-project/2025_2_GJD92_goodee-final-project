@@ -7,17 +7,19 @@
 	<meta charset="UTF-8">
 	<title>Index</title>
 	<style type="text/css">
-		.dashboard {
+	.dashboard {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
+    
     .container {
       display: flex;
       height: 100vh;
     }
+    
     .content {
-      padding: 20px;
+      padding: 15px;
       display: grid;
       grid-template-columns: repeat(3, 1fr); /* 3열 균등 */
       grid-template-rows: auto auto;         /* 2행 */
@@ -56,64 +58,64 @@
     /* 각 패널 카드 */
     .panel {
       background-color: #fff;
-      padding: 15px;
+      padding: 14px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      font-size: 14px;
+      font-size: 18px;
     }
 
     .panel h3 {
-      margin-bottom: 10px;
       border-bottom: 1px solid #eee;
       padding-bottom: 5px;
+      padding-left: 15px;
     }
 
     /* 체크인 카드 스타일 */
     .time-circle {
-  margin: 10px auto;
-  padding: 20px;
-  text-align: center;
-  border: 1px dashed #ccc;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  display: flex;           /* flex로 변경 */
-  justify-content: center; /* 가운데 정렬 */
-  align-items: center;     /* 수직 중앙 정렬 */
-}
+	  margin: 10px auto;
+	  padding: 20px;
+	  text-align: center;
+	  border: 1px dashed #ccc;
+	  border-radius: 50%;
+	  width: 160px;
+	  height: 160px;
+	  display: flex;           /* flex로 변경 */
+	  justify-content: center; /* 가운데 정렬 */
+	  align-items: center;     /* 수직 중앙 정렬 */
+	}
     .time-info {
-  text-align: center;
-  padding: 10px 0;
-}
+	  text-align: center;
+	  padding: 10px 0;
+	}
 
-.times-row {
-  display: flex;
-  flex-direction: column; /* 세로로 나열 (한 줄에 두개면 row로 놔도됨) */
-  gap: 10px;
-  font-size: 12px;
-  line-height: 1.4;
-  width: 200px;
-}
-
-.worktime {
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.button-row {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.button-row button {
-  padding: 8px 16px;
-  background-color: #1976d2;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
+	.times-row {
+	  display: flex;
+	  flex-direction: column; /* 세로로 나열 (한 줄에 두개면 row로 놔도됨) */
+	  gap: 10px;
+	  font-size: 12px;
+	  line-height: 1.4;
+	  width: 200px;
+	}
+	
+	.worktime {
+	  margin-bottom: 15px;
+	  font-size: 20px;
+	}
+	
+	.button-row {
+	  display: flex;
+	  justify-content: center;
+	  gap: 10px;
+	}
+	
+	.button-row button {
+	  padding: 8px 16px;
+	  background-color: #1976d2;
+	  border: none;
+	  color: white;
+	  border-radius: 4px;
+	  cursor: pointer;
+	}
 
     .weather .icon {
       font-size: 48px;
@@ -127,11 +129,12 @@
     }
 
     table td, table th, .table {
-      padding: 6px;
+      padding: 8px;
       border-bottom: 1px solid #eee;
     }
 
 	</style>
+	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -147,9 +150,10 @@
 			<!-- 왼쪽 (출근 / 근무시간) -->
 			<div class="panel check-in">
 				<h3>오늘</h3>
-				<p>${todayDate}</p>
+				<p style="font-size:22px;">${todayDate}</p>
 				<div class="time-info">
 				<div class="time-circle">
+				
 				<div class="times-row"">
 					<span style="width:100px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
 					<span style="width:100px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
@@ -207,12 +211,15 @@
 			<!-- 날씨 -->
 			<div class="panel weather-card">
 				<h3>날씨</h3>
-				<div id="weather-info" style="font-size:1rem;">⏳ 불러오는 중...</div>
+				<div id="weather-info" style="font-size:20px;">⏳ 불러오는 중...</div>
 			</div>
 
 	        <!-- 결재 현황 -->
 	        <div class="panel approval">
-	          <h3>결재 현황</h3><a href="/approval">더보기</a>
+	        <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
+	          <h3>결재 현황</h3>
+	          <a href="/approval" style="margin-top:10px;">더보기</a>
+	        </div>
 	          <table class="table text-center">
 	            <tr>
 		            <td class="col-2">문서번호</td>
@@ -233,7 +240,9 @@
 	
 	        <!-- 공지사항 -->
 	        <div class="panel notices">
-	          <h3>공지사항</h3><a href="/notice">더보기</a>
+	        <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
+	          <h3>공지사항</h3><a href="/notice" style="margin-top:10px;">더보기</a>
+	        </div>
 	          <table>
 	            <tr>
 		            <td>번호</td>

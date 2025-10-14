@@ -11,6 +11,20 @@
 	
 	<!-- Bootstrap 5.3.8 -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	
+	<style>
+	  /* 모달창 css */
+	  .my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
 </head>
 
 
@@ -73,9 +87,6 @@
 			<!-- 등록 버튼 -->
 			<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white" 
 			        style="width: 100px; float: right;">등록	</button>
-
-
-			
 			</form:form>
 
 	    </section>
@@ -83,8 +94,6 @@
   </main>
 	<script src="/js/fault/faultWrite.js"></script>
 	
-
-		
 	<!-- SweetAlert2 -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	

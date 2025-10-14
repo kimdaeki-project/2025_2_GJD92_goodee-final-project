@@ -58,7 +58,7 @@
 
 			<c:if test="${ notice ne null }">
 				<input type="hidden" name="noticeNum" value="${ notice.noticeNum }">
-				<input type="hidden" name="noticeTmp" value="${ notice.noticeTmp }">
+				<input type="hidden" name="noticeTmp" value="${ notice.noticeTmp }" id="noticeTmp">
 				<input type="hidden" name="deleteFiles" id="deleteFiles">
 			</c:if>
 
