@@ -195,6 +195,25 @@ public class ApprovalController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
+		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
+		int aprvState = approvalDTO.getAprvState();
+		if (aprvState == 702 || aprvState == 703) {
+			List<String> wsSub = new ArrayList<>();
+			wsSub.add(approvalDTO.getStaffDTO().getStaffCode() + "");
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+				if (aprvState == 702) {					
+					model.addAttribute("wsMsg", "내 결재가 승인되었습니다.," + aprvCode);
+				} else if (aprvState == 703) {
+					model.addAttribute("wsMsg", "내 결재가 반려되었습니다.," + aprvCode);					
+				}
+				return "common/notifyResult";
+			} catch (JsonProcessingException e) {
+				log.info("{}", e);
+			}
+		}
+		
 		return "common/result";
 	}
 	
