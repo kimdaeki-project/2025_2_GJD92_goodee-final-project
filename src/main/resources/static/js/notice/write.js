@@ -91,7 +91,50 @@ btn.addEventListener('click', () => {
 });
 
 cancelBtn.addEventListener('click', () => {
-	location.href = "/notice";
+	Swal.fire({
+		text: "게시글을 임시저장하시겠습니까?",
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#191919",
+		confirmButtonText: "확인",
+		cancelButtonText: "취소",
+		cancelButtonColor: "#FFFFFF",
+		customClass: {
+	    	cancelButton: 'my-cancel-btn'
+	  	}
+	}).then(result => {
+		if (result.isConfirmed) {
+			const noticeTitle = document.querySelector('#noticeTitle').value.trim();
+			const noticeContent = document.querySelector('#noticeContent').value.trim();
+			if (noticeTitle.length === 0) {
+				Swal.fire({
+					text: "제목을 입력해주세요.",
+					icon: "warning",
+					showCancelButton: false,
+					confirmButtonColor: "#191919",
+					confirmButtonText: "확인"
+				});
+				return;
+			} else if (noticeContent.length === 0) {
+				Swal.fire({
+					text: "내용을 입력해주세요.",
+					icon: "warning",
+					showCancelButton: false,
+					confirmButtonColor: "#191919",
+					confirmButtonText: "확인"
+				})
+				return;
+			}
+
+			const dt = new DataTransfer();
+			newFiles.forEach(f => dt.items.add(f));
+			input.files = dt.files;
+			form.setAttribute('action', '/notice/temp');
+			form.submit();
+		} else {
+			location.href = "/notice";
+		}
+	});
 });
 // -------------------------------------------------- //
 const existingFiles = window.existingFiles || [];

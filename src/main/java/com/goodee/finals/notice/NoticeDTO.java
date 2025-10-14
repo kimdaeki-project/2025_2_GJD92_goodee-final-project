@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,4 +46,7 @@ public class NoticeDTO {
 	private StaffDTO staffDTO;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "noticeDTO", cascade = CascadeType.ALL)
 	private List<NoticeAttachmentDTO> noticeAttachmentDTOs;
+	
+	@Transient
+	private boolean noticeTmpChecker = false;
 }

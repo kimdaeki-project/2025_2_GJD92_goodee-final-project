@@ -1,6 +1,7 @@
 package com.goodee.finals.staff;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,13 @@ public class StaffController {
 		if (search == null) search = "";
 		
 		Page<StaffDTO> staffList = staffService.getStaffSearchList(search, pageable);
+		List<Integer> leavedStaffList = staffService.getLeavedStaffToday();
 		for (StaffDTO staffDTO : staffList) {
+			if (leavedStaffList.contains(staffDTO.getStaffCode())) {
+				staffDTO.setTodayState("연차");
+				continue;
+			}
+			
 			if (!CollectionUtils.isEmpty(staffDTO.getAttendDTOs()) && !ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendIn())) {
 				if (!ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendOut())) {
 					staffDTO.setTodayState("퇴근");
@@ -61,6 +68,12 @@ public class StaffController {
 		
 		long totalStaff = staffService.getTotalStaff();
 		model.addAttribute("totalStaff", totalStaff);
+		
+		long leavedStaff = leavedStaffList.size();
+		model.addAttribute("leavedStaff", leavedStaff);
+		
+		long workingStaff = staffService.getWorkingStaffToday();
+		model.addAttribute("workingStaff", workingStaff);
 		
 		return "staff/list";
 	}

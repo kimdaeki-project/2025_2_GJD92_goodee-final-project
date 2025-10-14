@@ -60,4 +60,10 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	
 	@NativeQuery(value = "SELECT SUM(staff_used_leave) FROM staff")
 	Integer findStaffLeaveUsed();
+	
+	@NativeQuery(value = "SELECT staff_code FROM staff s INNER JOIN approval p USING(staff_code) INNER JOIN vacation v USING(aprv_code) WHERE now() BETWEEN v.vac_start AND v.vac_end")
+	List<Integer> findLeavedStaffToday();
+	
+	@NativeQuery(value = "SELECT COUNT(*) FROM attend WHERE attend_date = DATE_FORMAT(now(), '%Y-%m-%d') AND attend_in IS NOT NULL;")
+	Integer findWorkingStaff();
 }
