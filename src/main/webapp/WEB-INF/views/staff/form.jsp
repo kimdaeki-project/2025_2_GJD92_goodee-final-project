@@ -9,6 +9,16 @@
 	<title>사원</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	<style>
+		.inputDiv span {
+			font-size: 12px;
+			color: red;
+		}
+		
+		.error {
+			border-color: red !important;
+		}
+	</style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -79,7 +89,7 @@
     		<div class="col-6 offset-3">
     			<div class="form-group row mt-5">
     				<div class="col-4 text-center">
-	    				<img id="preview" width="150" height="150" style="object-fit: cover;" <c:if test="${ not empty staffDTO.staffName }">src="/file/staff/${ staffDTO.staffAttachmentDTO.attachmentDTO.savedName }"</c:if> class="border border-1 border-dark p-1" />
+	    				<img id="preview" width="150" height="150" style="object-fit: cover;" <c:if test="${ not empty staffDTO.staffCode }">src="/file/staff/${ staffDTO.staffAttachmentDTO.attachmentDTO.savedName }"</c:if> class="border border-1 border-dark p-1" />
 							<label for="attach">
 								<div class="btn btn-outline-secondary px-2 py-0 m-auto">프로필 사진 등록</div>
 							</label>
@@ -88,9 +98,10 @@
     				
     				<div class="col-4">
     					<div class="col-10">
-    						<div class="mb-5">
+    						<div class="mb-5 inputDiv">
 		    					<form:label path="staffName">성명</form:label>
-		    					<form:input path="staffName" cssClass="form-control" />
+		    					<form:errors path="staffName"></form:errors>
+		    					<form:input path="staffName" cssClass="form-control" cssErrorClass="form-control error" style="height: 34px;" />
 	    					</div>
 	    					
 	    					<div>
@@ -108,9 +119,10 @@
     				
     				<div class="col-4">
     					<div class="col-10">
-    						<div class="mb-5">
+    						<div class="mb-5 inputDiv">
 	    						<form:label path="staffGender">성별</form:label>
-		    					<form:select path="staffGender" cssClass="form-select py-1">
+		    					<form:errors path="staffGender"></form:errors>
+		    					<form:select path="staffGender" cssClass="form-select py-1" cssErrorClass="form-select error py-1">
 		    						<form:option value="">-- 선택 --</form:option>
 		    						<form:option value="1">남</form:option>
 		    						<form:option value="2">여</form:option>
@@ -134,14 +146,16 @@
     			</div>
     			
     			<div class="form-group row mt-5">
-    				<div class="col-5 offset-1">
+    				<div class="col-5 offset-1 inputDiv">
     					<form:label path="staffEmail">이메일</form:label>
-    					<form:input path="staffEmail" cssClass="form-control" />
+    					<form:errors path="staffEmail"></form:errors>
+    					<form:input path="staffEmail" cssClass="form-control" cssErrorClass="form-control error" />
     				</div>
     				
-    				<div class="col-5">
+    				<div class="col-5 inputDiv">
     					<form:label path="staffPhone">연락처</form:label>
-    					<form:input path="staffPhone" cssClass="form-control" />
+    					<form:errors path="staffPhone"></form:errors>
+    					<form:input path="staffPhone" cssClass="form-control" cssErrorClass="form-control error" />
     				</div>
     			</div>
     			
@@ -172,9 +186,10 @@
     			</div>
     			
     			<div class="form-group row mt-5">
-    				<div class="col-5 offset-1">
+    				<div class="col-5 offset-1 inputDiv">
     					<form:label path="staffHireDate">입사일</form:label>
-    					<form:input path="staffHireDate" type="date" cssClass="form-control py-1" />
+    					<form:errors path="staffHireDate"></form:errors>
+    					<form:input path="staffHireDate" type="date" cssClass="form-control py-1" cssErrorClass="form-control py-1 error" />
     				</div>
     				
     				<div class="col-5">
@@ -184,7 +199,7 @@
     			</div>
     			
     			<div class="form-group row mt-5 d-flex justify-content-center align-items-center">
-    				<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty staffDTO.staffName ? "등록" : "수정" }</button>
+    				<button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty staffDTO.staffCode ? "등록" : "수정" }</button>
     				<button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">취소</button>
     			</div> 
     		</div>
@@ -198,8 +213,8 @@
 	<script src="/js/staff/regist.js"></script>
 	<script>
 		document.querySelector("i[data-content='사원']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='${ empty staffDTO.staffName ? "사원 등록" : "사원 조회" }']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("#navTitle").textContent = "${ empty staffDTO.staffName ? '사원 등록' : '사원 정보 수정' }"
+		document.querySelector("i[data-content='${ empty staffDTO.staffCode ? "사원 등록" : "사원 조회" }']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("#navTitle").textContent = "${ empty staffDTO.staffCode ? '사원 등록' : '사원 정보 수정' }"
 	</script>
 </body>
 
