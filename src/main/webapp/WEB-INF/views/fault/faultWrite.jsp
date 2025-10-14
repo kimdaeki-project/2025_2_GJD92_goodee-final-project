@@ -38,7 +38,7 @@
  		
  		
  		
-	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh;">
+	    <section class="border-radius-xl bg-white w-92 ms-2 mt-2 me-3 ps-3 pe-3" style="height: 440px;">
 	    
 		    <!-- 여기에 코드 작성 -->
 			<form:form id="faultForm"

@@ -78,7 +78,7 @@ public class MessengerController {
 		if (result != null) {
 			model.addAttribute("resultMsg", "채팅방이 생성되었습니다.");
 			model.addAttribute("resultIcon", "success");
-			model.addAttribute("resultUrl", "msg/room");
+			model.addAttribute("resultUrl", "/msg/room/all");
 			
 			// 알림 발송
 			List<String> wsSub = new ArrayList<>();

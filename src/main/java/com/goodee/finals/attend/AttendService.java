@@ -133,14 +133,14 @@ public class AttendService {
             if (isVacationDay) {
                 // 휴가일일 때
             	total = total.plusHours(8);
-                System.out.println(attendDate + "는 휴가일입니다.");
+//                System.out.println(attendDate + "는 휴가일입니다.");
             } else {
                 // 2. 근무일일 때
-                System.out.println(attendDate + "는 근무일입니다.");
+//                System.out.println(attendDate + "는 근무일입니다.");
                 
                 // 결근
                 if (record.getAttendIn() == null && record.getAttendOut() == null) {
-                	System.out.println(attendDate + "에 결근하였습니다.");
+//                	System.out.println(attendDate + "에 결근하였습니다.");
                 	total = total.plusHours(0);
                 }
 
@@ -165,7 +165,7 @@ public class AttendService {
 						Duration duration = Duration.between(record.getAttendIn(), record.getAttendOut());
 						total = total.plus(duration);
 						
-						System.out.println(attendDate + "에 조기퇴근하였습니다. 퇴근시간: " + record.getAttendOut());
+//						System.out.println(attendDate + "에 조기퇴근하였습니다. 퇴근시간: " + record.getAttendOut());
                 	} else {
                 		// 연장근무일자에 해당될 때
                 		boolean isOvertimeDay = weeklyOvertimeList.stream().anyMatch(ot ->
@@ -180,7 +180,7 @@ public class AttendService {
                     		total = total.plusHours(8);
                     		overtime = overtime.plusHours(timeTmp/60/60);
                     		
-    						System.out.println(attendDate + "에 연장근무하였습니다. 연장근무: " + attendDate + overtime.toHours());
+//    						System.out.println(attendDate + "에 연장근무하였습니다. 연장근무: " + attendDate + overtime.toHours());
                 		
                 		// 정상근무
                     	} else {

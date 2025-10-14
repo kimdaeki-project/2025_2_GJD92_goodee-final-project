@@ -82,7 +82,7 @@
       	
       	<div style="flex: 1;">
 			<div class="form-group">
-	        	<img id="preview" width="300" height="300" style="object-fit: clip;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+	        	<img id="preview" width="300" height="300" style="object-fit: contain;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
 	        </div>
 	        
 	        <div class="form-group">
