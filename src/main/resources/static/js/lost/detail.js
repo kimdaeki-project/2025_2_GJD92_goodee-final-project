@@ -17,9 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("📦 분실물 상세:", data);
 
           // 이미지
-          lostDetailAttach.innerHTML = data.lostAttachmentDTO?.attachmentDTO?.savedName
-            ? `<img width="400" height="400" style="object-fit: clip;" src="/file/lost/${data.lostAttachmentDTO.attachmentDTO.savedName}"/>`
-            : "";
+					lostDetailAttach.innerHTML =
+					  data.lostAttachmentDTO &&
+					  data.lostAttachmentDTO.attachmentDTO &&
+					  data.lostAttachmentDTO.attachmentDTO.savedName
+					    ? `<img width="400" height="400" style="object-fit: clip;" src="/file/lost/${data.lostAttachmentDTO.attachmentDTO.savedName}"/>`
+					    : "";
 
           // 테이블
           lostDetailTable.innerHTML = `
@@ -31,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `;
 
           // 로그인 사용자와 작성자 비교 후 버튼 표시
-          const writerCode = data.staffDTO?.staffCode;
+          const writerCode = data.staffDTO ? data.staffDTO.staffCode : undefined;
           console.log("👤 로그인:", loginStaffCode, "| 작성자:", writerCode);
 
           if (		  typeof loginStaffCode !== 'undefined' &&

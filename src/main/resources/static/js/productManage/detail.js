@@ -25,16 +25,16 @@ document.addEventListener("DOMContentLoaded", () => {
           pmDetailTable.innerHTML = `
             <tr><th>입출고번호</th><td>${data.pmNum}</td></tr>
             <tr><th>등록일자</th><td>${data.pmDate}</td></tr>
-            <tr><th>작성자</th><td>${data.staffDTO?.staffName}</td></tr>
-            <tr><th>물품번호</th><td>${data.productDTO?.productCode}</td></tr>
-            <tr><th>물품타입</th><td>${data.productDTO?.productTypeDTO?.productTypeName}</td></tr>
-            <tr><th>물품명</th><td>${data.productDTO?.productName}</td></tr>
+            <tr><th>작성자</th><td>${data.staffDTO ? data.staffDTO.staffName : undefined}</td></tr>
+            <tr><th>물품번호</th><td>${data.productDTO ? data.productDTO.productCode : undefined}</td></tr>
+            <tr><th>물품타입</th><td>${data.productDTO && data.productDTO.productTypeDTO ? data.productDTO.productTypeDTO.productTypeName : undefined}</td></tr>
+            <tr><th>물품명</th><td>${data.productDTO ? data.productDTO.productName : undefined}</td></tr>
             <tr><th>등록수량</th><td>${data.pmAmount}</td></tr>
             <tr style="border-bottom: 1px solid #dee2e6;"><th>잔여수량</th><td>${data.pmRemainAmount}</td></tr>
           `;
 
           // 로그인 사용자와 작성자 비교 후 버튼 표시
-          const writerCode = data.staffDTO?.staffCode;
+          const writerCode = data.staffDTO ? data.staffDTO.staffCode : undefined;
           console.log("👤 로그인:", loginStaffCode, "| 작성자:", writerCode);
 
           if (		  typeof loginStaffCode !== 'undefined' &&

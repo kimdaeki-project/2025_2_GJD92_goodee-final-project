@@ -94,7 +94,9 @@ addBtn.addEventListener('click', () => {
 			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
 			newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
 	
-			newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
 				newLi.remove()
 			})
 			
@@ -139,7 +141,9 @@ receiptBtn.addEventListener('click', () => {
 			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
 			newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
 
-			newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
 				newLi.remove()
 			})
 			
@@ -185,7 +189,9 @@ agreeBtn.addEventListener('click', () => {
 			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
 			newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="agree">[합] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
 
-			newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
 				newLi.remove()
 			})
 			
@@ -437,7 +443,7 @@ function deleteAttach(attachNum, event) {
 				method : "GET"
 			})
 			.then((data) => data.text())
-			.then((data) => {
+			.then(() => {
 				Swal.fire({ text: "첨부파일이 삭제되었습니다.", icon: "success" })
 				
 				event.target.closest("div").remove()
