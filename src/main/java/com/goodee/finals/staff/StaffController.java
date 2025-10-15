@@ -1,6 +1,8 @@
 package com.goodee.finals.staff;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
+import com.goodee.finals.common.validation.MyPageValid;
+import com.goodee.finals.common.validation.StaffValid;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -45,8 +50,8 @@ public class StaffController {
 				continue;
 			}
 			
-			if (!CollectionUtils.isEmpty(staffDTO.getAttendDTOs()) && !ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendIn())) {
-				if (!ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getFirst().getAttendOut())) {
+			if (!CollectionUtils.isEmpty(staffDTO.getAttendDTOs()) && staffDTO.getAttendDTOs().getLast().getAttendDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString().equals(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()) && !ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getLast().getAttendIn())) {
+				if (!ObjectUtils.isEmpty(staffDTO.getAttendDTOs().getLast().getAttendOut())) {
 					staffDTO.setTodayState("퇴근");
 				} else {
 					staffDTO.setTodayState("근무중");
@@ -98,7 +103,14 @@ public class StaffController {
 	}
 	
 	@PostMapping("{staffCode}/update")
-	public String postStaffUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+	public String postStaffUpdate(@Validated(StaffValid.class) StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
+			StaffDTO temp = staffService.getStaff(staffDTO.getStaffCode());
+			staffDTO.setStaffAttachmentDTO(temp.getStaffAttachmentDTO());
+			
+			return "staff/form";
+		}
+		
 		boolean result = staffService.updateStaff(staffDTO, attach);
 		
 		String resultMsg = "사원 정보 수정 중 오류가 발생했습니다.";
@@ -196,7 +208,14 @@ public class StaffController {
 	}
 	
 	@PostMapping("info/update")
-	public String postStaffInfoUpdate(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+	public String postStaffInfoUpdate(@Validated(MyPageValid.class) StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
+			StaffDTO temp = staffService.getStaff(staffDTO.getStaffCode());
+			staffDTO.setStaffAttachmentDTO(temp.getStaffAttachmentDTO());
+			
+			return "staff/info-update";
+		}
+		
 		boolean result = staffService.updateStaffFromInfo(staffDTO, attach);
 		
 		String resultMsg = "내 정보 수정 중 오류가 발생했습니다.";
@@ -225,7 +244,11 @@ public class StaffController {
 	}
 	
 	@PostMapping("regist")
-	public String postStaffRegist(@Valid StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+	public String postStaffRegist(@Validated(StaffValid.class) StaffDTO staffDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if (!staffService.checkRegistError(staffDTO, bindingResult)) {
+			return "staff/form";
+		}
+		
 		boolean result = staffService.registStaff(staffDTO, attach);
 		
 		String resultMsg = "사원 등록 중 오류가 발생했습니다.";
@@ -324,6 +347,8 @@ public class StaffController {
 			resultMsg = "비밀번호 확인이 일치하지 않습니다.";
 		} else if (result == 403) {
 			resultMsg = "현재 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.";
+		} else if (result == 404) {
+			resultMsg = "비밀번호는 8자 이상 16자 이하의 영문 대소문자와 숫자만 사용 가능합니다.";
 		}
 		
 		model.addAttribute("resultMsg", resultMsg);

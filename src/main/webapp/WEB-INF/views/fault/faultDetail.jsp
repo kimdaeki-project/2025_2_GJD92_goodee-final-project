@@ -146,7 +146,7 @@
 				      			method="get" style="display: inline;">
 					        <button type="submit" 
 					        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
-					        		style="width: 75px;">수정</button>
+					        		style="width:75px;">수정</button>
 				        </form>
 				        <!-- 삭제 버튼 -->
 				        <button type="button" 

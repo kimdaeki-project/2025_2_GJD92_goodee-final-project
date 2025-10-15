@@ -2,6 +2,8 @@ package com.goodee.finals.lost;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.goodee.finals.common.attachment.LostAttachmentDTO;
 import com.goodee.finals.staff.StaffDTO;
 
@@ -33,6 +35,7 @@ public class LostDTO {
 	private String lostName;
 	private String lostFinder;
 	private String lostFinderPhone;
+	private String lostNote;
 	private LocalDate lostDate = LocalDate.now();
 	@Column(columnDefinition = "boolean default false")
 	private boolean lostDelete;
@@ -40,10 +43,12 @@ public class LostDTO {
 	// 분실물 작성자
 	@ManyToOne
 	@JoinColumn(name = "staffCode")
+	@JsonIgnoreProperties({"deptDTO", "lostList"}) // 필요한 필드만 제외
 	private StaffDTO staffDTO;
 
 	// 분실물 사진파일
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "lostDTO", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private LostAttachmentDTO lostAttachmentDTO; 
 	
 }

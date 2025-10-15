@@ -58,14 +58,14 @@
     /* 각 패널 카드 */
     .panel {
       background-color: #fff;
-      padding: 14px;
+      padding: 10px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .panel h3 {
-      border-bottom: 1px solid #eee;
+      /* border-bottom: 1px solid #eee; */
       padding-bottom: 5px;
       padding-left: 15px;
     }
@@ -128,7 +128,7 @@
       border-collapse: collapse;
     }
 
-    table td, table th {
+    table td, table th, .table {
       padding: 8px;
       border-bottom: 1px solid #eee;
     }
@@ -149,13 +149,14 @@
 
 			<!-- 왼쪽 (출근 / 근무시간) -->
 			<div class="panel check-in">
-				<h3>오늘</h3>
+				<h3 style="border-bottom: 1px solid #eee;">오늘</h3>
 				<p style="font-size:22px;">${todayDate}</p>
 				<div class="time-info">
 				<div class="time-circle">
-				<div class="times-row">
-					<span style="font-size:16px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
-					<span style="font-size:16px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
+				
+				<div class="times-row"">
+					<span style="width:100px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
+					<span style="width:100px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
 				</div>
 			</div>
 			<div class="worktime">근무시간 : <span>${attendDTO.workTime}</span></div>
@@ -197,7 +198,7 @@
 	
 	        <!-- 어트랙션 운휴 현황 -->
 	        <div class="panel attraction-status">
-	          <h3>어트랙션 운휴 현황</h3>
+	          <h3 style="border-bottom: 1px solid #eee;">어트랙션 운휴 현황</h3>
 	          <table>
 	            <tr><td>어트랙션</td><td>상태</td></tr>
 	          	<c:forEach items="${rides }" var="ride">
@@ -209,7 +210,7 @@
 	
 			<!-- 날씨 -->
 			<div class="panel weather-card">
-				<h3>날씨</h3>
+				<h3 style="border-bottom: 1px solid #eee;">날씨</h3>
 				<div id="weather-info" style="font-size:20px;">⏳ 불러오는 중...</div>
 			</div>
 

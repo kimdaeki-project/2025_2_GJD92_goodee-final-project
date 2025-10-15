@@ -78,7 +78,7 @@ public class RideDTO {
 	private Integer  rideState;  // 운행상태
 	
 	@Column(columnDefinition = "boolean default false")
-	private boolean rideDeleted = false;  // 논리적 삭제
+	private boolean rideDeleted = false;  // 어트랙션 삭제 여부
 	
 	// 사원이 여러개의 어트랙션 담당 가능
 	@ManyToOne
