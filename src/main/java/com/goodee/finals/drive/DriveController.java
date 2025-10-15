@@ -71,11 +71,9 @@ public class DriveController {
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		DriveDTO driveDTO = null;
-	    if (driveNum == null) { // 최초 진입시 기본 드라이브
-	        driveDTO = driveService.getDefaultDrive(staffDTO);
-	    } else { 				// 특정 드라이브 진입
-	        driveDTO = driveService.getDrive(driveNum);
-	    }
+	    if (driveNum == null) driveDTO = driveService.getDefaultDrive(staffDTO); // 최초 진입시 기본 드라이브
+	    else driveDTO = driveService.getDrive(driveNum); // 특정 드라이브 진입	        
+	    // TODO 여기에 유효성 검사 후 에러 페이지로 이동로직 작성
 	    
 		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
 		
@@ -117,7 +115,6 @@ public class DriveController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
-		
 		return "common/result";
 	}
 	
@@ -132,9 +129,7 @@ public class DriveController {
 	
 	@PostMapping("{driveNum}/update")
 	public String updateDrive(@Valid DriveDTO driveDTO,BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
-			return "drive/create";
-		}
+		if(bindingResult.hasErrors()) return "drive/create";
 		
 		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		driveDTO.setStaffDTO(staffDTO);
@@ -162,9 +157,7 @@ public class DriveController {
 		driveDTO.setDriveNum(driveNum);
 		driveDTO = driveService.deleteDrive(driveDTO); 
 		
-		if(driveDTO == null) {
-			return null;
-		}
+		if(driveDTO == null) return null;
 		return driveDTO;
 	}
 	

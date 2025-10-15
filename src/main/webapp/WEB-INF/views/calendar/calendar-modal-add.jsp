@@ -21,7 +21,7 @@
                   <option value="">선택</option>
                   <option value="2001">점검 일정</option>
                   <option value="2002">사내 일정</option>
-                  <option value="2003">부서 일정</option>
+                  <option value="2003">${ staffDTO.deptDTO.deptDetail }팀 일정</option>
                 </select>
               </div>
             </div>
