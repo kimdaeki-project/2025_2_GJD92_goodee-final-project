@@ -52,6 +52,7 @@ public class SecurityConfig {
 			// static resources
 			.requestMatchers("/css/**", "/js/**", "/images/**", "/WEB-INF/**").permitAll()
 			.requestMatchers("/staff/login", "/staff/password/change", "/staff/password/update").permitAll()
+			.requestMatchers("/staff/info", "/staff/info/update").authenticated()
 			.requestMatchers("/staff/**").hasAnyRole("HQ", "HR")
 			.anyRequest().authenticated()
 			;
