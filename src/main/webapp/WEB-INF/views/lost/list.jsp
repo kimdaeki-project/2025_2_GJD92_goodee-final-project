@@ -148,7 +148,6 @@
 	</script>
 	<script>
 	const loginStaffCode = "${staffDTO.staffCode}";
-	console.log(loginStaffCode);
 	</script>
 </body>
 
