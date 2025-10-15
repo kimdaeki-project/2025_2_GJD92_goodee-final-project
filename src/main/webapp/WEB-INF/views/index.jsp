@@ -218,7 +218,7 @@
 	        <div class="panel approval">
 	        <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
 	          <h3>결재 현황</h3>
-	          <a href="/approval" style="margin-top:10px;">더보기</a>
+	          <a href="/approval" style="margin-top:10px;">+</a>
 	        </div>
 	          <table class="table text-center">
 	            <tr>
@@ -241,7 +241,7 @@
 	        <!-- 공지사항 -->
 	        <div class="panel notices">
 	        <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
-	          <h3>공지사항</h3><a href="/notice" style="margin-top:10px;">더보기</a>
+	          <h3>공지사항</h3><a href="/notice" style="margin-top:10px; font-size:20px;">더보기</a>
 	        </div>
 	          <table>
 	            <tr>

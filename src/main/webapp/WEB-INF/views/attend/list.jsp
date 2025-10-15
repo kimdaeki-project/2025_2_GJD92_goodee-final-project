@@ -93,27 +93,61 @@
 								<p>- 잔여 근로시간 : ${remainingWorkTime }</p>
 								<p>- 연장 근로시간 : ${overtimeWorkTime}</p>
 								
+								<!-- 컨트롤러에서 받아온 값 예시 -->
+<c:set var="baseHours" value="40" /> <!-- 주 근로시간 기준 -->
+<c:set var="overHours" value="12" /> <!-- 연장근로 최대 -->
+<c:set var="currentHours" value="${weeklyWork.totalWorkHours}" /> <!-- 실제 누적 근로시간 -->
+<c:set var="currentOvertime" value="${weeklyWork.overtimeHours}" /> <!-- 실제 연장 근로시간 -->
+
+<!-- 비율 계산 (JSTL로 처리) -->
+<c:set var="basePercent" value="${(currentHours / baseHours) * 100}" />
+<c:set var="overPercent" value="${(currentOvertime / overHours) * 100}" />
+
+<div class="work-progress mt-5 mb-5" style="margin-top:15px;">
+
+  <div class="progress" style="height: 10px; border-radius: 3px; background-color:#e9ecef;">
+
+    <!-- 주 근로시간 전체바 -->
+    <div class="progress-bar bg-light position-relative"
+         style="height:12px; width: 77%; border-top-left-radius:3px; border-bottom-left-radius:3px;">
+      
+      <!-- 실제 근로시간만큼 내부 채우기 -->
+      <div style="width: 20%; height: 100%; background-color: green; border-radius: inherit;"></div>
+      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">${baseHours}h</span>
+    </div>
+
+    <!-- 연장근로 전체바 -->
+    <div class="progress-bar bg-light position-relative"
+         style="height:12px; width: 23%; border-top-right-radius:3px; border-bottom-right-radius:3px;">
+      
+      <div style="width: 10%; height: 100%; background-color: red; border-radius: inherit;"></div>
+      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">+${overHours}h</span>
+    </div>
+
+  </div>
+</div>
+
 								
-								<div class="work-progress mt-5" style="margin-top:15px;">
-								  <label>근로시간 현황</label>
-								  <div class="progress" style="height: 25px; border-radius: 10px;">
+<!-- 								<div class="work-progress mt-5" style="margin-top:15px;"> -->
+<!-- 								  <label>근로시간 현황</label> -->
+<!-- 								  <div class="progress" style="height: 25px; border-radius: 10px;"> -->
 								  
-								    <!-- 주 근로시간 -->
-								    <div class="progress-bar bg-success" role="progressbar" 
-								         style="width: 77%; height: 12px;" 
-								         aria-valuenow="40" aria-valuemin="0" aria-valuemax="52">
-								      40h
-								    </div>
+<!-- 								    주 근로시간 -->
+<!-- 								    <div class="progress-bar bg-success" role="progressbar"  -->
+<!-- 								         style="width: 77%; height: 12px;"  -->
+<!-- 								         aria-valuenow="40" aria-valuemin="0" aria-valuemax="52"> -->
+<!-- 								      40h -->
+<!-- 								    </div> -->
 								    
-								    <!-- 연장 근로시간 -->
-								    <div class="progress-bar bg-primary" role="progressbar" 
-								         style="width: 23%; height: 12px;" 
-								         aria-valuenow="12" aria-valuemin="0" aria-valuemax="52">
-								      +12h
-								    </div>
+<!-- 								    연장 근로시간 -->
+<!-- 								    <div class="progress-bar bg-primary" role="progressbar"  -->
+<!-- 								         style="width: 23%; height: 12px;"  -->
+<!-- 								         aria-valuenow="12" aria-valuemin="0" aria-valuemax="52"> -->
+<!-- 								      +12h -->
+<!-- 								    </div> -->
 								    
-								  </div>
-								</div>
+<!-- 								  </div> -->
+<!-- 								</div> -->
 								
 								
 							</div>

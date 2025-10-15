@@ -109,46 +109,67 @@ public class AttendService {
 	// 주 근로시간 계산
 	public WeeklyWorkResult getWeeklyWorkTime(LocalDate monday, LocalDate sunday, Integer staffCode) {
 		
+		// 주 단위 출퇴근내역
 		List<AttendDTO> records = attendRepository.findByStaffDTO_StaffCodeAndAttendDateBetween(staffCode, monday, sunday);
 
-		List<HolidayDTO> weeklyHolidayList = attendRepository.findHolidayByWeek(staffCode, monday, sunday);
-		List<VacationDTO> weeklyVacationList = attendRepository.findVacationByStaffCodeAndWeek(staffCode, monday, sunday);
-		List<EarlyDTO> weeklyEarlyList = attendRepository.findEarlyByStaffCodeAndWeek(staffCode, monday, sunday);
-		List<OvertimeDTO> weeklyOvertimeList = attendRepository.findOvertimeByStaffCodeAndWeek(staffCode, monday, sunday);
+		// 주 단위 데이터
+		List<HolidayDTO> weeklyOnlyHolidayList = attendRepository.findOnlyHolidayByWeek(staffCode, monday, sunday); // 공휴일
+		List<VacationDTO> weeklyVacationList = attendRepository.findVacationByStaffCodeAndWeek(staffCode, monday, sunday); // 휴가
+		List<EarlyDTO> weeklyEarlyList = attendRepository.findEarlyByStaffCodeAndWeek(staffCode, monday, sunday); //조기퇴근
+		List<OvertimeDTO> weeklyOvertimeList = attendRepository.findOvertimeByStaffCodeAndWeek(staffCode, monday, sunday); // 연장근로
+		
+		for (HolidayDTO HolidayDTO : weeklyOnlyHolidayList) {
+			System.out.println(HolidayDTO.getDate()+" : "+HolidayDTO.getKind());
+		}
 		
         Duration total = Duration.ZERO;      // 총 근로시간
         Duration overtime = Duration.ZERO;   // 일일 연장근로시간
         Duration weeklyOvertime = Duration.ZERO; // 주 40시간 초과분
         
-        // 주 단위 출퇴근내역에서..
         for (AttendDTO record : records) {
         	
         	LocalDate attendDate = record.getAttendDate();
 
-            boolean isVacationDay = weeklyVacationList.stream().anyMatch(vac ->
-                (attendDate.equals(vac.getVacStart()) || attendDate.equals(vac.getVacEnd())) ||
-                (attendDate.isAfter(vac.getVacStart()) && attendDate.isBefore(vac.getVacEnd()))
-            );
-
-            if (isVacationDay) {
-                // 휴가일일 때
-            	total = total.plusHours(8);
-//                System.out.println(attendDate + "는 휴가일입니다.");
-            } else {
-                // 2. 근무일일 때
-//                System.out.println(attendDate + "는 근무일입니다.");
+        	boolean isHoliDay = weeklyOnlyHolidayList.stream().anyMatch(hol ->
+	            attendDate.equals(hol.getDate()) 
+	        );
+        	
+        	boolean isVacationDay = weeklyVacationList.stream().anyMatch(vac ->
+        	(attendDate.equals(vac.getVacStart()) || attendDate.equals(vac.getVacEnd())) ||
+        	(attendDate.isAfter(vac.getVacStart()) && attendDate.isBefore(vac.getVacEnd()))
+        			);
+        	
+        	// 1. 공휴일
+        	if(isHoliDay) {
+        		total = total.plusHours(8);
+                System.out.println(attendDate + "는 공휴일입니다.");
                 
-                // 결근
+            // 2. 휴가일
+        	} else if(isVacationDay){
+        		total = total.plusHours(8);
+                System.out.println(attendDate + "는 휴가일입니다.");
+                
+            // 3. 근무일 -> [정상근무 / 조기퇴근 / 결근 / 연장근무] 구분 *놀이공원이라서 주말도 정규근무일로 가정한다면..
+            } else {
+                System.out.println(attendDate + "는 근무일입니다.");
+                
+                // 3-1. 출근&퇴근시간 다 없을 때
+                // 1) 결근
                 if (record.getAttendIn() == null && record.getAttendOut() == null) {
-//                	System.out.println(attendDate + "에 결근하였습니다.");
+                	System.out.println(attendDate + "에 결근하였습니다.");
                 	total = total.plusHours(0);
                 }
-
-                // 출근, 퇴근 기록 다 있을 때
-                // 조기퇴근, 정상근무, 연장근무
+                
+                // 3-2. 출근&퇴근시간 둘 중 하나만 있을 때 (계산하지 않기) -> 추후 인사팀에 문의하는 것으로..
+                if (record.getAttendIn() != null || record.getAttendOut() != null) {
+                	System.out.println(attendDate + "에 출근 또는 퇴근 기록이 빠졌습니다.");
+                	total = total.plusHours(0);
+                }
+                
+                // 3-3. 출근&퇴근시간 다 있을 때
                 if (record.getAttendIn() != null && record.getAttendOut() != null) {
                 	
-                	// 조기퇴근일자에 해당될 때
+                	// 1) 조기퇴근
                 	boolean isEarlyDay = weeklyEarlyList.stream().anyMatch(early ->
                 	attendDate.equals(early.getEarlyDtm().toLocalDate())
                 			);
@@ -163,11 +184,13 @@ public class AttendService {
 						    });
 						
 						Duration duration = Duration.between(record.getAttendIn(), record.getAttendOut());
+						// 휴게시간 1시간 뺀 시간으로 추가해줘야함..
 						total = total.plus(duration);
 						
-//						System.out.println(attendDate + "에 조기퇴근하였습니다. 퇴근시간: " + record.getAttendOut());
+						System.out.println(attendDate + "에 조기퇴근하였습니다. 퇴근시간: " + record.getAttendOut());
+						
                 	} else {
-                		// 연장근무일자에 해당될 때
+                		// 2) 연장근무
                 		boolean isOvertimeDay = weeklyOvertimeList.stream().anyMatch(ot ->
                     	attendDate.equals(ot.getOverStart().toLocalDate())
                     			);
@@ -180,11 +203,21 @@ public class AttendService {
                     		total = total.plusHours(8);
                     		overtime = overtime.plusHours(timeTmp/60/60);
                     		
-//    						System.out.println(attendDate + "에 연장근무하였습니다. 연장근무: " + attendDate + overtime.toHours());
+    						System.out.println(attendDate + "에 연장근무하였습니다. 연장근무: " + attendDate + overtime.toHours());
                 		
-                		// 정상근무
                     	} else {
-                    		total = total.plusHours(8);
+                    		// 3) 정상근무
+                    		// 근무시간이 6시간은 넘는지..?
+                    		LocalTime in = record.getAttendIn();
+                            LocalTime out = record.getAttendOut();
+
+                            Duration duration = Duration.between(in, out);
+                            
+                    		if(duration.toHours() > 5) {
+                    			total = total.plusHours(8);
+                    		}else {
+                    			total = total.plusHours(0);
+                    		}
                     	}
                     	
 //                		// 일일 연장근로 (9시간 초과)
@@ -193,14 +226,10 @@ public class AttendService {
 //                		}
                 	}
                 }
-            }
+                
+            } // 근무일일때 else문
         } // for문
 
-        // 주 40시간 초과분 계산
-        if (total.toMinutes() > 2400) {
-            weeklyOvertime = weeklyOvertime.plusMinutes(total.toMinutes() - 2400);
-        }
-        
         return new WeeklyWorkResult(
                 formatDuration(total),
                 formatDuration(overtime),

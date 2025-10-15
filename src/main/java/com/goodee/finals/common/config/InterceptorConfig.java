@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.goodee.finals.common.interceptor.CheckStaffEnableInterceptor;
+import com.goodee.finals.lost.LostCheckAuthInterceptor;
 import com.goodee.finals.notice.NoticeCheckAuthInterceptor;
 import com.goodee.finals.notice.NoticeCheckLoginInterceptor;
 
@@ -18,6 +19,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	@Autowired
 	NoticeCheckAuthInterceptor noticeCheckAuthInterceptor;
 	@Autowired
+	LostCheckAuthInterceptor lostCheckAuthInterceptor;
+	@Autowired
 	CheckStaffEnableInterceptor checkStaffEnableInterceptor;
 	
 	@Override
@@ -26,6 +29,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 				.addPathPatterns("/notice/write", "/notice/*/edit", "/notice/*/delete");
 		registry.addInterceptor(noticeCheckAuthInterceptor)
 				.addPathPatterns("/notice/*/edit", "/notice/*/delete");
+		registry.addInterceptor(lostCheckAuthInterceptor)
+				.addPathPatterns("/lost/*/update", "/lost/*/delete");
 		registry.addInterceptor(checkStaffEnableInterceptor).addPathPatterns("/**");
 	}
 	
