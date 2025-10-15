@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import com.goodee.finals.drive.DriveDTO;
 import com.goodee.finals.drive.DriveRepository;
 import com.goodee.finals.drive.DriveService;
+import com.goodee.finals.product.ProductTypeDTO;
+import com.goodee.finals.product.ProductTypeRepository;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.JobDTO;
@@ -32,6 +34,8 @@ public class DefaultInitializer implements ApplicationRunner {
 	@Autowired
 	private DriveRepository driveRepository;
 	@Autowired
+	private ProductTypeRepository productTypeRepository;
+	@Autowired
 	private StaffService staffService;
 	@Autowired
 	private DriveService driveService;
@@ -42,6 +46,7 @@ public class DefaultInitializer implements ApplicationRunner {
 		setJobDefault();
 		setAdmin();
 		setDeptDrive();
+		setProductType();
 	}
 
 	private void setDeptDefault() {
@@ -99,6 +104,21 @@ public class DefaultInitializer implements ApplicationRunner {
 				driveDTO.setDriveName(driveNameArr[i]);
 				driveDTO.setStaffDTO(staffDTO);
 				driveService.createDrive(driveDTO);
+			}
+		}
+	}
+	
+	private void setProductType() {
+		if (productTypeRepository.count() == 0) {
+			Integer[] typeNumArr = {801, 802, 803, 804, 805, 806, 807, 808, 809};
+			String[] typeNameArr = {"식음료 소모품", "증정품", "운영 자재", "시설 유지 보수 자재", "청소 / 위생용품", "포장 / 물류 소모품", "보안 / 안전용품", "행사용 / 이벤트 소품", "IT / 사무 장비"};
+			
+			for (int i = 0; i < typeNameArr.length; i++) {
+				ProductTypeDTO productTypeDTO = new ProductTypeDTO();
+				productTypeDTO.setProductTypeCode(typeNumArr[i]);
+				productTypeDTO.setProductTypeName(typeNameArr[i]);
+				
+				productTypeRepository.save(productTypeDTO);
 			}
 		}
 	}
