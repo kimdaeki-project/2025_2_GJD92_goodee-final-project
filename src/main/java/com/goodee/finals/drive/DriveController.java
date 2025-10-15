@@ -79,9 +79,9 @@ public class DriveController {
 	    
 		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
 		
+		model.addAttribute("pager", drivePager);
 	    model.addAttribute("docList", docList);
 	    model.addAttribute("driveDTO", driveDTO);
-	    model.addAttribute("pager", drivePager);
 	    model.addAttribute("jobList", driveService.getJobList());
 
 	    return "drive/detail";

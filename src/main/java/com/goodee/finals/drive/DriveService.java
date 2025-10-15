@@ -1,7 +1,6 @@
 package com.goodee.finals.drive;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -86,12 +84,12 @@ public class DriveService {
 	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, StaffDTO staffDTO, Pageable pageable) {
 		Long driveNum = driveDTO.getDriveNum();
 		String keyword = drivePager.getKeyword();
-		Integer staffJobCode = staffDTO.getJobDTO().getJobCode();
 		String fileTypeSelect = drivePager.getFileType();
+		Integer staffJobCode = staffDTO.getJobDTO().getJobCode();
 		List<String> fileTypeList = new ArrayList<>();
 		
-		if(fileTypeSelect == null) fileTypeSelect = "all"; 
 		if(keyword == null) keyword = "";
+		if(fileTypeSelect == null) fileTypeSelect = "all"; 
 		
 		switch (fileTypeSelect) {
 		case "all": fileTypeList = null; break;
