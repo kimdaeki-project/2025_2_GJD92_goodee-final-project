@@ -16,6 +16,7 @@ public interface ProductManageRepository extends JpaRepository<ProductManageDTO,
 			          "INNER JOIN product p USING(product_code) " +
 			          "INNER JOIN product_type pt USING(product_type_code) " +
 			          "WHERE s.staff_name LIKE %:search% " + 
+			          "OR pm.pm_type LIKE %:search% " +
 			          "OR pm.pm_note LIKE %:search% " +
 			          "OR p.product_name LIKE %:search% " ,
 			  countQuery = "SELECT COUNT(*) FROM product_manage pm " +
@@ -23,6 +24,7 @@ public interface ProductManageRepository extends JpaRepository<ProductManageDTO,
 						  "INNER JOIN product p USING(product_code) " +
 						  "INNER JOIN product_type pt USING(product_type_code) " +
 				          "WHERE s.staff_name LIKE %:search% " +
+				          "OR pm.pm_type LIKE %:search% " +
 				          "OR pm.pm_note LIKE %:search% " +
 				          "OR p.product_name LIKE %:search% " ,
 			  nativeQuery = true

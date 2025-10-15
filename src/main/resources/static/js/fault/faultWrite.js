@@ -1,6 +1,4 @@
-/**
- * 어트랙션 고장 신고 등록/수정 JS
- */
+// 어트랙션 고장 신고 등록/수정 JS
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   if (!form) return; // form이 없으면 종료
@@ -9,15 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const preview = document.querySelector("#preview");
   const noImageText = document.querySelector("#noImageText");
 
-  // ==============================
   // 파일 사이즈 & 이미지 타입 제한
-  // ==============================
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
 
-  // ==============================
   // 파일 미리보기 (등록/수정 공통)
-  // ==============================
   if (attachInput) {
     attachInput.addEventListener("change", (event) => {
       const file = event.target.files[0];
@@ -28,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Swal.fire({
             text: "파일 크기는 5MB 이하여야 합니다.",
             icon: "error",
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#191919",
             confirmButtonText: "확인"
           });
           event.target.value = "";
@@ -43,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Swal.fire({
             text: "이미지 파일(jpg, jpeg, png, gif, bmp, webp)만 업로드 가능합니다.",
             icon: "error",
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#191919",
             confirmButtonText: "확인"
           });
           event.target.value = "";
@@ -73,15 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==============================
   // 등록/수정 폼 검증 + 모달 확인
-  // ==============================
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
     let emptyField = false;
 
-    // 1. 입력값 확인 (hidden 제외)
+    // 입력값 확인 (hidden 제외)
     const requiredInputs = form.querySelectorAll("input:not([type=hidden]), select, textarea");
     requiredInputs.forEach((el) => {
       const type = el.getAttribute("type");
@@ -106,31 +98,31 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         text: "입력하지 않은 정보가 있습니다.",
         icon: "warning",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#191919",
         confirmButtonText: "확인"
       });
       return;
     }
 	
-	// 2. 날짜 유효성 검사 (오늘 이후 불가)
-	  const dateInput = form.querySelector("input[name='faultDate']");
-	  if (dateInput && dateInput.value) {
-	    const selectedDate = new Date(dateInput.value);
-	    const today = new Date();
-	    today.setHours(0, 0, 0, 0); // 오늘 0시 기준
+	// 날짜 유효성 검사 (오늘 이후 불가)
+	const dateInput = form.querySelector("input[name='faultDate']");
+	if (dateInput && dateInput.value) {
+	  const todayStr = new Date().toISOString().split("T")[0];
+	  const selectedDateStr = dateInput.value;
 
-	    if (selectedDate > today) {
-	      Swal.fire({
-	        text: "날짜 양식이 올바르지 않습니다.",
-	        icon: "error",
-	        confirmButtonColor: "#3085d6",
-	        confirmButtonText: "확인"
-	      });
-	      return;
-	    }
+	  if (selectedDateStr > todayStr) {
+	    Swal.fire({
+	      text: "날짜 양식이 올바르지 않습니다.",
+	      icon: "error",
+	      confirmButtonColor: "#191919",
+	      confirmButtonText: "확인"
+	    });
+	    return;
 	  }
+	}
 
-    // 2. 최종 등록/수정 확인 모달
+
+    // 최종 등록/수정 확인 모달
     const isUpdatePage = !!attachInput; // update.jsp에는 첨부파일 input 존재
     Swal.fire({
       text: isUpdatePage
@@ -138,10 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
         : "어트랙션 고장 신고를 등록하시겠습니까?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#191919",
+      cancelButtonColor: "#FFFFFF",
       confirmButtonText: isUpdatePage ? "수정" : "등록",
-      cancelButtonText: "취소"
+      cancelButtonText: "취소",
+	  customClass: {
+		cancelButton: 'my-cancel-btn'
+	  }
     }).then((result) => {
       if (result.isConfirmed) {
         form.submit();

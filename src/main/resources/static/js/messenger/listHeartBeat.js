@@ -26,7 +26,6 @@ function renderHtmlChatList(room) {
 	})
 	.then(response => response.json())
 	.then(response => {
-		console.log(response);
 		let badge = document.querySelector('#unread-count-' + room);
 		if (badge.innerText == "") {
 			badge.innerText = 1;
@@ -35,10 +34,12 @@ function renderHtmlChatList(room) {
 			badge.innerText = newCount;
 		}
 		let latestMessage = document.querySelector('#chat-room-last-' + room);
-		if (response.chatBodyContent.includes('\n')) {
-			latestMessage.innerText = response.chatBodyContent.split('\n')[0] + '...';
+		if (response.chatBodyContent.trim().substr(0, 17).includes('\n')) {
+			latestMessage.innerText = response.chatBodyContent.trim().split('\n')[0] + '...';
+		} else if (response.chatBodyContent.length >= 17) {
+			latestMessage.innerText = response.chatBodyContent.trim().substr(0, 17) + '...';				
 		} else {
-			latestMessage.innerText = response.chatBodyContent;		
+			latestMessage.innerText = response.chatBodyContent.trim();		
 		}
 		let time = document.querySelector('#time-' + room);
         let timeFromJava = response.chatBodyDtm;

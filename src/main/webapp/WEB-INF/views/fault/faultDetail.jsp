@@ -9,6 +9,34 @@
 	<meta charset="UTF-8">
 	<title>어트랙션 고장 신고 목록</title>
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+	
+	<style>
+	  /* 테이블 밑줄 제거 */
+	  .fault-info table {
+	    border-collapse: collapse;
+	  }
+	
+	  .fault-info th,
+	  .fault-info td {
+	    border: none !important;
+	  }
+	
+	  .fault-info tr {
+	    border-bottom: none !important;
+	  }
+	  /* 모달창 css */
+	  .my-cancel-btn {
+	  background-color: #fff !important;   
+	  color: #212529 !important;           
+	  border: 1px solid #ccc !important;   
+	  border-radius: 5px !important;       
+	}
+	
+	.my-cancel-btn:hover {
+	  background-color: #f8f9fa !important;
+	}
+	</style>
+	
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -62,41 +90,41 @@
 					      <table class="table">
 					        <tr>
 					          <th>어트랙션 코드</th>
-					          <td>${ fault.rideDTO.rideCode }</td>
+					          <td>|&nbsp;&nbsp;${ fault.rideDTO.rideCode }</td>
 					        </tr>
 					        <tr>
 					          <th>어트랙션 기종</th>
-					          <td>${ fault.rideDTO.rideType }</td>
+					          <td>|&nbsp;&nbsp;${ fault.rideDTO.rideType }</td>
 					        </tr>
 					        <tr>
 					         	<th>신고 제목</th>
-					        	<td>${ fault.faultTitle }</td>
+					        	<td>|&nbsp;&nbsp;${ fault.faultTitle }</td>
 					        </tr>
 					        <tr>
 					         	<th>신고 내용</th>
-					        	<td>${ fault.faultContent }</td>
+					        	<td>|&nbsp;&nbsp;${ fault.faultContent }</td>
 					        </tr>
 					        <tr>
 					          <th>담당자</th>
-					          <td>${ fault.staffDTO.staffName } (${ fault.staffDTO.staffCode })</td>
+					          <td>|&nbsp;&nbsp;${ fault.staffDTO.staffName } (${ fault.staffDTO.staffCode })</td>
 					        </tr>
 							<tr>
 					          <th>고장 신고 날짜</th>
-					          <td>${ fault.faultDate }</td>
+					          <td>|&nbsp;&nbsp;${ fault.faultDate }</td>
 					        </tr>
 					        <tr>
 					          <th>신고 상태</th>
 					          <c:if test="${ fault.faultState eq 410 }"> 
-					          	<td>신고접수</td>
+					          	<td>|&nbsp;&nbsp;신고접수</td>
 					          </c:if> 
  					          <c:if test="${ fault.faultState eq 411 }">
-					          	<td>담당자 배정</td>
+					          	<td>|&nbsp;&nbsp;담당자 배정</td>
 					          </c:if>
 					          <c:if test="${ fault.faultState eq 412 }">
-					          	<td>수리중</td>
+					          	<td>|&nbsp;&nbsp;수리중</td>
 					          </c:if>
 					          <c:if test="${ fault.faultState eq 420 }">
-					          	<td>수리완료</td>
+					          	<td>|&nbsp;&nbsp;수리완료</td>
 					          </c:if> 
 					        </tr>
 					      </table>
@@ -112,18 +140,18 @@
 				<!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
 				<c:if test="${staff.deptDTO.deptCode eq 1003}">
 				    <div class="form-group row mt-4 text-end">
-				      <div class="col-sm-12">
+				      <div class="col-sm-11">
 				      	<!-- 수정 버튼 -> add 페이지로가는데 입력된 정보 가지고 감 -->
 				      	<form action="${pageContext.request.contextPath }/fault/${ fault.faultNum }/update"
 				      			method="get" style="display: inline;">
 					        <button type="submit" 
 					        		class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" 
-					        		style="width: 100px;">수정</button>
+					        		style="width:75px;">수정</button>
 				        </form>
 				        <!-- 삭제 버튼 -->
 				        <button type="button" 
 				                class="btn btn-sm btn-outline-secondary" 
-				                style="width: 100px;"
+				                style="width: 75px;"
 				                onclick="deleteFault('${ fault.faultNum }')">삭제</button>
 				      </div>
 				    </div>

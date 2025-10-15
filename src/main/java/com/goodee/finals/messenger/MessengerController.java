@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.validation.Valid;
@@ -37,9 +42,11 @@ public class MessengerController {
 	private SimpMessagingTemplate simpMessagingTemplate;
     
     @GetMapping("")
-    public String home(Model model) {
-    	List<StaffDTO> result = messengerService.getStaff();
+    public String home(String keyword, Model model) {
+    	if (keyword == null) keyword = "";
+    	List<StaffDTO> result = messengerService.getStaff(keyword);
     	model.addAttribute("members", result);
+    	model.addAttribute("keyword", keyword);
     	return "messenger/home";
     }
 	
@@ -52,24 +59,42 @@ public class MessengerController {
 	}
 	
 	@GetMapping("create")
-	public String create(Model model) {
-		List<StaffDTO> result = messengerService.getStaff();
+	public String create(String keyword, Model model) {
+		if (keyword == null) keyword = "";
+		List<StaffDTO> result = messengerService.getStaff(keyword);
 		model.addAttribute("staff", result);
+		model.addAttribute("keyword", keyword);
 		return "messenger/create";
 	}
 	
 	@PostMapping("create")
 	public String create(@RequestParam(required = false) List<Integer> addedStaff, @Valid ChatRoomDTO chatRoomDTO, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			List<StaffDTO> result = messengerService.getStaff();
+			List<StaffDTO> result = messengerService.getStaff("");
 			model.addAttribute("staff", result);
 			return "messenger/create";
 		}
 		ChatRoomDTO result = messengerService.createRoom(addedStaff, chatRoomDTO);
-		model.addAttribute("resultMsg", "채팅방이 생성되었습니다.");
-		model.addAttribute("resultIcon", "success");
-		model.addAttribute("resultUrl", "msg/room");
-		return "common/result";
+		if (result != null) {
+			model.addAttribute("resultMsg", "채팅방이 생성되었습니다.");
+			model.addAttribute("resultIcon", "success");
+			model.addAttribute("resultUrl", "msg/room");
+			
+			// 알림 발송
+			List<String> wsSub = new ArrayList<>();
+			for (Integer s : addedStaff) {
+				Integer staffCodeLogged = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()); // 로그인한 사람 제외하고 알림 발송
+				if (!(s.equals(staffCodeLogged))) wsSub.add(s + "");
+			}
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+				model.addAttribute("wsMsg", "새로운 그룹 채팅방에 초대되었습니다.," + chatRoomDTO.getChatRoomNum());
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+		}
+		return "common/notifyResult";
 	}
 	
 	@PostMapping("chat")
@@ -127,6 +152,8 @@ public class MessengerController {
 			model.addAttribute("chatRoomNum", checkTrueResult.getChatRoomNum());
 			model.addAttribute("chat", messages);
 			model.addAttribute("next", resultIfNotPresent.hasNext());
+			ChatRoomDTO chatRoomResult = messengerService.findChatRoom(checkTrueResult);
+			model.addAttribute("chatRoom", chatRoomResult);
 		} else {
 			Page<MessengerTestDTO> resultIfPresent = (Page<MessengerTestDTO>)result.get("result");
 			List<MessengerTestDTO> messages = new ArrayList<>(resultIfPresent.getContent());
@@ -134,6 +161,11 @@ public class MessengerController {
 			model.addAttribute("chatRoomNum", (Long)result.get("chatRoomNum"));
 			model.addAttribute("chat", messages);
 			model.addAttribute("next", resultIfPresent.hasNext());
+			
+			ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+			chatRoomDTO.setChatRoomNum((Long)result.get("chatRoomNum"));
+			chatRoomDTO = messengerService.findChatRoom(chatRoomDTO);
+			model.addAttribute("chatRoom", chatRoomDTO);
 		}
 		return "messenger/chat";
 	}

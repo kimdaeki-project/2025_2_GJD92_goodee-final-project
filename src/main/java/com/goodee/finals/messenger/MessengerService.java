@@ -1,6 +1,8 @@
 package com.goodee.finals.messenger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +29,10 @@ public class MessengerService {
 	@Autowired
 	StompRepository stompRepository;
 
-	public List<StaffDTO> getStaff() {
+	public List<StaffDTO> getStaff(String keyword) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer loggedStaff = staffDTO.get().getStaffCode();
-		List<StaffDTO> result = staffRepository.findByStaffCodeNot(loggedStaff);
+		List<StaffDTO> result = staffRepository.findByStaffCodeNotAndStaffNameContaining(loggedStaff, keyword);
 		return result;
 	}
 
@@ -64,15 +66,83 @@ public class MessengerService {
 	public List<ChatRoomDTO> list(String roomType) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer loggedStaff = staffDTO.get().getStaffCode();
-		List<ChatRoomDTO> result = null; 
+		List<ChatRoomDTO> result = null;
+		List<ChatRoomDTOProjection> comparator = null;
 		if ("all".equals(roomType)) { // 모든 채팅을 전부 가져오기
-			result = messengerRepository.findChatRoomByStaffCode(loggedStaff);			
+			
+			result = messengerRepository.findChatRoomByStaffCode(loggedStaff);
+			comparator = messengerRepository.findMaxChatBodyNum(loggedStaff);
+			
+			if (comparator == null || comparator.size() == 0) {
+				return result;
+			}
+			
+			List<ChatRoomDTO> chatRoomYesMsg = new ArrayList<>();
+			List<ChatRoomDTO> chatRoomNoMsg = new ArrayList<>();
+			for (ChatRoomDTO cr : result) {
+				int cnt = 0;
+				
+				for (ChatRoomDTOProjection c : comparator) {
+					if (cr.getChatRoomNum().equals(c.getChatRoomNum())) {
+						cr.setChatRoomMax(c.getChatRoomMax());
+						chatRoomYesMsg.add(cr);
+						break;
+					}
+					cnt++;
+				}
+				
+				if (cnt == comparator.size()) {
+					chatRoomNoMsg.add(cr);
+				}
+			}
+			Collections.sort(chatRoomYesMsg, new Comparator<ChatRoomDTO>() {
+				@Override
+				public int compare(ChatRoomDTO o1, ChatRoomDTO o2) {
+					return o2.getChatRoomMax().intValue() - o1.getChatRoomMax().intValue();
+				}
+			});
+			result = new ArrayList<>(); // result 변수 다시 초기화 -> 정렬된 리스트랑 채팅이 하나도 없는 리스트를 합치기 위해
+			result.addAll(chatRoomYesMsg);
+			result.addAll(chatRoomNoMsg);
 		} else {
 			boolean type = false; // 일단 1:1 채팅으로 세팅
 			if ("group".equals(roomType)) { // 그룹 채팅으로 세팅
 				type = true;
 			}
 			result = messengerRepository.findChatRoomByStaffCodeAndType(loggedStaff, type);
+			comparator = messengerRepository.findMaxChatBodyNumAndType(loggedStaff, type);
+			
+			if (comparator == null || comparator.size() == 0) {
+				return result;
+			}
+			
+			List<ChatRoomDTO> chatRoomYesMsg = new ArrayList<>();
+			List<ChatRoomDTO> chatRoomNoMsg = new ArrayList<>();
+			for (ChatRoomDTO cr : result) {
+				int cnt = 0;
+				
+				for (ChatRoomDTOProjection c : comparator) {
+					if (cr.getChatRoomNum().equals(c.getChatRoomNum())) {
+						cr.setChatRoomMax(c.getChatRoomMax());
+						chatRoomYesMsg.add(cr);
+						break;
+					}
+					cnt++;
+				}
+				
+				if (cnt == comparator.size()) {
+					chatRoomNoMsg.add(cr);
+				}
+			}
+			Collections.sort(chatRoomYesMsg, new Comparator<ChatRoomDTO>() {
+				@Override
+				public int compare(ChatRoomDTO o1, ChatRoomDTO o2) {
+					return o2.getChatRoomMax().intValue() - o1.getChatRoomMax().intValue();
+				}
+			});
+			result = new ArrayList<>(); // result 변수 다시 초기화 -> 정렬된 리스트랑 채팅이 하나도 없는 리스트를 합치기 위해
+			result.addAll(chatRoomYesMsg);
+			result.addAll(chatRoomNoMsg);
 		}
 		return result;
 	}

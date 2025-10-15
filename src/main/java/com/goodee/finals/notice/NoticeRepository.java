@@ -15,14 +15,19 @@ public interface NoticeRepository extends JpaRepository<NoticeDTO, Long> {
 	// Page<NoticeDTO> findByNoticeTitleContainingOrStaffDTOStaffNameContaining(String titleKeyword, String nameKeyword, Pageable pageable);
 	
 	@Query("SELECT n FROM NoticeDTO n " +
-	       "WHERE n.noticeDelete = false AND n.noticePinned = false AND " +
+	       "WHERE n.noticeDelete = false AND n.noticePinned = false AND n.noticeTmp = false AND" +
 	       "(n.noticeTitle LIKE %:keyword% OR n.staffDTO.staffName LIKE %:keyword%)")
 	Page<NoticeDTO> list(@Param("keyword") String keyword, Pageable pageable);
+	
+	@Query("SELECT n FROM NoticeDTO n " +
+	       "WHERE n.noticeDelete = false AND n.noticePinned = false AND n.noticeTmp = true AND" +
+	       "(n.noticeTitle LIKE %:keyword% OR n.staffDTO.staffName LIKE %:keyword%)")
+	Page<NoticeDTO> tempList(String keyword, Pageable pageable);
 
 	@Query("SELECT n FROM NoticeDTO n " + 
 			"WHERE n.noticeDelete = false AND n.noticePinned = true AND " + 
 			"(n.noticeTitle LIKE %:keyword% OR n.staffDTO.staffName LIKE %:keyword%)")
 	List<NoticeDTO> pinned(@Param("keyword") String keyword);
 
-	List<NoticeDTO> findTop5ByNoticePinnedFalseAndNoticeDeleteFalseOrderByNoticeDateDescNoticeNumDesc();
+	List<NoticeDTO> findTop5ByNoticePinnedFalseAndNoticeDeleteFalseAndNoticeTmpFalseOrderByNoticeDateDescNoticeNumDesc();
 }

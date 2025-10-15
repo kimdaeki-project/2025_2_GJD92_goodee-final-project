@@ -26,7 +26,7 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
 
 	@Query("SELECT cb " + 
 		   "FROM MessengerTestDTO cb " +
-		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyDelete = false AND cb.chatBodyNum >= :chatGroupLatest")
+		   "WHERE cb.chatRoomNum = :chatRoomNum AND cb.chatBodyNum >= :chatGroupLatest")
 	Page<MessengerTestDTO> chatList(Pageable pageable, Long chatRoomNum, Long chatGroupLatest);
 
 	List<ChatRoomDTO> findByChatRoomGroupFalseAndChatUserDTOsStaffDTOStaffCode(Integer loggedStaffCode);
@@ -65,6 +65,20 @@ public interface MessengerRepository extends JpaRepository<ChatRoomDTO, Long> {
     @Modifying @Transactional
     @Query(value = "DELETE FROM chat_user WHERE chat_room_num = :chatRoomNum AND staff_code = :staffCode", nativeQuery = true)
 	int leaveMember(Long chatRoomNum, Integer staffCode);
+
+    @Query(value = "SELECT cr.chat_room_num AS chatRoomNum, MAX(cb.chat_body_num) AS chatRoomMax FROM chat_room cr " +
+    	   "JOIN chat_body cb ON cr.chat_room_num = cb.chat_room_num " + 
+    	   "JOIN chat_user cu ON cr.chat_room_num = cu.chat_room_num " +
+    	   "WHERE cu.staff_code = :loggedStaff " +
+    	   "GROUP BY cr.chat_room_num", nativeQuery = true)
+	List<ChatRoomDTOProjection> findMaxChatBodyNum(Integer loggedStaff);
+
+    @Query(value = "SELECT cr.chat_room_num AS chatRoomNum, MAX(cb.chat_body_num) AS chatRoomMax FROM chat_room cr " +
+     	   "JOIN chat_body cb ON cr.chat_room_num = cb.chat_room_num " + 
+     	   "JOIN chat_user cu ON cr.chat_room_num = cu.chat_room_num " +
+     	   "WHERE cu.staff_code = :loggedStaff AND cr.chat_room_group = :type " +
+     	   "GROUP BY cr.chat_room_num", nativeQuery = true)
+	List<ChatRoomDTOProjection> findMaxChatBodyNumAndType(Integer loggedStaff, boolean type);
 
 	
 }

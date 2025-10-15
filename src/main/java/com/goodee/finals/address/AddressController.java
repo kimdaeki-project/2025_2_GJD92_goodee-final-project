@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
 @RequestMapping("/address/**")
+@Slf4j
 public class AddressController {
 
 	@Autowired
@@ -37,7 +40,6 @@ public class AddressController {
 		
 		long totalAddress = addressService.getTotalAddress();
 		model.addAttribute("totalAddress", totalAddress);
-		
 		return "address/list";
 	}
 	
@@ -54,6 +56,17 @@ public class AddressController {
 		
 		long totalAddress = addressService.getTotalAddress();
 		model.addAttribute("totalAddress", totalAddress);
+		
+		switch (deptCode) {
+		case 1000: model.addAttribute("deptSelected", "임원");
+				break;
+		case 1001: model.addAttribute("deptSelected", "인사");
+				break;
+		case 1002: model.addAttribute("deptSelected", "운영");
+				break;
+		case 1003: model.addAttribute("deptSelected", "시설");
+				break;
+		}
 		
 		return "address/list";
 	}

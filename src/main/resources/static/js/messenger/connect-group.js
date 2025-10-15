@@ -36,7 +36,7 @@ function renderHtmlChatAddMemeber(chatRoomNum) {
 	.then(response => response.json())
 	.then(response => {
 		response.forEach(el => {
-			renderHtmlInner(el)
+			renderHtmlInner(el);
 		});
 	});
 }
@@ -97,6 +97,15 @@ function renderHtmlInner(el) {
 const joinStaffBtn = document.querySelector('#addMembers');
 const form = document.querySelector('#form');
 joinStaffBtn.addEventListener('click', () => {
+	if (staffs.length < 1) {
+		Swal.fire({
+			text: "최소 1명 이상의 인원을 선택해주세요.",
+			icon: "warning",
+			confirmButtonColor: "#191919",
+			confirmButtonText: "확인"
+		});
+		return;
+	}
 	const contents = staffNames.join("님, ") + '님이 초대되었습니다.';
 	const message = {
 	    chatBodyType: "NEW",
@@ -114,8 +123,26 @@ joinStaffBtn.addEventListener('click', () => {
 	})
 	.then(response => response.json())
 	.then(response => {
-		console.log(response);
 		modal.style.display = "none";
+		let targetAll = document.querySelectorAll('.selected-member[data-staffCode]');
+		targetAll.forEach(t => {
+			t.remove();
+		});
+		let targetAllMember = document.querySelectorAll('.member-item');
+		targetAllMember.forEach(t => {
+			t.remove();
+		});
+		// 그룹 채팅방 들어왔을 때 알림
+		staffs.forEach(s => {
+			fetch('/alert/save', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ alertMsg: '새로운 그룹 채팅방에 초대되었습니다.,' + chatRoomNum, staffCodeToDb: s })
+            })
+			.then(response => response.json())
+			.then(response => console.log(response));
+			stompClient.send("/pub/notify/" + s, {}, JSON.stringify({ msg: '새로운 그룹 채팅방에 초대되었습니다.,' + chatRoomNum, type: 'GROUPINVITATION' }));				
+		})
 	});
 });
 // 채팅방 나가기
@@ -127,7 +154,11 @@ leaveBtn.addEventListener('click', () => {
 		showCancelButton: true,
 		confirmButtonColor: "#191919",
 		confirmButtonText: "확인",
-		cancelButtonText: "취소"
+		cancelButtonText: "취소",
+		cancelButtonColor: "#FFFFFF",
+		customClass: {
+			cancelButton: 'my-cancel-btn'
+		}
 	})
 	.then(result => {
 		if (result.isConfirmed) {

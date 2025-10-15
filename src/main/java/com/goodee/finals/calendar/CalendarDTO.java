@@ -2,6 +2,8 @@ package com.goodee.finals.calendar;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
@@ -38,6 +40,8 @@ public class CalendarDTO {
 	@Column(columnDefinition = "datetime(6)")
 	private LocalDateTime calEnd;
 	private LocalDateTime calReg;
+	@UpdateTimestamp
+	private LocalDateTime calMod;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffCode")

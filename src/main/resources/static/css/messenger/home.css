@@ -80,3 +80,43 @@ body {
     padding-bottom: 12px;
     margin-bottom: 20px;
 }
+/* 검색창 */
+.search-form {
+    display: flex;
+    align-items: center;
+    width: 270px; /* 원하는 너비로 조절 가능 */
+    height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-form input[type="text"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0 12px;
+    font-size: 14px;
+    color: #333;
+}
+
+.search-form input::placeholder {
+    color: #aaa;
+}
+
+.search-form button {
+    background-color: #222;
+    color: #fff;
+    border: none;
+    padding: 0 16px;
+    height: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.search-form button:hover {
+    background-color: #333;
+}

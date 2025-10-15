@@ -195,6 +195,25 @@ public class ApprovalController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
+		ApprovalDTO approvalDTO = approvalService.getApprovalDetail(aprvCode);
+		int aprvState = approvalDTO.getAprvState();
+		if (aprvState == 702 || aprvState == 703) {
+			List<String> wsSub = new ArrayList<>();
+			wsSub.add(approvalDTO.getStaffDTO().getStaffCode() + "");
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+				if (aprvState == 702) {					
+					model.addAttribute("wsMsg", "내 결재가 승인되었습니다.," + aprvCode);
+				} else if (aprvState == 703) {
+					model.addAttribute("wsMsg", "내 결재가 반려되었습니다.," + aprvCode);					
+				}
+				return "common/notifyResult";
+			} catch (JsonProcessingException e) {
+				log.info("{}", e);
+			}
+		}
+		
 		return "common/result";
 	}
 	
@@ -290,7 +309,7 @@ public class ApprovalController {
 				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
 				model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				log.info("{}", e);
 			}
 			
 			return "common/notifyResult";
@@ -375,7 +394,7 @@ public class ApprovalController {
 				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
 				model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				log.info("{}", e);
 			}
 			
 			return "common/notifyResult";
@@ -459,7 +478,7 @@ public class ApprovalController {
 				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
 				model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				log.info("{}", e);
 			}
 			
 			return "common/notifyResult";
@@ -543,7 +562,7 @@ public class ApprovalController {
 				model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
 				model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				log.info("{}", e);
 			}
 			
 			return "common/notifyResult";
@@ -601,7 +620,18 @@ public class ApprovalController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
-		return "common/result";
+		// 알림
+		List<String> wsSub = new ArrayList<>();
+		for (String sub : inputApprovalDTO.getApprover()) wsSub.add(sub);
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			model.addAttribute("wsSub", objectMapper.writeValueAsString(wsSub));
+			model.addAttribute("wsMsg", "내 앞으로 새로운 결재가 등록되었습니다.," + inputApprovalDTO.getAprvCode());
+		} catch (JsonProcessingException e) {
+			log.info("{}", e);
+		}
+		
+		return "common/notifyResult";
 	}
 	
 	@GetMapping("{attachNum}/download")

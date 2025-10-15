@@ -30,47 +30,48 @@ aside.sidenav {
 
 	    <section class="flex-grow-1 border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh ; overflow: auto;">
 
-	    <div class="d-flex justify-content-end align-items-end">
-			<div class="input-group">
-				<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-				<button class="btn btn-outline-secondary p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
-			</div>
-		</div>
 
 	    <div class="mt-3" style="min-height: 500px;">
-			    	<div class="col-10 offset-1">
-			    		<table class="table table-hover text-center">
-			    			<thead>
-			    				<tr>
-			    					<th class="col-1">사원번호</th>
-			    					<th class="col-1">이름</th>
-			    					<th class="col-1">부서</th>
-			    					<th class="col-1">직위</th>
-			    					<th class="col-2">연락처</th>
-			    					<th class="col-2">이메일</th>
-			    				</tr>
-			    			</thead>
-			    			<tbody>
-
-			    				<c:forEach var="address" items="${ addressList.content }">
-			    					<tr>
-				    					<td>${ address.staffCode }</td>
-				    					<td>${ address.staffName }</td>
-				    					<td>${ address.deptDTO.deptDetail}</td>
-				    					<td>${ address.jobDTO.jobDetail }</td>
-				    					<td>${ address.staffPhone }</td>
-				    					<td>${ address.staffEmail }</td>
-			    					</tr>
-			    				</c:forEach>
-
-			    			</tbody>
-			    		</table>
-			    <c:if test="${ addressList.totalElements eq 0 }">
-				     <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
-				</c:if>
-				
-			    	</div>
-			    </div>
+		    	<div class="col-10 offset-1">
+				    <div class="d-flex justify-content-between align-items-end mt-4 mb-4">
+		    		<div>총 &nbsp;${addressList.totalElements } 건</div>
+						<div class="input-group w-25">
+							<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
+							<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+						</div>
+					</div>
+		    		<table class="table table-hover text-center">
+		    			<thead>
+		    				<tr>
+		    					<th class="col-1">사원번호</th>
+		    					<th class="col-1">이름</th>
+		    					<th class="col-1">부서</th>
+		    					<th class="col-1">직위</th>
+		    					<th class="col-2">연락처</th>
+		    					<th class="col-2">이메일</th>
+		    				</tr>
+		    			</thead>
+		    			
+		    			<tbody>
+		    				<c:forEach var="address" items="${ addressList.content }">
+		    					<tr>
+			    					<td>${ address.staffCode }</td>
+			    					<td>${ address.staffName }</td>
+			    					<td>${ address.deptDTO.deptDetail}</td>
+			    					<td>${ address.jobDTO.jobDetail }</td>
+			    					<td>${ address.staffPhone }</td>
+			    					<td>${ address.staffEmail }</td>
+		    					</tr>
+		    				</c:forEach>
+		    			</tbody>
+		    		</table>
+		    		
+				    <c:if test="${ addressList.totalElements eq 0 }">
+					     <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+					</c:if>
+			
+		    	</div>
+		    </div>
 
 	    <div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
@@ -107,7 +108,7 @@ aside.sidenav {
 	<script src="/js/address/list.js"></script>
 	<script>
 		document.querySelector("i[data-content='주소록']").parentElement.classList.add("bg-gradient-dark", "text-white")
-		document.querySelector("i[data-content='전체']").parentElement.classList.add("bg-gradient-dark", "text-white")
+		document.querySelector("i[data-content='${ deptSelected }']").parentElement.classList.add("bg-gradient-dark", "text-white")
 		document.querySelector("#navTitle").textContent = "주소록"
 	</script>
 </body>

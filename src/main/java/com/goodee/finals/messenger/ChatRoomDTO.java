@@ -13,8 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,4 +30,7 @@ public class ChatRoomDTO {
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "chatRoomDTO", cascade = CascadeType.ALL) @JsonIgnore
 	private List<ChatUserDTO> chatUserDTOs;
+	
+	@Transient
+	private Long chatRoomMax;
 }

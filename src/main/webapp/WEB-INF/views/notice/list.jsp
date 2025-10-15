@@ -46,7 +46,7 @@
 				<!-- 고정공지 -->
 				<c:if test="${ notice.number eq 0 }">
 				<c:forEach items="${ pinned }" var="n">
-					<tr class="fw-bold">
+					<tr class="fw-bold" style="background-color: rgba(0, 0, 0, 0.05);">
 						<th scope="row">&#x1F4E2;</th>
 						<td>${ n.staffDTO.deptDTO.deptDetail }팀</td>
 						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>
@@ -100,13 +100,16 @@
     	
     	<!-- 공지 없음 -->
 		<c:if test="${ totalNotice eq 0 }">
-			<div class="alert alert-secondary text-center">검색된 결과가 없습니다.</div>
+			<div class="alert alert-secondary text-center no-search">검색된 결과가 없습니다.</div>
 		</c:if>    	
     	<!-- 공지 없음 -->
     	
     	<!-- 작성 버튼 -->
     	<div class="d-flex justify-content-end mt-3">
-    		<a href="/notice/write" class="btn bg-gradient-dark">작성</a>
+    		<div>
+				<a href="/notice/temp" class="btn bg-gradient-dark">임시보관함</a>    		
+	    		<a href="/notice/write" class="btn bg-gradient-dark">작성</a>
+    		</div>
     	</div>
     	
     </section>

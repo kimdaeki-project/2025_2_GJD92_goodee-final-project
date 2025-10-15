@@ -49,6 +49,7 @@ stompClient.connect({}, function (frame) {
 			});
 		});
         document.getElementById('messageInput').value = '';
+        document.getElementById('sendButton').disabled = true;		
     });
 });
 //화면에 메시지 출력하기
@@ -182,3 +183,11 @@ function renderHtmlInfiniteScroll(msg) {
 		messageBox.prepend(div);	
 	}
 }
+// 채팅 내용이 없을 때 버튼 비활성화
+let textarea = document.querySelector('#messageInput');
+let textareaBtn = document.querySelector('#sendButton');
+textarea.addEventListener('input', () => {
+	const input = textarea.value.trim();
+	if (input.length > 0) textareaBtn.disabled = false;
+	else textareaBtn.disabled = true;
+});

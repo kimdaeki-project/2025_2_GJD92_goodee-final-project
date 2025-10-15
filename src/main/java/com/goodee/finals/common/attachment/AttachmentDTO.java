@@ -28,6 +28,7 @@ public class AttachmentDTO {
 	private String originName;
 	private String savedName;
 	private Long attachSize;
+	private String attachSizeDetail;
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -40,6 +41,10 @@ public class AttachmentDTO {
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private LostAttachmentDTO lostAttachmentDTO;
+	
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private ProductAttachmentDTO productAttachmentDTO;
 	
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "attachmentDTO", cascade = CascadeType.ALL)
 	@JsonIgnore

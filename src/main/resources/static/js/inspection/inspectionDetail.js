@@ -1,14 +1,11 @@
-/**
- * 
- */
-// 어드랙션 점검 기록 삭제
+// 어트랙션 점검 기록 삭제
 function deleteInspection(isptNum) {
 	Swal.fire({
 	  text: "어트랙션 점검 기록을 삭제하시겠습니까?",
 	  icon: "question",
 	  showCancelButton: true,
-	  confirmButtonColor: "#3085d6",
-	  cancelButtonColor: "#d33",
+	  confirmButtonColor: "#191919",
+	  cancelButtonColor: "#FFFFFF",
 	  confirmButtonText: "삭제",
 		cancelButtonText: "취소"
 	})	.then((result) => {

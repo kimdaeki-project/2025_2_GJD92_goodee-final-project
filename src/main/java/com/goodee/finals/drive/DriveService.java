@@ -2,6 +2,7 @@ package com.goodee.finals.drive;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class DriveService {
-
+	private static final Long ROLE_HQ_DRIVE = 2L;
+	private static final Long ROLE_HR_DRIVE = 3L;
+	private static final Long ROLE_OP_DRIVE = 4L;
+	private static final Long ROLE_FA_DRIVE = 5L;
+	
 	@Value("${goodee.file.upload.base-directory}")
 	private String baseDir;
 	
@@ -64,6 +69,10 @@ public class DriveService {
 		return driveRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 내 드라이브
 	}
 	
+	public List<DriveDTO> getDisabledDriveList() {
+		return driveRepository.findAllByDriveEnabledFalse();
+	}
+	
 	public List<DriveShareDTO> getShareDriveByStaffCode(StaffDTO staffDTO) {
 		return driveShareRepository.findAllByStaffDTO_StaffCode(staffDTO.getStaffCode()); // 공유 드라이브
 	}
@@ -75,11 +84,22 @@ public class DriveService {
 	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, StaffDTO staffDTO, Pageable pageable) {
 		Long driveNum = driveDTO.getDriveNum();
 		String keyword = drivePager.getKeyword();
-		Integer jobCode = staffDTO.getJobDTO().getJobCode();
+		String fileTypeSelect = drivePager.getFileType();
+		Integer staffJobCode = staffDTO.getJobDTO().getJobCode();
+		List<String> fileTypeList = new ArrayList<>();
 		
 		if(keyword == null) keyword = "";
+		if(fileTypeSelect == null) fileTypeSelect = "all"; 
 		
-		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, jobCode ,pageable);
+		switch (fileTypeSelect) {
+		case "all": fileTypeList = null; break;
+		case "audio":  fileTypeList = Arrays.asList("MP3", "WAV", "OGG", "AAC", "FLAC"); break;
+		case "video":  fileTypeList = Arrays.asList("MP4", "AVI", "MOV", "WMV", "MKV", "WEBM"); break;
+		case "image":  fileTypeList = Arrays.asList("JPG", "JPEG", "PNG", "GIF", "BMP", "SVG", "WEBP"); break;
+		case "doc":  fileTypeList = Arrays.asList( "PDF", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "TXT", "HWP", "JSON", "CSV"); break;
+		}
+		
+		Page<DocumentDTO> result = documentRepository.findByDriveAndKeyword(driveNum, keyword, staffJobCode ,pageable, fileTypeList);
 		drivePager.calc(result);
 		
 		return result;
@@ -95,8 +115,50 @@ public class DriveService {
 		return driveRepository.findById(driveNum).orElseThrow();
 	}
 	
+	// 사원 등록시 기본드라이브 생성
+	public DriveDTO createDefaultDrive(StaffDTO staffDTO) {
+		DriveDTO driveDTO = new DriveDTO();
+		driveDTO.setDriveName(staffDTO.getStaffName() + "님");
+		driveDTO.setIsPersonal(true);
+		driveDTO.setStaffDTO(staffDTO);
+		driveDTO.setDriveEnabled(true);
+		
+		driveDTO = driveRepository.save(driveDTO);
+		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
+		
+		if(driveRepository.count() > 1)	addInDeptDrive(staffDTO); // 최초 서버 실행시 부서드라이브 없음
+		
+		return driveDTO;
+	}
+
+	// 사원 등록시 부서 공유드라이브에 추가
+	public DriveDTO addInDeptDrive(StaffDTO staffDTO) {
+		Integer deptCode = staffDTO.getDeptDTO().getDeptCode();
+		DriveDTO driveDTO = null;
+		
+		switch (deptCode) {
+			case 1000: driveDTO = driveRepository.findById(ROLE_HQ_DRIVE).orElseThrow(); break;
+			case 1001: driveDTO = driveRepository.findById(ROLE_HR_DRIVE).orElseThrow(); break;
+			case 1002: driveDTO = driveRepository.findById(ROLE_OP_DRIVE).orElseThrow(); break;
+			case 1003: driveDTO = driveRepository.findById(ROLE_FA_DRIVE).orElseThrow(); break;
+		}
+		
+		if(driveDTO.getDriveShareDTOs() == null) { // || isEmpty() 조건 추가시 영속성 추적 불가 에러 발생
+			driveDTO.setDriveShareDTOs(new ArrayList<DriveShareDTO>());
+		} 	
+		DriveShareDTO driveShareDTO = new DriveShareDTO();
+		driveShareDTO.setDriveDTO(driveDTO);
+		driveShareDTO.setStaffDTO(staffDTO);
+		driveDTO.setIsPersonal(false);
+		driveDTO.getDriveShareDTOs().add(driveShareDTO);
+		
+		driveDTO = driveRepository.save(driveDTO);
+		
+		return driveDTO;
+	}
+	
 	public DriveDTO createDrive(DriveDTO driveDTO) {
-		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    // 드라이브 이름 중복 조회
+		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName().trim()); // 드라이브 이름 중복 조회
 		if(existDriveName != null) {
 			System.out.println("DriveService createDrive : 중복된이름 존재 메서드 종료");
 			return null;
@@ -129,19 +191,20 @@ public class DriveService {
 		return driveDTO; 
 	}
 	
+	
 	public DriveDTO updateDrive(DriveDTO driveDTO) {
-		DriveDTO existDriveName = driveRepository.findByDriveName(driveDTO.getDriveName());    
-		if(existDriveName != null && !existDriveName.getDriveNum().equals(driveDTO.getDriveNum())) { // 중복이름과 PK가 같지 않은경우 return;
+		DriveDTO existDrive = driveRepository.findByDriveName(driveDTO.getDriveName());    
+		if(existDrive != null && !existDrive.getDriveNum().equals(driveDTO.getDriveNum())) { // 중복이름과 PK가 같지 않은경우 return;
 			System.out.println("DriveService : 중복된이름 존재 메서드 종료");
 			return null;
 		}
 		
 		DriveDTO originDrive = driveRepository.findById(driveDTO.getDriveNum()).orElseThrow();
 		originDrive.getDriveShareDTOs().clear(); // 기존 드라이브 연간관계 끊기
+		originDrive.setDriveName(driveDTO.getDriveName().trim());
 		
 		if(driveDTO.getDriveShareDTOs() == null || driveDTO.getDriveShareDTOs().isEmpty()) {
 			originDrive.setIsPersonal(true);
-			originDrive.setDriveName(driveDTO.getDriveName().trim());
 			return driveRepository.save(originDrive);
 		}
 		
@@ -151,7 +214,6 @@ public class DriveService {
 			driveShare.setStaffDTO(staffDTO);
 			driveShare.setDriveDTO(originDrive);
 			originDrive.setIsPersonal(false);
-			originDrive.setDriveName(driveDTO.getDriveName().trim());
 			originDrive.getDriveShareDTOs().add(driveShare);
 		}
 		
@@ -169,43 +231,27 @@ public class DriveService {
 		return driveDTO;
 	}
 	
-	// 사원 등록시 기본드라이브 생성
-	public DriveDTO createDefaultDrive(StaffDTO staffDTO) {
-		DriveDTO driveDTO = new DriveDTO();
-		driveDTO.setDriveName(staffDTO.getStaffName() + "님");
-		driveDTO.setIsPersonal(true);
-		driveDTO.setStaffDTO(staffDTO);
-		driveDTO.setDriveEnabled(true);
-		
-		driveDTO = driveRepository.save(driveDTO);
-		driveDTO.setDriveDefaultNum(driveDTO.getDriveNum());
-		
-		driveDTO = driveRepository.save(driveDTO);
-		
-		return driveDTO;
-	}
-	
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {
+		if(attach == null) return null;
+		if(attach.getOriginalFilename().length() > 255) return null;
+		
 		AttachmentDTO attachmentDTO = new AttachmentDTO();
-		
-		if(attach.getOriginalFilename().length() > 50) {
-			System.out.println("파일명이 너무 깁니다.");
-			return null;
-		}
-		
 		if(attach != null && attach.getSize() != 0) {
 			try {
 				String path = FileService.DRIVE + "/" + driveNum;
+				
 				String fileName = fileService.saveFile(path, attach);
 				
 				attachmentDTO.setSavedName(fileName);
 				attachmentDTO.setAttachSize(attach.getSize());
+				attachmentDTO.setAttachSizeDetail(fileService.readableFileSize(attach.getSize()));
 				attachmentDTO.setOriginName(attach.getOriginalFilename());
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		
 		LocalDate currentDate = LocalDate.now();
 		String contentType = attach.getOriginalFilename();
 		String newContentType = "";
@@ -220,6 +266,7 @@ public class DriveService {
 			jobDTO = new JobDTO();
 			jobDTO.setJobCode(1202);
 		}
+		
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
 		
@@ -229,7 +276,7 @@ public class DriveService {
 		documentDTO.setDriveDTO(driveDTO);
 		documentDTO.setDocStatus("ACTIVE");
 		documentDTO.setDocDate(currentDate);
-		documentDTO.setDocExpire(currentDate.plusDays(6));
+		documentDTO.setDocExpire(currentDate.plusDays(90));
 		documentDTO.setDocContentType(newContentType);
 		documentDTO.setAttachmentDTO(attachmentDTO);
 		
@@ -265,5 +312,6 @@ public class DriveService {
 	public List<AttachmentDTO> getAttachListByAttachNum(List<Long> attachNums) {
 		return attachmentRepository.findAllById(attachNums);
 	}
+	
 	
 }

@@ -37,11 +37,7 @@
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">
-			      	<c:if test="${not empty railRides}">
-					  레일형 어트랙션
-					</c:if>
-			      </h4>
+			      <h4 class="text-white text-capitalize ps-5">레일형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -69,11 +65,7 @@
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">
-			      	<c:if test="${not empty railRides}">
-					  회전형 어트랙션
-					</c:if>
-			      </h4>
+			      <h4 class="text-white text-capitalize ps-5">회전형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -101,11 +93,7 @@
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">
-			      	<c:if test="${not empty railRides}">
-					  수상형 어트랙션
-					</c:if>
-			      </h4>
+			      <h4 class="text-white text-capitalize ps-5">수상형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -133,11 +121,7 @@
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">
-			      	<c:if test="${not empty railRides}">
-					  관람형 어트랙션
-					</c:if>
-			      </h4>
+			      <h4 class="text-white text-capitalize ps-5">관람형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -165,11 +149,7 @@
           <div class="card my-4 mt-8 m-8">
 			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
 			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">
-			      	<c:if test="${not empty railRides}">
-					  어린이 어트랙션
-					</c:if>
-			      </h4>
+			      <h4 class="text-white text-capitalize ps-5">어린이 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -200,10 +180,10 @@
 			  
 			  <!-- 시설부서(deptCode == 1003)일 때만 등록 버튼 보이기 -->
 		      <c:if test="${staff.deptDTO.deptCode eq 1003}">
-		        <div class="text-end mt-4 me-4">
+		        <div class="text-end me-8" style="margin-top:50px; margin-bottom:30px;">
 		          <a href="${pageContext.request.contextPath}/ride/add"
 		             class="btn btn-primary btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-		             style="width: 100px;">등록</a>
+		             style="width: 75px; font-size:15px;">등록</a>
 		        </div>
 		      </c:if>
 		  </sec:authorize>
