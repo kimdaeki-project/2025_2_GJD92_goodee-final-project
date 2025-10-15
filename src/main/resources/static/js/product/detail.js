@@ -17,9 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("📦 물품 상세:", data);
 
           // 이미지
-          productDetailAttach.innerHTML = data.productAttachmentDTO?.attachmentDTO?.savedName
-            ? `<img width="400" height="400" style="object-fit: clip;" src="/file/product/${data.productAttachmentDTO.attachmentDTO.savedName}"/>`
-            : "";
+					productDetailAttach.innerHTML =
+					  data.productAttachmentDTO &&
+					  data.productAttachmentDTO.attachmentDTO &&
+					  data.productAttachmentDTO.attachmentDTO.savedName
+					    ? `<img width="400" height="400" style="object-fit: clip;" src="/file/product/${data.productAttachmentDTO.attachmentDTO.savedName}"/>`
+					    : "";
 
           // 테이블
           productDetailTable.innerHTML = `
