@@ -49,7 +49,7 @@
 					<tr class="fw-bold" style="background-color: rgba(0, 0, 0, 0.05);">
 						<th scope="row">&#x1F4E2;</th>
 						<td>${ n.staffDTO.deptDTO.deptDetail }팀</td>
-						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>
+						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }" style="white-space: pre;">${ n.noticeTitle }</a></td>
 						<td>${ n.staffDTO.staffName }</td>
 						<td>${ n.noticeDate }</td>
 						<td>${ n.noticeHits }</td>
@@ -62,7 +62,7 @@
 					<tr>
 						<th scope="row">${ n.noticeNum }</th>
 						<td>${ n.staffDTO.deptDTO.deptDetail }팀</td>
-						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }">${ n.noticeTitle }</a></td>
+						<td class="text-start"><a class="text-decoration-none" href="/notice/${ n.noticeNum }" style="white-space: pre;">${ n.noticeTitle }</a></td>
 						<td>${ n.staffDTO.staffName }</td>
 						<td>${ n.noticeDate }</td>
 						<td>${ n.noticeHits }</td>
