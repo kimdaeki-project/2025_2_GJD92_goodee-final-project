@@ -1,22 +1,23 @@
 console.log("detail.js 연결됨")
 
 const dropZone = document.getElementById("dropZone");
-const fileInput = document.getElementById("fileInput");
-const fileName = document.getElementById("fileName");
-const uploadFrm = document.getElementById("uploadFrm");
 const checkAll = document.getElementById("checkAll");
+const fileName = document.getElementById("fileName");
+const fileType = document.getElementById("fileType");
+const fileInput = document.getElementById("fileInput");
+const frmSearch = document.getElementById("frmSearch");
+const uploadFrm = document.getElementById("uploadFrm");
+const btnSearch = document.getElementById("btnSearch");
 const checkBoxes = document.querySelectorAll(".checkBoxes");
-const btnDownloadFile = document.getElementById("btnDownloadFile");
 const btnDeleteFile = document.getElementById("btnDeleteFile");
 const fileTypeSelect = document.getElementById("fileTypeSelect");
-const frmSearch = document.getElementById("frmSearch");
-const fileType = document.getElementById("fileType");
+const btnDownloadFile = document.getElementById("btnDownloadFile");
 
 window.addEventListener("load", () => {
   const COLLAPSE_KEY = "openDriveCollapses";
   const DEFAULT_OPEN = ["collapseMyDrive", "collapseShareDrive"];
 
-  // 1️⃣ localStorage 초기화 (최초 1회만)
+  // localStorage 초기화 (최초 1회만)
   let opened = JSON.parse(localStorage.getItem(COLLAPSE_KEY));
 
   if (!opened) {
@@ -25,7 +26,7 @@ window.addEventListener("load", () => {
     localStorage.setItem(COLLAPSE_KEY, JSON.stringify(opened));
   }
 
-  // 2️⃣ collapse 열리고 닫힐 때 localStorage 갱신
+  // collapse 열리고 닫힐 때 localStorage 갱신
   document.querySelectorAll('.collapse').forEach(collapse => {
     collapse.addEventListener('show.bs.collapse', () => {
       let openedNow = JSON.parse(localStorage.getItem(COLLAPSE_KEY)) || [];
@@ -42,7 +43,7 @@ window.addEventListener("load", () => {
     });
   });
 
-  // 3️⃣ 페이지 로드 시 localStorage 기준으로 표시
+  // 페이지 로드 시 localStorage 기준으로 표시
   const openedFinal = JSON.parse(localStorage.getItem(COLLAPSE_KEY)) || [];
   document.querySelectorAll('.collapse').forEach(collapse => {
     if (openedFinal.includes(collapse.id)) {
@@ -115,6 +116,13 @@ checkAll.addEventListener("change", () => {
 fileTypeSelect.addEventListener("change", () => {
 	const selectedType = fileTypeSelect.value; 	
 	fileType.value = selectedType;  	
+	frmSearch.submit();
+})
+
+frmSearch.addEventListener("submit", (e) => {
+	e.preventDefault();
+	const selectedType = fileTypeSelect.value;
+	fileType.value = selectedType;
 	frmSearch.submit();
 })
 
