@@ -2,6 +2,8 @@ let staffs = []
 let currentDept = null
 let draftUser = null
 
+let doubleCheck = [];
+
 const addBtn = document.getElementById('addBtn')
 const receiptBtn = document.getElementById('receiptBtn')
 const agreeBtn = document.getElementById('agreeBtn')
@@ -56,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					const receiverStaff = staffs.find((staff) => staff.staffCode == receiver.value)
 					
 					const value = receiverStaff.staffCode
+					doubleCheck.push(String(value))
 					const text = `${receiverStaff.staffName}(${receiverStaff.jobDTO.jobDetail}) ${receiverStaff.deptDTO.deptDetail}`
 					
 					const newLi = document.createElement('li')
@@ -67,6 +70,18 @@ document.addEventListener('DOMContentLoaded', function () {
 					})
 					
 					receiveList.appendChild(newLi)
+				})
+				
+				postApprover.forEach((approver) => {
+					const approverStaff = staffs.find((staff) => staff.staffCode == approver.value)
+					const value = approverStaff.staffCode
+					doubleCheck.push(String(value))
+				})
+				
+				postAgreer.forEach((agreer) => {
+					const agreerStaff = staffs.find((staff) => staff.staffCode == agreer.value)
+					const value = agreerStaff.staffCode
+					doubleCheck.push(String(value))
 				})
 			})
 			.catch(error => console.log('Fetch Error!', error))
@@ -88,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					const approved = approver.getAttribute("data-approved")
 					
 					const value = approverStaff.staffCode
+					doubleCheck.push(String(value))
 					const text = `${approverStaff.staffName}(${approverStaff.jobDTO.jobDetail}) ${approverStaff.deptDTO.deptDetail}`
 					
 					const newLi = document.createElement('li')
@@ -107,10 +123,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					newLi.querySelector(`.remove-btn`).addEventListener('click', (event) => {
 						const isApproved = event.target.parentElement.querySelector("span").getAttribute("data-approved")
+						const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
 						
 						if (isApproved == 'Y') {
 							Swal.fire({ text: "이미 결재한 사원은 제외할 수 없습니다.", icon: "warning"})
 						} else {
+							doubleCheck.pop(value)
 							newLi.remove()
 						}
 					})
@@ -122,13 +140,16 @@ document.addEventListener('DOMContentLoaded', function () {
 					const receiverStaff = staffs.find((staff) => staff.staffCode == receiver.value)
 					
 					const value = receiverStaff.staffCode
+					doubleCheck.push(String(value))
 					const text = `${receiverStaff.staffName}(${receiverStaff.jobDTO.jobDetail}) ${receiverStaff.deptDTO.deptDetail}`
 					
 					const newLi = document.createElement('li')
 					newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
 					newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
 
-					newLi.querySelector(`.remove-btn`).addEventListener('click', () => {
+					newLi.querySelector(`.remove-btn`).addEventListener('click', (event) => {
+						const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+						doubleCheck.pop(value)
 						newLi.remove()
 					})
 					
@@ -140,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					const approved = agreer.getAttribute("data-approved")
 					
 					const value = agreerStaff.staffCode
+					doubleCheck.push(String(value))
 					const text = `${agreerStaff.staffName}(${agreerStaff.jobDTO.jobDetail}) ${agreerStaff.deptDTO.deptDetail}`
 					
 					const newLi = document.createElement('li')
@@ -153,10 +175,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					newLi.querySelector(`.remove-btn`).addEventListener('click', (event) => {
 						const isApproved = event.target.parentElement.querySelector("span").getAttribute("data-approved")
+						const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
 						
 						if (isApproved == 'Y') {
 							Swal.fire({ text: "이미 결재한 사원은 제외할 수 없습니다.", icon: "warning"})
 						} else {
+							doubleCheck.pop(value)
 							newLi.remove()
 						}
 					})
@@ -169,98 +193,197 @@ document.addEventListener('DOMContentLoaded', function () {
 			.catch(error => console.log('Fetch Error!', error))
 		}
 	})
+	
+	document.addEventListener('hidden.bs.modal', () => {
+		doubleCheck = [];
+		selectedList.innerHTML = "";
+		supportedList.innerHTML = "";
+		receiveList.innerHTML = "";
+	})
 })
 
 addBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList')
 	
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			} 
+			
 		})
 		
-		selectedList.insertBefore(newLi, selectedList.firstChild)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+	
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
+				newLi.remove()
+			})
+			
+			selectedList.insertBefore(newLi, selectedList.firstChild)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
 })
 
 receiptBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList')
 	
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			} 
+			
 		})
 		
-		supportedList.appendChild(newLi)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="receipt">[수] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+	
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
+				newLi.remove()
+			})
+			
+			supportedList.appendChild(newLi)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
 })
 
 agreeBtn.addEventListener('click', () => {
 	const staffList = document.getElementById('staffList')
 	
 	const checkedInput = staffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="agree">[합] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			} 
+			
 		})
 		
-		supportedList.appendChild(newLi)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}" data-staff-type="agree">[합] ${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+	
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
+				newLi.remove()
+			})
+			
+			supportedList.appendChild(newLi)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
 })
 
 receiveBtn.addEventListener('click', () => {
 	const receiveStaffList = document.getElementById('receiveStaffList')
 	
 	const checkedInput = receiveStaffList.querySelectorAll('input[type="checkbox"]:checked')
- 	
-	checkedInput.forEach((check) => {
-		const li = check.closest('li')
-		const text = li.querySelector('span').textContent
-		const value = check.value
-		
-		const newLi = document.createElement('li')
-		newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
-		newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
-
-		newLi.querySelector(`.remove-btn`).addEventListener('click', function () {
-			newLi.remove()
+	const checkDoubleStaff = new Promise((resolve, reject) => {
+		checkedInput.forEach((check) => {
+			const value = check.value
+			
+			if (doubleCheck.includes(value)) {
+				reject();
+			} 
+			
 		})
 		
-		receiveList.appendChild(newLi)
-		check.checked = false
+		resolve();
 	})
+	
+	checkDoubleStaff
+	.then(() => {
+		checkedInput.forEach((check) => {
+			const li = check.closest('li')
+			const text = li.querySelector('span').textContent
+			const value = check.value
+			doubleCheck.push(value)
+			
+			const newLi = document.createElement('li')
+			newLi.className = 'list-group-item d-flex justify-content-between align-items-center'
+			newLi.innerHTML = `<span data-staff-code="${value}">${text}</span><button class="btn-close btn-close-white remove-btn"></button>`
+	
+			newLi.querySelector(`.remove-btn`).addEventListener('click', function (event) {
+				const value = String(event.target.parentElement.querySelector("span").getAttribute("data-staff-code"))
+				doubleCheck.pop(value)
+				newLi.remove()
+			})
+			
+			receiveList.appendChild(newLi)
+			check.checked = false
+		})
+	})
+	.catch(() => {
+		Swal.fire({ text: "한 명의 사원을 여러 번 추가할 수는 없습니다.", icon: "warning" })
+		return
+	})
+ 	
 })
 
 saveBtn.addEventListener('click', () => {
@@ -407,7 +530,7 @@ saveReceiveBtn.addEventListener('click', () => {
 			.then((data) => {
 				if (data == "true") {
 					Swal.fire({ text: "수신자가 추가되었습니다.", icon: "success"})
-					.then((result) => {
+					.then(() => {
 						location.href = location.pathname
 					})
 				} else {
