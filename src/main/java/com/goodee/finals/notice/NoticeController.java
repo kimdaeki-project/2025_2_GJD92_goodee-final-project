@@ -87,6 +87,7 @@ public class NoticeController {
 		}
 		
 		noticeDTO.setNoticeTmp(true);
+		noticeDTO.setNoticePinned(false);
 		
 		NoticeDTO result = noticeService.write(noticeDTO, files);
 		if (result != null) {
@@ -148,7 +149,11 @@ public class NoticeController {
 		if (result != null) {			
 			model.addAttribute("resultMsg", "게시글이 삭제되었습니다.");
 			model.addAttribute("resultIcon", "success");
-			model.addAttribute("resultUrl", "/notice");
+			if (noticeDTO.isNoticeTmp()) {
+				model.addAttribute("resultUrl", "/notice/temp");
+			} else {				
+				model.addAttribute("resultUrl", "/notice");
+			}
 			return "common/result";
 		} else {
 			return null;

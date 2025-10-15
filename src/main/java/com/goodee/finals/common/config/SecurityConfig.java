@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistry;
@@ -51,7 +50,9 @@ public class SecurityConfig {
 		// Authorization
 		.authorizeHttpRequests((option) -> { option
 			// static resources
-			.requestMatchers("/css/**", "/js/**", "/images/**", "/WEB-INF/**", "/staff/login").permitAll()
+			.requestMatchers("/css/**", "/js/**", "/images/**", "/WEB-INF/**").permitAll()
+			.requestMatchers("/staff/login", "/staff/password/change", "/staff/password/update").permitAll()
+			.requestMatchers("/staff/**").hasAnyRole("HQ", "HR")
 			.anyRequest().authenticated()
 			;
 		})
