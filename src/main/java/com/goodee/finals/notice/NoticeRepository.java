@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<NoticeDTO, Long> {
-
-	// Page<NoticeDTO> findByNoticeTitleContainingOrStaffDTOStaffNameContaining(String titleKeyword, String nameKeyword, Pageable pageable);
 	
 	@Query("SELECT n FROM NoticeDTO n " +
 	       "WHERE n.noticeDelete = false AND n.noticePinned = false AND n.noticeTmp = false AND" +

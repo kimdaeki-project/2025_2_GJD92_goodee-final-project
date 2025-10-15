@@ -38,7 +38,7 @@
 			<sec:authentication property="principal" var="logged" />
 		</sec:authorize>
 		<!-- 제목 -->
-		<h4 class="fw-bold mb-3" style="white-space: pre;">${ notice.noticeTitle }</h4>
+		<h4 class="fw-bold mb-3" style="white-space: pre-wrap; word-break: break-word;">${ notice.noticeTitle }</h4>
     	
     	<!-- 작성자 정보 -->
     	<div class="d-flex align-items-center mb-4">
