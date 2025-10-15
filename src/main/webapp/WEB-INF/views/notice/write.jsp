@@ -25,6 +25,7 @@
 			    <div class="d-flex justify-content-between align-items-center mb-2">
 			        <label for="noticeTitle" class="fw-bold">제목</label>
 			        <div class="form-check">
+			            <input type="checkbox" id="noticePinned" name="noticePinned" ${ notice.noticePinned ? "checked" : "" }>
 			            <label class="form-check-label fw-bold" for="noticePinned">상단 고정</label>
 			        </div>
 			    </div>
