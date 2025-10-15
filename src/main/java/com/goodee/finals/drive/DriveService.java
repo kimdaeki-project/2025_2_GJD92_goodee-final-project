@@ -85,7 +85,7 @@ public class DriveService {
 	}
 	
 	public List<StaffResponseDTO> staffList() { // 순환참조 방지를 위해 응답 DTO 만듬
-		return staffRepository.findAllWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
+		return staffRepository.findAllEnabledStaffWithDeptAndJob().stream().map(StaffResponseDTO:: new).collect(Collectors.toList());
 	}
 	
 	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, StaffDTO staffDTO, Pageable pageable) {
