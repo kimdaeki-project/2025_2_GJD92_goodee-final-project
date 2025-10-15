@@ -73,13 +73,22 @@ public class NoticeService {
 	}
 
 	public Page<NoticeDTO> list(Pageable pageable, String keyword) {
-		// Page<NoticeDTO> result = noticeRepository.findByNoticeTitleContainingOrStaffDTOStaffNameContaining(keyword, keyword, pageable);
 		Page<NoticeDTO> result = noticeRepository.list(keyword, pageable);
+		for (NoticeDTO n : result) {
+			if (n.getNoticeTitle().trim().length() > 50) {
+				n.setNoticeTitle(n.getNoticeTitle().substring(0, 50) + "...");
+			}
+		}
 		return result;
 	}
 
 	public List<NoticeDTO> pinned(String keyword) {
 		List<NoticeDTO> result = noticeRepository.pinned(keyword);
+		for (NoticeDTO n : result) {
+			if (n.getNoticeTitle().trim().length() > 50) {
+				n.setNoticeTitle(n.getNoticeTitle().substring(0, 50) + "...");
+			}
+		}
 		return result;
 	}
 	
