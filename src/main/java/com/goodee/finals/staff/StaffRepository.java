@@ -33,7 +33,7 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	List<StaffDTO> findByStaffCodeNotAndStaffNameContaining(Integer loggedStaff, String keyword);
 	
 	// deptDTO.deptCode 시설부서의 코드 꺼내옴
-  List<StaffDTO> findByDeptDTO_DeptCode(Integer deptCode);
+   List<StaffDTO> findByDeptDTO_DeptCodeAndStaffEnabledTrue(Integer deptCode);
   
 	List<StaffDTO> findByStaffCodeNotIn(List<Integer> currentMemeber);
 	
