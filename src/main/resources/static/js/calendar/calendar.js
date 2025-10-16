@@ -363,8 +363,7 @@ function addInCalendar(cal) {
 		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
 		classNames: ['my-event'],
-//		editable : (cal.staffDTO.staffCode === loginStaffCode) && (cal.calType != 2000),
-		editable : true,
+		editable : (cal.staffDTO.staffCode === loginStaffCode || loginStaffCode === 20250001),
 		extendedProps: {
 			calNum      : cal.calNum,
 			calReg      : cal.calReg,
