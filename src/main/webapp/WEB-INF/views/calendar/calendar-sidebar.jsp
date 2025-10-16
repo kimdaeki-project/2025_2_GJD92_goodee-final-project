@@ -18,17 +18,14 @@
 		<!-- 일정 분류 체크 박스 -->
 		<div class="ps-4 mt-3">
 			<ul class="navbar-nav my-1">
-<!-- 				<li class="nav-item mt-2"> -->
-<!-- 					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2000" style="accent-color: red;" checked><span>공휴일</span> -->
-<!-- 				</li>  -->
 				<li class="nav-item mt-2">
-					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2001" style="accent-color: #F1C40F;" checked><span>점검 일정</span>
+					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2001" style="accent-color: #CA6F1E;" checked><span>점검 일정</span>
 				</li> 
 				<li class="nav-item mt-2">
-					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2002" style="accent-color: blue;" checked><span>사내 일정</span>
+					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2002" style="accent-color: #2E86DE;" checked><span>사내 일정</span>
 				</li> 
 				<li class="nav-item mt-2">
-					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2003" style="accent-color: green;" checked><span>${ staffDTO.deptDTO.deptDetail }팀 일정</span>
+					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2003" style="accent-color: #16A085;" checked><span>${ staffDTO.deptDTO.deptDetail }팀 일정</span>
 				</li> 
 			</ul>
 		</div>
