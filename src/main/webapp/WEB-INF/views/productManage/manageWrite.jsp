@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 
@@ -82,9 +82,9 @@ aside.sidenav {
 
 			<section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; width: 100%; overflow: hidden;">
 			
+					<form:form method="post" modelAttribute="productManageDTO" enctype="multipart/form-data" class="d-flex flex-column mt-6" style="gap: 80px;">
 				<div class="col-6 offset-3">
-					<h4 class="text-center mt-5 mb-5">${empty productManageDTO.pmNum ? "입출고 등록" : "입출고 수정" }</h4>
-					<form method="post" enctype="multipart/form-data">
+					<h4 class="text-center mt-5 mb-5">입출고 등록</h4>
 						<div class="d-flex justify-content-between" style="gap: 50px;" >
 						
 							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px; border: 1px solid lightgray; border-radius: 20px; padding:10px;">
@@ -123,24 +123,24 @@ aside.sidenav {
 									<label>유형</label>
 									<div class="radio-group d-flex justify-content-start" style="gap: 15px;" >
 										<label style="font-size: 16px;">
-								            <input type="radio" name="pmType" value="80"
-								                <c:if test="${empty productManageDTO or productManageDTO.pmType == 80}">checked</c:if>> 입고
+								            <input type="radio" name="pmType" value="80" checked> 입고
 								        </label> 
 										<label style="font-size: 16px;">
-											<input type="radio"	name="pmType" value="90"
-												<c:if test="${productManageDTO.pmType == 90}">checked</c:if>> 출고
+											<input type="radio"	name="pmType" value="90"> 출고
 										</label>
 									</div>
 								</div>
 		
 								<div class="form-group">
-									<label>수량</label>
-									<input type="text" name="pmAmount" value="${productManageDTO.pmAmount }">
+									<form:label path="pmAmount">수량</form:label>
+									<form:input path="pmAmount" cssClass="form-control"/>
+		  							<form:errors path="pmAmount"></form:errors>
 								</div>
 								
 								<div class="form-group">
-									<label>비고</label>
-									<input type="text" name="pmNote" value="${productManageDTO.pmNote }">
+									<form:label path="pmNote">비고</form:label>
+									<form:input path="pmNote" cssClass="form-control"/>
+		  							<form:errors path="pmNote"></form:errors>
 								</div>
 								
 								</div>
@@ -151,12 +151,12 @@ aside.sidenav {
 						<div class="mt-6 d-flex justify-content-center gap-3">
 							<button type="submit"
 								class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
-								style="width: 100px;">${ empty productManageDTO.pmNum ? "등록" : "수정" }</button>
+								style="width: 100px;">등록</button>
 							<button type="button" class="btn btn-sm btn-outline-secondary"
 								onclick="history.back();" style="width: 100px;">취소</button>
 						</div>
-					</form>
 					</div>
+					</form:form>
 
 				<!-- 모달창 내용 -->
 				<div class="modal fade" id="productModal" tabindex="-1"

@@ -10,7 +10,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.product.ProductService;
+import com.goodee.finals.product.ProductTypeDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -73,7 +77,7 @@ public class ProductManageController {
 	}
 	
 	@GetMapping("write")
-	public String write(@PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+	public String write(@ModelAttribute ProductManageDTO productManageDTO, @PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
 //		if (search == null) search = "";
 //		
 //		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
@@ -103,9 +107,24 @@ public class ProductManageController {
 	}
 	
 	@PostMapping("write")
-	public String Write(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
-		log.info("{}", pDTO.getProductTypeDTO().getProductTypeCode());
-		ProductManageDTO result = pmService.write(pDTO, pmDTO);
+	public String Write(@Valid ProductManageDTO productManageDTO, BindingResult bindingResult, ProductDTO pDTO, Model model) {
+		if(bindingResult.hasErrors()) {
+			return "productManage/manageWrite";
+		}
+		
+		if (pDTO.getProductCode() == null) {
+			String resultMsg = "입출고 대상을 지정해주세요.";
+			String resultIcon = "warning";
+			String resultUrl = "/productManage/write";
+			
+			model.addAttribute("resultUrl", resultUrl);
+			model.addAttribute("resultMsg", resultMsg);
+			model.addAttribute("resultIcon", resultIcon);
+			
+			return "common/result";
+		}
+		
+		ProductManageDTO result = pmService.write(pDTO, productManageDTO);
 		
 		String resultMsg = "입출고 등록 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
@@ -123,43 +142,43 @@ public class ProductManageController {
 		return "common/result";
 	}
 	
-	@GetMapping("{pmNum}/update")
-	public String getProductManageUpdate(@PathVariable Long pmNum, @PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
-		if (search == null) search = "";
-		
-		Page<ProductDTO> productPage  = pService.getProductSearchList(search,pageable);
-		List<ProductDTO> productList = productPage.getContent();
-		
-		model.addAttribute("productList", productList);
-		model.addAttribute("search", search);
-		
-		ProductManageDTO productManageDTO = pmService.getProductManage(pmNum);
-		
-		model.addAttribute("productManageDTO", productManageDTO);
-		return "productManage/manageWrite";
-	}
-	
-	@PostMapping("{pmNum}/update")
-	public String postProductManageUpdate(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
-		
-		boolean result = pmService.updateProductManage(pDTO, pmDTO);
-		
-		String resultMsg = "입출고내역 수정 중 오류가 발생했습니다.";
-		String resultIcon = "warning";
-		
-		if (result) {
-			resultMsg = "입출고내역을 수정했습니다.";
-			resultIcon = "success";
-			String resultUrl = "/productManage";
-			model.addAttribute("resultUrl", resultUrl);
-		}
-			
-		model.addAttribute("resultMsg", resultMsg);
-		model.addAttribute("resultIcon", resultIcon);
-		
-		return "common/result";
-		
-	}
+//	@GetMapping("{pmNum}/update")
+//	public String getProductManageUpdate(@PathVariable Long pmNum, @PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
+//		if (search == null) search = "";
+//		
+//		Page<ProductDTO> productPage  = pService.getProductSearchList(search,pageable);
+//		List<ProductDTO> productList = productPage.getContent();
+//		
+//		model.addAttribute("productList", productList);
+//		model.addAttribute("search", search);
+//		
+//		ProductManageDTO productManageDTO = pmService.getProductManage(pmNum);
+//		
+//		model.addAttribute("productManageDTO", productManageDTO);
+//		return "productManage/manageWrite";
+//	}
+//	
+//	@PostMapping("{pmNum}/update")
+//	public String postProductManageUpdate(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
+//		
+//		boolean result = pmService.updateProductManage(pDTO, pmDTO);
+//		
+//		String resultMsg = "입출고내역 수정 중 오류가 발생했습니다.";
+//		String resultIcon = "warning";
+//		
+//		if (result) {
+//			resultMsg = "입출고내역을 수정했습니다.";
+//			resultIcon = "success";
+//			String resultUrl = "/productManage";
+//			model.addAttribute("resultUrl", resultUrl);
+//		}
+//			
+//		model.addAttribute("resultMsg", resultMsg);
+//		model.addAttribute("resultIcon", resultIcon);
+//		
+//		return "common/result";
+//		
+//	}
 	
 	@PostMapping("{pmNum}/delete")
 	public String delete(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {

@@ -12,13 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "product_manage")
 public class ProductManageDTO {
@@ -27,9 +28,11 @@ public class ProductManageDTO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pmNum;
 	private Integer pmType;
+	@NotNull(message = "* 수량은 필수입니다.")
 	private Long pmAmount;
 	private Long pmRemainAmount;
 	private LocalDate pmDate = LocalDate.now();
+	@NotBlank(message = "* 비고는 필수입니다.")
 	private String pmNote = "";
 	
 	@ManyToOne

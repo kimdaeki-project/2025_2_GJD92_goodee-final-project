@@ -157,10 +157,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				
-				<div class="modal-body">
-					<div class="text-center mb-5" id="pmDetailAttach">
-					
-					</div>
+				<div class="modal-body mb-5 mt-5">
 					<div class="d-flex justify-content-center">
 						<table class="text-start table" style="width: 80%;">
 							

@@ -154,7 +154,7 @@
 				<div class="time-info">
 				<div class="time-circle">
 				
-				<div class="times-row"">
+				<div class="times-row">
 					<span style="width:100px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
 					<span style="width:100px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
 				</div>

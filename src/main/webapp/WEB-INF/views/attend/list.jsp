@@ -77,11 +77,11 @@
 								<div>근로시간 현황</div>
 								
 								<div class="d-flex align-content-center">
-        							<a href="/attend?baseDate=${prevWeek}">
+        							<a href="/attend?baseDate=${prevWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_backward</span>
         							</a>
 									<small>&nbsp;${mondayStr }(월)&nbsp; ~ &nbsp;${sundayStr }(일)&nbsp;</small> 
-        							<a href="/attend?baseDate=${nextWeek}">
+        							<a href="/attend?baseDate=${nextWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_forward</span>
         							</a>
 								</div>
@@ -93,29 +93,29 @@
 								<p>- 잔여 근로시간 : ${remainingWorkTime }</p>
 								<p>- 연장 근로시간 : ${overtimeWorkTime eq null ? "00h 00m" : overtimeWorkTime}</p>
 								
-<div class="work-progress mt-5 mb-5" style="margin-top:15px;">
-
-  <div class="progress" style="height: 10px; border-radius: 3px; background-color:#e9ecef;">
-
-    <!-- 주 근로시간 전체바 -->
-    <div class="progress-bar bg-light position-relative"
-         style="height:12px; width: 77%; border-top-left-radius:3px; border-bottom-left-radius:3px;">
-      
-      <!-- 실제 근로시간만큼 내부 채우기 -->
-      <div style="width: 20%; height: 100%; background-color: green; border-radius: inherit;"></div>
-      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">40h</span>
-    </div>
-
-    <!-- 연장근로 전체바 -->
-    <div class="progress-bar bg-light position-relative"
-         style="height:12px; width: 23%; border-top-right-radius:3px; border-bottom-right-radius:3px;">
-      
-      <div style="width: 10%; height: 100%; background-color: red; border-radius: inherit;"></div>
-      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">+12h</span>
-    </div>
-
-  </div>
-</div>
+								<div class="work-progress mt-5 mb-5" style="margin-top:15px;">
+								
+								  <div class="progress" style="height: 10px; border-radius: 3px; background-color:#e9ecef;">
+								
+								    <!-- 주 근로시간 전체바 -->
+								    <div class="progress-bar bg-light position-relative"
+								         style="height:12px; width: 77%; border-top-left-radius:3px; border-bottom-left-radius:3px;">
+								      
+								      <!-- 실제 근로시간만큼 내부 채우기 -->
+								      <div style="width: ${weekPercent}%; height: 100%; background-color: green; border-radius: inherit;"></div>
+								      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">40h</span>
+								    </div>
+								
+								    <!-- 연장근로 전체바 -->
+								    <div class="progress-bar bg-light position-relative"
+								         style="height:12px; width: 23%; border-top-right-radius:3px; border-bottom-right-radius:3px;">
+								      
+								      <div style="width: ${overPercent}%; height: 100%; background-color: red; border-radius: inherit;"></div>
+								      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">+12h</span>
+								    </div>
+								
+								  </div>
+								</div>
 								
 							</div>
 						</div>
@@ -130,7 +130,7 @@
 								</div>
 								<div>
 								<form action="${pageContext.request.contextPath}/attend/monthly" method="get">
-									<input type="hidden" name="staffCode" value="${staffDTO.staffCode}" />
+									<input type="hidden" name="baseDate" value="${monday }">
 									<label for="year">년도</label>
 									<select name="year" id="year">
 										<c:forEach var="y" begin="2020" end="2030">
@@ -222,6 +222,7 @@
 		</section>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/lost/list.js"></script>
 	
 	<script>
 		document.querySelector("i[data-content='근태']").parentElement.classList
