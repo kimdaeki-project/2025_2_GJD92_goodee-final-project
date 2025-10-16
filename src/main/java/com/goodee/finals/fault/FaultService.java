@@ -183,7 +183,7 @@ public class FaultService {
 	
 	// 시설팀 직원 목록 가져오기 (dept_code = 1003)
 	public List<StaffDTO> getStaffList() {
-		return staffRepository.findByDeptDTO_DeptCode(1003);
+		return staffRepository.findByDeptDTO_DeptCodeAndStaffEnabledTrue(1003);
 	}
 
 }
