@@ -217,9 +217,11 @@ public class DriveController {
 		model.addAttribute("driveNum", driveNum);
 		
 		// 겹치는 로직 그대로 둔 이유 - 양쪽의 조회, model로 넘겨야하는 타입이 다름
+		// 1. 단일 파일
 		if (attachNums.length == 1) {
 			AttachmentDTO file = driveService.getAttachByAttachNum(attachNums[0]);
 			Integer docJobCode = file.getDocumentDTO().getJobDTO().getJobCode();
+			
 			if (staffJobCode > docJobCode) {
 				model.addAttribute("resultUrl", "/drive/" + driveNum);
 				model.addAttribute("resultMsg", "다운로드 권한이 없습니다");
@@ -227,11 +229,11 @@ public class DriveController {
 				return "common/result";
 			}
 			model.addAttribute("file", file);
-			
 			return "fileDownView";
+		// 2. 여러 파일
 		} else {
 			List<AttachmentDTO> files = driveService.getAttachListByAttachNum(Arrays.asList(attachNums));
-			model.addAttribute("files", files);
+			
 			for (AttachmentDTO file : files) {
 				Integer docJobCode = file.getDocumentDTO().getJobDTO().getJobCode();
 				if (staffJobCode > docJobCode) {
@@ -241,6 +243,7 @@ public class DriveController {
 					return "common/result";
 				}
 			}
+			model.addAttribute("files", files);
 			return "zipDownView";
 		}
 	}

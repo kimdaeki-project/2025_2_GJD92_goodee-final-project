@@ -321,6 +321,7 @@ function addCalendar() {
 		calContent:  inputCalContent.value,
 		calIsAllDay: inputCalIsAllDay.checked
 	};
+	
 	// fetch로 DB에 등록
 	// 1. 일정 쓰기
 	if(btnAddCalendar.dataset.request == "add") {
