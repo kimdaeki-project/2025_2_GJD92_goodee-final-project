@@ -303,6 +303,51 @@ function deleteDrive(driveNum, driveDefaultNum) {
 	});
 }
 
+function restoreDrive(driveNum) {
+	Swal.fire({
+		text: '드라이브를 복원하시겠습니까?',
+		icon: "question",
+		showCancelButton: true,
+		confirmButtonColor: "#191919",
+		cancelButtonColor: "#FFFFFF",
+		confirmButtonText: "삭제",
+		cancelButtonText: "취소",
+		customClass: {
+			cancelButton: 'my-cancel-btn'
+		}
+	}).then((result) => {
+		if (!result.isConfirmed) {
+			return;
+		}
+
+		let params = new URLSearchParams();
+		params.append('driveNum', driveNum);
+
+		fetch('/drive/restore', {
+			method: 'post',
+			body: params
+		})
+			.then(r => r.json())
+			.then(r => {
+				if (r != null) {
+					Swal.fire({
+						text: "드라이브 복원 완료",
+						icon: "success",
+						confirmButtonColor: "#191919",
+						confirmButtonText: "확인"
+					})
+						.then((result) => {
+							if (result) location.href = "/drive"
+						})
+				}
+			})
+			.catch(e => {
+				console.log("실패", e)
+			});
+	});
+}
+
+
 /* 사이드바 유지 */
 window.addEventListener("load", () => {
   const COLLAPSE_KEY = "openDriveCollapses";

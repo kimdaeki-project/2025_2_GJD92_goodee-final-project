@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.staff.DeptDTO;
@@ -71,11 +73,8 @@ public class DriveController {
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		DriveDTO driveDTO = null;
-	    if (driveNum == null) { // 최초 진입시 기본 드라이브
-	        driveDTO = driveService.getDefaultDrive(staffDTO);
-	    } else { 				// 특정 드라이브 진입
-	        driveDTO = driveService.getDrive(driveNum);
-	    }
+	    if (driveNum == null) driveDTO = driveService.getDefaultDrive(staffDTO); // 최초 진입시 기본 드라이브
+	    else driveDTO = driveService.getDrive(driveNum); // 특정 드라이브 진입	        
 	    
 		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
 		
@@ -117,13 +116,18 @@ public class DriveController {
 		model.addAttribute("resultMsg", resultMsg);
 		model.addAttribute("resultIcon", resultIcon);
 		
-		
 		return "common/result";
 	}
 	
 	@GetMapping("{driveNum}/update")
-	public String updateDrive(@PathVariable Long driveNum, Model model) {
+	public String updateDrive(@PathVariable Long driveNum, Model model, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
 		DriveDTO driveDTO = driveService.getDrive(driveNum);
+		
+		Integer loginStaffCode = staffDTO.getStaffCode();
+		Integer driveStaffCode = driveDTO.getStaffDTO().getStaffCode();
+		if(!loginStaffCode.equals(driveStaffCode)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+		
 		List<DeptDTO> deptList = driveService.getDeptList();
 		model.addAttribute("driveDTO", driveDTO);
 		model.addAttribute("deptList", deptList);
@@ -132,9 +136,7 @@ public class DriveController {
 	
 	@PostMapping("{driveNum}/update")
 	public String updateDrive(@Valid DriveDTO driveDTO,BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
-			return "drive/create";
-		}
+		if(bindingResult.hasErrors()) return "drive/create";
 		
 		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		driveDTO.setStaffDTO(staffDTO);
@@ -155,17 +157,23 @@ public class DriveController {
 		return "common/result";
 	}
 	
-	@PostMapping("/delete")
+	@PostMapping("delete")
 	@ResponseBody
 	public DriveDTO deleteDrive(Long driveNum) {
 		DriveDTO driveDTO = new DriveDTO();
 		driveDTO.setDriveNum(driveNum);
 		driveDTO = driveService.deleteDrive(driveDTO); 
 		
-		if(driveDTO == null) {
-			return null;
-		}
+		if(driveDTO == null) return null;
 		return driveDTO;
+	}
+	
+	@PostMapping("restore")
+	@ResponseBody
+	public boolean restoreDrive(DriveDTO driveDTO, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
+		boolean result = driveService.restoreDrive(driveDTO, staffDTO);
+		return result;
 	}
 	
 	@PostMapping("{driveNum}/upload")
@@ -209,9 +217,11 @@ public class DriveController {
 		model.addAttribute("driveNum", driveNum);
 		
 		// 겹치는 로직 그대로 둔 이유 - 양쪽의 조회, model로 넘겨야하는 타입이 다름
+		// 1. 단일 파일
 		if (attachNums.length == 1) {
 			AttachmentDTO file = driveService.getAttachByAttachNum(attachNums[0]);
 			Integer docJobCode = file.getDocumentDTO().getJobDTO().getJobCode();
+			
 			if (staffJobCode > docJobCode) {
 				model.addAttribute("resultUrl", "/drive/" + driveNum);
 				model.addAttribute("resultMsg", "다운로드 권한이 없습니다");
@@ -219,11 +229,11 @@ public class DriveController {
 				return "common/result";
 			}
 			model.addAttribute("file", file);
-			
 			return "fileDownView";
+		// 2. 여러 파일
 		} else {
 			List<AttachmentDTO> files = driveService.getAttachListByAttachNum(Arrays.asList(attachNums));
-			model.addAttribute("files", files);
+			
 			for (AttachmentDTO file : files) {
 				Integer docJobCode = file.getDocumentDTO().getJobDTO().getJobCode();
 				if (staffJobCode > docJobCode) {
@@ -233,6 +243,7 @@ public class DriveController {
 					return "common/result";
 				}
 			}
+			model.addAttribute("files", files);
 			return "zipDownView";
 		}
 	}
