@@ -150,7 +150,7 @@ public class DriveController {
 		return "common/result";
 	}
 	
-	@PostMapping("/delete")
+	@PostMapping("delete")
 	@ResponseBody
 	public DriveDTO deleteDrive(Long driveNum) {
 		DriveDTO driveDTO = new DriveDTO();
@@ -159,6 +159,14 @@ public class DriveController {
 		
 		if(driveDTO == null) return null;
 		return driveDTO;
+	}
+	
+	@PostMapping("restore")
+	@ResponseBody
+	public boolean restoreDrive(DriveDTO driveDTO, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
+		boolean result = driveService.restoreDrive(driveDTO, staffDTO);
+		return result;
 	}
 	
 	@PostMapping("{driveNum}/upload")

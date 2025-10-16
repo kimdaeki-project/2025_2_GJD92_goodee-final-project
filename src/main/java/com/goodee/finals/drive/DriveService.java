@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.common.attachment.AttachmentRepository;
 import com.goodee.finals.common.file.FileService;
-import com.goodee.finals.ride.RideRepository;
 import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.DeptRepository;
 import com.goodee.finals.staff.JobDTO;
@@ -34,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(rollbackFor = Exception.class)
 public class DriveService {
 
-    private final RideRepository rideRepository;
 	private static final Long ROLE_HQ_DRIVE = 2L;
 	private static final Long ROLE_HR_DRIVE = 3L;
 	private static final Long ROLE_OP_DRIVE = 4L;
@@ -59,10 +57,6 @@ public class DriveService {
 	private DriveShareRepository driveShareRepository;
 	@Autowired
 	private FileService fileService;
-
-    DriveService(RideRepository rideRepository) {
-        this.rideRepository = rideRepository;
-    }
 
 	public List<DeptDTO> getDeptList() {
 		return deptRepository.findAll();
@@ -242,13 +236,20 @@ public class DriveService {
 	
 	public DriveDTO deleteDrive(DriveDTO driveDTO) {
 		driveDTO = driveRepository.findById(driveDTO.getDriveNum()).orElseThrow();
-		if(driveDTO == null) {
-			return null;
-		}
+		if(driveDTO == null) return null;
 		driveDTO.setDriveEnabled(false);
 		driveDTO = driveRepository.save(driveDTO);
 		
 		return driveDTO;
+	}
+	
+	public boolean restoreDrive(DriveDTO driveDTO, StaffDTO staffDTO) {
+		if(staffDTO.getJobDTO().getJobCode() != 1100) return false;
+		DriveDTO originDrive = driveRepository.findById(driveDTO.getDriveNum()).orElseThrow();
+		if(originDrive == null) return false;
+		originDrive.setDriveEnabled(true);
+		originDrive = driveRepository.save(originDrive);
+		return originDrive.getDriveEnabled();
 	}
 	
 	public DocumentDTO uploadDocument(Long driveNum, JobDTO jobDTO, MultipartFile attach, StaffDTO staffDTO) {

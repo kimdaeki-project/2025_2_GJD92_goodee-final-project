@@ -73,8 +73,11 @@
 								<button type="button" class="btn btn-outline-secondary" onclick="history.back()">취소</button>
 							</div>
 							<div>
-								<c:if test="${ not empty driveDTO.driveNum }">
+								<c:if test="${ not empty driveDTO.driveNum and driveDTO.driveEnabled }">
 									<button type="button" class="btn btn-outline-danger" onclick="deleteDrive(${ driveDTO.driveNum }, ${ driveDTO.driveDefaultNum })">드라이브 삭제</button>
+								</c:if>
+								<c:if test="${ not empty driveDTO.driveNum and not driveDTO.driveEnabled }">
+									<button type="button" class="btn btn-outline-danger" onclick="restoreDrive(${ driveDTO.driveNum }, ${ driveDTO.driveDefaultNum })">드라이브 복원</button>
 								</c:if>
 							</div>							
 						</div>
