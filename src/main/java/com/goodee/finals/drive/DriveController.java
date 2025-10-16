@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
 import com.goodee.finals.staff.DeptDTO;
@@ -73,7 +75,6 @@ public class DriveController {
 		DriveDTO driveDTO = null;
 	    if (driveNum == null) driveDTO = driveService.getDefaultDrive(staffDTO); // 최초 진입시 기본 드라이브
 	    else driveDTO = driveService.getDrive(driveNum); // 특정 드라이브 진입	        
-	    // TODO 여기에 유효성 검사 후 에러 페이지로 이동로직 작성
 	    
 		Page<DocumentDTO> docList = driveService.getDocListByDriveNum(driveDTO, drivePager, staffDTO, pageable);
 		
@@ -119,8 +120,14 @@ public class DriveController {
 	}
 	
 	@GetMapping("{driveNum}/update")
-	public String updateDrive(@PathVariable Long driveNum, Model model) {
+	public String updateDrive(@PathVariable Long driveNum, Model model, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
 		DriveDTO driveDTO = driveService.getDrive(driveNum);
+		
+		Integer loginStaffCode = staffDTO.getStaffCode();
+		Integer driveStaffCode = driveDTO.getStaffDTO().getStaffCode();
+		if(!loginStaffCode.equals(driveStaffCode)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+		
 		List<DeptDTO> deptList = driveService.getDeptList();
 		model.addAttribute("driveDTO", driveDTO);
 		model.addAttribute("deptList", deptList);
