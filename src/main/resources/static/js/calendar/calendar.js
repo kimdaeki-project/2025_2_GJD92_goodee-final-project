@@ -201,7 +201,6 @@ btnOpenUpdateModal.addEventListener("click", () => {
 
 btnDeleteCalendar.addEventListener("click", () => {
 	Swal.fire({
-	   title: "일정 삭제",
 	   text: '일정을 삭제하시겠습니까?',
 	   icon: "error",
 	   showCancelButton: true,
