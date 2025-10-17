@@ -7,6 +7,7 @@ const form = document.querySelector('#form');
 const cancelBtn = document.querySelector('#btn-cancel');
 const input = document.querySelector('#fileInput');
 const data = btn.getAttribute('data-kind');
+const noticePinned = document.querySelector('#noticePinned').checked;
 
 btn.addEventListener('click', () => {
 	
@@ -66,7 +67,9 @@ btn.addEventListener('click', () => {
 		deleteFiles.value = deleteExistingFiles.join(",");
 		form.setAttribute('action', './edit');
 		
-		if (pinned.checked) {
+		if (noticePinned && pinned.checked) {
+			form.submit();
+		} else if (!noticePinned && pinned.checked) {
 			fetch('/notice/pinned', {
 				method: 'POST'
 			})

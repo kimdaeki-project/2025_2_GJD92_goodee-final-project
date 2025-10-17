@@ -114,7 +114,18 @@
 				        </tr>
 				        <tr>
 				          <th>운행상태</th>
-				          <td>|&nbsp;&nbsp;${ride.rideState}</td>
+				          <c:if test="${ ride.rideState eq 200 }">
+							<td>|&nbsp;&nbsp;운영(${ride.rideState })</td>
+						  </c:if>
+						  <c:if test="${ ride.rideState eq 300 }">
+							<td>|&nbsp;&nbsp;운휴(${ride.rideState })</td>
+						  </c:if>
+						  <c:if test="${ ride.rideState eq 400 }">
+							<td>|&nbsp;&nbsp;고장(${ride.rideState })</td>
+						  </c:if>
+						  <c:if test="${ ride.rideState eq 500 }">
+							<td>|&nbsp;&nbsp;점검(${ride.rideState })</td>
+						  </c:if>
 				        </tr>
 				      </table>
 				    </div>

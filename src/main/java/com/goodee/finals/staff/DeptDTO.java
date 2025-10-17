@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,5 +32,8 @@ public class DeptDTO {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "deptDTO", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CalendarDTO> calendarDTOs;
+	
+	@Transient
+	private Integer deptGroup;
 	
 }

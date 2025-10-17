@@ -86,6 +86,17 @@ function displayMessage(msg) {
 		div.appendChild(divSender);
 		div.appendChild(divTextWrapper);
 		messagesDiv.appendChild(div);
+		
+		if (msg.chatBodyContent.includes('축하')) {
+			confetti({
+				// 옵션은 여기에...
+				particleCount: 150,
+				origin: {
+					x : 0.5,
+					y: 0.8
+				}
+			});
+		}
 	} else if (msg.chatBodyType == 'NEW') {
 		let div = document.createElement('div');
 		div.classList.add('chat-read-divider');

@@ -7,7 +7,10 @@ function deleteInspection(isptNum) {
 	  confirmButtonColor: "#191919",
 	  cancelButtonColor: "#FFFFFF",
 	  confirmButtonText: "삭제",
-		cancelButtonText: "취소"
+	  cancelButtonText: "취소",
+	  customClass: {
+			cancelButton: 'my-cancel-btn'
+	  }
 	})	.then((result) => {
 	      if (result.isConfirmed) {
 	        // POST 요청으로 삭제

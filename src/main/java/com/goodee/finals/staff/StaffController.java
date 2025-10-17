@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -152,16 +153,24 @@ public class StaffController {
 	
 	@PostMapping("leave/update")
 	public String postStaffLeaveUpdate(LeaveDTO leaveDTO, Model model) {
-		boolean result = staffService.updateStaffLeave(leaveDTO);
-		
 		String resultMsg = "연차 정보 수정 중 오류가 발생했습니다.";
 		String resultIcon = "warning";
-		
-		if (result) {
-			resultMsg = "연차 정보를 수정했습니다.";
-			resultIcon = "success";
-			String resultUrl = "/staff/leave";
-			model.addAttribute("resultUrl", resultUrl);
+
+		if (Objects.isNull(leaveDTO.getStaffRemainLeave()) || Objects.isNull(leaveDTO.getStaffUsedLeave())) {
+			resultMsg = "연차 정보를 정확하게 입력해주세요.";
+		} else if (leaveDTO.getStaffRemainLeave() < 0 || leaveDTO.getStaffUsedLeave() < 0) {
+			resultMsg = "연차 정보를 정확하게 입력해주세요.";
+		} else if (leaveDTO.getStaffUsedLeave() > leaveDTO.getStaffRemainLeave()) {
+			resultMsg = "사용한 연차 일수는 전체 연차 일수보다 클 수 없습니다.";
+		} else {
+			boolean result = staffService.updateStaffLeave(leaveDTO);
+						
+			if (result) {
+				resultMsg = "연차 정보를 수정했습니다.";
+				resultIcon = "success";
+				String resultUrl = "/staff/leave";
+				model.addAttribute("resultUrl", resultUrl);
+			}
 		}
 		
 		model.addAttribute("resultMsg", resultMsg);
