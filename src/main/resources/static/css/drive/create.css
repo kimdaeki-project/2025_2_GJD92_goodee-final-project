@@ -11,6 +11,7 @@
   background-color: #f8f9fa !important; /* hover 시 살짝 회색 */
 }
 
-.bg-gradient-dark {
-    background-image: linear-gradient(195deg, #191919 0%, #191919 100%) !important;
+a.nav-link.bg-gradient-dark.custom-color {
+  background: none !important; /* background-image 포함 전체 제거 */
+  background-color: transparent !important;
 }
