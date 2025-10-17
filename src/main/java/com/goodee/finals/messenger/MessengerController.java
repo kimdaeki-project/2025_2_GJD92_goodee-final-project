@@ -42,7 +42,8 @@ public class MessengerController {
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
     
-    @GetMapping("")
+    @SuppressWarnings("unchecked")
+	@GetMapping("")
     public String home(String keyword, Model model) {
     	if (keyword == null) keyword = "";
     	Map<String, Object> result = messengerService.getStaff(keyword);
@@ -60,6 +61,7 @@ public class MessengerController {
 		return "messenger/list";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("create")
 	public String create(String keyword, Model model) {
 		if (keyword == null) keyword = "";
@@ -70,6 +72,7 @@ public class MessengerController {
 		return "messenger/create";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostMapping("create")
 	public String create(@RequestParam(required = false) List<Integer> addedStaff, @Valid ChatRoomDTO chatRoomDTO, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
@@ -142,6 +145,7 @@ public class MessengerController {
 		return "messenger/profile";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostMapping("profile/chat")
 	public String profile(StaffDTO staffDTO, @PageableDefault(size = 20, sort = "chatBodyNum", direction= Sort.Direction.DESC) Pageable pageable, Model model) {
 		Integer sendStaffCode = staffDTO.getStaffCode();
@@ -223,6 +227,7 @@ public class MessengerController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostMapping("/room/join") @ResponseBody
 	public boolean memberJoin(@RequestBody Map<String, Object> data) {
 		List<String> staffs = (List<String>)data.get("staffs");
