@@ -114,7 +114,7 @@
 				</div>
 				
 				<div class="modal-body">
-					<div class="text-center mb-5" id="lostDetailAttach">
+					<div class="text-center mb-3" id="lostDetailAttach">
 					
 					</div>
 					<div class="d-flex justify-content-center">

@@ -48,7 +48,7 @@ function renderProduct(r) {
 		<td>${product.productName}</td>
 		<td>
 			<button type="button"
-				class="btn btn-sm btn-primary select-product"
+				class="btn btn-sm bg-gradient-dark select-product"
 				onclick="selectProduct(
 					${product.productCode},
 					${product.productTypeDTO.productTypeCode},

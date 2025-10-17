@@ -1,5 +1,8 @@
 package com.goodee.finals.productManage;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.goodee.finals.product.ProductDTO;
@@ -23,6 +27,7 @@ import com.goodee.finals.product.ProductService;
 import com.goodee.finals.product.ProductTypeDTO;
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,6 +70,30 @@ public class ProductManageController {
 	    model.addAttribute("searchKeyword", searchValue);
 	    
 		return "productManage/manageList";
+	}
+	
+	@GetMapping("/excel")
+	public void downloadExcel(@RequestParam(required = false) String search, HttpServletResponse response) throws IOException {
+	    if (search == null) search = "";
+
+	    // 입출고 변환 (기존과 동일한 로직)
+	    if ("입고".equals(search)) {
+	        search = "80";
+	    } else if ("출고".equals(search)) {
+	        search = "90";
+	    }
+
+	    // 전체 데이터 조회
+	    List<ProductManageDTO> list = pmService.getProductManageSearchListForExcel(search);
+
+	    // 파일명 지정
+	    String fileName = URLEncoder.encode("물품관리대장.xlsx", StandardCharsets.UTF_8);
+
+	    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	    response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+	    // 서비스에서 엑셀 파일 생성
+	    pmService.writeProductManageExcel(list, response.getOutputStream());
 	}
 	
 	@GetMapping("{pmNum}")
@@ -200,4 +229,8 @@ public class ProductManageController {
 		return "common/result";
 	}
 	
+	@GetMapping("stockReport")
+	public String getStockReport() {
+		return "productManage/stockReport";
+	}
 }

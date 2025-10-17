@@ -38,12 +38,6 @@ aside.sidenav {
 	min-width: 200px !important;
 	max-width: 200px !important;
 }
-.btn-close {
-  background-color: red !important; /* 테스트용 - 보이는지 확인 */
-  border: 1px solid black;
-  width: 1.5rem;
-  height: 1.5rem;
-}
 </style>
 <c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -168,7 +162,7 @@ aside.sidenav {
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							
-							<div class="modal-body">
+							<div class="modal-body" style="max-height: 700px; overflow-y: auto;">
 								<div class="d-flex justify-content-end align-items-end">
 									<div class="input-group" style="width: 30%;">
 										<input type="text" class="form-control" id="searchInput" placeholder="검색어를 입력하세요." style="height:40px; border-radius: 0.375rem 0 0 0.375rem !important;" >

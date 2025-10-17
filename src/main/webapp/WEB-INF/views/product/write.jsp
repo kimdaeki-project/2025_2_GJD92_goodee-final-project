@@ -95,14 +95,14 @@
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 300px;">
         <div class="form-group">
         	<form:label path="productTypeDTO.productTypeCode">물품 타입</form:label>
-<form:select path="productTypeDTO.productTypeCode"
-             items="${productTypeList}"
-             itemValue="productTypeCode"
-             itemLabel="productTypeName"
-             cssClass="form-select"
-             style="width:80%; height:44px;">
-    <form:option value="">--선택--</form:option>
-</form:select>
+			<form:select path="productTypeDTO.productTypeCode"
+			             items="${productTypeList}"
+			             itemValue="productTypeCode"
+			             itemLabel="productTypeName"
+			             cssClass="form-select"
+			             style="width:80%; height:44px;">
+			    <form:option value="">--선택--</form:option>
+			</form:select>
         </div>
 			
 		<div class="form-group">
@@ -130,6 +130,8 @@
 	    </div>
       </div>
 		</form:form>
+		
+		<a href="/productManage/stockReport">재고집계표</a>
 		
     </section>
     </div>

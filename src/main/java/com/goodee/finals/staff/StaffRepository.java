@@ -15,7 +15,7 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	@NativeQuery(value = "SELECT staff_code FROM staff ORDER BY staff_code DESC LIMIT 1")
 	Integer findLastStaffCode();
 	
-	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
+	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_email LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearch(String search, Pageable pageable);
 	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) LEFT OUTER JOIN (SELECT * FROM attend WHERE attend_date = :today) a USING(staff_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")

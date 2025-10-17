@@ -23,7 +23,7 @@
     }
 	
 	</style>
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
@@ -144,6 +144,24 @@
 					<div>
 		    			<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/productManage/write'">입출고등록</button>
 		   			</div>
+		   			<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white ms-2"
+					        onclick="location.href='/productManage/excel?search=${searchKeyword}'">
+					    엑셀 다운로드
+					</button>
+					<%-- <button class="btn btn-sm btn-outline-success text-white ms-2"
+        onclick="location.href='/productManage/excel?search=${searchKeyword}'"
+        style="background-color:#217346;"> <!-- 엑셀 그린 컬러 -->
+    <i class="fa-solid fa-file-excel me-1r></i>
+    엑셀 다운로드
+</button> --%>
+<!-- 엑셀 아이콘 버튼 -->
+<!-- 	<button class="btn btn-lg text-white" -->
+<%-- 	        onclick="location.href='/productManage/excel?search=${searchKeyword}'" --%>
+<!-- 	        style="background-color:#217346; border:none; border-radius:20%; width:50px; height:35px;" -->
+<!-- 	        data-bs-toggle="tooltip" data-bs-placement="bottom" title="엑셀 다운로드"> -->
+<!-- 	    <i class="fa-solid fa-file-excel"style="font-size: 20px;"></i> -->
+<!-- 	</button> -->
+
 	  			</div>
 	    	</div>
 	    </div>
