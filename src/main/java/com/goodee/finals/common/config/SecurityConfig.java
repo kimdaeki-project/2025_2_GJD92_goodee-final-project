@@ -53,6 +53,7 @@ public class SecurityConfig {
 			.requestMatchers("/css/**", "/js/**", "/images/**", "/WEB-INF/**").permitAll()
 			.requestMatchers("/staff/login", "/staff/password/change", "/staff/password/update").permitAll()
 			.requestMatchers("/staff/info", "/staff/info/update").authenticated()
+			.requestMatchers("/ride/add", "/ride/*/update", "/fault/*/update", "/inspection/write", "/inspection/*/update").hasRole("FA")
 			.requestMatchers("/staff/**").hasAnyRole("HQ", "HR")
 			.anyRequest().authenticated()
 			;

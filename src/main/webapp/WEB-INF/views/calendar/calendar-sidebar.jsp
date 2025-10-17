@@ -28,7 +28,7 @@
 					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2002" style="accent-color: blue;" checked><span>사내 일정</span>
 				</li> 
 				<li class="nav-item mt-2">
-					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2003" style="accent-color: green;" checked><span>${ staffDTO.deptDTO.deptDetail } 일정</span>
+					<input type="checkbox" class="cal-type-checkbox" data-cal-type="2003" style="accent-color: green;" checked><span>${ staffDTO.deptDTO.deptDetail }팀 일정</span>
 				</li> 
 			</ul>
 		</div>

@@ -321,6 +321,7 @@ function addCalendar() {
 		calContent:  inputCalContent.value,
 		calIsAllDay: inputCalIsAllDay.checked
 	};
+	
 	// fetch로 DB에 등록
 	// 1. 일정 쓰기
 	if(btnAddCalendar.dataset.request == "add") {
@@ -363,8 +364,7 @@ function addInCalendar(cal) {
 		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
 		classNames: ['my-event'],
-//		editable : (cal.staffDTO.staffCode === loginStaffCode) && (cal.calType != 2000),
-		editable : true,
+		editable : (cal.staffDTO.staffCode === loginStaffCode || loginStaffCode === 20250001),
 		extendedProps: {
 			calNum      : cal.calNum,
 			calReg      : cal.calReg,

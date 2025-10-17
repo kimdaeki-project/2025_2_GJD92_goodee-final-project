@@ -191,8 +191,9 @@ public class StaffService implements UserDetailsService {
 			staffDTO.setStaffEnabled(false);
 			staffDTO.setStaffFireDate(LocalDate.now());
 			staffRepository.saveAndFlush(staffDTO);
+			boolean result = driveService.deleteFromDeptDrive(staffDTO);
 			
-			return true;
+			return result;
 		}
 	}
 	
@@ -205,8 +206,9 @@ public class StaffService implements UserDetailsService {
 			staffDTO.setStaffEnabled(true);
 			staffDTO.setStaffFireDate(null);
 			staffRepository.saveAndFlush(staffDTO);
+			boolean result = driveService.addInDeptDrive(staffDTO);
 			
-			return true;
+			return result;
 		}
 	}
 
