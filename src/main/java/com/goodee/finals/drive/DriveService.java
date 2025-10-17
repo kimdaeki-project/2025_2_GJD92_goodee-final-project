@@ -85,9 +85,10 @@ public class DriveService {
 	}
 	
 	public Page<DocumentDTO> getDocListByDriveNum(DriveDTO driveDTO, DrivePager drivePager, StaffDTO staffDTO, Pageable pageable) {
+		boolean isCEO = staffDTO.getJobDTO().getJobCode().equals(1100); // 사장인지 확인
 		boolean isOwner = staffDTO.getStaffCode().equals(driveDTO.getStaffDTO().getStaffCode()); // 드라이브 생성자인지 확인
 		boolean isSharedStaff = driveDTO.getDriveShareDTOs().stream().anyMatch(ds -> ds.getStaffDTO().getStaffCode().equals(staffDTO.getStaffCode())); // 공유받고있는 드라이브인지 확인
-		if(!isOwner && !isSharedStaff) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+		if(!isOwner && !isSharedStaff && !isCEO) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
 		
 		Long driveNum = driveDTO.getDriveNum();
 		String keyword = drivePager.getKeyword();

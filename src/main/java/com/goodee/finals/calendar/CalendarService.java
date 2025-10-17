@@ -93,29 +93,33 @@ public class CalendarService {
 	}
 	
 	public boolean disableEvent(CalendarDTO calendarDTO, StaffDTO staffDTO) {
-		CalendarDTO oriCalendar = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
-		if(!staffDTO.getStaffCode().equals(oriCalendar.getStaffDTO().getStaffCode())) {
-			System.out.println("calendarService : 등록자가 아니라 삭제 할 수 없음");
-			return false;
-		}
-		oriCalendar.setCalEnabled(false);
-		oriCalendar = calendarRepository.save(oriCalendar);
-		if(!oriCalendar.getCalEnabled()) {
-			return true;
-		} else {
-			return false;
-		}
+		CalendarDTO oriCal = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
+		boolean result = false;
+		
+		if(!staffDTO.getStaffCode().equals(oriCal.getStaffDTO().getStaffCode())) return result;
+		
+		oriCal.setCalEnabled(false);
+		oriCal = calendarRepository.save(oriCal);
+		
+		if(!oriCal.getCalEnabled()) result = true;
+		else result = false;
+		
+		return result;
 	}
 	
-	public boolean updateCalDate(CalendarDTO calendarDTO) {
+	public boolean updateCalDate(CalendarDTO calendarDTO, StaffDTO staffDTO) {
 		CalendarDTO oriCal = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
+		boolean result = false;
+		
+		if(!staffDTO.getStaffCode().equals(oriCal.getStaffDTO().getStaffCode())) return result;
+		
 		oriCal.setCalStart(calendarDTO.getCalStart());
 		oriCal.setCalEnd(calendarDTO.getCalEnd());
-		oriCal = calendarRepository.save(oriCal);
-		if(oriCal.getCalStart().isEqual((calendarDTO.getCalStart()))) {
-			return true;
-		}
-		return false; 
+		
+		if(oriCal.getCalStart().isEqual((calendarDTO.getCalStart()))) result = true;
+		else result = false;
+		
+		return result;
 	}
 	
 }

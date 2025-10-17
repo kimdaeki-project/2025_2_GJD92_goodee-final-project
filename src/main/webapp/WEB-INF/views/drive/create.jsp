@@ -33,7 +33,7 @@
 						<div>
 							<form:errors path="driveName" cssClass="text-danger small"></form:errors>
 						</div>
-						<div class="mt-4 d-flex align-items-center">
+						<div class="mt-1 d-flex align-items-center">
 							<span class="fs-6">드라이브 공유 : </span>
 							<button type="button" class="btn btn-outline-secondary p-1 rounded ms-2 mt-3" 
 								id="btnShowModalShare" data-bs-toggle="modal" data-bs-target="#shareModal">
@@ -93,8 +93,10 @@
 	<script>
 	const loginStaffCode = ${ staffDTO.staffCode }
 	let lastIndexOfStaffList = ${empty driveDTO.driveShareDTOs ? 0 : fn:length(driveDTO.driveShareDTOs)};
-	document.querySelector("#navTitle").textContent = "드라이브 추가"
+	document.querySelector("#navTitle").textContent = "드라이브"
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.parentElement.classList.add("bg-gradient-dark", "text-white", "rounded")
+	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.classList.add("text-white")
 	</script>
 	
 	<c:if test="${not empty driveDTO.driveNum}">

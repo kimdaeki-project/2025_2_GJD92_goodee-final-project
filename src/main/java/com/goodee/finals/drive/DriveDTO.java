@@ -35,9 +35,8 @@ public class DriveDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long driveNum;
-	@NotBlank(message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
-	@Size(min = 1, max = 50)
-	private String driveName; // 사용하지 않고 있음
+	@Size(min = 1, max = 50, message = "드라이브 이름은 필수입니다 1~50자 이하로 입력해주세요.")
+	private String driveName;
 	@Column(unique = true)
 	private Long driveDefaultNum;
 	private Boolean isPersonal;
