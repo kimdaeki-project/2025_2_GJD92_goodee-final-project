@@ -93,7 +93,7 @@
 	<script>
 	const loginStaffCode = ${ staffDTO.staffCode }
 	let lastIndexOfStaffList = ${empty driveDTO.driveShareDTOs ? 0 : fn:length(driveDTO.driveShareDTOs)};
-	document.querySelector("#navTitle").textContent = "드라이브 추가"
+	document.querySelector("#navTitle").textContent = "드라이브"
 	document.querySelector("i[data-content='드라이브']").parentElement.classList.add("bg-gradient-dark", "text-white")
 	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.parentElement.classList.add("bg-gradient-dark", "text-white", "rounded")
 	document.querySelector("i[data-content='${ driveDTO.driveName }']").parentElement.classList.add("text-white")
