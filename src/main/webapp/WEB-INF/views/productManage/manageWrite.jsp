@@ -127,7 +127,7 @@ aside.sidenav {
 		
 								<div class="form-group">
 									<form:label path="pmAmount">수량</form:label>
-									<form:input path="pmAmount" cssClass="form-control"/>
+									<input type="number" name="pmAmount" class="form-control"/>
 		  							<form:errors path="pmAmount"></form:errors>
 								</div>
 								

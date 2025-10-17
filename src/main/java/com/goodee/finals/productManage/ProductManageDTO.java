@@ -2,6 +2,8 @@ package com.goodee.finals.productManage;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import com.goodee.finals.product.ProductDTO;
 import com.goodee.finals.staff.StaffDTO;
 
@@ -15,6 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +32,7 @@ public class ProductManageDTO {
 	private Long pmNum;
 	private Integer pmType;
 	@NotNull(message = "* 수량은 필수입니다.")
+//	@Pattern(regexp = "^[0-9]+$", message = "숫자만 입력 가능합니다.")
 	private Long pmAmount;
 	private Long pmRemainAmount;
 	private LocalDate pmDate = LocalDate.now();
