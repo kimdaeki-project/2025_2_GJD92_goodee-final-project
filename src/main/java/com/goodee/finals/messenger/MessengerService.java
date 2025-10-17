@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.goodee.finals.staff.DeptDTO;
+import com.goodee.finals.staff.DeptDTOProjection;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
 
@@ -29,11 +31,60 @@ public class MessengerService {
 	@Autowired
 	StompRepository stompRepository;
 
-	public List<StaffDTO> getStaff(String keyword) {
+	public Map<String, Object> getStaff(String keyword) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer loggedStaff = staffDTO.get().getStaffCode();
 		List<StaffDTO> result = staffRepository.findByStaffCodeNotAndStaffNameContaining(loggedStaff, keyword);
-		return result;
+		List<DeptDTO> deptResult = null;
+		if (result != null && result.size() > 0) {
+			List<DeptDTOProjection> proj = staffRepository.findCountDeptByStaffCodeAndKeyword(loggedStaff, keyword);
+			if (proj != null) {
+				deptResult = new ArrayList<>();
+				for (DeptDTOProjection d : proj) {
+					DeptDTO dto = new DeptDTO();
+					dto.setDeptCode(d.getDeptCode());
+					dto.setDeptGroup(d.getDeptGroup());
+					deptResult.add(dto);
+				}
+			}
+		}
+		
+		List<Integer> deptCodes = new ArrayList<>();
+		deptCodes.add(1000);
+		deptCodes.add(1001);
+		deptCodes.add(1002);
+		deptCodes.add(1003);
+		
+		if (deptResult != null) {			
+			for (Integer code : deptCodes) {
+				boolean flag = true;
+				for (DeptDTO d : deptResult) {
+					if (d.getDeptCode().equals(code)) {
+						flag = false;
+						break;
+					}
+				}
+				if (flag) {
+					DeptDTO dto = new DeptDTO();
+					dto.setDeptCode(code);
+					dto.setDeptGroup(0);
+					deptResult.add(dto);
+				}
+			}
+		} else if (deptResult == null) {
+			deptResult = new ArrayList<>();
+			for (Integer code : deptCodes) {
+				DeptDTO dto = new DeptDTO();
+				dto.setDeptCode(code);
+				dto.setDeptGroup(0);
+				deptResult.add(dto);
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("staffResult", result);
+		map.put("deptResult", deptResult);
+		return map;
 	}
 
 	public ChatRoomDTO createRoom(List<Integer> addedStaff, ChatRoomDTO chatRoomDTO) {
