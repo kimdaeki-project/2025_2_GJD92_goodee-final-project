@@ -43,14 +43,19 @@
     /* 둘째 줄 */
     .approval {
       grid-column: 1 / 2;
-      grid-row: 2 / 3;
+      grid-row: 2 / 2;
       height: 350px;
     }
 
     .notices {
-      grid-column: 2 / 4; /* 2~3열 합침 */
-      grid-row: 2 / 3;
+      grid-column: 2 / 3; /* 2~3열 합침 */
+      grid-row: 2 / 2;
     }
+
+	.cal {
+		grid-row: 3 / 4;
+        grid-row: 2 / 2;
+	}
 
     /* 각 패널 카드 */
     .panel {
@@ -135,12 +140,12 @@
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
 
-<body>
+<body class="g-sidenav-show bg-gray-100">
 	<c:import url="/WEB-INF/views/common/sidebar.jsp"></c:import>
   
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
-    <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: hidden scroll;">
+    <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 90vh; overflow: hidden;">
     
 	    <section class="content">
 
@@ -249,25 +254,31 @@
 	        <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
 	          <h3>공지사항</h3><a href="/notice" style="margin-top:10px;">더보기</a>
 	        </div>
-	          <table>
+	          <table style="table-layout: fixed; width: 100%;">
 	            <tr>
-		            <td>번호</td>
-		            <td>부서</td>
-		            <td>제목</td>
+		            <td style="width: 50px;">번호</td>
+		            <td style="width: 240px;">제목</td>
 		            <td>작성자</td>
 		            <td>작성일</td>
 	            </tr>
 	          <c:forEach items="${noticeList}" var="notice">
 	            <tr>
-		            <td>${notice.noticeNum }</td>
-		            <td>${notice.staffDTO.deptDTO.deptDetail }</td>
-		            <td><a href="/notice/${ notice.noticeNum }">${ notice.noticeTitle }</a></td>
+		            <td class="text-center">${notice.noticeNum }</td>
+		            <td><div class="text-truncate"><a href="/notice/${ notice.noticeNum }">${ notice.noticeTitle }</a></div></td>
 		            <td>${notice.staffDTO.staffName }</td>
 		            <td>${notice.noticeDate }</td>
 	            </tr>
 	          
 	          </c:forEach>
 	          </table>
+	        </div>
+	        
+	        <div class="panel cal">
+	        	<div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
+		          <h3>일정</h3>
+		          
+		        </div>
+		        <div id='calendar' class="mt-3"></div>
 	        </div>
 
       	</section>
@@ -276,8 +287,112 @@
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
 	<script src="/js/weather/weather.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 	<script>
 		document.querySelector("i[data-content='대시보드']").parentElement.classList.add("bg-gradient-dark", "text-white")
+	</script>
+	<script>
+	const calendarEl = document.getElementById("calendar");
+	const calendarType = [2001, 2002, 2003]
+	console.log(calendarEl);
+	const calendar = new FullCalendar.Calendar(calendarEl, {
+		 initialView: 'listDay',
+		      locale: 'ko',
+		    timezone: 'local',
+		dayMaxEvents: true,
+	        editable: false, // 드래그드롭, 잡아서 늘리기 가능 
+		  expandRows: false, // 화면 높이에 맞게
+		      height: '75%',
+		 slotMinTime: "00:00:00",
+		 slotMaxTime: "24:00:00",
+		slotDuration: "01:00:00",
+		  scrollTime: "00:00:00",
+		  allDayText: '종일',
+		nowIndicator: true, // 현재시간을 빨간 선으로 표시
+//	      selectable: true, // 날짜 범위를 드래그하여 새로운 일정 구간을 선택 - 사용 할지 미정
+		googleCalendarApiKey: "AIzaSyAriTdVIXQDpo48t7KVpxkw2H6sXMOuJt4", // API 키
+		 titleFormat: function(date) {
+	        const y = date.date.year;
+			const m = String(date.date.month + 1).padStart(2, '0');
+			return `${y}-${m}`;
+		},
+		headerToolbar: false,
+		eventClick: function(eventInfo) {
+			if (eventInfo.event.classNames.includes('holiday-event')) { // 휴일은 클릭시 아무런 동작하지 않음
+			}
+			/* calDetail(eventInfo);
+			modalCalendarDetail.show(); */
+		},
+		events: function(fetchInfo, successCallback, failureCallback) { // 일정 불러오기
+			fetch(`/calendar/calList?calTypes=2001&calTypes=2002&calTypes=2003`, { method: 'GET' })
+			.then(r => r.json())
+			.then(cals => {
+//				console.log(fetchInfo)
+				if(!cals) return;
+				const events = cals.map(cal => addInCalendar(cal))       // .filter(event => event !== null);
+				console.log(events);
+				successCallback(events); // 달력에 이벤트 반영
+			})
+			.catch(e => {
+				console.error("이벤트 로딩 실패:", e);
+				failureCallback(e);
+			});
+		},
+		eventDidMount: function(info) { // 공휴일 API사용시 부여한 className이 실제로 DOM에는 반영되지 않는 현상 발생, 실제 이벤트가 마운트됐을때 클래스를 추가
+		  if (info.event.title &&  // 공휴일(holiday-event) 판별: 구글 캘린더 소스인지 확인
+		      info.event.source && 
+		      info.event.source.googleCalendarId) {
+		    info.el.classList.add('holiday-event'); // 실제 DOM 요소에 class 직접 부여
+		  }
+		}
+	})
+	calendar.render(); // 랜더링
+	
+	function addInCalendar(cal) {
+		return {
+			id: cal.calNum,              
+			title: cal.calTitle,         
+			allDay: cal.calIsAllDay,
+			start: cal.calStart,         
+			end: plusOneDay(cal),     
+			backgroundColor: eventBgColor(cal.calType),
+			borderColor: "transparent",
+			classNames: ['my-event'],
+			editable : false,
+			extendedProps: {
+				calNum      : cal.calNum,
+				calReg      : cal.calReg,
+				calMod      : cal.calMod,
+				calType     : cal.calType,
+				calPlace    : cal.calPlace,
+				calTitle    : cal.calTitle,
+				calContent  : cal.calContent,
+				calTypeName : cal.calTypeName,
+				staffCode   : cal.staffDTO.staffCode,
+				staffName   : cal.staffDTO.staffName,
+				deptCode    : cal.staffDTO.deptDTO.deptCode,
+				deptDetail  : cal.staffDTO.deptDTO.deptDetail
+			}
+		}
+	}
+	function plusOneDay(cal) {
+		let modEndDate = cal.calEnd;
+		
+		if(cal.calIsAllDay) {
+			modEndDate = dayjs(modEndDate).add(1, "day").toDate();
+		}
+		
+		return modEndDate;
+	}
+	function eventBgColor(calType) {
+		switch (calType) {
+			case 2000 : return "red";
+			case 2001 : return "#E67E22";
+			case 2002 : return "#2E86DE";
+			case 2003 : return "#16A085";
+		}	
+	}
 	</script>
 </body>
 
