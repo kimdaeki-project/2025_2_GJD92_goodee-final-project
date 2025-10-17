@@ -83,14 +83,14 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
 	                     @Param("today") LocalDate today,
 	                     @Param("holiday") List<Integer> holiday);
 	
-	// 특정 직원의 출퇴근 기록 중, 주간 범위에 해당하는 목록 조회
+	// 주단위 출퇴근목록 조회
     List<AttendDTO> findByStaffDTO_StaffCodeAndAttendDateBetween(
             Integer staffCode,
             LocalDate startDate,
             LocalDate endDate
     );
     
- 	// 주단위 휴가리스트 조회
+ 	// 주단위 주말,공휴일 리스트 조회
  	@Query("""
     	    SELECT h 
     	    FROM HolidayDTO h 
@@ -103,23 +103,6 @@ public interface AttendRepository extends JpaRepository<AttendDTO, Long>{
  			LocalDate startDate,
  			LocalDate endDate);
  	
-    // 주단위 휴가리스트 조회
-    @Query("""
-    	    SELECT v 
-    	    FROM VacationDTO v 
-    	    JOIN v.approvalDTO a 
-    	    WHERE a.staffDTO.staffCode = :staffCode
-    	      AND (
-    	            (v.vacStart BETWEEN :startDate AND :endDate)
-    	         OR (v.vacEnd BETWEEN :startDate AND :endDate)
-    	         OR (v.vacStart <= :startDate AND v.vacEnd >= :endDate)
-    	      )
-    	""")
-    	List<VacationDTO> findVacationByStaffCodeAndWeek(
-    			Integer staffCode,
-    	        LocalDate startDate,
-    	        LocalDate endDate);
-    
     // 주단위 연장근로 리스트 조회
     @Query("""
     	    SELECT o 

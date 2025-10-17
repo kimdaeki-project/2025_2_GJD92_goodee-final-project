@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 
@@ -45,15 +46,16 @@
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden;">
     
+	      <form:form method="post" modelAttribute="lostDTO" enctype="multipart/form-data" class="d-flex flex-column mt-6" style="gap: 80px;">
 	    <div class="col-6 offset-3">
 	    
 	      <h4 class="text-center mt-5 mb-5">${empty lostDTO.lostNum ? "분실물 등록" : "분실물 수정" }</h4>
-	      <form method="post" enctype="multipart/form-data" class="d-flex flex-column mt-6" style="gap: 80px;">
+		           
 			<div class="d-flex justify-content-between" >
 
 	        <div style="flex: 1;">
 		        <div class="form-group">
-		        	<img id="preview" width="370" height="370" style="object-fit: clip;" <c:if test="${ not empty lostDTO.lostNum }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+		        	<img id="preview" width="370" height="370" style="object-fit: contain;" <c:if test="${ not empty lostDTO.lostNum }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
 		        </div>
 		        
 		        <div class="form-group">
@@ -64,23 +66,27 @@
 	        
 	        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 450px;">
 		        <div class="form-group">
-		          <label for="lostName">분실물명</label>
-		          <input type="text" id="lostName" name="lostName" value="${lostDTO.lostName }" required>
+		          <form:label path="lostName">분실물명</form:label>
+		          <form:input path="lostName" cssClass="form-control"/>
+		          <form:errors path="lostName"></form:errors>
 		        </div>
 		        
 		        <div class="form-group">
-		          <label for="lostFinder">습득자</label>
-		          <input type="text" id="lostFinder" name="lostFinder" value="${lostDTO.lostFinder }" required>
+		          <form:label path="lostFinder">습득자</form:label>
+		          <form:input path="lostFinder" cssClass="form-control"/>
+		          <form:errors path="lostFinder"></form:errors>
 		        </div>
 		        
 		        <div class="form-group">
-		          <label for="lostFinderPhone">습득자 연락처</label>
-		          <input type="text" id="lostFinderPhone" name="lostFinderPhone" placeholder="ex) 010-1234-5678" value="${lostDTO.lostFinderPhone }" required>
+		          <form:label path="lostFinderPhone">습득자 연락처</form:label>
+		          <form:input path="lostFinderPhone" cssClass="form-control" placeholder="ex) 010-1234-5678" />
+		          <form:errors path="lostFinderPhone"></form:errors>
 		        </div>
 		        
 		        <div class="form-group">
-		          <label for="lostNote">특이사항</label>
-		          <textarea id="lostNote" name="lostNote" rows="4" style="width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize:none;" placeholder="ex)  습득 장소: 회전목마 옆 벤치" required>${lostDTO.lostNote }</textarea>
+		          <form:label path="lostNote">특이사항</form:label>
+		          <textarea class="form-control" id="lostNote" name="lostNote" rows="3" style="width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize:none;" placeholder="ex)  습득 장소: 회전목마 옆 벤치">${lostDTO.lostNote }</textarea>
+		          <form:errors path="lostNote"></form:errors>
 		        </div>
 	        </div>
 		    </div>
@@ -89,8 +95,8 @@
 		        <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty lostDTO.lostNum ? "등록" : "수정" }</button>
 		        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">취소</button>
 	        </div>
-	      </form>
 	      </div>
+	      </form:form>
     
     </section>
   </main>

@@ -3,7 +3,9 @@ package com.goodee.finals.attend;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.goodee.finals.approval.EarlyDTO;
 import com.goodee.finals.approval.OvertimeDTO;
@@ -120,12 +123,19 @@ public class AttendController {
         LocalDate nextWeek = monday.plusWeeks(1);
         model.addAttribute("mondayStr", monday.format(formatter));
         model.addAttribute("sundayStr", sunday.format(formatter));
+        model.addAttribute("monday", monday);
         
         // DB에서 주간 근로시간 합계 조회
         WeeklyWorkResult result = attendService.getWeeklyWorkTime(monday, sunday, staffCode);
         model.addAttribute("totalWorkTime", result.getTotalWorkTime());
         model.addAttribute("overtimeWorkTime", result.getOvertimeWorkTime());
-        model.addAttribute("weeklyOvertime", result.getWeeklyOvertime());
+        
+        int weekHours = Integer.parseInt(result.getTotalWorkTime().split("h")[0].trim());
+        int overHours = Integer.parseInt(result.getOvertimeWorkTime().split("h")[0].trim());
+        int weekPercent = (int) Math.round((weekHours / 40.0) * 100);
+        int overPercent = (int) Math.round((overHours / 12.0) * 100);
+        model.addAttribute("weekPercent", weekPercent);
+        model.addAttribute("overPercent", overPercent);
         
      // ✅ 1. totalWorkTime 문자열을 분으로 변환
         String totalWorkTimeStr = result.getTotalWorkTime();
@@ -178,20 +188,67 @@ public class AttendController {
 		return "attend/list";
 	}
 	
+	@GetMapping("weeklyData")
+	@ResponseBody
+	public Map<String, Object> getWeeklyDataAjax(@RequestParam String baseDate) {
+	    Map<String, Object> result = new HashMap<>();
+
+	    Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+	    LocalDate base = LocalDate.parse(baseDate);
+	    LocalDate monday = base.with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+	    LocalDate sunday = base.with(java.time.temporal.TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+	    WeeklyWorkResult work = attendService.getWeeklyWorkTime(monday, sunday, staffCode);
+
+	    int totalWorkedMinutes = parseWorkTimeToMinutes(work.getTotalWorkTime());
+	    int remainingMinutes = Math.max(0, 40 * 60 - totalWorkedMinutes);
+	    String remainingWorkTime = formatMinutesToHhMm(remainingMinutes);
+
+	    result.put("mondayStr", monday.format(DateTimeFormatter.ofPattern("M/d")));
+	    result.put("sundayStr", sunday.format(DateTimeFormatter.ofPattern("M/d")));
+	    result.put("prevWeek", monday.minusWeeks(1).toString());
+	    result.put("nextWeek", monday.plusWeeks(1).toString());
+	    result.put("totalWorkTime", work.getTotalWorkTime());
+	    result.put("overtimeWorkTime", work.getOvertimeWorkTime());
+	    result.put("remainingWorkTime", remainingWorkTime);
+
+	    return result;
+	}
+	
+	@GetMapping("monthlyData")
+	@ResponseBody
+	public Map<String, Object> getMonthlyAttendancesAjax(
+	        @RequestParam Integer year,
+	        @RequestParam Integer month,
+	        @PageableDefault(size = 10, sort = "attendDate", direction = Direction.DESC) Pageable pageable) {
+
+	    Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+	    LocalDate today = LocalDate.now();
+
+	    Page<AttendDTO> attendances = attendService.getMonthlyAttendances(staffCode, year, month, today, pageable);
+	    List<OvertimeDTO> overtimeList = attendService.findAllOvertimeByStaffCodeAndByMonth(staffCode, year, month);
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("attendances", attendances.getContent());
+	    result.put("totalPages", attendances.getTotalPages());
+	    result.put("currentPage", attendances.getNumber());
+	    result.put("overtimeList", overtimeList);
+	    result.put("year", year);
+	    result.put("month", month);
+	    return result;
+	}
+	
 	public static class WeeklyWorkResult {
 		private String totalWorkTime;      // 총 근로시간
 	    private String overtimeWorkTime;   // 연장근로 (1일 9시간 초과분)
-	    private String weeklyOvertime;     // 주 40시간 초과분
 
-	    public WeeklyWorkResult(String totalWorkTime, String overtimeWorkTime, String weeklyOvertime) {
+	    public WeeklyWorkResult(String totalWorkTime, String overtimeWorkTime) {
 	        this.totalWorkTime = totalWorkTime;
 	        this.overtimeWorkTime = overtimeWorkTime;
-	        this.weeklyOvertime = weeklyOvertime;
 	    }
 
 	    public String getTotalWorkTime() { return totalWorkTime; }
 	    public String getOvertimeWorkTime() { return overtimeWorkTime; }
-	    public String getWeeklyOvertime() { return weeklyOvertime; }
 	}
 	
 	private int parseWorkTimeToMinutes(String workTime) {

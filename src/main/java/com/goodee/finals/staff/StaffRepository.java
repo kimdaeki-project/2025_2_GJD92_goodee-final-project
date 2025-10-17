@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.goodee.finals.messenger.ChatRoomDTOProjection;
-
 @Repository
 public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 

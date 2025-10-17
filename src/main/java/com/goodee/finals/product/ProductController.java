@@ -12,14 +12,16 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.goodee.finals.staff.StaffDTO;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/product/**")
@@ -54,7 +56,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("write")
-	public String write(Model model) {
+	public String getWrite(@ModelAttribute ProductDTO productDTO, Model model) {
 		// 품목타입리스트 가져오기
 		List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
 		model.addAttribute("productTypeList", productTypeList);
@@ -63,7 +65,14 @@ public class ProductController {
 	}
 	
 	@PostMapping("write")
-	public String write(ProductDTO productDTO, MultipartFile attach, Model model) {
+	public String postWrite(@Valid ProductDTO productDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if(bindingResult.hasErrors()) {
+			List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
+			model.addAttribute("productTypeList", productTypeList);
+			
+			return "product/write";
+		}
+		
 		log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
 		
 		ProductDTO result = productService.write(productDTO, attach);
@@ -98,7 +107,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("{productCode}/update")
-	public String postProductUpdate(ProductDTO productDTO, MultipartFile attach, Model model) {
+	public String postProductUpdate(@Valid ProductDTO productDTO, MultipartFile attach, Model model) {
 		boolean result = productService.updateProduct(productDTO, attach);
 		
 		String resultMsg = "물품 수정 중 오류가 발생했습니다.";

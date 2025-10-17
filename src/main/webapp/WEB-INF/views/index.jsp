@@ -13,11 +13,6 @@
       flex-direction: column;
     }
     
-    .container {
-      display: flex;
-      height: 100vh;
-    }
-    
     .content {
       padding: 15px;
       display: grid;
@@ -32,6 +27,7 @@
     .check-in {
       grid-column: 1 / 2;
       grid-row: 1 / 2;
+      height: 410px;
     }
 
     .attraction-status {
@@ -48,6 +44,7 @@
     .approval {
       grid-column: 1 / 2;
       grid-row: 2 / 3;
+      height: 350px;
     }
 
     .notices {
@@ -149,17 +146,23 @@
 
 			<!-- 왼쪽 (출근 / 근무시간) -->
 			<div class="panel check-in">
-				<h3 style="border-bottom: 1px solid #eee;">오늘</h3>
-				<p style="font-size:22px;">${todayDate}</p>
+				<div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
+					<h3>오늘</h3>
+					<small style="font-size:20px;">${todayDate}</small>
+				</div>
 				<div class="time-info">
 				<div class="time-circle">
-				
-				<div class="times-row"">
-					<span style="width:100px;">출근: <span>${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span></span>
-					<span style="width:100px;">퇴근: <span>${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span></span>
+					<div class="times-row" style="text-align:center;">
+						<span style="width:100px;">출근: ${attendDTO.attendIn eq null ? "--:--:--" : attendDTO.formattedAttendIn}</span>
+						<span style="width:100px;">퇴근: ${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span>
+					</div>
 				</div>
-			</div>
-			<div class="worktime">근무시간 : <span>${attendDTO.workTime}</span></div>
+			<div class="worktime">근무시간 : 
+				<c:if test="${not empty attendDTO.workTime}">
+					<span>${attendDTO.workTime}</span>
+				</c:if>
+				<span>--  --</span>
+					</div>
 				<div class="button-row">
 				  
 					<c:choose>
@@ -198,7 +201,9 @@
 	
 	        <!-- 어트랙션 운휴 현황 -->
 	        <div class="panel attraction-status">
-	          <h3 style="border-bottom: 1px solid #eee;">어트랙션 운휴 현황</h3>
+	          <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
+	          	<h3>어트랙션 운휴 현황</h3>
+	          </div>
 	          <table>
 	            <tr><td>어트랙션</td><td>상태</td></tr>
 	          	<c:forEach items="${rides }" var="ride">
@@ -210,15 +215,16 @@
 	
 			<!-- 날씨 -->
 			<div class="panel weather-card">
-				<h3 style="border-bottom: 1px solid #eee;">날씨</h3>
-				<div id="weather-info" style="font-size:20px;">⏳ 불러오는 중...</div>
+				<div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
+					<h3>날씨</h3>
+				</div>
+					<div id="weather-info" style="font-size:20px;">⏳ 불러오는 중...</div>
 			</div>
 
 	        <!-- 결재 현황 -->
 	        <div class="panel approval">
 	        <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
-	          <h3>결재 현황</h3>
-	          <a href="/approval" style="margin-top:10px;">더보기</a>
+	          <h3>결재 현황</h3><a href="/approval" style="margin-top:10px;">더보기</a>
 	        </div>
 	          <table class="table text-center">
 	            <tr>
@@ -262,12 +268,6 @@
 	          
 	          </c:forEach>
 	          </table>
-<!-- 	          <table> -->
-<!-- 	            <tr><td>번호</td><td>제목</td><td>작성자</td><td>작성일</td></tr> -->
-<!-- 	            <tr><td>7</td><td>신규 입사자 교육 일정 안내</td><td>김은하</td><td>2025-09-11</td></tr> -->
-<!-- 	            <tr><td>6</td><td>놀이물 별 점검 개선 안내</td><td>권호찬</td><td>2025-09-07</td></tr> -->
-<!-- 	            <tr><td>5</td><td>주말 근무 교대 신청 마감일 안내</td><td>권호찬</td><td>2025-09-07</td></tr> -->
-<!-- 	          </table> -->
 	        </div>
 
       	</section>

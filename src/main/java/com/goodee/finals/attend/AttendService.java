@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.goodee.finals.approval.EarlyDTO;
 import com.goodee.finals.approval.OvertimeDTO;
 import com.goodee.finals.approval.VacationDTO;
-import com.goodee.finals.approval.VacationRepository;
 import com.goodee.finals.attend.AttendController.WeeklyWorkResult;
 import com.goodee.finals.staff.StaffDTO;
 import com.goodee.finals.staff.StaffRepository;
@@ -31,11 +30,7 @@ public class AttendService {
 	AttendRepository attendRepository;
 	@Autowired
 	StaffRepository staffRepository;
-	@Autowired
-	VacationRepository vacationRepository;
 	
-	private Duration tempDur = null;
-
 	public AttendDTO attendIn(AttendDTO attendDTO) {
 		Integer staffCode = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         LocalDate today = LocalDate.now();
@@ -103,108 +98,68 @@ public class AttendService {
 			holiday.add(holidayDTO.getDate().getDayOfMonth());
 		}
 		
+		// 연차 리스트 가져오기
+		List<VacationDTO> vacationList = attendRepository.findAllVacationByStaffCodeAndByMonth(staffCode, monthStr);
+		for (VacationDTO vacationDTO : vacationList) {
+			
+			Integer vacStartDay = vacationDTO.getVacStart().getDayOfMonth();
+			Integer vacEndDay = vacationDTO.getVacEnd().getDayOfMonth();
+			
+			if (vacationDTO.getVacStart().getDayOfMonth() != vacationDTO.getVacEnd().getDayOfMonth()) {
+				holiday.add(vacStartDay);
+				holiday.add(vacEndDay);
+			} else {
+				holiday.add(vacStartDay);
+			}
+		}
+		
 		return attendRepository.countAbsentDays(year, month, staffCode, today, holiday);
 	}
 	
 	// 주 근로시간 계산
 	public WeeklyWorkResult getWeeklyWorkTime(LocalDate monday, LocalDate sunday, Integer staffCode) {
-		
-		List<AttendDTO> records = attendRepository.findByStaffDTO_StaffCodeAndAttendDateBetween(staffCode, monday, sunday);
-
-		List<HolidayDTO> weeklyHolidayList = attendRepository.findHolidayByWeek(staffCode, monday, sunday);
-		List<VacationDTO> weeklyVacationList = attendRepository.findVacationByStaffCodeAndWeek(staffCode, monday, sunday);
-		List<EarlyDTO> weeklyEarlyList = attendRepository.findEarlyByStaffCodeAndWeek(staffCode, monday, sunday);
-		List<OvertimeDTO> weeklyOvertimeList = attendRepository.findOvertimeByStaffCodeAndWeek(staffCode, monday, sunday);
-		
+        List<AttendDTO> records = attendRepository
+                .findByStaffDTO_StaffCodeAndAttendDateBetween(staffCode, monday, sunday);
+        List<OvertimeDTO> weeklyOvertimeList = attendRepository.findOvertimeByStaffCodeAndWeek(staffCode, monday, sunday); // 연장근로
+        
         Duration total = Duration.ZERO;      // 총 근로시간
         Duration overtime = Duration.ZERO;   // 일일 연장근로시간
-        Duration weeklyOvertime = Duration.ZERO; // 주 40시간 초과분
-        
-        // 주 단위 출퇴근내역에서..
+
         for (AttendDTO record : records) {
-        	
-        	LocalDate attendDate = record.getAttendDate();
+            if (record.getAttendIn() != null && record.getAttendOut() != null) {
+            	LocalDate attendDate = record.getAttendDate();
+                LocalTime in = record.getAttendIn();
+                LocalTime out = record.getAttendOut();
 
-            boolean isVacationDay = weeklyVacationList.stream().anyMatch(vac ->
-                (attendDate.equals(vac.getVacStart()) || attendDate.equals(vac.getVacEnd())) ||
-                (attendDate.isAfter(vac.getVacStart()) && attendDate.isBefore(vac.getVacEnd()))
-            );
-
-            if (isVacationDay) {
-                // 휴가일일 때
-            	total = total.plusHours(8);
-                System.out.println(attendDate + "는 휴가일입니다.");
-            } else {
-                // 2. 근무일일 때
-                System.out.println(attendDate + "는 근무일입니다.");
+                Duration duration = Duration.between(in, out);
                 
-                // 결근
-                if (record.getAttendIn() == null && record.getAttendOut() == null) {
-                	System.out.println(attendDate + "에 결근하였습니다.");
-                	total = total.plusHours(0);
+                boolean isOvertimeDay = weeklyOvertimeList.stream().anyMatch(ot ->
+            	attendDate.equals(ot.getOverStart().toLocalDate())
+            			);
+            	
+            	if (isOvertimeDay) {
+            		long timeTmp = 0;
+            		for (OvertimeDTO overtimeDTO : weeklyOvertimeList) {
+            			timeTmp += overtimeDTO.getOverEnd().atZone(ZoneId.systemDefault()).toEpochSecond() - overtimeDTO.getOverStart().atZone(ZoneId.systemDefault()).toEpochSecond();
+					}
+            		overtime = overtime.plusHours(timeTmp/60/60);
+            	}
+                
+                // 휴게시간 1시간 차감 (12~13시 걸치는 경우)
+                boolean isRestApplicable = in.isBefore(LocalTime.NOON) && out.isAfter(LocalTime.of(13, 0));
+                if (isRestApplicable) {
+                    duration = duration.minusHours(1);
                 }
 
-                // 출근, 퇴근 기록 다 있을 때
-                // 조기퇴근, 정상근무, 연장근무
-                if (record.getAttendIn() != null && record.getAttendOut() != null) {
-                	
-                	// 조기퇴근일자에 해당될 때
-                	boolean isEarlyDay = weeklyEarlyList.stream().anyMatch(early ->
-                	attendDate.equals(early.getEarlyDtm().toLocalDate())
-                			);
-                	
-                	if (isEarlyDay) {
-						 weeklyEarlyList.stream()
-						    .filter(early -> attendDate.equals(early.getEarlyDtm().toLocalDate()))
-						    .findFirst()
-						    .ifPresent(early -> {
-						        // attendOut 시간을 조기퇴근 승인시간으로 덮어쓰기
-						        record.setAttendOut(early.getEarlyDtm().toLocalTime());
-						    });
-						
-						Duration duration = Duration.between(record.getAttendIn(), record.getAttendOut());
-						total = total.plus(duration);
-						
-						System.out.println(attendDate + "에 조기퇴근하였습니다. 퇴근시간: " + record.getAttendOut());
-                	} else {
-                		// 연장근무일자에 해당될 때
-                		boolean isOvertimeDay = weeklyOvertimeList.stream().anyMatch(ot ->
-                    	attendDate.equals(ot.getOverStart().toLocalDate())
-                    			);
-                    	
-                    	if (isOvertimeDay) {
-                    		long timeTmp = 0;
-                    		for (OvertimeDTO overtimeDTO : weeklyOvertimeList) {
-                    			timeTmp += overtimeDTO.getOverEnd().atZone(ZoneId.systemDefault()).toEpochSecond() - overtimeDTO.getOverStart().atZone(ZoneId.systemDefault()).toEpochSecond();
-							}
-                    		total = total.plusHours(8);
-                    		overtime = overtime.plusHours(timeTmp/60/60);
-                    		
-    						System.out.println(attendDate + "에 연장근무하였습니다. 연장근무: " + attendDate + overtime.toHours());
-                		
-                		// 정상근무
-                    	} else {
-                    		total = total.plusHours(8);
-                    	}
-                    	
-//                		// 일일 연장근로 (9시간 초과)
-//                		if (duration.toMinutes() > 540) {
-//                			overtime = overtime.plusMinutes(duration.toMinutes() - 540);
-//                		}
-                	}
+                if (!duration.isNegative()) {
+                    total = total.plus(duration);
                 }
             }
-        } // for문
-
-        // 주 40시간 초과분 계산
-        if (total.toMinutes() > 2400) {
-            weeklyOvertime = weeklyOvertime.plusMinutes(total.toMinutes() - 2400);
         }
-        
+
         return new WeeklyWorkResult(
                 formatDuration(total),
-                formatDuration(overtime),
-                formatDuration(weeklyOvertime)
+                formatDuration(overtime)
         );
     }
 
