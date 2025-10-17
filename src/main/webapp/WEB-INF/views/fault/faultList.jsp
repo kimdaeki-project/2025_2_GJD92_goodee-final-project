@@ -15,29 +15,6 @@
 		.table tbody tr:last-child th {
 			border-bottom: 1px solid #dee2e6;
 		}
-		/* 높이 통일 */
-		.input-group .form-control,
-		.input-group .btn {
-		    height: 40px !important;
-		    line-height: 1.5 !important;
-		}
-		
-		/* 왼쪽 input → 오른쪽 모서리 각지게 */
-		.input-group .form-control {
-		    border-top-right-radius: 0 !important;
-		    border-bottom-right-radius: 0 !important;
-		}
-		
-		/* 오른쪽 버튼 → 왼쪽 모서리 각지게 */
-		.input-group .btn {
-		    border-top-left-radius: 0 !important;
-		    border-bottom-left-radius: 0 !important;
-		}
-		
-		.input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3) {
-		    border-top-right-radius: 0 !important;
-		    border-bottom-right-radius: 0 !important;
-		}
 	</style>
 </head>
 
@@ -47,7 +24,7 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
+    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="width: 200px !important; height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
 			   		 <!-- 메뉴 개수만큼 추가 -->
@@ -57,15 +34,16 @@
     	</aside>
     	
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
+	    <div class="col-10 offset-1 mt-5">
 	    <!-- 여기에 코드 작성 -->
     	<!-- 검색창 -->
 		<form action="/fault" class="mb-4">
-		    <div class="d-flex justify-content-end" style="margin-top:30px;">
-		        <div class="input-group w-25">
+		    <div class="d-flex justify-content-end">
+		        <div class="d-flex">
 		
 		            <!-- 검색 조건 선택 -->
 		            <!-- 선택했던 옵션이 검색 후에도 유지되도록 selected 속성 -->
-		            <select class="form-select" name="searchType" id="searchType" style="max-width:120px; height:40px;">
+		            <select class="form-select ps-2 py-0" name="searchType" id="searchType" style="width: 100px; height:30px; border-radius: 6px 0 0 6px;">
 		                <option value="ride" ${searchType == 'ride' ? 'selected' : '' }>어트랙션</option>
 		                <option value="title" ${searchType == 'title' ? 'selected' : '' }>신고 제목</option>
 		                <option value="staff" ${searchType == 'staff' ? 'selected' : '' }>담당자</option>
@@ -73,10 +51,10 @@
 		            </select>
 		
 		            <!-- 검색어 입력 -->
-		            <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="keyword" id="keywordInput" value="${pager.keyword}">
+		            <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="keyword" id="keywordInput" value="${pager.keyword}" style="width: 200px; height: 30px; border-radius: 0;">
 		            
 		            <!-- 신고 상태 옵션 -->
-		            <select class="form-select d-none" name="keywordState" id="stateSelect" style="height:40px;">
+		            <select class="form-select ps-2 py-0 d-none" name="keywordState" id="stateSelect" style="width: 200px; height:30px; border-radius: 0;">
 	            		<option value="">-- 점검결과 --</option>
 		            	<option value="410" ${pager.keyword == '410' ? 'selected' : '' }>신고접수</option>
 		            	<option value="411" ${pager.keyword == '411' ? 'selected' : '' }>담당자 배정</option>
@@ -84,7 +62,7 @@
 		            	<option value="420" ${pager.keyword == '420' ? 'selected' : '' }>수리완료</option>
 					 </select>
 		            <!-- 검색 버튼 -->
-		            <button class="btn btn-dark" type="submit">검색</button>
+		            <button class="btn bg-gradient-dark text-white py-0" type="submit" style="width: 60px; height: 30px; border-radius: 0 6px 6px 0;">검색</button>
 		        </div>
 		    </div>
 		</form>
@@ -150,10 +128,13 @@
     	
 	<!-- 검색 결과 없음 -->
 	<c:if test="${ totalFault eq 0 }">
-		<div class="alert alert-secondary text-center" style="color:white;">검색된 결과가 없습니다.</div>
+		<div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">검색 결과가 없습니다.</h4>
+	  </div>
 	</c:if>
 
-	    
+	    </div>
 	    </section>
     </div>
   </main>
