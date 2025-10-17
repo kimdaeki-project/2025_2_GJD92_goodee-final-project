@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.goodee.finals.messenger.ChatRoomDTOProjection;
+
 @Repository
 public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 
@@ -68,4 +70,9 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	
 	@NativeQuery(value = "SELECT COUNT(*) FROM attend WHERE attend_date = DATE_FORMAT(now(), '%Y-%m-%d') AND attend_in IS NOT NULL;")
 	Integer findWorkingStaff();
+	
+    @Query(value = "SELECT s.dept_code AS deptCode, COUNT(*) AS deptGroup FROM staff s " +
+     	   "WHERE s.staff_code != :loggedStaff AND s.staff_name LIKE CONCAT('%', :keyword, '%')" +
+     	   "GROUP BY s.dept_code", nativeQuery = true)
+ 	List<DeptDTOProjection> findCountDeptByStaffCodeAndKeyword(Integer loggedStaff, String keyword);
 }
