@@ -165,7 +165,7 @@ public class RideService {
     // 시설팀 직원 목록
     public List<StaffDTO> getStaffList() {
         // 시설팀 dept_code = 1003
-        return staffRepository.findByDeptDTO_DeptCode(1003);
+        return staffRepository.findByDeptDTO_DeptCodeAndStaffEnabledTrue(1003);
     }
     
     

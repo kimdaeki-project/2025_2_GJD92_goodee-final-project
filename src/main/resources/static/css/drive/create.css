@@ -10,3 +10,8 @@
 .my-cancel-btn:hover {
   background-color: #f8f9fa !important; /* hover 시 살짝 회색 */
 }
+
+a.nav-link.bg-gradient-dark.custom-color {
+  background: none !important; /* background-image 포함 전체 제거 */
+  background-color: transparent !important;
+}

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ public class CalendarService {
 	
 	public static final String INSPECTION = "점검";
 	public static final String COMPANY = "사내";
-	public static final String DEPT = "부서";
 	
 	@Autowired
 	private CalendarRepository calendarRepository;
@@ -56,10 +54,8 @@ public class CalendarService {
 		switch (calendarDTO.getCalType()) {
 		case 2001: calendarDTO.setCalTypeName(INSPECTION); break;
 		case 2002: calendarDTO.setCalTypeName(COMPANY); break;
-		case 2003: calendarDTO.setCalTypeName(DEPT);
-				   DeptDTO deptDTO = new DeptDTO();
-				   deptDTO.setDeptCode(staffDTO.getDeptDTO().getDeptCode());
-				   calendarDTO.setDeptDTO(deptDTO);
+		case 2003: calendarDTO.setCalTypeName(staffDTO.getDeptDTO().getDeptDetail());
+				   calendarDTO.setDeptDTO(staffDTO.getDeptDTO());
 				   break;
 		}
 		calendarDTO.setCalReg(LocalDateTime.now());
@@ -70,23 +66,21 @@ public class CalendarService {
 		return calendarDTO;
 	}
 	
-	
 	public CalendarDTO updateCalendar(CalendarDTO calendarDTO, StaffDTO staffDTO) {
 		CalendarDTO oriCalendar = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
-		if(!staffDTO.getStaffCode().equals(oriCalendar.getStaffDTO().getStaffCode())) {
+		if(!staffDTO.getStaffCode().equals(oriCalendar.getStaffDTO().getStaffCode())) { // 수정자 == 등록자 일치 확인
 			return null;
 		}
 		
 		switch (calendarDTO.getCalType()) {
 		case 2001: oriCalendar.setCalTypeName(INSPECTION); break;
 		case 2002: oriCalendar.setCalTypeName(COMPANY); break;
-		case 2003: oriCalendar.setCalTypeName(DEPT);
+		case 2003: oriCalendar.setCalTypeName(staffDTO.getDeptDTO().getDeptDetail());
 				   if(oriCalendar.getDeptDTO() != null) break;
-				   DeptDTO deptDTO = new DeptDTO();
-				   deptDTO.setDeptCode(staffDTO.getDeptDTO().getDeptCode());
-				   oriCalendar.setDeptDTO(deptDTO);
+				   oriCalendar.setDeptDTO(staffDTO.getDeptDTO());
 				   break;
 		}
+		oriCalendar.setCalType(calendarDTO.getCalType());
 		oriCalendar.setCalTitle(calendarDTO.getCalTitle());
 		oriCalendar.setCalPlace(calendarDTO.getCalPlace());
 		oriCalendar.setCalContent(calendarDTO.getCalContent());
@@ -95,34 +89,37 @@ public class CalendarService {
 		oriCalendar.setCalEnd(calendarDTO.getCalEnd());
 		
 		oriCalendar = calendarRepository.save(oriCalendar);
-		
 		return oriCalendar;
 	}
 	
 	public boolean disableEvent(CalendarDTO calendarDTO, StaffDTO staffDTO) {
-		CalendarDTO oriCalendar = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
-		if(!staffDTO.getStaffCode().equals(oriCalendar.getStaffDTO().getStaffCode())) {
-			System.out.println("calendarService : 등록자가 아니라 삭제 할 수 없음");
-			return false;
-		}
-		oriCalendar.setCalEnabled(false);
-		oriCalendar = calendarRepository.save(oriCalendar);
-		if(!oriCalendar.getCalEnabled()) {
-			return true;
-		} else {
-			return false;
-		}
+		CalendarDTO oriCal = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
+		boolean result = false;
+		
+		if(!staffDTO.getStaffCode().equals(oriCal.getStaffDTO().getStaffCode())) return result;
+		
+		oriCal.setCalEnabled(false);
+		oriCal = calendarRepository.save(oriCal);
+		
+		if(!oriCal.getCalEnabled()) result = true;
+		else result = false;
+		
+		return result;
 	}
 	
-	public boolean updateCalDate(CalendarDTO calendarDTO) {
+	public boolean updateCalDate(CalendarDTO calendarDTO, StaffDTO staffDTO) {
 		CalendarDTO oriCal = calendarRepository.findById(calendarDTO.getCalNum()).orElseThrow();
+		boolean result = false;
+		
+		if(!staffDTO.getStaffCode().equals(oriCal.getStaffDTO().getStaffCode())) return result;
+		
 		oriCal.setCalStart(calendarDTO.getCalStart());
 		oriCal.setCalEnd(calendarDTO.getCalEnd());
-		oriCal = calendarRepository.save(oriCal);
-		if(oriCal.getCalStart().isEqual((calendarDTO.getCalStart()))) {
-			return true;
-		}
-		return false; 
+		
+		if(oriCal.getCalStart().isEqual((calendarDTO.getCalStart()))) result = true;
+		else result = false;
+		
+		return result;
 	}
 	
 }

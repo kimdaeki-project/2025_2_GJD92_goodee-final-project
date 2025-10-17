@@ -15,7 +15,9 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	@NativeQuery(value = "SELECT staff_code FROM staff ORDER BY staff_code DESC LIMIT 1")
 	Integer findLastStaffCode();
 	
-	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_email LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
+	List<StaffDTO> findByStaffEnabled(Boolean staffEnabled);
+	
+	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearch(String search, Pageable pageable);
 	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) LEFT OUTER JOIN (SELECT * FROM attend WHERE attend_date = :today) a USING(staff_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
@@ -24,8 +26,8 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	@Query(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE s.dept_code = :deptCode AND (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1", nativeQuery = true)
 	Page<StaffDTO> findAllByDeptCodeAndSearch(Integer deptCode, String search, Pageable pageable);
 	
-	@Query("SELECT s FROM StaffDTO s JOIN FETCH s.deptDTO JOIN FETCH s.jobDTO")
-	List<StaffDTO> findAllWithDeptAndJob();
+	@Query("SELECT s FROM StaffDTO s JOIN FETCH s.deptDTO JOIN FETCH s.jobDTO WHERE s.staffEnabled = true")
+	List<StaffDTO> findAllEnabledStaffWithDeptAndJob();
 	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 0")
 	Page<StaffDTO> findAllQuitBySearch(String search, Pageable pageable);
@@ -33,7 +35,7 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	List<StaffDTO> findByStaffCodeNotAndStaffNameContaining(Integer loggedStaff, String keyword);
 	
 	// deptDTO.deptCode 시설부서의 코드 꺼내옴
-  List<StaffDTO> findByDeptDTO_DeptCode(Integer deptCode);
+   List<StaffDTO> findByDeptDTO_DeptCodeAndStaffEnabledTrue(Integer deptCode);
   
 	List<StaffDTO> findByStaffCodeNotIn(List<Integer> currentMemeber);
 	
@@ -66,4 +68,9 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	
 	@NativeQuery(value = "SELECT COUNT(*) FROM attend WHERE attend_date = DATE_FORMAT(now(), '%Y-%m-%d') AND attend_in IS NOT NULL;")
 	Integer findWorkingStaff();
+	
+    @Query(value = "SELECT s.dept_code AS deptCode, COUNT(*) AS deptGroup FROM staff s " +
+     	   "WHERE s.staff_code != :loggedStaff AND s.staff_name LIKE CONCAT('%', :keyword, '%')" +
+     	   "GROUP BY s.dept_code", nativeQuery = true)
+ 	List<DeptDTOProjection> findCountDeptByStaffCodeAndKeyword(Integer loggedStaff, String keyword);
 }

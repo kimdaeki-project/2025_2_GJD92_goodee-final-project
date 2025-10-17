@@ -201,7 +201,6 @@ btnOpenUpdateModal.addEventListener("click", () => {
 
 btnDeleteCalendar.addEventListener("click", () => {
 	Swal.fire({
-	   title: "일정 삭제",
 	   text: '일정을 삭제하시겠습니까?',
 	   icon: "error",
 	   showCancelButton: true,
@@ -321,6 +320,7 @@ function addCalendar() {
 		calContent:  inputCalContent.value,
 		calIsAllDay: inputCalIsAllDay.checked
 	};
+	
 	// fetch로 DB에 등록
 	// 1. 일정 쓰기
 	if(btnAddCalendar.dataset.request == "add") {
@@ -363,8 +363,7 @@ function addInCalendar(cal) {
 		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
 		classNames: ['my-event'],
-//		editable : (cal.staffDTO.staffCode === loginStaffCode) && (cal.calType != 2000),
-		editable : true,
+		editable : (cal.staffDTO.staffCode === loginStaffCode || loginStaffCode === 20250001),
 		extendedProps: {
 			calNum      : cal.calNum,
 			calReg      : cal.calReg,
@@ -455,9 +454,9 @@ function dragResizeUpdate(eventInfo) {
 function eventBgColor(calType) {
 	switch (calType) {
 		case 2000 : return "red";
-		case 2001 : return "#F1C40F";
-		case 2002 : return "blue";
-		case 2003 : return "green";
+		case 2001 : return "#E67E22";
+		case 2002 : return "#2E86DE";
+		case 2003 : return "#16A085";
 	}	
 }
 

@@ -90,8 +90,10 @@ public class CalendarController {
 	
 	@PostMapping("updateDate")
 	@ResponseBody
-	public boolean updateCalDate(@RequestBody CalendarDTO calendarDTO) {
-		return calendarService.updateCalDate(calendarDTO);
+	public boolean updateCalDate(@RequestBody CalendarDTO calendarDTO, Authentication authentication) {
+		StaffDTO staffDTO = (StaffDTO) authentication.getPrincipal();
+		
+		return calendarService.updateCalDate(calendarDTO, staffDTO);
 	}
 	
 }

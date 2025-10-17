@@ -36,6 +36,7 @@
         </div>
 
         <!-- 채팅방 리스트 -->
+        <c:if test="${ not empty room }">
         <c:forEach items="${ room }" var="r">
             <form action="/msg/chat" method="post" class="chat-room">
                 <input type="hidden" name="chatRoomNum" value="${ r.chatRoomNum }">
@@ -63,6 +64,10 @@
                 </div>
             </form>
         </c:forEach>
+        </c:if>
+        <c:if test="${ empty room }">
+        	<div class="no-room">참여중인 채팅방이 없습니다</div>
+        </c:if>
     </div>
 
     <script>	
