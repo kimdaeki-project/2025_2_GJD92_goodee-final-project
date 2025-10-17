@@ -50,7 +50,7 @@ public class StaffService implements UserDetailsService {
 	}
 	
 	public List<StaffDTO> getStaffAll() {
-		return staffRepository.findAll();
+		return staffRepository.findByStaffEnabled(true);
 	}
 	
 	public Page<StaffDTO> getStaffSearchList(String search, Pageable pageable) {
