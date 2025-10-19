@@ -59,21 +59,35 @@ public class ProductController {
 	public String getWrite(@ModelAttribute ProductDTO productDTO, Model model) {
 		// 품목타입리스트 가져오기
 		List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
+		ProductTypeDTO addSelect = new ProductTypeDTO();
+		addSelect.setProductTypeCode(0);
+		addSelect.setProductTypeName("--선택--");
+		
+		productTypeList.addFirst(addSelect);
 		model.addAttribute("productTypeList", productTypeList);
 		
 		return "product/write";
 	}
 	
 	@PostMapping("write")
-	public String postWrite(@Valid ProductDTO productDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
-		if(bindingResult.hasErrors()) {
+	public String postWrite(@Valid ProductDTO productDTO, BindingResult bindingResult, MultipartFile attach, Model model) throws Exception {
+		List<Integer> checkList = productService.hasOtherErrors(productDTO, bindingResult, attach);
+		
+		if (!checkList.isEmpty()) {
 			List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
+			ProductTypeDTO addSelect = new ProductTypeDTO();
+			addSelect.setProductTypeCode(0);
+			addSelect.setProductTypeName("--선택--");
+			productTypeList.addFirst(addSelect);
 			model.addAttribute("productTypeList", productTypeList);
 			
+			for (int check : checkList) {
+				if(check == 2) model.addAttribute("productTypeErrorMsg", "물품 타입은 필수입니다.");
+				if(check == 3) model.addAttribute("fileErrorMsg", "파일을 첨부해주세요.");
+			}
 			return "product/write";
-		}
-		
-		log.info("{}", productDTO.getProductTypeDTO().getProductTypeCode());
+				
+		} else {
 		
 		ProductDTO result = productService.write(productDTO, attach);
 		
@@ -91,7 +105,7 @@ public class ProductController {
 		model.addAttribute("resultIcon", resultIcon);
 		
 		return "common/result";
-		
+		}
 	}
 	
 	@GetMapping("{productCode}/update")
@@ -107,7 +121,15 @@ public class ProductController {
 	}
 	
 	@PostMapping("{productCode}/update")
-	public String postProductUpdate(@Valid ProductDTO productDTO, MultipartFile attach, Model model) {
+	public String postProductUpdate(@Valid ProductDTO productDTO, BindingResult bindingResult, MultipartFile attach, Model model) throws Exception {
+		if(bindingResult.hasErrors()) {
+			// 품목타입리스트 가져오기
+			List<ProductTypeDTO> productTypeList = productService.getProductTypeList();
+			model.addAttribute("productTypeList", productTypeList);
+			
+			return "product/write";
+		}
+		
 		boolean result = productService.updateProduct(productDTO, attach);
 		
 		String resultMsg = "물품 수정 중 오류가 발생했습니다.";

@@ -51,6 +51,13 @@
 			        </a>
 			      </li>
 
+			      <li class="nav-item">
+			        <a class="nav-link text-dark" href="/productManage/stockReport">
+			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
+			          <span class="nav-link-text ms-1 text-sm">재고집계표</span>
+			        </a>
+			      </li>
+
 			    </ul>
 			  </div>
     	</aside>
@@ -91,7 +98,7 @@
 	    			</tbody>
 	    		</table>
 	    		
-			    <c:if test="${ totalProduct eq 0 }">
+			    <c:if test="${ productList.totalElements eq 0 }">
 					<div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
 				</c:if>
 				
@@ -147,7 +154,7 @@
 						
 						</div>
 						<div class="d-flex justify-content-center">
-							<table class="text-start table" style="width: 80%;">
+							<table class="text-start table">
 								
 								<tbody id="productDetailTable">
 								

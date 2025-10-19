@@ -80,7 +80,7 @@
         							<a href="/attend?baseDate=${prevWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_backward</span>
         							</a>
-									<small>&nbsp;${mondayStr }(월)&nbsp; ~ &nbsp;${sundayStr }(일)&nbsp;</small> 
+									<small>&nbsp;${mondayStr }(월)<span class="me-2 ms-2">~</span>${sundayStr }(일)&nbsp;</small> 
         							<a href="/attend?baseDate=${nextWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_forward</span>
         							</a>
@@ -173,8 +173,22 @@
 													<td>${attend.attendOut eq null ? "--:--:--" : attend.formattedAttendOut}</td>
 													<td>${attend.workTime }</td>
 													<td>${attend.totalWorkTime }</td>
-													<td>${attend.attendStatus }</td>
+													<c:set var="isEarlytime" value="false" scope="page" />
+													<c:forEach items="${earlyList}" var="early">
+													    <c:set var="earlyDateOnly" value="${fn:substring(early.earlyDtm, 0, 10)}" />
+													    <c:if test="${attend.attendDate eq earlyDateOnly}">
+													        <c:set var="isEarlytime" value="true" scope="page" />
+													    </c:if>
+													</c:forEach>
 													
+													<td>
+													    <c:if test="${isEarlytime}">
+													        ${fn:replace(attend.attendStatus, '조퇴(미승인)', '조퇴(승인)')}
+													    </c:if>
+													    <c:if test="${!isEarlytime}">
+													        ${attend.attendStatus}
+													    </c:if>
+													</td>
 													<td>
 											            <c:set var="isOvertime" value="false" />
 											            <c:forEach items="${overtimeList}" var="over">
