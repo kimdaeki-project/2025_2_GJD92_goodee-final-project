@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.goodee.finals.staff.StaffDTO;
+
 import jakarta.validation.Valid;
 
 @Controller
@@ -42,6 +44,9 @@ public class ProductController {
 		
 		long totalProduct = productService.getTotalProduct();
 		model.addAttribute("totalProduct", totalProduct);
+		
+		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		model.addAttribute("staffDTO", staffDTO);
 		
 		return "product/list";
 	}

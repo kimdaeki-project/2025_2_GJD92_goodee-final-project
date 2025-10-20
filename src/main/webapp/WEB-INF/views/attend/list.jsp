@@ -8,7 +8,7 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>근태</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 <c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -80,7 +80,9 @@
         							<a href="/attend?baseDate=${prevWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_backward</span>
         							</a>
-									<small>&nbsp;${mondayStr }(월)<span class="me-2 ms-2">~</span>${sundayStr }(일)&nbsp;</small> 
+									<small class="text-center date-range"
+	      									 style="display:inline-block; min-width: 150px;">
+	       								&nbsp;${mondayStr }(월)<span class="me-2 ms-2">~</span>${sundayStr }(일)&nbsp;</small> 
         							<a href="/attend?baseDate=${nextWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_forward</span>
         							</a>
@@ -116,9 +118,9 @@
 								
 								  </div>
 								</div>
-								
 							</div>
 						</div>
+						
 					</div>
 
 					<!-- 오른쪽 출퇴근 내역 -->

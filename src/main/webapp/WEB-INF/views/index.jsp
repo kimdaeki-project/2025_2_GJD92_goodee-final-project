@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>대시보드</title>
 	<style type="text/css">
 	.dashboard {
       flex: 1;
@@ -275,7 +275,7 @@
 	        
 	        <div class="panel cal">
 	        	<div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
-		          <h3>일정</h3>
+		          <h3>오늘 일정</h3>
 		          
 		        </div>
 		        <div id='calendar' class="mt-3"></div>

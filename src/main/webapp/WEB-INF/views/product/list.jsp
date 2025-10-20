@@ -6,7 +6,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>물품 목록</title>
+	<title>재고</title>
 	<style type="text/css">
 		.sidenav .nav-link {
 		  white-space: nowrap; /* 줄바꿈 방지 */
@@ -48,13 +48,6 @@
 			        <a class="nav-link text-dark" href="/productManage">
 			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
 			          <span class="nav-link-text ms-1 text-sm">물품관리대장</span>
-			        </a>
-			      </li>
-
-			      <li class="nav-item">
-			        <a class="nav-link text-dark" href="/productManage/stockReport">
-			          <i class="material-symbols-rounded opacity-5 fs-5" data-content="물품관리대장">remove_shopping_cart</i>
-			          <span class="nav-link-text ms-1 text-sm">재고집계표</span>
 			        </a>
 			      </li>
 
@@ -132,11 +125,13 @@
 					</c:if>
 			    </div>
 				
+		      <c:if test="${staffDTO.deptDTO.deptCode eq 1002}">
 				<div class="d-flex justify-content-end aling-items-end">
 					<div>
 					    <button onclick="location.href='/product/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
 					</div>
 				</div>
+		      </c:if>
 	    	</div>
 	    </div>
 

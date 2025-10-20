@@ -16,7 +16,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>분실물 목록</title>
+	<title>분실물</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -109,11 +109,13 @@
 				</c:if>
 		    </div>
 				
-			<div class="d-flex justify-content-end aling-items-end">
-				<div>
-		    		<button onclick="location.href='/lost/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
-	   			</div>
-			</div>
+			<c:if test="${staffDTO.deptDTO.deptCode eq 1002}">	
+				<div class="d-flex justify-content-end aling-items-end">
+					<div>
+			    		<button onclick="location.href='/lost/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
+		   			</div>
+				</div>
+			</c:if>
     	</div>
     </div>
 		    

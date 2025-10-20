@@ -92,12 +92,12 @@
 <!-- 			    					<th>물품코드</th> -->
 	    					<th class="col-2">물품명</th>
 	    					<th class="col-1">구분</th>
+<!-- 			    					<th class="col-1">입고</th> -->
+<!-- 			    					<th class="col-1">출고</th> -->
 	    					<th class="col-1">등록수량</th>
-<!-- 			    					<th>입고</th> -->
-<!-- 			    					<th>출고</th> -->
 	    					<th class="col-1">잔여수량</th>
 	    					<th class="col-1">작성자</th>
-	    					<th class="col-1">비고</th>
+	    					<th class="col-2">비고</th>
 	    				</tr>
 	    			</thead>
 	    			<tbody>
@@ -155,9 +155,11 @@
 			    </div>
 				
 				<div class="d-flex justify-content-end aling-items-end">
+				<c:if test="${staffDTO.deptDTO.deptCode eq 1002}">
 					<div>
 		    			<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/productManage/write'">입출고등록</button>
 		   			</div>
+		   		</c:if>
 					<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white ms-2"
 					        onclick="downloadExcel()">
 					    엑셀 다운로드

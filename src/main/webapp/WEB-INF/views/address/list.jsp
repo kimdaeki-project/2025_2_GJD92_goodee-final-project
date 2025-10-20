@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>주소록</title>
 	<style type="text/css">
 		.sidenav .nav-link {
   white-space: nowrap; /* 줄바꿈 방지 */

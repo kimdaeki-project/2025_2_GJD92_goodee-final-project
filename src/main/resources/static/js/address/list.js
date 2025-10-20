@@ -10,15 +10,15 @@ function movePage(page) {
 	}
 	
 	// URL 만들기
-		let url = "/address";
-		if (deptCode !== null) {
-			url += `/${deptCode}`;
-		}
+	let url = "/address";
+	if (deptCode !== null) {
+		url += `/${deptCode}`;
+	}
 
-		url += `?page=${page}`;
-		if (search && search.trim() !== "") {
-			url += `&search=${encodeURIComponent(search)}`;
-		}
+	url += `?page=${page}`;
+	if (search && search.trim() !== "") {
+		url += `&search=${encodeURIComponent(search)}`;
+	}
 
-		location.href = url;
+	location.href = url;
 	}
