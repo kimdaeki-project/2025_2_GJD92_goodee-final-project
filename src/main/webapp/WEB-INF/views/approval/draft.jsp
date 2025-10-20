@@ -61,7 +61,7 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
+    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="width: 200px !important; height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
 			    
@@ -98,7 +98,7 @@
     	</aside>
 	    <section class="border-radius-xl bg-white w-90 ms-2 mt-2 me-3" style="height: 92vh; overflow: hidden scroll;">
 	    	<form id="approvalForm" method="POST" enctype="multipart/form-data">
-		    	<div class="mt-5 row d-flex justify-content-between" style="width: 95%; margin: 0 auto;">
+		    	<div class="mt-5 row d-flex justify-content-between" style="width: 90%; margin: 0 auto;">
 				    <div class="col-auto" style="width: 180px;">
 				    	<div class="rounded text-center w-100" style="border: 1px solid #686868; height: 500px; overflow: hidden; box-shadow: 2px 2px 5px gray; margin: 0 auto;">
 		    				<div class="mt-4">
