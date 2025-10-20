@@ -17,7 +17,7 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <div class="d-flex">
-    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="height: 92vh;">
+    	<aside class="sidenav navbar navbar-vertical border-radius-lg ms-2 bg-white my-2 w-10 align-items-start" style="width: 200px !important; height: 92vh;">
     		<div class="w-100">
 			    <ul class="navbar-nav">
 			    
@@ -34,10 +34,10 @@
 		        <div class="row">
         <div class="col-12">
 		  <!-- 레일형 / 고속형 어트랙션 -->
-          <div class="card my-4 mt-8 m-8">
-			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">레일형 어트랙션</h4>
+          <div class="card my-4 mt-6 m-8">
+			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 w-25">
+			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-2 ">
+			      <h4 class="text-white text-capitalize text-center">레일형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -62,10 +62,10 @@
 		  </div>
 		  
 		  <!-- 회전형 어트랙션 -->
-          <div class="card my-4 mt-8 m-8">
-			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">회전형 어트랙션</h4>
+          <div class="card my-4 mt-6 m-8">
+			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 w-25">
+			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-2">
+			      <h4 class="text-white text-capitalize text-center">회전형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -90,10 +90,10 @@
 		  </div>
 		  
 		  <!-- 수상형 어트랙션 -->
-          <div class="card my-4 mt-8 m-8">
-			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">수상형 어트랙션</h4>
+          <div class="card my-4 mt-6 m-8">
+			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 w-25">
+			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-2">
+			      <h4 class="text-white text-capitalize text-center">수상형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -118,10 +118,10 @@
 		  </div>
 		  
 		  <!-- 관람형 어트랙션 -->
-          <div class="card my-4 mt-8 m-8">
-			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">관람형 어트랙션</h4>
+          <div class="card my-4 mt-6 m-8">
+			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 w-25">
+			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-2">
+			      <h4 class="text-white text-capitalize text-center">관람형 어트랙션</h4>
 			    </div>
 			  </div>
 		  
@@ -146,10 +146,10 @@
 		  </div>
 		  
 		  <!-- 어린이 어트랙션 -->
-          <div class="card my-4 mt-8 m-8">
-			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-			      <h4 class="text-white text-capitalize ps-5">어린이 어트랙션</h4>
+          <div class="card my-4 mt-6 m-8">
+			  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 w-25">
+			    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-2">
+			      <h4 class="text-white text-capitalize text-center">어린이 어트랙션</h4>
 			    </div>
 			  </div>
 		  
