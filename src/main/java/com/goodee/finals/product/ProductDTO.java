@@ -32,9 +32,9 @@ public class ProductDTO {
 	@Id
 	private Integer productCode;
 	
-	@NotBlank(message = "* 물품명은 필수입니다.")
+	@NotBlank(message = "물품명은 필수입니다.")
 	private String productName;
-	@NotBlank(message = "* 물품 규격은 필수입니다.")
+	@NotBlank(message = "물품 규격은 필수입니다.")
 	private String productSpec;
 	private Long productAmount = 0L;
 	private LocalDate productDate = LocalDate.now();
@@ -61,4 +61,13 @@ public class ProductDTO {
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "productDTO", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private ProductAttachmentDTO productAttachmentDTO;
+	
+	public void setProductName(String productName) {
+	    this.productName = productName == null ? null : productName.trim();
+	}
+	
+	public void setProductSpec(String productSpec) {
+		this.productSpec = productSpec == null ? null : productSpec.trim();
+	}
+	
 }

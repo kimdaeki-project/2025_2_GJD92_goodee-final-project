@@ -80,41 +80,44 @@ aside.sidenav {
 				<div class="col-6 offset-3">
 					<h4 class="text-center mt-5 mb-5">입출고 등록</h4>
 						<div class="d-flex justify-content-between" style="gap: 50px;" >
-						
-							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px; border: 1px solid lightgray; border-radius: 20px; padding:10px;">
-								<div class="form-group mt-4">
-									<label for="productCode">물품번호</label>
-									<input type="text" id="productCode" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
-								</div>
+							<div class="w-50">
+								<label for="product">품목선택<span class="text-danger"> *</span></label>
+								<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px; border: 1px solid lightgray; border-radius: 20px; padding:10px;">
+									<div class="form-group mt-4">
+										<label for="productCode">물품번호</label>
+										<input type="text" id="productCode" name="productCode" value="${productManageDTO.productDTO.productCode }" readonly required placeholder="물품을 검색해주세요.">
+									</div>
+											
+										<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
 										
-									<input type="hidden" name="productTypeDTO.productTypeCode" value="${productManageDTO.productDTO.productTypeDTO.productTypeCode }"/>
-									
-								<div class="form-group">
-									<label for="productTypeName">물품타입</label>
-									<input type="text" id="productTypeName" name="productTypeDTO.productTypeName" value="${productManageDTO.productDTO.productTypeDTO.productTypeName }" readonly required placeholder="물품을 검색해주세요.">
+									<div class="form-group">
+										<label for="productTypeName">물품타입</label>
+										<input type="text" id="productTypeName" name="productTypeDTO.productTypeName" value="${productManageDTO.productDTO.productTypeDTO.productTypeName }" readonly required placeholder="물품을 검색해주세요.">
+									</div>
+											 
+									<div class="form-group">
+										<label for="productName">물품명</label>
+										<input type="text" id="productName" name="productName" value="${productManageDTO.productDTO.productName }" readonly required placeholder="물품을 검색해주세요.">
+									</div>
+										
+									<div class="form-group">
+										<label for="productSpec">규격</label>
+										<input type="text" id="productSpec" name="productSpec" value="${productManageDTO.productDTO.productSpec }" readonly required placeholder="물품을 검색해주세요.">
+									</div>
 								</div>
-										 
-								<div class="form-group">
-									<label for="productName">물품명</label>
-									<input type="text" id="productName" name="productName" value="${productManageDTO.productDTO.productName }" readonly required placeholder="물품을 검색해주세요.">
-								</div>
-									
-								<div class="form-group">
-									<label for="productSpec">규격</label>
-									<input type="text" id="productSpec" name="productSpec" value="${productManageDTO.productDTO.productSpec }" readonly required placeholder="물품을 검색해주세요.">
-								</div>
+								<c:if test="${not empty productCodeMsg }"><div class="mt-1" id="productCodeMsg"><small style="color: #F44335;">&nbsp;${productCodeMsg }</small></div></c:if>
 							</div>
 							
-							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 400px;">
+							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 450px;">
 								<div class="d-flex flex-column justify-content-between" style="gap:20px;">
 								<div>
-								<button type="button" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"	data-bs-toggle="modal" data-bs-target="#productModal"
-									style="height:40px; width:140px;">물품검색</button>
+									<button type="button" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"	data-bs-toggle="modal" data-bs-target="#productModal"
+										style="height:40px; width:140px;">물품검색</button>
 								</div>
 								
 								<div>
 								<div class="form-group">
-									<label>유형</label>
+									<label>유형<span class="text-danger"> *</span></label>
 									<div class="radio-group d-flex justify-content-start" style="gap: 15px;" >
 										<label style="font-size: 16px;">
 								            <input type="radio" name="pmType" value="80" checked> 입고
@@ -126,15 +129,15 @@ aside.sidenav {
 								</div>
 		
 								<div class="form-group">
-									<form:label path="pmAmount">수량</form:label>
-									<input type="number" name="pmAmount" class="form-control"/>
-		  							<form:errors path="pmAmount"></form:errors>
+									<form:label path="pmAmount">수량<span class="text-danger"> *</span></form:label>
+									<input type="number" name="pmAmount" id="pmAmount" class="form-control" value="${pmAmount }" style="height: 45px;"/>
+		  							<form:errors path="pmAmount" cssClass="text-danger small"></form:errors>
 								</div>
 								
 								<div class="form-group">
-									<form:label path="pmNote">비고</form:label>
+									<form:label path="pmNote">비고<span class="text-danger"> *</span></form:label>
 									<form:input path="pmNote" cssClass="form-control"/>
-		  							<form:errors path="pmNote"></form:errors>
+		  							<form:errors path="pmNote" cssClass="text-danger small"></form:errors>
 								</div>
 								
 								</div>

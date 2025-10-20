@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>대시보드</title>
 	<style type="text/css">
 	.dashboard {
       flex: 1;
@@ -14,24 +14,23 @@
     }
     
     .content {
-      padding: 15px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3열 균등 */
-      grid-template-rows: auto auto;         /* 2행 */
-      gap: 20px;
-      overflow-y: auto;
-      flex-grow: 1;
-    }
+  padding: 15px;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;  /* <- 여기 핵심!! */
+  grid-template-rows: auto auto;
+  gap: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
 
     /* 첫 줄 */
     .check-in {
       grid-column: 1 / 2;
       grid-row: 1 / 2;
-      height: 410px;
     }
 
-    .attraction-status {
-      grid-column: 2 / 3;
+    .notices {
+      grid-column: 2 / 3; /* 2~3열 합침 */
       grid-row: 1 / 2;
     }
 
@@ -41,21 +40,20 @@
     }
 
     /* 둘째 줄 */
-    .approval {
-      grid-column: 1 / 2;
-      grid-row: 2 / 2;
-      height: 350px;
-    }
-
-    .notices {
-      grid-column: 2 / 3; /* 2~3열 합침 */
-      grid-row: 2 / 2;
-    }
-
 	.cal {
-		grid-row: 3 / 4;
+		grid-column: 1 / 2;
         grid-row: 2 / 2;
 	}
+    .approval {
+      grid-column: 2 / 3;
+      grid-row: 2 / 2;
+    }
+
+    .attraction-status {
+      grid-column: 3 / 4;
+      grid-row: 2 / 2;
+    }
+
 
     /* 각 패널 카드 */
     .panel {
@@ -162,12 +160,9 @@
 						<span style="width:100px;">퇴근: ${attendDTO.attendOut eq null ? "--:--:--" : attendDTO.formattedAttendOut}</span>
 					</div>
 				</div>
-			<div class="worktime">근무시간 : 
-				<c:if test="${not empty attendDTO.workTime}">
-					<span>${attendDTO.workTime}</span>
-				</c:if>
-				<span>--  --</span>
-					</div>
+			<div class="worktime"><small>근무시간 : 
+				<span>${attendDTO.workTime}</span></small>
+				</div>
 				<div class="button-row">
 				  
 					<c:choose>
@@ -209,11 +204,16 @@
 	          <div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
 	          	<h3>어트랙션 운휴 현황</h3>
 	          </div>
-	          <table>
-	            <tr><td>어트랙션</td><td>상태</td></tr>
+	          <table class="text-center">
+	            <tr>
+	            	<th>어트랙션</th>
+	            	<th>상태</th>
+	            </tr>
 	          	<c:forEach items="${rides }" var="ride">
-		            <tr><td>${ride.rideName }</td>
-		            <td>${ride.rideState eq 300 ? "운휴" : ride.rideState eq 400 ? "고장" : "점검"}</td></tr>
+		            <tr>
+		            	<td>${ride.rideName }</td>
+		            	<td>${ride.rideState eq 300 ? "운휴" : ride.rideState eq 400 ? "고장" : "점검"}</td>
+		            </tr>
 	          	</c:forEach>
 	          </table>
 	        </div>
@@ -275,7 +275,7 @@
 	        
 	        <div class="panel cal">
 	        	<div class="d-flex justify-content-between" style="border-bottom: 1px solid #eee;">
-		          <h3>일정</h3>
+		          <h3>오늘 일정</h3>
 		          
 		        </div>
 		        <div id='calendar' class="mt-3"></div>

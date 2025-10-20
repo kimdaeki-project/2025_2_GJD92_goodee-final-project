@@ -1,5 +1,6 @@
 package com.goodee.finals.product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.common.attachment.AttachmentDTO;
@@ -26,8 +28,6 @@ public class ProductService {
 
 	@Autowired
 	private FileService fileService;
-	@Autowired
-	private StaffRepository staffRepository;
 	@Autowired
 	private AttachmentRepository attachmentRepository;
 	@Autowired
@@ -94,6 +94,30 @@ public class ProductService {
 		else return null;
 	}
 	
+	// 검증 메서드
+	public List<Integer> hasOtherErrors(ProductDTO productDTO, BindingResult bindingResult, MultipartFile attach) throws Exception {
+		
+		List<Integer> checkList = new ArrayList<>();
+		// check: 1이상  => 검증 실패
+		// check: 0 => 검증 통과
+		
+		// 1. annotation 검증
+		if(bindingResult.hasErrors()) { // true => 검증실패
+			checkList.add(1);
+		}
+		
+		// 2. 물품타입 선택여부
+		if (productDTO.getProductTypeDTO().getProductTypeCode() == 0) {
+			checkList.add(2);
+		} 
+		
+		// 3. 파일 첨부여부
+		if (attach == null || attach.getSize() <= 0) {
+			checkList.add(3);
+		}
+		return checkList;
+	}
+	
 	private ProductDTO setProductDefault(ProductDTO productDTO) {
 		Integer productTypeCode = productDTO.getProductTypeDTO().getProductTypeCode();
 		Integer lastProductCode = productRepository.findTopProductCodeByProductType(productTypeCode);
@@ -112,18 +136,14 @@ public class ProductService {
 		
 		
 		if(attach != null && attach.getSize() > 0) {
-			if(productDTO.getProductAttachmentDTO() != null) {
-				ProductDTO before = productRepository.findById(productDTO.getProductCode()).orElseThrow();
-				AttachmentDTO beforeAttach = before.getProductAttachmentDTO().getAttachmentDTO();
-				
-				String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
-				boolean deleteResult = fileService.fileDelete(FileService.PRODUCT, savedName);
-				
-				if(deleteResult) {
-					productRepository.deleteBeforeAttach(beforeAttach.getAttachNum());
-					attachmentRepository.deleteAttach(beforeAttach.getAttachNum());
-				}
-			}
+			ProductDTO before = productRepository.findById(productDTO.getProductCode()).orElseThrow();
+			AttachmentDTO beforeAttach = before.getProductAttachmentDTO().getAttachmentDTO();
+			
+			String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
+			attachmentRepository.deleteById(beforeAttach.getAttachNum());
+			fileService.fileDelete(FileService.PRODUCT, savedName);
+			
+//			productRepository.deleteBeforeAttach(beforeAttach.getAttachNum());
 			
 			AttachmentDTO attachmentDTO = new AttachmentDTO();
 			
