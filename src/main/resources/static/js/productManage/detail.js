@@ -16,11 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
           console.log("📦 입출고내역 상세:", data);
 
-//          // 이미지
-//          pmDetailAttach.innerHTML = data.productDTO.productAttachmentDTO?.attachmentDTO?.savedName
-//            ? `<img width="400" height="400" style="object-fit: clip;" src="/file/product/${data.productDTO.productAttachmentDTO.attachmentDTO.savedName}"/>`
-//            : "";
-
           // 테이블
           pmDetailTable.innerHTML = `
             <tr><th>입출고번호</th><td>${data.pmNum}</td></tr>
@@ -32,24 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <tr><th>등록수량</th><td>${data.pmAmount}</td></tr>
             <tr style="border-bottom: 1px solid #dee2e6;"><th>잔여수량</th><td>${data.pmRemainAmount}</td></tr>
           `;
-
-          // 로그인 사용자와 작성자 비교 후 버튼 표시
-          const writerCode = data.staffDTO ? data.staffDTO.staffCode : undefined;
-          console.log("👤 로그인:", loginStaffCode, "| 작성자:", writerCode);
-
-          if (		  typeof loginStaffCode !== 'undefined' &&
-		    typeof writerCode !== 'undefined' &&
-		    String(loginStaffCode) === String(writerCode)) {
-				buttonBox.classList.remove("d-none");
-            buttonBox.style.display = "block";
-            document.getElementById("pmUpdateBtn").onclick = () => {
-              location.href = `/productManage/${data.pmNum}/update`;
-            };
-            document.getElementById("pmDeleteForm").action = `/productManage/${data.pmNum}/delete`;
-          } else {
-			buttonBox.classList.add("d-none");
-            buttonBox.style.display = "none";
-          }
 
           pmDetailModal.show();
         })

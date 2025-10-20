@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goodee.finals.staff.DeptDTO;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.validation.Valid;
@@ -44,9 +45,10 @@ public class MessengerController {
     @GetMapping("")
     public String home(String keyword, Model model) {
     	if (keyword == null) keyword = "";
-    	List<StaffDTO> result = messengerService.getStaff(keyword);
-    	model.addAttribute("members", result);
+    	Map<String, Object> result = messengerService.getStaff(keyword);
+    	model.addAttribute("members", (List<StaffDTO>)result.get("staffResult"));
     	model.addAttribute("keyword", keyword);
+    	model.addAttribute("dept", (List<DeptDTO>)result.get("deptResult"));
     	return "messenger/home";
     }
 	
@@ -61,24 +63,25 @@ public class MessengerController {
 	@GetMapping("create")
 	public String create(String keyword, Model model) {
 		if (keyword == null) keyword = "";
-		List<StaffDTO> result = messengerService.getStaff(keyword);
-		model.addAttribute("staff", result);
+		Map<String, Object> result = messengerService.getStaff(keyword);
+		model.addAttribute("staff", (List<StaffDTO>)result.get("staffResult"));
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("dept", (List<DeptDTO>)result.get("deptResult"));
 		return "messenger/create";
 	}
 	
 	@PostMapping("create")
 	public String create(@RequestParam(required = false) List<Integer> addedStaff, @Valid ChatRoomDTO chatRoomDTO, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			List<StaffDTO> result = messengerService.getStaff("");
-			model.addAttribute("staff", result);
+			Map<String, Object> result = messengerService.getStaff("");
+			model.addAttribute("staff", (List<StaffDTO>)result.get("staffResult"));
 			return "messenger/create";
 		}
 		ChatRoomDTO result = messengerService.createRoom(addedStaff, chatRoomDTO);
 		if (result != null) {
 			model.addAttribute("resultMsg", "채팅방이 생성되었습니다.");
 			model.addAttribute("resultIcon", "success");
-			model.addAttribute("resultUrl", "msg/room");
+			model.addAttribute("resultUrl", "/msg/room/all");
 			
 			// 알림 발송
 			List<String> wsSub = new ArrayList<>();

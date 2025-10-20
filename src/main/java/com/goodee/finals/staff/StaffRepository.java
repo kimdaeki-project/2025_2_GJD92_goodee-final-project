@@ -15,6 +15,8 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	@NativeQuery(value = "SELECT staff_code FROM staff ORDER BY staff_code DESC LIMIT 1")
 	Integer findLastStaffCode();
 	
+	List<StaffDTO> findByStaffEnabled(Boolean staffEnabled);
+	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearch(String search, Pageable pageable);
 	
@@ -66,4 +68,9 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	
 	@NativeQuery(value = "SELECT COUNT(*) FROM attend WHERE attend_date = DATE_FORMAT(now(), '%Y-%m-%d') AND attend_in IS NOT NULL;")
 	Integer findWorkingStaff();
+	
+    @Query(value = "SELECT s.dept_code AS deptCode, COUNT(*) AS deptGroup FROM staff s " +
+     	   "WHERE s.staff_code != :loggedStaff AND s.staff_name LIKE CONCAT('%', :keyword, '%')" +
+     	   "GROUP BY s.dept_code", nativeQuery = true)
+ 	List<DeptDTOProjection> findCountDeptByStaffCodeAndKeyword(Integer loggedStaff, String keyword);
 }

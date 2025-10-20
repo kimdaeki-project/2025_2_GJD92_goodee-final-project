@@ -27,7 +27,7 @@
 							<c:forEach items="${ myDriveList }" var="myDrive">
 								<c:if test="${ myDrive.driveEnabled and not empty myDrive.driveDefaultNum }">
 									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
-										<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
+										<a class="nav-link text-dark custom-color" href="/drive/${ myDrive.driveNum }">
 											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
 											<span class="nav-link-text ms-1 text-sm text-truncate" style="max-width: 110px;" title="${myDrive.driveName}">${ myDrive.driveName }</span>
 										</a>
@@ -39,7 +39,7 @@
 							<c:forEach items="${ myDriveList }" var="myDrive">
 								<c:if test="${ myDrive.driveEnabled and empty myDrive.driveDefaultNum }">
 									<li class="nav-item d-flex align-items-center justify-content-between" style="min-width: 170px">
-										<a class="nav-link text-dark" href="/drive/${ myDrive.driveNum }">
+										<a class="nav-link text-dark custom-color" href="/drive/${ myDrive.driveNum }">
 											<i class="material-symbols-rounded opacity-5 fs-5" data-content="${ myDrive.driveName }">folder_open</i>
 											<span class="nav-link-text ms-1 text-sm text-truncate" style="max-width: 110px;" title="${ myDrive.driveName }">${ myDrive.driveName }</span>
 										</a>

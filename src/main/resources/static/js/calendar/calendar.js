@@ -201,7 +201,6 @@ btnOpenUpdateModal.addEventListener("click", () => {
 
 btnDeleteCalendar.addEventListener("click", () => {
 	Swal.fire({
-	   title: "일정 삭제",
 	   text: '일정을 삭제하시겠습니까?',
 	   icon: "error",
 	   showCancelButton: true,
@@ -455,9 +454,9 @@ function dragResizeUpdate(eventInfo) {
 function eventBgColor(calType) {
 	switch (calType) {
 		case 2000 : return "red";
-		case 2001 : return "#F1C40F";
-		case 2002 : return "blue";
-		case 2003 : return "green";
+		case 2001 : return "#E67E22";
+		case 2002 : return "#2E86DE";
+		case 2003 : return "#16A085";
 	}	
 }
 

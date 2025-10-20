@@ -97,7 +97,7 @@ public class DriveController {
 	public String createDrive(@Valid DriveDTO driveDTO,BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("deptList", driveService.getDeptList());
-	        return "drive/create";
+			return "drive/create";
 	    }
 		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		driveDTO.setStaffDTO(staffDTO);
@@ -131,11 +131,11 @@ public class DriveController {
 		List<DeptDTO> deptList = driveService.getDeptList();
 		model.addAttribute("driveDTO", driveDTO);
 		model.addAttribute("deptList", deptList);
-		return "drive/create";
+		return "drive/create";	
 	}
 	
 	@PostMapping("{driveNum}/update")
-	public String updateDrive(@Valid DriveDTO driveDTO,BindingResult bindingResult, Model model) {
+	public String updateDrive(@Valid DriveDTO driveDTO, BindingResult bindingResult, Model model) {
 		if(bindingResult.hasErrors()) return "drive/create";
 		
 		StaffDTO staffDTO = (StaffDTO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

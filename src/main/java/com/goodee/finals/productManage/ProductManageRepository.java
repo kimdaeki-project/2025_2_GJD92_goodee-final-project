@@ -1,5 +1,7 @@
 package com.goodee.finals.productManage;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +33,9 @@ public interface ProductManageRepository extends JpaRepository<ProductManageDTO,
 			)
 	Page<ProductManageDTO> findAllBySearch(@Param("search") String search, Pageable pageable);
 	
+	@Query("SELECT p FROM ProductManageDTO p "
+		     + "WHERE CAST(p.pmType AS string) LIKE %:search% "
+		     + "OR p.productDTO.productName LIKE %:search% "
+		     + "ORDER BY p.pmNum DESC")
+		List<ProductManageDTO> findBySearchKeyword(@Param("search") String search);
 }

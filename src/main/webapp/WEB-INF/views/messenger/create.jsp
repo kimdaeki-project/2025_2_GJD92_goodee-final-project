@@ -35,7 +35,12 @@
 		    	<button class="search-btn">검색</button>
 	    	</form> --%>
 			<div class="scroll-members">
-			<div class="section-title">임원</div>
+			
+			<c:forEach items="${ dept }" var="d">
+				<c:if test="${ d.deptCode eq 1000 }">
+		        	<div class="section-title">임원(${ d.deptGroup })</div>			
+				</c:if>
+			</c:forEach>
             <c:forEach items="${ staff }" var="m">
             <c:if test="${ m.deptDTO.deptName eq 'ROLE_HQ' }">
                 <div class="member-item">
@@ -51,7 +56,11 @@
             </c:if>
             </c:forEach>
             
-        	<div class="section-title">인사팀</div>
+   			<c:forEach items="${ dept }" var="d">
+				<c:if test="${ d.deptCode eq 1001 }">
+		        	<div class="section-title">인사팀(${ d.deptGroup })</div>			
+				</c:if>
+			</c:forEach>
             <c:forEach items="${ staff }" var="m">
             <c:if test="${ m.deptDTO.deptName eq 'ROLE_HR' }">
                 <div class="member-item">
@@ -67,7 +76,11 @@
             </c:if>
             </c:forEach>
             
-            <div class="section-title">운영팀</div>
+       		<c:forEach items="${ dept }" var="d">
+				<c:if test="${ d.deptCode eq 1002 }">
+		        	<div class="section-title">운영팀(${ d.deptGroup })</div>			
+				</c:if>
+			</c:forEach>
             <c:forEach items="${ staff }" var="m">
             <c:if test="${ m.deptDTO.deptName eq 'ROLE_OP' }">
                 <div class="member-item">
@@ -83,7 +96,11 @@
             </c:if>
             </c:forEach>
             
-            <div class="section-title">시설팀</div>
+       		<c:forEach items="${ dept }" var="d">
+				<c:if test="${ d.deptCode eq 1003 }">
+		        	<div class="section-title">시설팀(${ d.deptGroup })</div>			
+				</c:if>
+			</c:forEach>
             <c:forEach items="${ staff }" var="m">
             <c:if test="${ m.deptDTO.deptName eq 'ROLE_FA' }">
                 <div class="member-item">

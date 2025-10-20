@@ -1,7 +1,14 @@
 package com.goodee.finals.productManage;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -149,5 +156,46 @@ public class ProductManageService {
 		
 		return result;
 	}
+	
+	// 엑셀용 전체 리스트
+    public List<ProductManageDTO> getProductManageSearchListForExcel(String search) {
+        return pmRepository.findBySearchKeyword(search);
+    }
+
+    // 엑셀 작성
+    public void writeProductManageExcel(List<ProductManageDTO> list, OutputStream os) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("물품관리대장");
+
+        // 헤더 작성
+        Row header = sheet.createRow(0);
+        String[] headers = {"No.", "입출고일자", "물품명", "구분", "등록수량", "잔여수량", "작성자", "비고"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = header.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+
+        // 데이터 작성
+        int rowIdx = 1;
+        for (ProductManageDTO pm : list) {
+            Row row = sheet.createRow(rowIdx++);
+            row.createCell(0).setCellValue(pm.getPmNum());
+            row.createCell(1).setCellValue(pm.getPmDate().toString());
+            row.createCell(2).setCellValue(pm.getProductDTO().getProductName());
+            row.createCell(3).setCellValue(pm.getPmType() == 90 ? "출고" : "입고");
+            row.createCell(4).setCellValue(pm.getPmAmount());
+            row.createCell(5).setCellValue(pm.getPmRemainAmount());
+            row.createCell(6).setCellValue(pm.getStaffDTO().getStaffName());
+            row.createCell(7).setCellValue(pm.getPmNote() == null ? "" : pm.getPmNote());
+        }
+
+        // 열 너비 자동 조정
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        workbook.write(os);
+        workbook.close();
+    }
 	
 }
