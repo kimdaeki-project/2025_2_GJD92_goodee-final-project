@@ -83,32 +83,33 @@
       	
       	<div style="flex: 1;">
 			<div class="form-group">
+	          <label for="attach">사진첨부<span class="text-danger"> *</span></label>
 	        	<img id="preview" width="300" height="300" style="object-fit: contain;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
 	        </div>
 	        
 	        <div class="form-group">
-<!-- 	          <label for="attach">사진첨부</label> -->
 	          <input type="file" id="attach" name="attach">
+	          <c:if test="${not empty fileErrorMsg }"><div id="fileMsg"><small style="color: #F44335;">${fileErrorMsg }</small></div></c:if>
 	        </div>
         </div>
         
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 300px;">
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 350px;">
         <div class="form-group">
-        	<form:label path="productTypeDTO.productTypeCode">물품 타입</form:label>
+        	<form:label path="productTypeDTO.productTypeCode">물품 타입<span class="text-danger"> *</span></form:label>
 			<form:select path="productTypeDTO.productTypeCode"
 			             items="${productTypeList}"
 			             itemValue="productTypeCode"
 			             itemLabel="productTypeName"
 			             cssClass="form-select"
 			             style="width:80%; height:44px;">
-			    <form:option value="">--선택--</form:option>
 			</form:select>
+			<c:if test="${not empty productTypeErrorMsg }"><div><small style="color: #F44335;">${productTypeErrorMsg }</small></div></c:if>
         </div>
 			
 		<div class="form-group">
-		  <form:label path="productName">물품명</form:label>
+		  <form:label path="productName">물품명<span class="text-danger"> *</span></form:label>
 		  <form:input path="productName" cssClass="form-control"/>
-		  <form:errors path="productName"></form:errors>
+		  <form:errors path="productName" cssClass="text-danger small"></form:errors>
 		</div>
 		
 		<c:if test="${not empty productDTO.productAmount }">
@@ -116,9 +117,9 @@
 		</c:if>
 		
 		<div class="form-group">
-		  <form:label path="productSpec">규격</form:label>
+		  <form:label path="productSpec">규격<span class="text-danger"> *</span></form:label>
 		  <form:input path="productSpec" cssClass="form-control"/>
-		  <form:errors path="productSpec"></form:errors>
+		  <form:errors path="productSpec" cssClass="text-danger small"></form:errors>
 		</div>
 
       </div>
@@ -130,8 +131,6 @@
 	    </div>
       </div>
 		</form:form>
-		
-		<a href="/productManage/stockReport">재고집계표</a>
 		
     </section>
     </div>

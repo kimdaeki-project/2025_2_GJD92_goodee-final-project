@@ -1,12 +1,29 @@
 // 모달 닫기
 
-	
 const modalEl = document.getElementById('productModal');
 const productModal = new bootstrap.Modal(modalEl);
 const searchInput = document.getElementById('searchInput');
-const productTable = document.getElementById('productTable')
+const productTable = document.getElementById('productTable');
 let products =null;
 
+document.addEventListener("DOMContentLoaded", () => {
+  const pmAmount = document.getElementById("pmAmount");
+
+  pmAmount.addEventListener("input", e => {
+    const inputNum = e.target.value;
+	if(inputNum && inputNum == 0){
+      Swal.fire({
+        text: "0은 입력할 수 없습니다.",
+        icon: "error",
+        confirmButtonColor: "#191919",
+        confirmButtonText: "확인"
+      });
+      e.target.value = "";
+      return;
+	}
+    console.log(inputNum);
+  });
+});
 
 document.addEventListener("shown.bs.modal", ()=> {
 	fetch("/productManage/loadProducts", {method : "GET" })
@@ -71,6 +88,6 @@ function selectProduct(code, typeCode, typeName, name, spec){
     document.querySelector("input[name='productSpec']").value = spec;
 	
 	productModal.hide();
-	
+	document.querySelector("#productCodeMsg").innerHTML = "";
 }
 
