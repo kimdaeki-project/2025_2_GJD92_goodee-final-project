@@ -9,6 +9,7 @@ import com.goodee.finals.common.interceptor.CheckStaffEnableInterceptor;
 import com.goodee.finals.lost.LostCheckAuthInterceptor;
 import com.goodee.finals.notice.NoticeCheckAuthInterceptor;
 import com.goodee.finals.notice.NoticeCheckLoginInterceptor;
+import com.goodee.finals.product.ProductCheckAuthInterceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
@@ -21,6 +22,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	@Autowired
 	LostCheckAuthInterceptor lostCheckAuthInterceptor;
 	@Autowired
+	ProductCheckAuthInterceptor productCheckAuthInterceptor;
+	@Autowired
 	CheckStaffEnableInterceptor checkStaffEnableInterceptor;
 	
 	@Override
@@ -30,7 +33,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		registry.addInterceptor(noticeCheckAuthInterceptor)
 				.addPathPatterns("/notice/*/edit", "/notice/*/delete");
 		registry.addInterceptor(lostCheckAuthInterceptor)
-				.addPathPatterns("/lost/*/update", "/lost/*/delete");
+				.addPathPatterns("/lost/write", "/lost/*/update", "/lost/*/delete");
+		registry.addInterceptor(productCheckAuthInterceptor)
+				.addPathPatterns("/product/write", "/product/*/update", "/product/*/delete", "/productManage/write");
 		registry.addInterceptor(checkStaffEnableInterceptor).addPathPatterns("/**");
 	}
 	

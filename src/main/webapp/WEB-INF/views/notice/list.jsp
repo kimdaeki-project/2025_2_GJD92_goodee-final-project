@@ -18,19 +18,21 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3 p-4" style="height: 90vh; overflow: hidden scroll;">
+    <div class="col-10 offset-1 mt-3">
     	
     	<!-- 검색창 -->
     	<form action="/notice" class="mb-4">
 		    <div class="d-flex justify-content-end">
-		        <div class="input-group w-25">
-		            <input type="text" class="form-control" placeholder="제목 또는 작성자로 검색" name="keyword" value="${ pager.keyword }">
-		            <button class="btn btn-dark" type="submit">검색</button>
+		        <div class="d-flex">
+		            <input type="text" class="form-control" placeholder="제목 또는 작성자로 검색" name="keyword" value="${ pager.keyword }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;">
+		            <button class="btn btn-dark py-0" type="submit" style="width: 60px; height: 30px; border-radius: 0 6px 6px 0;">검색</button>
 		        </div>
 		    </div>
 		</form>
     
     	<!-- 공지 존재 -->
     	<c:if test="${ totalNotice gt 0 }">
+    	<div class="mt-3" style="min-height: 500px;">
 		<table class="table table-hover align-middle text-center">
 			<thead>
 				<tr>
@@ -70,6 +72,7 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		</div>
 
 		<!-- 페이지네이션 -->
 		<c:if test="${ notice.content.size() gt 0 }">
@@ -100,7 +103,10 @@
     	
     	<!-- 공지 없음 -->
 		<c:if test="${ totalNotice eq 0 }">
-			<div class="alert alert-secondary text-center no-search">검색된 결과가 없습니다.</div>
+			<div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">검색 결과가 없습니다.</h4>
+	  </div>
 		</c:if>    	
     	<!-- 공지 없음 -->
     	
@@ -112,6 +118,7 @@
     		</div>
     	</div>
     	
+    	</div>
     </section>
   </main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>

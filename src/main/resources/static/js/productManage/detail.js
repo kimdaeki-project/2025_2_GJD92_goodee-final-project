@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pmDetailModal = new bootstrap.Modal(modalEl);
   const pmDetailTable = document.getElementById('pmDetailTable');
 //  const pmDetailAttach = document.getElementById("pmDetailAttach");
-  const buttonBox = document.getElementById("pmModalButtons");
 
   // 각 테이블 row에 클릭 이벤트 부여
   document.querySelectorAll("table tbody tr").forEach(row => {
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(data => {
           console.log("📦 입출고내역 상세:", data);
-
+		  const pmTypeStr = data.pmType == "80" ? "입고" : "출고";
           // 테이블
           pmDetailTable.innerHTML = `
             <tr><th>입출고번호</th><td>${data.pmNum}</td></tr>
@@ -24,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <tr><th>물품번호</th><td>${data.productDTO ? data.productDTO.productCode : undefined}</td></tr>
             <tr><th>물품타입</th><td>${data.productDTO && data.productDTO.productTypeDTO ? data.productDTO.productTypeDTO.productTypeName : undefined}</td></tr>
             <tr><th>물품명</th><td>${data.productDTO ? data.productDTO.productName : undefined}</td></tr>
+            <tr><th>구분</th><td>${pmTypeStr}</td></tr>
             <tr><th>등록수량</th><td>${data.pmAmount}</td></tr>
             <tr style="border-bottom: 1px solid #dee2e6;"><th>잔여수량</th><td>${data.pmRemainAmount}</td></tr>
           `;

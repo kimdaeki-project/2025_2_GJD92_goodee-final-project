@@ -6,7 +6,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>물품 목록</title>
+	<title>재고</title>
 	<style type="text/css">
 		.sidenav .nav-link {
 		  white-space: nowrap; /* 줄바꿈 방지 */
@@ -91,8 +91,11 @@
 	    			</tbody>
 	    		</table>
 	    		
-			    <c:if test="${ totalProduct eq 0 }">
-					<div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+			    <c:if test="${ productList.totalElements eq 0 }">
+					<div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">검색 결과가 없습니다.</h4>
+	  </div>
 				</c:if>
 				
 			    <div class="d-flex justify-content-center aling-items-center">
@@ -125,11 +128,13 @@
 					</c:if>
 			    </div>
 				
+		      <c:if test="${staffDTO.deptDTO.deptCode eq 1002}">
 				<div class="d-flex justify-content-end aling-items-end">
 					<div>
 					    <button onclick="location.href='/product/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
 					</div>
 				</div>
+		      </c:if>
 	    	</div>
 	    </div>
 
@@ -147,7 +152,7 @@
 						
 						</div>
 						<div class="d-flex justify-content-center">
-							<table class="text-start table" style="width: 80%;">
+							<table class="text-start table">
 								
 								<tbody id="productDetailTable">
 								

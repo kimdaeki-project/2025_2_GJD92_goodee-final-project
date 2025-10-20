@@ -63,9 +63,23 @@
 	    	
 			    <div class="d-flex justify-content-between align-items-end mt-4 mb-4">
 		    		<div>총 &nbsp;${productManageList.totalElements } 건</div>
-					<div class="input-group w-25">
-						<input type="text" class="form-control" id="searchText" value="${ searchKeyword }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-						<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+					<div class="d-flex align-items-center">
+					
+						<div class="col-auto">
+					      <input type="date" name="startDate" id="startDate" class="form-control" value="${startDate}" style="width: 150px;">
+					    </div>
+					    <div>~</div>
+					    <div class="col-auto me-2">
+					      <input type="date" name="endDate" id="endDate" class="form-control" value="${endDate}" style="width: 150px;">
+					    </div>
+					    
+						<select class="form-select ps-2 py-0" name="pmType" id="searchPmType" style="width: 75px; height:30px; border-radius: 6px 0 0 6px;">
+							<option value="" ${pmType eq '' ? 'selected' : ''}>전체</option>
+							<option value="80" ${pmType eq '80' ? 'selected' : ''}>입고</option>
+							<option value="90" ${pmType eq '90' ? 'selected' : ''}>출고</option>
+						</select>
+						<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0;" >
+						<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white p-0 m-0" type="button" onclick="movePage()" style="width: 60px; height: 30px; border-radius: 0 6px 6px 0" >검색</button>
 					</div>
 				</div>
 				
@@ -78,12 +92,12 @@
 <!-- 			    					<th>물품코드</th> -->
 	    					<th class="col-2">물품명</th>
 	    					<th class="col-1">구분</th>
+<!-- 			    					<th class="col-1">입고</th> -->
+<!-- 			    					<th class="col-1">출고</th> -->
 	    					<th class="col-1">등록수량</th>
-<!-- 			    					<th>입고</th> -->
-<!-- 			    					<th>출고</th> -->
 	    					<th class="col-1">잔여수량</th>
 	    					<th class="col-1">작성자</th>
-	    					<th class="col-1">비고</th>
+	    					<th class="col-2">비고</th>
 	    				</tr>
 	    			</thead>
 	    			<tbody>
@@ -108,10 +122,14 @@
 	    			</tbody>
 	    		</table>
 	    		
-			    <c:if test="${ totalProductManage eq 0 }">
-					 <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+			    <c:if test="${ productManageList.totalElements eq 0 }">
+					 <div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">검색 결과가 없습니다.</h4>
+	  </div>
 				</c:if>
 		
+		<c:if test="${ productManageList.totalElements ne 0 }">
 		   		<div class="d-flex justify-content-center aling-items-center">
 			    	<nav aria-label="Page navigation example">
 					  <ul class="pagination">
@@ -139,13 +157,16 @@
 					  </ul>
 					</nav>
 			    </div>
+			    </c:if>
 				
 				<div class="d-flex justify-content-end aling-items-end">
+				<c:if test="${staffDTO.deptDTO.deptCode eq 1002}">
 					<div>
 		    			<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" onclick="location.href='/productManage/write'">입출고등록</button>
 		   			</div>
-		   			<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white ms-2"
-					        onclick="location.href='/productManage/excel?search=${searchKeyword}'">
+		   		</c:if>
+					<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white ms-2"
+					        onclick="downloadExcel()">
 					    엑셀 다운로드
 					</button>
 					<%-- <button class="btn btn-sm btn-outline-success text-white ms-2"
@@ -155,12 +176,12 @@
     엑셀 다운로드
 </button> --%>
 <!-- 엑셀 아이콘 버튼 -->
-<!-- 	<button class="btn btn-lg text-white" -->
-<%-- 	        onclick="location.href='/productManage/excel?search=${searchKeyword}'" --%>
-<!-- 	        style="background-color:#217346; border:none; border-radius:20%; width:50px; height:35px;" -->
-<!-- 	        data-bs-toggle="tooltip" data-bs-placement="bottom" title="엑셀 다운로드"> -->
-<!-- 	    <i class="fa-solid fa-file-excel"style="font-size: 20px;"></i> -->
-<!-- 	</button> -->
+<!-- <button class="btn text-white d-flex align-items-center justify-content-center" -->
+<%--         onclick="location.href='/productManage/excel?search=${searchKeyword}'" --%>
+<!--         style="background-color:#217346; border:none; border-radius:20%; width:35px; height:35px; padding:0;" -->
+<!--         data-bs-toggle="tooltip" data-bs-placement="bottom" title="엑셀 다운로드"> -->
+<!--     <i class="fa-solid fa-file-excel" style="font-size: 18px;"></i> -->
+<!-- </button> -->
 
 	  			</div>
 	    	</div>
@@ -177,7 +198,7 @@
 				
 				<div class="modal-body mb-5 mt-5">
 					<div class="d-flex justify-content-center">
-						<table class="text-start table" style="width: 80%;">
+						<table class="text-start table" style="width: 90%;">
 							
 							<tbody id="pmDetailTable">
 							

@@ -55,20 +55,21 @@
 
 	        <div style="flex: 1;">
 		        <div class="form-group">
+		          <label for="attach">사진첨부<span class="text-danger"> *</span></label>
 		        	<img id="preview" width="370" height="370" style="object-fit: contain;" <c:if test="${ not empty lostDTO.lostNum }">src="/file/lost/${ lostDTO.lostAttachmentDTO.attachmentDTO.savedName }"</c:if> />
 		        </div>
 		        
 		        <div class="form-group">
-<!-- 		          <label for="attach">사진첨부</label> -->
 		          <input type="file" id="attach" name="attach">
+		          <c:if test="${not empty fileErrorMsg }"><div id="fileMsg"><small style="color: #F44335;">${fileErrorMsg }</small></div></c:if>
 		        </div>
 	        </div>
 	        
 	        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 450px;">
 		        <div class="form-group">
-		          <form:label path="lostName">분실물명</form:label>
+		          <form:label path="lostName">분실물명<span class="text-danger"> *</span></form:label>
 		          <form:input path="lostName" cssClass="form-control"/>
-		          <form:errors path="lostName"></form:errors>
+		          <form:errors path="lostName" cssClass="text-danger small"></form:errors>
 		        </div>
 		        
 		        <div class="form-group">
@@ -80,7 +81,7 @@
 		        <div class="form-group">
 		          <form:label path="lostFinderPhone">습득자 연락처</form:label>
 		          <form:input path="lostFinderPhone" cssClass="form-control" placeholder="ex) 010-1234-5678" />
-		          <form:errors path="lostFinderPhone"></form:errors>
+		          <form:errors path="lostFinderPhone" cssClass="text-danger small"></form:errors>
 		        </div>
 		        
 		        <div class="form-group">

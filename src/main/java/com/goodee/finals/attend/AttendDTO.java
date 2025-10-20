@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.goodee.finals.staff.StaffDTO;
 
 import jakarta.persistence.Entity;
@@ -58,7 +57,7 @@ public class AttendDTO {
     
     public String getWorkTime() {
         if (attendIn == null || attendOut == null) {
-        	return "--h --m";
+        	return "-- --";
         }
 
         Duration duration = Duration.between(attendIn, attendOut);
@@ -99,9 +98,9 @@ public class AttendDTO {
         boolean isLate = attendIn != null && attendIn.isAfter(LocalTime.of(9, 0));
         boolean isEarlyLeave = attendOut != null && attendOut.isBefore(LocalTime.of(18, 0));
 
-        if (isLate && isEarlyLeave) return "지각, 조퇴";
+        if (isLate && isEarlyLeave) return "지각, 조퇴(미승인)";
         if (isLate) return "지각";
-        if (isEarlyLeave) return "조퇴";
+        if (isEarlyLeave) return "조퇴(미승인)";
 
         return "-";
     }

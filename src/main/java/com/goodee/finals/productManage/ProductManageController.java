@@ -3,6 +3,8 @@ package com.goodee.finals.productManage;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,22 +45,27 @@ public class ProductManageController {
 	private ProductManageService pmService;
 	
 	@GetMapping("")
-	public String getProductManageList(@PageableDefault(size = 10, sort = "pm_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+	public String getProductManageList(@PageableDefault(size = 10, sort = "pm_num", direction = Direction.DESC) Pageable pageable, 
+										@RequestParam(required = false) String pmType,
+										@RequestParam(value="startDate", required = false) String startDateStr,
+								        @RequestParam(value="endDate", required = false) String endDateStr,
+								        @RequestParam(required = false) String search, 
+										Model model) {
+		Integer pmTypeInt = null;
+		if (pmType != null && !pmType.trim().isEmpty()) {
+		    pmTypeInt = Integer.parseInt(pmType);
+		}
 		if (search == null) search = "";
+		LocalDate startDate = (startDateStr == null) ? null : LocalDate.parse(startDateStr);
+		LocalDate endDate = (endDateStr == null) ? null : LocalDate.parse(endDateStr);
 		
-		String searchValue = search;
-		
-		// 실제 검색용으로는 숫자 변환
-	    if ("입고".equals(search)) {
-	        search = "80";
-	    } else if ("출고".equals(search)) {
-	        search = "90";
-	    }
-			
-		Page<ProductManageDTO> productManageList = pmService.getProductManageSearchList(search, pageable);
+		Page<ProductManageDTO> productManageList = pmService.getProductManageSearchList(startDate, endDate, pmTypeInt, search, pageable);
 		
 		model.addAttribute("productManageList", productManageList);
 		model.addAttribute("search", search);
+		model.addAttribute("pmType", pmType);
+		model.addAttribute("startDate", startDateStr);
+		model.addAttribute("endDate", endDateStr);
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		model.addAttribute("staffDTO", staffDTO);
@@ -66,25 +73,25 @@ public class ProductManageController {
 		long totalProductManage = pmService.getTotalProduct();
 		model.addAttribute("totalProductManage", totalProductManage);
 		
-		// 검색창에 보일 원래 검색어를 별도로 넘긴다
-	    model.addAttribute("searchKeyword", searchValue);
-	    
 		return "productManage/manageList";
 	}
 	
 	@GetMapping("/excel")
-	public void downloadExcel(@RequestParam(required = false) String search, HttpServletResponse response) throws IOException {
+	public void downloadExcel(@RequestParam(required = false) String search, 
+								@RequestParam(required = false) String pmType,
+								@RequestParam(value="startDate", required = false) String startDateStr,
+						        @RequestParam(value="endDate", required = false) String endDateStr,
+								HttpServletResponse response) throws IOException {
+		Integer pmTypeInt = null;
+		if (pmType != null && !pmType.trim().isEmpty()) {
+		    pmTypeInt = Integer.parseInt(pmType);
+		}
 	    if (search == null) search = "";
-
-	    // 입출고 변환 (기존과 동일한 로직)
-	    if ("입고".equals(search)) {
-	        search = "80";
-	    } else if ("출고".equals(search)) {
-	        search = "90";
-	    }
+	    LocalDate startDate = (startDateStr == null) ? null : LocalDate.parse(startDateStr);
+		LocalDate endDate = (endDateStr == null) ? null : LocalDate.parse(endDateStr);
 
 	    // 전체 데이터 조회
-	    List<ProductManageDTO> list = pmService.getProductManageSearchListForExcel(search);
+	    List<ProductManageDTO> list = pmService.getProductManageSearchListForExcel(startDate, endDate, pmTypeInt, search);
 
 	    // 파일명 지정
 	    String fileName = URLEncoder.encode("물품관리대장.xlsx", StandardCharsets.UTF_8);
@@ -107,14 +114,6 @@ public class ProductManageController {
 	
 	@GetMapping("write")
 	public String write(@ModelAttribute ProductManageDTO productManageDTO, @PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
-//		if (search == null) search = "";
-//		
-//		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
-//		List<ProductDTO> productList = productPage.getContent();
-//		
-//		model.addAttribute("productList", productList);
-//		model.addAttribute("search", search);
-		
 		return "productManage/manageWrite";
 	}
 	
@@ -122,14 +121,6 @@ public class ProductManageController {
 	@GetMapping("loadProducts")
 	@ResponseBody
 	public List<ProductDTO> loadloadProducts() {
-//		if (search == null) search = "";
-//		
-//		Page<ProductDTO> productPage  = pService.getProductSearchList(search, pageable);
-//		List<ProductDTO> productList = productPage.getContent();
-//		
-//		model.addAttribute("productList", productList);
-//		model.addAttribute("search", search);
-		
 		List<ProductDTO> productList =  pmService.list();
 		
 		return productList;
@@ -137,20 +128,19 @@ public class ProductManageController {
 	
 	@PostMapping("write")
 	public String Write(@Valid ProductManageDTO productManageDTO, BindingResult bindingResult, ProductDTO pDTO, Model model) {
-		if(bindingResult.hasErrors()) {
-			return "productManage/manageWrite";
-		}
+		List<Integer> checkList = new ArrayList<>();
 		
-		if (pDTO.getProductCode() == null) {
-			String resultMsg = "입출고 대상을 지정해주세요.";
-			String resultIcon = "warning";
-			String resultUrl = "/productManage/write";
-			
-			model.addAttribute("resultUrl", resultUrl);
-			model.addAttribute("resultMsg", resultMsg);
-			model.addAttribute("resultIcon", resultIcon);
-			
-			return "common/result";
+		if(bindingResult.hasErrors()) checkList.add(1);
+		if (pDTO.getProductCode() == null) checkList.add(2);
+		
+		if (!checkList.isEmpty()) {
+			for (int check : checkList) {
+				if(check == 2) {
+					model.addAttribute("pmAmount", productManageDTO.getPmAmount());
+					model.addAttribute("productCodeMsg", "입출고 대상을 지정해주세요. (우측상단 물품검색)");
+				}
+			}
+			return "productManage/manageWrite";
 		}
 		
 		ProductManageDTO result = pmService.write(pDTO, productManageDTO);
@@ -171,66 +161,58 @@ public class ProductManageController {
 		return "common/result";
 	}
 	
-//	@GetMapping("{pmNum}/update")
-//	public String getProductManageUpdate(@PathVariable Long pmNum, @PageableDefault(size = 10, sort = "product_code", direction = Direction.ASC) Pageable pageable, String search, Model model) {
-//		if (search == null) search = "";
+//	@PostMapping("{pmNum}/delete")
+//	public String delete(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
+//		ProductManageDTO result = pmService.delete(pDTO, pmDTO);
 //		
-//		Page<ProductDTO> productPage  = pService.getProductSearchList(search,pageable);
-//		List<ProductDTO> productList = productPage.getContent();
-//		
-//		model.addAttribute("productList", productList);
-//		model.addAttribute("search", search);
-//		
-//		ProductManageDTO productManageDTO = pmService.getProductManage(pmNum);
-//		
-//		model.addAttribute("productManageDTO", productManageDTO);
-//		return "productManage/manageWrite";
-//	}
-//	
-//	@PostMapping("{pmNum}/update")
-//	public String postProductManageUpdate(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
-//		
-//		boolean result = pmService.updateProductManage(pDTO, pmDTO);
-//		
-//		String resultMsg = "입출고내역 수정 중 오류가 발생했습니다.";
+//		String resultMsg = "입출고내역 삭제 중 오류가 발생했습니다.";
 //		String resultIcon = "warning";
 //		
-//		if (result) {
-//			resultMsg = "입출고내역을 수정했습니다.";
+//		if (result != null) {
+//			resultMsg = "입출고내역을 삭제했습니다.";
 //			resultIcon = "success";
 //			String resultUrl = "/productManage";
 //			model.addAttribute("resultUrl", resultUrl);
 //		}
-//			
+//		
 //		model.addAttribute("resultMsg", resultMsg);
 //		model.addAttribute("resultIcon", resultIcon);
 //		
 //		return "common/result";
-//		
 //	}
 	
-	@PostMapping("{pmNum}/delete")
-	public String delete(ProductDTO pDTO, ProductManageDTO pmDTO, Model model) {
-		ProductManageDTO result = pmService.delete(pDTO, pmDTO);
-		
-		String resultMsg = "입출고내역 삭제 중 오류가 발생했습니다.";
-		String resultIcon = "warning";
-		
-		if (result != null) {
-			resultMsg = "입출고내역을 삭제했습니다.";
-			resultIcon = "success";
-			String resultUrl = "/productManage";
-			model.addAttribute("resultUrl", resultUrl);
-		}
-		
-		model.addAttribute("resultMsg", resultMsg);
-		model.addAttribute("resultIcon", resultIcon);
-		
-		return "common/result";
-	}
-	
 	@GetMapping("stockReport")
-	public String getStockReport() {
+	public String getStockReport(Model model) {
+		List<ProductTypeDTO> productTypeList = pService.getProductTypeList();
+		model.addAttribute("productTypeList", productTypeList);
+		
 		return "productManage/stockReport";
 	}
+	
+//	@GetMapping("summary")
+//	public String getSummary(
+//	        @RequestParam(required = false) String startDate,
+//	        @RequestParam(required = false) String endDate,
+//	        @RequestParam(required = false) String keyword,
+//	        @RequestParam(required = false) String type,
+//	        @RequestParam(required = false) Integer productTypeCode,
+//	        Model model) {
+//
+//	    // 물품타입 리스트 (보통은 DB나 enum에서 불러옴)
+//	    List<ProductTypeDTO> productTypeList = List.of(
+//	        new ProductTypeDTO(801, "식음료소모품"),
+//	        new ProductTypeDTO(802, "장비"),
+//	        new ProductTypeDTO(803, "수리소모품"),
+//	        new ProductTypeDTO(804, "기타")
+//	    );
+//	    model.addAttribute("productTypeList", productTypeList);
+//
+//	    // 조회 서비스 호출
+//	    List<ProductLogDTO> logs = pService.findLogs(startDate, endDate, keyword, type, productTypeCode);
+//
+//	    // ... 나머지 합계 계산 및 모델 설정
+//	    model.addAttribute("productList", logs);
+//
+//	    return "productManage/summary";
+//	}
 }
