@@ -21,17 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	  // 받아온 데이터 출력
 	  div.innerHTML = `
-	  <div style="padding: 25px;">
+	  <div class="d-flex flex-column justify-content-center align-items-center" style="padding: 20px;">
 	    <div style="font-size:80px;">
 	      ${icon}
 	    </div>
 	    <div style="font-size:28px; font-weight:bold; margin-top:5px;">
 	      ${data.city}
 	    </div>
-	    <div style="font-size:18px; margin-top:10px;">
-	      기온 ${data.temperature}℃<br>
-	      풍속 ${data.windspeed}m/s<br>
-		  습도 ${data.humidity}%
+	    <div style="font-size:18px;">
+	      기온: ${data.temperature}℃<br>
+	      풍속: ${data.windspeed}m/s<br>
+		  	습도: ${data.humidity}%
 	    </div>
 	 </div>	
 	  `;
