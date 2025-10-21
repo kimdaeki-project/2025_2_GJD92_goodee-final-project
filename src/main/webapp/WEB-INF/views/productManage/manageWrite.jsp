@@ -133,10 +133,11 @@ aside.sidenav {
 									<input type="number" name="pmAmount" id="pmAmount" class="form-control" value="${pmAmount }" style="height: 45px;"/>
 		  							<form:errors path="pmAmount" cssClass="text-danger small"></form:errors>
 								</div>
+	  							<c:if test="${not empty pmAmountMsg }"><div class="mt-1" id="pmAmountMsg"><small style="color: #F44335;">&nbsp;${pmAmountMsg }</small></div></c:if>
 								
 								<div class="form-group">
 									<form:label path="pmNote">비고<span class="text-danger"> *</span></form:label>
-									<form:input path="pmNote" cssClass="form-control"/>
+									<form:input path="pmNote" cssClass="form-control" placeholder="ex) 2025-10-20 입고분, "/>
 		  							<form:errors path="pmNote" cssClass="text-danger small"></form:errors>
 								</div>
 								
@@ -150,7 +151,7 @@ aside.sidenav {
 								class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3"
 								style="width: 100px;">등록</button>
 							<button type="button" class="btn btn-sm btn-outline-secondary"
-								onclick="history.back();" style="width: 100px;">취소</button>
+								onclick="location.href='/productManage'" style="width: 100px;">취소</button>
 						</div>
 					</div>
 					</form:form>
