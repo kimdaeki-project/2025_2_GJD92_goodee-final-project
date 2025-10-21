@@ -90,7 +90,7 @@
 					      <table class="table">
 					        <tr>
 					          <th>어트랙션 코드</th>
-					          <td>|&nbsp;&nbsp;${ fault.rideDTO.rideCode }</td>
+					          <td>|&nbsp;&nbsp;${fault.rideDTO.rideName }(${ fault.rideDTO.rideCode })</td>
 					        </tr>
 					        <tr>
 					          <th>어트랙션 기종</th>
@@ -102,7 +102,7 @@
 					        </tr>
 					        <tr>
 					         	<th>신고 내용</th>
-					        	<td>|&nbsp;&nbsp;${ fault.faultContent }</td>
+					        	<td style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">|&nbsp;&nbsp;${ fault.faultContent }</td>
 					        </tr>
 					        <tr>
 					          <th>담당자</th>
