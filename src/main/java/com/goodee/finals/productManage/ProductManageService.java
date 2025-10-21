@@ -1,7 +1,15 @@
 package com.goodee.finals.productManage;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +38,8 @@ public class ProductManageService {
 	@Autowired
 	private ProductTypeRepository ptRepository;
 
-	public Page<ProductManageDTO> getProductManageSearchList(String search, Pageable pageable) {
-		return pmRepository.findAllBySearch(search, pageable);
+	public Page<ProductManageDTO> getProductManageSearchList(LocalDate startDate, LocalDate endDate, Integer pmType, String search, Pageable pageable) {
+		return pmRepository.findAllBySearch(startDate, endDate, pmType, search, pageable);
 	}
 	
 	public List<ProductDTO> list(){
@@ -70,50 +78,6 @@ public class ProductManageService {
 		else return null;
 	}
 	
-	public boolean updateProductManage(ProductDTO productDTO, ProductManageDTO productManageDTO) {
-		// 물품, 유형, 수량, 비고(수정되었음 표시)
-		// 1. 삭제 pm 등록
-		delete(productDTO, productManageDTO);
-		
-		// 2. 새로 입력된 pm 새로 등록 + 수정 메세지 비고란에
-		ProductManageDTO newPmDTO = new ProductManageDTO();
-		
-		ProductManageDTO pmDB = pmRepository.findById(productManageDTO.getPmNum()).orElseThrow();
-		
-		newPmDTO.setStaffDTO(pmDB.getStaffDTO());
-		
-		ProductDTO productDB = pRepository.findById(productDTO.getProductCode()).orElseThrow();
-			
-		Long pmAmount = productManageDTO.getPmAmount(); // 새로입력한 수량
-		Long pAmount = productDB.getProductAmount(); // 물품 현재수량
-		
-		Long pmNum = productManageDTO.getPmNum(); // 기존 pmDTO 번호
-		
-		// 출고 90 코드일 때, 음수로 변환
-		if (productManageDTO.getPmType() == 90) {
-			newPmDTO.setPmType(90);
-			newPmDTO.setPmAmount(pmAmount);
-			newPmDTO.setPmRemainAmount(pAmount + (-pmAmount));
-			newPmDTO.setPmNote(productManageDTO.getPmNote() + " (No."+pmNum+"  내용 정정)");
-		}else {
-			newPmDTO.setPmType(80);
-			newPmDTO.setPmAmount(pmAmount);
-			newPmDTO.setPmRemainAmount(pAmount + pmAmount);
-			newPmDTO.setPmNote(productManageDTO.getPmNote() + " (No."+pmNum+"  내용 정정)");
-		}
-		
-		// product 현재수량 저장
-		productDB.setProductAmount(newPmDTO.getPmRemainAmount());
-		newPmDTO.setProductDTO(productDB);
-		
-		ProductManageDTO result1 = pmRepository.save(newPmDTO);
-		ProductDTO result2 = pRepository.save(productDB);
-		
-		if (result2 != null) return true;
-		else return false;
-		
-	}
-	
 	public ProductManageDTO delete(ProductDTO productDTO, ProductManageDTO productManageDTO) {
 		productManageDTO = pmRepository.findById(productManageDTO.getPmNum()).orElseThrow();
 
@@ -150,4 +114,83 @@ public class ProductManageService {
 		return result;
 	}
 	
+	// 엑셀용 전체 리스트
+    public List<ProductManageDTO> getProductManageSearchListForExcel(LocalDate startDate, LocalDate endDate, Integer pmType, String search) {
+        return pmRepository.findBySearchKeyword(startDate, endDate, pmType, search);
+    }
+
+    // 엑셀 작성
+    public void writeProductManageExcel(List<ProductManageDTO> list, OutputStream os) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("물품관리대장");
+
+        // 헤더 작성
+        Row header = sheet.createRow(0);
+        String[] headers = {"No.", "입출고일자", "물품명", "구분", "등록수량", "잔여수량", "작성자", "비고"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = header.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+
+        // 데이터 작성
+        int rowIdx = 1;
+        for (ProductManageDTO pm : list) {
+            Row row = sheet.createRow(rowIdx++);
+            row.createCell(0).setCellValue(pm.getPmNum());
+            row.createCell(1).setCellValue(pm.getPmDate().toString());
+            row.createCell(2).setCellValue(pm.getProductDTO().getProductName());
+            row.createCell(3).setCellValue(pm.getPmType() == 90 ? "출고" : "입고");
+            row.createCell(4).setCellValue(pm.getPmAmount());
+            row.createCell(5).setCellValue(pm.getPmRemainAmount());
+            row.createCell(6).setCellValue(pm.getStaffDTO().getStaffName());
+            row.createCell(7).setCellValue(pm.getPmNote() == null ? "" : pm.getPmNote());
+        }
+
+        // 열 너비 자동 조정
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        workbook.write(os);
+        workbook.close();
+    }
+	
+    // 조건 검색 (기간, 카테고리, 입출고, 키워드)
+//    public List<ProductManageDTO> findByConditions(LocalDate startDate,
+//                                                   LocalDate endDate,
+//                                                   Integer productTypeCode,
+//                                                   String inoutType,
+//                                                   String keyword) {
+//
+//        if (keyword != null && keyword.trim().isEmpty()) keyword = null;
+//        if (inoutType != null && inoutType.trim().isEmpty()) inoutType = null;
+//
+//        return productManageRepository.findByConditions(startDate, endDate, productTypeCode, inoutType, keyword);
+//    }
+//
+//    // 통계용 합계 계산
+//    public ProductSummary calculateSummary(List<ProductManageDTO> list) {
+//        int totalIn = 0;
+//        int totalOut = 0;
+//        int totalStock = 0;
+//        int totalItems = 0;
+//
+//        if (list != null && !list.isEmpty()) {
+//            totalItems = (int) list.stream()
+//                    .map(pm -> pm.getProductDTO().getProductName())
+//                    .distinct()
+//                    .count();
+//
+//            for (ProductManageDTO dto : list) {
+//                if ("입고".equals(dto.getPmTypeName()) || dto.getPmType() == 80) {
+//                    totalIn += dto.getPmAmount();
+//                } else if ("출고".equals(dto.getPmTypeName()) || dto.getPmType() == 90) {
+//                    totalOut += dto.getPmAmount();
+//                }
+//                totalStock += dto.getPmRemainAmount();
+//            }
+//        }
+//
+//        return new ProductSummary(totalItems, totalIn, totalOut, totalStock);
+//    }
 }

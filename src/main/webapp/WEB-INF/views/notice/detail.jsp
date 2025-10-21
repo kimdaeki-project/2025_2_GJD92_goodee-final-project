@@ -33,12 +33,13 @@
     <c:import url="/WEB-INF/views/common/nav.jsp"></c:import>
     
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3 p-4 shadow-sm" style="min-height: 90vh; overflow-y: auto;">
+    <div class="col-8 offset-2 mt-4">
 		<% pageContext.setAttribute("br", "\n"); %>
         <sec:authorize access="isAuthenticated()">
 			<sec:authentication property="principal" var="logged" />
 		</sec:authorize>
 		<!-- 제목 -->
-		<h4 class="fw-bold mb-3">${ notice.noticeTitle }</h4>
+		<h3 class="fw-bold mb-3">${ notice.noticeTitle }</h3>
     	
     	<!-- 작성자 정보 -->
     	<div class="d-flex align-items-center mb-4">
@@ -52,7 +53,7 @@
 
 
 		<!-- 내용 -->
-		<div class="mb-4 p-3 border rounded bg-white">
+		<div class="mb-4 p-3 border rounded bg-white" style="height: 400px; overflow: auto;">
 			${fn:replace(notice.noticeContent, br, '<br>')}
 		</div>
 
@@ -96,6 +97,7 @@
 		<!-- 스크립트 -->
 		<script type="text/javascript" src="/js/notice/detail.js"></script>
 
+		</div>
     </section>
   </main>
 

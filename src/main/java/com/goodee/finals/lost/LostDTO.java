@@ -18,13 +18,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "lost")
 public class LostDTO {
@@ -32,8 +32,10 @@ public class LostDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long lostNum;
+	@NotBlank(message = "분실물명은 필수입니다.")
 	private String lostName;
 	private String lostFinder;
+	@Pattern(regexp = "^$|^010-([0-9]{4,})-([0-9]{4,})$", message = "휴대폰 번호를 정확하게 입력해주세요.")
 	private String lostFinderPhone;
 	private String lostNote;
 	private LocalDate lostDate = LocalDate.now();
@@ -51,4 +53,15 @@ public class LostDTO {
 	@JsonManagedReference
 	private LostAttachmentDTO lostAttachmentDTO; 
 	
+	public void setLostName(String lostName) {
+	    this.lostName = lostName == null ? null : lostName.trim();
+	}
+	
+	public void setLostFinder(String lostFinder) {
+		this.lostFinder = lostFinder == null ? null : lostFinder.trim();
+	}
+	
+	public void setLostNote(String lostNote) {
+		this.lostNote = lostNote == null ? null : lostNote.trim();
+	}
 }

@@ -16,7 +16,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>분실물 목록</title>
+	<title>분실물</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -32,9 +32,22 @@
     	<div class="col-10 offset-1">
 		    <div class="d-flex justify-content-between align-items-end mt-4 mb-4">
 		   		<div>총 &nbsp;${lostList.totalElements } 건</div>
-				<div class="input-group w-25">
-					<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
-					<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+		   		
+				<div class="d-flex align-items-center">
+				
+					<div class="col-auto">
+				      <input type="date" name="startDate" id="startDate" class="form-control" value="${startDate}" style="width: 150px;">
+				    </div>
+				    <div>~</div>
+				    <div class="col-auto me-2">
+				      <input type="date" name="endDate" id="endDate" class="form-control" value="${endDate}" style="width: 150px;">
+				    </div>
+				    
+					<div class="input-group" style="width: 250px;">
+						<input type="text" class="form-control" id="searchText" value="${ requestScope.search }" placeholder="분실물명 또는 작성자" style="width: 200px; height: 30px; border-radius: 0.375rem 0 0 0.375rem !important;" >
+						<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white p-0 m-0" type="button" onclick="movePage()" style="width: 50px; height: 30px;" >검색</button>
+					</div>
+					
 				</div>
 			</div>
     		<table class="table table-hover text-center">
@@ -62,8 +75,11 @@
     			</tbody>
     		</table>
     
-		     <c:if test="${ totalLost eq 0 }">
-		        <div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+		     <c:if test="${ lostList.totalElements eq 0 }">
+		        <div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">검색 결과가 없습니다.</h4>
+	  </div>
 		    </c:if>
     	
 	    	<div class="d-flex justify-content-center aling-items-center">
@@ -96,11 +112,13 @@
 				</c:if>
 		    </div>
 				
-			<div class="d-flex justify-content-end aling-items-end">
-				<div>
-		    		<button onclick="location.href='/lost/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
-	   			</div>
-			</div>
+			<c:if test="${staffDTO.deptDTO.deptCode eq 1002}">	
+				<div class="d-flex justify-content-end aling-items-end">
+					<div>
+			    		<button onclick="location.href='/lost/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
+		   			</div>
+				</div>
+			</c:if>
     	</div>
     </div>
 		    
@@ -114,7 +132,7 @@
 				</div>
 				
 				<div class="modal-body">
-					<div class="text-center mb-5" id="lostDetailAttach">
+					<div class="text-center mb-3" id="lostDetailAttach">
 					
 					</div>
 					<div class="d-flex justify-content-center">
@@ -148,7 +166,6 @@
 	</script>
 	<script>
 	const loginStaffCode = "${staffDTO.staffCode}";
-	console.log(loginStaffCode);
 	</script>
 </body>
 

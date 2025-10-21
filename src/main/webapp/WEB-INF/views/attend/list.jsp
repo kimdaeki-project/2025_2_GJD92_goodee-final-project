@@ -8,7 +8,7 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>근태</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 <c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 </head>
@@ -77,11 +77,13 @@
 								<div>근로시간 현황</div>
 								
 								<div class="d-flex align-content-center">
-        							<a href="/attend?baseDate=${prevWeek}">
+        							<a href="/attend?baseDate=${prevWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_backward</span>
         							</a>
-									<small>&nbsp;${mondayStr }(월)&nbsp; ~ &nbsp;${sundayStr }(일)&nbsp;</small> 
-        							<a href="/attend?baseDate=${nextWeek}">
+									<small class="text-center date-range"
+	      									 style="display:inline-block; min-width: 150px;">
+	       								&nbsp;${mondayStr }(월)<span class="me-2 ms-2">~</span>${sundayStr }(일)&nbsp;</small> 
+        							<a href="/attend?baseDate=${nextWeek}&month=${month}">
         								<span class="material-symbols-outlined">chevron_forward</span>
         							</a>
 								</div>
@@ -91,33 +93,34 @@
 								<p>- 주 근로시간 : 40h 00m</p>
 								<p>- 누적 근로시간 : ${totalWorkTime}</p>
 								<p>- 잔여 근로시간 : ${remainingWorkTime }</p>
-								<p>- 연장 근로시간 : ${overtimeWorkTime}</p>
+								<p>- 연장 근로시간 : ${overtimeWorkTime eq null ? "00h 00m" : overtimeWorkTime}</p>
 								
+								<div class="work-progress mt-5 mb-5" style="margin-top:15px;">
 								
-								<div class="work-progress mt-5" style="margin-top:15px;">
-								  <label>근로시간 현황</label>
-								  <div class="progress" style="height: 25px; border-radius: 10px;">
-								  
-								    <!-- 주 근로시간 -->
-								    <div class="progress-bar bg-success" role="progressbar" 
-								         style="width: 77%; height: 12px;" 
-								         aria-valuenow="40" aria-valuemin="0" aria-valuemax="52">
-								      40h
+								  <div class="progress" style="height: 10px; border-radius: 3px; background-color:#e9ecef;">
+								
+								    <!-- 주 근로시간 전체바 -->
+								    <div class="progress-bar bg-light position-relative"
+								         style="height:12px; width: 77%; border-top-left-radius:3px; border-bottom-left-radius:3px;">
+								      
+								      <!-- 실제 근로시간만큼 내부 채우기 -->
+								      <div style="width: ${weekPercent}%; height: 100%; background-color: green; border-radius: inherit;"></div>
+								      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">40h</span>
 								    </div>
-								    
-								    <!-- 연장 근로시간 -->
-								    <div class="progress-bar bg-primary" role="progressbar" 
-								         style="width: 23%; height: 12px;" 
-								         aria-valuenow="12" aria-valuemin="0" aria-valuemax="52">
-								      +12h
+								
+								    <!-- 연장근로 전체바 -->
+								    <div class="progress-bar bg-light position-relative"
+								         style="height:12px; width: 23%; border-top-right-radius:3px; border-bottom-right-radius:3px;">
+								      
+								      <div style="width: ${overPercent}%; height: 100%; background-color: red; border-radius: inherit;"></div>
+								      <span style="position:absolute; left:50%; transform:translateX(-50%); color:white;">+12h</span>
 								    </div>
-								    
+								
 								  </div>
 								</div>
-								
-								
 							</div>
 						</div>
+						
 					</div>
 
 					<!-- 오른쪽 출퇴근 내역 -->
@@ -129,7 +132,7 @@
 								</div>
 								<div>
 								<form action="${pageContext.request.contextPath}/attend/monthly" method="get">
-									<input type="hidden" name="staffCode" value="${staffDTO.staffCode}" />
+									<input type="hidden" name="baseDate" value="${monday }">
 									<label for="year">년도</label>
 									<select name="year" id="year">
 										<c:forEach var="y" begin="2020" end="2030">
@@ -172,8 +175,22 @@
 													<td>${attend.attendOut eq null ? "--:--:--" : attend.formattedAttendOut}</td>
 													<td>${attend.workTime }</td>
 													<td>${attend.totalWorkTime }</td>
-													<td>${attend.attendStatus }</td>
+													<c:set var="isEarlytime" value="false" scope="page" />
+													<c:forEach items="${earlyList}" var="early">
+													    <c:set var="earlyDateOnly" value="${fn:substring(early.earlyDtm, 0, 10)}" />
+													    <c:if test="${attend.attendDate eq earlyDateOnly}">
+													        <c:set var="isEarlytime" value="true" scope="page" />
+													    </c:if>
+													</c:forEach>
 													
+													<td>
+													    <c:if test="${isEarlytime}">
+													        ${fn:replace(attend.attendStatus, '조퇴(미승인)', '조퇴(승인)')}
+													    </c:if>
+													    <c:if test="${!isEarlytime}">
+													        ${attend.attendStatus}
+													    </c:if>
+													</td>
 													<td>
 											            <c:set var="isOvertime" value="false" />
 											            <c:forEach items="${overtimeList}" var="over">
@@ -221,6 +238,8 @@
 		</section>
 	</main>
 	<c:import url="/WEB-INF/views/common/footer.jsp"></c:import>
+	<script src="/js/lost/list.js"></script>
+	
 	<script>
 		document.querySelector("i[data-content='근태']").parentElement.classList
 				.add("bg-gradient-dark", "text-white")

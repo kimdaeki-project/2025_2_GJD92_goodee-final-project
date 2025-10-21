@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.goodee.finals.messenger.ChatRoomDTOProjection;
-
 @Repository
 public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 
@@ -19,13 +17,13 @@ public interface StaffRepository extends JpaRepository<StaffDTO, Integer> {
 	
 	List<StaffDTO> findByStaffEnabled(Boolean staffEnabled);
 	
-	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
+	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_email LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearch(String search, Pageable pageable);
 	
 	@NativeQuery(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) LEFT OUTER JOIN (SELECT * FROM attend WHERE attend_date = :today) a USING(staff_code) WHERE (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1")
 	Page<StaffDTO> findAllBySearchWithTodayAttend(String today, String search, Pageable pageable);
 	
-	@Query(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE s.dept_code = :deptCode AND (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1", nativeQuery = true)
+	@Query(value = "SELECT * FROM staff s INNER JOIN dept d USING(dept_code) INNER JOIN job j USING(job_code) WHERE s.dept_code = :deptCode AND (s.staff_name LIKE %:search% OR d.dept_detail LIKE %:search% OR j.job_detail LIKE %:search% OR s.staff_phone LIKE %:search% OR s.staff_email LIKE %:search% OR s.staff_code LIKE %:search%) AND s.staff_enabled = 1", nativeQuery = true)
 	Page<StaffDTO> findAllByDeptCodeAndSearch(Integer deptCode, String search, Pageable pageable);
 	
 	@Query("SELECT s FROM StaffDTO s JOIN FETCH s.deptDTO JOIN FETCH s.jobDTO WHERE s.staffEnabled = true")

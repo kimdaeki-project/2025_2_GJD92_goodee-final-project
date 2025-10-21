@@ -1,5 +1,9 @@
 package com.goodee.finals.lost;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,15 +12,19 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.goodee.finals.staff.StaffDTO;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -28,13 +36,21 @@ public class LostController {
 	private LostService lostService;
 	
 	@GetMapping("")
-	public String getLostList(@PageableDefault(size = 10, sort = "lost_num", direction = Direction.DESC) Pageable pageable, String search, Model model) {
+	public String getLostList(@PageableDefault(size = 10, sort = "lost_num", direction = Direction.DESC) Pageable pageable, 
+								@RequestParam(value="startDate", required = false) String startDateStr,
+						        @RequestParam(value="endDate", required = false) String endDateStr,
+						        String search,
+								Model model) {
 		if (search == null) search = "";
-		
-		Page<LostDTO> lostList = lostService.getLostSearchList(search, pageable);
+		LocalDate startDate = (startDateStr == null) ? null : LocalDate.parse(startDateStr);
+		LocalDate endDate = (endDateStr == null) ? null : LocalDate.parse(endDateStr);
+				
+		Page<LostDTO> lostList = lostService.getLostSearchList(startDate, endDate, search, pageable);
 		
 		model.addAttribute("lostList", lostList);
 		model.addAttribute("search", search);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
 		
 		StaffDTO staffDTO = (StaffDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		model.addAttribute("staffDTO", staffDTO);
@@ -55,28 +71,44 @@ public class LostController {
 	}
 	
 	@GetMapping("write")
-	public String write() {
+	public String write(@ModelAttribute LostDTO lostDTO, Model model) {
 		return "lost/write";
 	}
 	
 	@PostMapping("write")
-	public String write(LostDTO lostDTO, MultipartFile attach, Model model) throws Exception {
-		LostDTO result = lostService.write(lostDTO, attach);
+	public String write(@Valid LostDTO lostDTO, BindingResult bindingResult, MultipartFile attach, Model model) throws Exception {
+		List<Integer> checkList = new ArrayList<>();
 		
-		String resultMsg = "분실물 등록 중 오류가 발생했습니다.";
-		String resultIcon = "warning";
+		if (bindingResult.hasErrors()) checkList.add(1);
+		if (attach == null || attach.getSize() <= 0) checkList.add(2);
 		
-		if (result != null) {
-			resultMsg = "분실물을 성공적으로 등록했습니다.";
-			resultIcon = "success";
-			String resultUrl = "/lost";
-			model.addAttribute("resultUrl", resultUrl);
+		if (!checkList.isEmpty()) {
+			for (int check : checkList) {
+				if(check == 2) {
+					model.addAttribute("fileErrorMsg", "파일을 첨부해주세요.");
+				}
+			}
+			return "lost/write";
+			
+		} else {
+				
+			LostDTO result = lostService.write(lostDTO, attach);
+			
+			String resultMsg = "분실물 등록 중 오류가 발생했습니다.";
+			String resultIcon = "warning";
+			
+			if (result != null) {
+				resultMsg = "분실물을 성공적으로 등록했습니다.";
+				resultIcon = "success";
+				String resultUrl = "/lost";
+				model.addAttribute("resultUrl", resultUrl);
+			}
+			
+			model.addAttribute("resultMsg", resultMsg);
+			model.addAttribute("resultIcon", resultIcon);
+			
+			return "common/result";
 		}
-		
-		model.addAttribute("resultMsg", resultMsg);
-		model.addAttribute("resultIcon", resultIcon);
-		
-		return "common/result";
 	}
 	
 	@GetMapping("{lostNum}/update")
@@ -88,7 +120,11 @@ public class LostController {
 	}
 	
 	@PostMapping("{lostNum}/update")
-	public String postLostUpdate(LostDTO lostDTO, MultipartFile attach, Model model) {
+	public String postLostUpdate(@Valid LostDTO lostDTO, BindingResult bindingResult, MultipartFile attach, Model model) {
+		if(bindingResult.hasErrors()) {
+			return "lost/write";
+		}
+		
 		boolean result = lostService.updateLost(lostDTO, attach);
 		
 		String resultMsg = "분실물 수정 중 오류가 발생했습니다.";

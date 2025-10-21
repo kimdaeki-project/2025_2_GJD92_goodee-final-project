@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 
@@ -74,46 +75,51 @@
     
     <section class="border-radius-xl bg-white ms-2 mt-2 me-3" style="height: 92vh; width: 100%; overflow: hidden;">
 
+		<form:form method="post" modelAttribute="productDTO" enctype="multipart/form-data" class="d-flex flex-column mt-6" style="gap: 80px;">
 		<div class="col-6 offset-3">
 
       <h4 class="text-center mt-5 mb-5">${empty productDTO.productCode ? "물품 등록" : "물품 수정" }</h4>
-      <form method="post" enctype="multipart/form-data" class="d-flex flex-column mt-6" style="gap: 40px;">
       	<div class="d-flex justify-content-between" >
       	
       	<div style="flex: 1;">
 			<div class="form-group">
-	        	<img id="preview" width="300" height="300" style="object-fit: clip;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
+	          <label for="attach">사진첨부<span class="text-danger"> *</span></label>
+	        	<img id="preview" width="300" height="300" style="object-fit: contain;" <c:if test="${ not empty productDTO.productCode }">src="/file/product/${ productDTO.productAttachmentDTO.attachmentDTO.savedName }"</c:if> />
 	        </div>
 	        
 	        <div class="form-group">
-<!-- 	          <label for="attach">사진첨부</label> -->
 	          <input type="file" id="attach" name="attach">
+	          <c:if test="${not empty fileErrorMsg }"><div id="fileMsg"><small style="color: #F44335;">${fileErrorMsg }</small></div></c:if>
 	        </div>
         </div>
         
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 300px;">
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 350px;">
         <div class="form-group">
-        	<label for="productTypeCode">물품 타입</label>
-        	<select class="form-select" id="productTypeCode" name="productTypeDTO.productTypeCode" style="width:80%; height:44px;">
-				<option value="">--선택--</option>
-        		<c:forEach items="${productTypeList }" var = "productType">
-				<option value="${productType.productTypeCode }"
-					<c:if test="${productType.productTypeCode == productDTO.productTypeDTO.productTypeCode}">
-		                selected
-		            </c:if>>
-				${productType.productTypeName }</option>
-				</c:forEach>
-			</select>
+        	<form:label path="productTypeDTO.productTypeCode">물품 타입<span class="text-danger"> *</span></form:label>
+			<form:select path="productTypeDTO.productTypeCode"
+			             items="${productTypeList}"
+			             itemValue="productTypeCode"
+			             itemLabel="productTypeName"
+			             cssClass="form-select"
+			             style="width:80%; height:44px;">
+			</form:select>
+			<c:if test="${not empty productTypeErrorMsg }"><div><small style="color: #F44335;">${productTypeErrorMsg }</small></div></c:if>
         </div>
 			
 		<div class="form-group">
-          <label for="productName">물품명</label>
-          <input type="text" id="productName" name="productName" value="${productDTO.productName }" required>
+		  <form:label path="productName">물품명<span class="text-danger"> *</span></form:label>
+		  <form:input path="productName" cssClass="form-control"/>
+		  <form:errors path="productName" cssClass="text-danger small"></form:errors>
 		</div>
 		
+		<c:if test="${not empty productDTO.productAmount }">
+			<input type="hidden" name="productAmount" value="${productDTO.productAmount }">
+		</c:if>
+		
 		<div class="form-group">
-          <label for="productSpec">규격</label>
-          <input type="text" id="productSpec" name="productSpec" value="${productDTO.productSpec }" required>
+		  <form:label path="productSpec">규격<span class="text-danger"> *</span></form:label>
+		  <form:input path="productSpec" cssClass="form-control"/>
+		  <form:errors path="productSpec" cssClass="text-danger small"></form:errors>
 		</div>
 
       </div>
@@ -123,9 +129,9 @@
 	        <button type="submit" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3" style="width: 100px;">${ empty productDTO.productCode ? "등록" : "수정" }</button>
 	        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back();" style="width: 100px;">취소</button>
 	    </div>
-      </form>
       </div>
-
+		</form:form>
+		
     </section>
     </div>
   </main>

@@ -1,6 +1,7 @@
 package com.goodee.finals.lost;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,8 +31,8 @@ public class LostService {
 	@Autowired
 	private LostRepository lostRepository;
 	
-	public Page<LostDTO> getLostSearchList(String search, Pageable pageable) {
-		return lostRepository.findAllBySearch(search, pageable);
+	public Page<LostDTO> getLostSearchList(LocalDate startDate, LocalDate endDate, String search, Pageable pageable) {
+		return lostRepository.findAllBySearch(startDate, endDate, search, pageable);
 	}
 	
 	public long getTotalLost() {
@@ -91,11 +92,8 @@ public class LostService {
 			AttachmentDTO beforeAttach = before.getLostAttachmentDTO().getAttachmentDTO();
 			
 			String savedName = attachmentRepository.findById(beforeAttach.getAttachNum()).get().getSavedName();
-			boolean deleteResult = fileService.fileDelete(FileService.LOST, savedName);
-			
-			if(deleteResult) {
-				attachmentRepository.deleteById(beforeAttach.getAttachNum());
-			}
+			attachmentRepository.deleteById(beforeAttach.getAttachNum());
+			fileService.fileDelete(FileService.LOST, savedName);
 			
 			AttachmentDTO attachmentDTO = new AttachmentDTO();
 			
