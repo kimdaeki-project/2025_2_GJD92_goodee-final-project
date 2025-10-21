@@ -282,7 +282,7 @@ public class MessengerService {
 		return result;
 	}
 
-	public void unread(Long chatRoomNum) {
+	public int unread(Long chatRoomNum) {
 		Optional<StaffDTO> staffDTO = staffRepository.findById(Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName()));
 		Integer staffCode = staffDTO.get().getStaffCode();
 		
@@ -293,6 +293,7 @@ public class MessengerService {
 		}
 		
 		int result = messengerRepository.unread(chatRoomNum, staffCode, chatBodyNum);
+		return result;
 	}
 
 	public int getUnreadCounts(Long r) {
