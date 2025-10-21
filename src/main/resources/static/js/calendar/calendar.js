@@ -77,6 +77,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 	 	 month: '월간',
 		 today: '오늘'
 	},
+	allDayText : '종일',
 	eventSources: [
 		{
 			googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com', // 대한민국 공휴일
@@ -301,7 +302,7 @@ function addCalendar() {
 	const start = dayjs(`${calStartDate} ${calStartHour}:${calStartMin}`, "YYYY-MM-DD HH:mm")
 	const end   = dayjs(`${calEndDate} ${calEndHour}:${calEndMin}`, "YYYY-MM-DD HH:mm")
 	
-	if(end.isBefore(start)) {
+	if(end.valueOf() <= start.valueOf() && !inputCalIsAllDay.checked) {
 		Swal.fire({
 	        text: "종료일을 시작일보다 빠르게 설정할 수 없습니다.",
 	        icon: "error",
@@ -362,7 +363,7 @@ function addInCalendar(cal) {
 		end: plusOneDay(cal),     
 		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
-		classNames: ['my-event'],
+		classNames: ['my-event', `cal-type-${cal.calType}`],
 		editable : (cal.staffDTO.staffCode === loginStaffCode || loginStaffCode === 20250001),
 		extendedProps: {
 			calNum      : cal.calNum,
@@ -426,15 +427,24 @@ function dragResizeUpdate(eventInfo) {
 	const calStart = dayjs(eventInfo.event.startStr).format("YYYY-MM-DDTHH:mm:ss");
 	let calEnd = dayjs(eventInfo.event.endStr).format("YYYY-MM-DDTHH:mm:ss");
 	
+	console.log(eventInfo)
+	
 	if(eventInfo.event.allDay) {
 		calEnd = dayjs(eventInfo.event.endStr).add(-1, "day").format("YYYY-MM-DDTHH:mm:ss");
-	};
+	}
+	
+	if(eventInfo.event.endStr === null || eventInfo.event.endStr === "") {
+		calEnd = calStart
+	}
 	
 	const calEvent = {
-		calNum   : eventInfo.event._def.extendedProps.calNum,
-		calStart : calStart,
-		calEnd   : calEnd
+		calNum      : eventInfo.event._def.extendedProps.calNum,
+		calStart    : calStart,
+		calEnd      : calEnd,
+		calIsAllDay : eventInfo.event.allDay
 	}
+	
+	console.log(calEvent)
 	
 	fetch("/calendar/updateDate", {
 		method: "POST",
@@ -495,7 +505,6 @@ function plusOneDay(cal) {
 	if(cal.calIsAllDay) {
 		modEndDate = dayjs(modEndDate).add(1, "day").toDate();
 	}
-	
 	return modEndDate;
 }
 

@@ -185,7 +185,7 @@
 													
 													<td>
 													    <c:if test="${isEarlytime}">
-													        ${fn:replace(attend.attendStatus, '조퇴(미승인)', '조퇴(승인)')}
+													        ${fn:replace(attend.attendStatus, '조퇴(미승인)', '조퇴')}
 													    </c:if>
 													    <c:if test="${!isEarlytime}">
 													        ${attend.attendStatus}

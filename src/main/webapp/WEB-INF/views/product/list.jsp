@@ -133,6 +133,10 @@
 					<div>
 					    <button onclick="location.href='/product/write'" class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white me-3">등록</button>
 					</div>
+					<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white ms-2"
+					        onclick="downloadExcel()">
+					    Excel
+					</button>
 				</div>
 		      </c:if>
 	    	</div>
