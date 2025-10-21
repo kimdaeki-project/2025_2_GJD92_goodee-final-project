@@ -363,7 +363,7 @@ function addInCalendar(cal) {
 		end: plusOneDay(cal),     
 		backgroundColor: eventBgColor(cal.calType),
 		borderColor: "transparent",
-		classNames: ['my-event'],
+		classNames: ['my-event', `cal-type-${cal.calType}`],
 		editable : (cal.staffDTO.staffCode === loginStaffCode || loginStaffCode === 20250001),
 		extendedProps: {
 			calNum      : cal.calNum,
