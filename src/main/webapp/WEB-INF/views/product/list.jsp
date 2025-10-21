@@ -92,7 +92,10 @@
 	    		</table>
 	    		
 			    <c:if test="${ productList.totalElements eq 0 }">
-					<div class="alert alert-secondary text-center" style="color: white;">검색된 결과가 없습니다.</div>
+					<div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">검색 결과가 없습니다.</h4>
+	  </div>
 				</c:if>
 				
 			    <div class="d-flex justify-content-center aling-items-center">
