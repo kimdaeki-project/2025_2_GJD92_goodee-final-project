@@ -212,7 +212,10 @@
 									</table>
 
 									<c:if test="${ attendances.content.size() eq 0 }">
-								        <div class="alert alert-secondary text-center" style="color: white;">조회된 결과가 없습니다.</div>
+								        <div class="d-flex flex-column justify-content-center align-items-center mt-8">
+	  	<img width="150" height="180" src="/images/nothing.png" />
+	  	<h4 class="mt-5">조회 결과가 없습니다.</h4>
+	  </div>
 								    </c:if>
 									<!-- 페이징 -->
 									<c:if test="${attendances.content.size() gt 0 }">

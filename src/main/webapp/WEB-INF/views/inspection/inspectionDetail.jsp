@@ -61,9 +61,9 @@
 	        <div class="col-10">
 			  <!-- 레일형 / 고속형 어트랙션 -->
 	          <div class="card my-4 mt-8 m-8">
-				  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-				    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-4">
-				      <h3 class="text-white text-capitalize ps-5 mt-3"> ${inspection.rideDTO.rideName } </h3>
+				  <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 w-50">
+				    <div class="bg-gradient-dark shadow-dark border-radius-lg pt-3 pb-2">
+				      <h3 class="text-white text-capitalize text-center"> ${inspection.rideDTO.rideName } 점검 기록</h3>
 				    </div>
 				  </div>
 			  
