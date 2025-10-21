@@ -29,7 +29,7 @@
 			            <label class="form-check-label fw-bold" for="noticePinned">상단 고정</label>
 			        </div>
 			    </div>
-			    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" value="${ notice.noticeTitle }">
+			    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" value="${ notice.noticeTitle }" autocomplete="off">
 			    <form:errors path="noticeTitle" cssStyle="color: red;"></form:errors>
 			</div>
 
@@ -52,7 +52,7 @@
 			<!-- 본문 -->
 			<div class="mb-4">
 				<label for="noticeContent" class="fw-bold d-block mb-2">본문</label>
-				<textarea rows="10" class="form-control" id="noticeContent" name="noticeContent" style="resize: none;">${ notice.noticeContent }</textarea>
+				<textarea rows="10" class="form-control" id="noticeContent" name="noticeContent" style="resize: none;" autocomplete="off">${ notice.noticeContent }</textarea>
 				<form:errors path="noticeContent" cssStyle="color: red;"></form:errors>
 			</div>
 
