@@ -162,7 +162,7 @@
 		   		</c:if>
 					<button class="btn btn-sm btn-outline-secondary bg-gradient-dark text-white ms-2"
 					        onclick="downloadExcel()">
-					    엑셀 다운로드
+					    Excel
 					</button>
 					<%-- <button class="btn btn-sm btn-outline-success text-white ms-2"
         onclick="location.href='/productManage/excel?search=${searchKeyword}'"
