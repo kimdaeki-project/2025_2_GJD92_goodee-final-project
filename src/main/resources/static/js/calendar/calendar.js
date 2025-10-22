@@ -106,8 +106,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 		}
 	},
 	eventClick: function(eventInfo) {
-		if (eventInfo.event.classNames.includes('holiday-event')) { // 휴일은 클릭시 아무런 동작하지 않음
-		}
+		if (eventInfo.event.classNames.includes('holiday-event')) return;	
 		calDetail(eventInfo);
 		modalCalendarDetail.show();
 	},
