@@ -75,7 +75,7 @@ public class AttendDTO {
         Duration duration = Duration.between(attendIn, attendOut);
 
         // 휴게시간 1시간 빼는 조건 체크
-        boolean isRestApplicable = attendIn.isBefore(LocalTime.NOON) && attendOut.isAfter(LocalTime.of(13, 0));
+        boolean isRestApplicable = attendIn.isBefore(LocalTime.of(10, 0)) && attendOut.isAfter(LocalTime.of(18, 0));
 
         if (isRestApplicable) {
             duration = duration.minusHours(1);

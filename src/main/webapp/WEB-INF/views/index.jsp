@@ -6,7 +6,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>대시보드</title>
 	
 	<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 	<style>

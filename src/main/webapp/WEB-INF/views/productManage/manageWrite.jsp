@@ -132,8 +132,8 @@ aside.sidenav {
 									<form:label path="pmAmount">수량<span class="text-danger"> *</span></form:label>
 									<input type="number" name="pmAmount" id="pmAmount" class="form-control" value="${pmAmount }" style="height: 45px;"/>
 		  							<form:errors path="pmAmount" cssClass="text-danger small"></form:errors>
-								</div>
 	  							<c:if test="${not empty pmAmountMsg }"><div class="mt-1" id="pmAmountMsg"><small style="color: #F44335;">&nbsp;${pmAmountMsg }</small></div></c:if>
+								</div>
 								
 								<div class="form-group">
 									<form:label path="pmNote">비고<span class="text-danger"> *</span></form:label>
@@ -179,6 +179,7 @@ aside.sidenav {
 											<th>물품번호</th>
 											<th>물품타입</th>
 											<th>물품명</th>
+											<th>규격</th>
 											<th>선택</th>
 										</tr>
 									</thead>

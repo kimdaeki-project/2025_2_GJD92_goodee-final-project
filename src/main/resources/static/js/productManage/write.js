@@ -63,6 +63,7 @@ function renderProduct(r) {
 		<td>${product.productCode}</td>
 		<td>${product.productTypeDTO.productTypeName}</td>
 		<td>${product.productName}</td>
+		<td>${product.productSpec}</td>
 		<td>
 			<button type="button"
 				class="btn btn-sm bg-gradient-dark select-product"
