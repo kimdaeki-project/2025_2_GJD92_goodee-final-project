@@ -137,7 +137,7 @@ aside.sidenav {
 								
 								<div class="form-group">
 									<form:label path="pmNote">비고<span class="text-danger"> *</span></form:label>
-									<form:input path="pmNote" cssClass="form-control" placeholder="ex) 2025-10-20 입고분, "/>
+									<form:input path="pmNote" cssClass="form-control" placeholder="ex) 정기 재고 보충분 입고"/>
 		  							<form:errors path="pmNote" cssClass="text-danger small"></form:errors>
 								</div>
 								
@@ -159,7 +159,7 @@ aside.sidenav {
 				<!-- 모달창 내용 -->
 				<div class="modal fade" id="productModal" tabindex="-1"
 					aria-hidden="true">
-					<div class="modal-dialog modal-lg">
+					<div class="modal-dialog modal-xl">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title">물품 목록</h5>
@@ -176,11 +176,12 @@ aside.sidenav {
 								<table class="table">
 									<thead>
 										<tr>
-											<th>물품번호</th>
+											<th style="text-align:center;">물품번호</th>
 											<th>물품타입</th>
 											<th>물품명</th>
 											<th>규격</th>
-											<th>선택</th>
+											<th style="text-align:center;">재고수량</th>
+											<th style="text-align:center;">선택</th>
 										</tr>
 									</thead>
 									<tbody id="productTable">
