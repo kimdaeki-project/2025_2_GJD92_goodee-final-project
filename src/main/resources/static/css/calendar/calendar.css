@@ -1,0 +1,74 @@
+.my-cancel-btn {
+	background-color: #fff !important;
+	color: #212529 !important;
+	border: 1px solid #ccc !important;
+	border-radius: 5px !important;
+}
+
+.my-cancel-btn:hover {background-color: #f8f9fa !important;}
+
+.holiday-event {
+	color: red !important;
+	font-weight: bold;
+	opacity: 1 !important;
+}
+
+
+/* 토요일 일요일 배경 색상 */
+.fc-day-sun {
+	color: #e74c3c !important;
+	background-color: #fff5f5 !important;
+}
+.fc-day-sat {
+	color: #2980b9 !important;
+	background-color: #f5f9ff !important;
+}
+
+/* 공휴일 배경 색상 */
+.holiday-event { background-color: #fff5f5 !important; }
+
+/* 상단 요일 헤더 (SUN / SAT) */
+.fc-col-header-cell.fc-day-sun { color: #e74c3c !important; }
+.fc-col-header-cell.fc-day-sat { color: #3498db !important; }
+
+/* 달력 내부 날짜 숫자 색상*/
+.fc-daygrid-day.fc-day-sun .fc-daygrid-day-number { color: #e74c3c !important; }
+.fc-daygrid-day.fc-day-sat .fc-daygrid-day-number { color: #2980b9 !important; }
+
+/* 일요일 헤더 */
+.fc-col-header-cell.fc-day-sun .fc-col-header-cell-cushion {
+	color: #e74c3c !important; /* 글자색 빨강 */
+	/*   background-color: #ffeaea !important;  연한 빨강 배경 */
+	font-weight: 600 !important;
+	display: block !important; /* 배경색이 영역 전체에 적용되도록 */
+	padding: 6px 0 !important; /* 약간의 여백 */
+}
+
+/* 토요일 헤더 */
+.fc-col-header-cell.fc-day-sat .fc-col-header-cell-cushion {
+	color: #2980b9 !important; /* 글자색 파랑 */
+	/*   background-color: #eaf3ff !important;  연한 파랑 배경 */
+	font-weight: 600 !important;
+	display: block !important;
+	padding: 6px 0 !important;
+}
+
+/* 다음, 이전, 오늘 버튼 색상 */
+.fc-next-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary,
+	.fc-today-button.fc-button.fc-button-primary {
+	background-color: #262626 !important;
+}
+
+/* 기간 일정 앞에 점 추가 */
+.fc-daygrid-event-dot {
+	display: inline-block;
+	width: 1px;
+	height: 1px;
+	border-radius: 50%;
+	background-color: currentColor;
+}
+
+/* 점 색상 */
+.cal-type-2001 .fc-daygrid-event-dot { background-color: #E67E22 !important; }
+.cal-type-2002 .fc-daygrid-event-dot { background-color: #2E86DE !important; }
+.cal-type-2003 .fc-daygrid-event-dot { background-color: #16A085 !important; }
